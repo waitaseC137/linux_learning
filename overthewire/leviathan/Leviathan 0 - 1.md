@@ -15,8 +15,7 @@ Revizyon:
 
 Makineye ssh aracılığıyla giriş yaptıktan sonra mevcut kullanıcının ana dizinine genel bir bakış elde edebiliriz:
 
-```
-bash
+```bash
 1 leviathan0@leviathan:~$ ls -la
 2 total 24
 3 drwxr-xr-x  3 root       root       4096 Aug 26  2019 .
@@ -32,8 +31,7 @@ bash
 Farklı kullanıcı ve grupların izinlerine baktığımızda, 'leviathan0' kullanıcısı olarak .backup klasörü için okuma (ve yürütme) izinlerine sahip olduğumuzu görebiliriz.
 Böylece içeriğine göz atabiliriz:
 
-```
-bash
+```bash
 
 1 leviathan0@leviathan:~$ cd .backup/
 2 leviathan0@leviathan:~/.backup$ ls -la
@@ -48,8 +46,7 @@ Ancak oldukça büyük bir dosya olduğunu da görebiliyoruz.
 Bu nedenle içeriğe manuel olarak bakmak iyi bir fikir değildir.
 Yine de öncelikle içeriğin yapısı hakkında bir fikir edinelim:
 
-```
-bash
+```bash
 
 1 leviathan0@leviathan:~/.backup$ head bookmarks.html
 2 <!DOCTYPE NETSCAPE-Bookmark-file-1>
@@ -71,10 +68,8 @@ Dosyanın ilk birkaç satırına bakmak bunu doğruluyor gibi görünüyor.
 Artık dosyaya bakmanın farklı yolları ve aranacak farklı şeyler var.
 Bir şifre arayabiliriz, ancak yer imleri içerdiğinden benim fikrim [grep] komutuyla 'leviathan'ı aramaktı:
 
-```
-bash
+```bash
 
 1 leviathan0@leviathan:~/.backup$ cat bookmarks.html | grep leviathan
-```
 2 <DT><A HREF="[http://leviathan.labs.overthewire.org/passwordus.html](http://leviathan.labs.overthewire.org/passwordus.html) | This will be fixed later, the password for leviathan1 is rioGegei8m" ADD_DATE="1155384634" LAST_CHARSET="ISO-8859-1" ID="rdf:#$2wIU71">password to leviathan1</A>
-```
+```  
