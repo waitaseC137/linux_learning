@@ -161,7 +161,7 @@ Bu şekilde ikili şifre dosyasını çağırır ve biz kontrolden kaçtık.
 8 -rw-r--r--   1 leviathan2 root      0 Jul  5 09:03 test file.txt
 9 leviathan2@leviathan:~$ chmod 777 /tmp/tmp.BykcxJXZxD
 10 leviathan2@leviathan:~$ ./printfile /tmp/tmp.BykcxJXZxD/"test file.txt"
-11 Ahdiemoo1j
+11 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 12 /bin/cat: file.txt: No such file or directory
 ```
 
