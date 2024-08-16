@@ -27,5 +27,5 @@ Bunun yerine, şifre 'millionth' kelimesiyle aynı satırda olduğu için `grep`
 
 ```nasm
 bandit7@bandit:~$ cat data.txt | grep millionth
-millionth cvX2JJa4CFALtqS87jk27qwqGhBM9plV
+millionth XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
