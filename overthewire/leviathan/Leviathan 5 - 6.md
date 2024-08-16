@@ -58,7 +58,7 @@ Böylece şifre dosyasına yönlendiren sembolik bir bağlantı oluşturuyoruz.
 ```bash
 leviathan5@leviathan:~$ ln -s /etc/leviathan_pass/leviathan6 /tmp/file.log
 leviathan5@leviathan:~$ ./leviathan5
-UgaoFee4li
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ---
