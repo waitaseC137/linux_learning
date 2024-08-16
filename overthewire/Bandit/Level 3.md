@@ -47,5 +47,5 @@ Alternatif olarak, bu görev hem `ls` hem de `cat` komutunun yolunu ayarlayarak 
 bandit3@bandit:~$ ls -a \inhere
 .  ..  .hidden
 bandit3@bandit:~$ cat inhere/.hidden
-pIwrPrtPN36QITSp3EQaw936yaFoFgAB
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
