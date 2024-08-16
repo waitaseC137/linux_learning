@@ -30,7 +30,7 @@ Durum böyle olduğu için, bir dosyanın içeriğini aşağıdaki komut sözdiz
 
 ```jsx
 bandit0@bandit:~$ cat readme
-boJ9jbbUNNfktd78OOpsqOltutMc3MY1
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 Elde edilen dize 'bandit1' kullanıcısının parolasıdır.
