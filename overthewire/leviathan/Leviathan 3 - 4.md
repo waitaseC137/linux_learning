@@ -53,7 +53,7 @@ O halde tekrar deneyelim ltrace:
 
 ```bash
 1 $ cat /etc/leviathan_pass/leviathan4
-2 vuH0coox6m
+2 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ---
