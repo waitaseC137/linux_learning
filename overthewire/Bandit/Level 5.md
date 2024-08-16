@@ -141,5 +141,5 @@ bandit5@bandit:~/inhere$ find . -type f -size 1033c ! -executable -exec file '{}
 ./maybehere07/.file2: ASCII text, with very long lines
 
 bandit5@bandit:~/inhere$ cat ./maybehere07/.file2
-DXjZPULLxYr17uwoI01bNLQbtFemEgo7
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
