@@ -64,7 +64,7 @@ Hızlı bir Google araması bana Perl ile şu örneği gösteriyor: [bash echo 0
 ```bash
 leviathan4@leviathan:~/.trash$ echo 0101010001101001011101000110100000110100011000110110111101101011011001010110100100001010 | perl -lpe '$*=pack"B*",$*'
 
-Tith4cokei
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ---
