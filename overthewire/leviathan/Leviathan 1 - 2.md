@@ -96,7 +96,7 @@ Web sitesindeki açıklamaya göre tüm şifreler 'etc/leviathan_pass' altında 
 
 ```bash
 1 $ cat /etc/leviathan_pass/leviathan2
-2 ougahZi8Ta
+2 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ---
