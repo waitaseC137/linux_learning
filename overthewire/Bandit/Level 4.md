@@ -63,5 +63,5 @@ Sadece '-file07' dosyasının insanların okuyabileceği kodlamalardan biri olan
 
 ```bash
 bandit4@bandit:~/inhere$ cat ./-file07
-koReBOKuIDDepwhWk7jZC0RTdopnAYKh
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
