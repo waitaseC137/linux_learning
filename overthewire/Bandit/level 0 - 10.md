@@ -3,7 +3,7 @@
 # Level 0
 
 Giriş
-SSH: ssh [bandit0@bandit.labs.overthewire.org](mailto:bandit0@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit0@bandit.labs.overthewire.org] -p 2220
 
 Şifre: bandit0
 
@@ -40,7 +40,7 @@ Elde edilen dize 'bandit1' kullanıcısının parolasıdır.
 # Level 1
 
 Giriş
-SSH: ssh [bandit1@bandit.labs.overthewire.org](mailto:bandit1@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit1@bandit.labs.overthewire.org] -p 2220
 
 Şifre: boJ9jbbUNNfktd78OOpsqOltutMc3MY1
 
@@ -71,7 +71,7 @@ Sıradaki bölüme geçelim
 # Level 2
 
 Giriş
-SSH: ssh [bandit2@bandit.labs.overthewire.org](mailto:bandit2@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit2@bandit.labs.overthewire.org] -p 2220
 
 Şifre: CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9
 
@@ -107,7 +107,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Level 3
 
 Giriş
-SSH: ssh [bandit3@bandit.labs.overthewire.org](mailto:bandit3@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit3@bandit.labs.overthewire.org] -p 2220
 
 Şifre: UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK
 
@@ -159,7 +159,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Level 4
 
 Giriş
-SSH: ssh [bandit4@bandit.labs.overthewire.org](mailto:bandit4@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit4@bandit.labs.overthewire.org] -p 2220
 
 Şifre: pIwrPrtPN36QITSp3EQaw936yaFoFgAB
 
@@ -227,7 +227,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Level 5
 
 Giriş
-SSH: ssh [bandit5@bandit.labs.overthewire.org](mailto:bandit5@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit5@bandit.labs.overthewire.org] -p 2220
 
 Şifre: koReBOKuIDDepwhWk7jZC0RTdopnAYKh
 
