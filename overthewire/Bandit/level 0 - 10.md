@@ -374,7 +374,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Level 6
 
 Giriş
-SSH: ssh [bandit6@bandit.labs.overthewire.org](mailto:bandit6@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit6@bandit.labs.overthewire.org] -p 2220
 
 Şifre DXjZPULLxYr17uwoI01bNLQbtFemEgo7
 
@@ -421,7 +421,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 Giriş
 
-SSH: ssh [bandit6@bandit.labs.overthewire.org](mailto:bandit6@bandit.labs.overthewire.org) -p 2220
+SSH: ssh [bandit6@bandit.labs.overthewire.org] -p 2220
 
 Şifre DXjZPULLxYr17uwoI01bNLQbtFemEgo7
 
@@ -469,7 +469,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # Level 8
 
 Giriş
-SSH: `ssh [bandit7@bandit.labs.overthewire.org](mailto:bandit7@bandit.labs.overthewire.org) -p 2220`
+SSH: `ssh [bandit7@bandit.labs.overthewire.org] -p 2220`
 
 Şifre: HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
 
