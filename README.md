@@ -55,12 +55,37 @@ Bandit'ten sonra gelen ilk adım. Programlama bilgisi gerekmiyor — binary anal
 
 ---
 
-## 📌 Kaynaklar
+## 📚 Kaynaklar
 
-- [OverTheWire Wargames](https://overthewire.org/wargames/)
-- [MayADevBe Blog — Full Walkthroughs](https://mayadevbe.me/posts/overthewire/bandit/overview/)
-- [Explain Shell](https://explainshell.com/) — Komutları görsel açıklar
-- [Linux Man Pages](https://manpages.ubuntu.com/)
+### OverTheWire
+- [OverTheWire Wargames](https://overthewire.org/wargames/) — Oyunların ana sitesi
+- [Bandit Walkthrough — MayADevBe](https://mayadevbe.me/posts/overthewire/bandit/overview/) — Her level için detaylı İngilizce anlatım
+- [Leviathan Walkthrough — MayADevBe](https://mayadevbe.me/posts/overthewire/leviathan/overview/) — Leviathan için detaylı İngilizce anlatım
+
+### Linux Referans
+- [Linux Man Pages](https://manpages.ubuntu.com/) — Her komutun resmi dokümantasyonu
+- [Explain Shell](https://explainshell.com/) — Komutları ve bayrakları görsel olarak açıklar
+- [Linux Komutlarına Giriş](https://manpages.ubuntu.com/manpages/noble/man1/intro.1.html) — Ubuntu'nun resmi giriş kılavuzu
+
+### Encoding & Şifreleme
+- [Base64 — Wikipedia](https://en.wikipedia.org/wiki/Base64)
+- [ROT13 — Wikipedia](https://en.wikipedia.org/wiki/ROT13)
+- [ASCII Tablosu](https://www.asciitable.com/) — Karakter kodlama referansı
+- [Dosya İmzaları Listesi](https://en.wikipedia.org/wiki/List_of_file_signatures) — Magic number'lar (hexdump okuma için)
+
+### Git
+- [Git Resmi Dokümantasyon](https://git-scm.com/doc)
+- [GitHub Guides](https://guides.github.com/)
+
+### Tersine Mühendislik
+- [GDB Cheat Sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf) — GDB komutları referansı
+- [Intel vs AT&T Assembly Syntax](https://imada.sdu.dk/u/kslarsen/dm546/Material/IntelnATT.htm) — Assembly söz dizimi farkları
+- [Ghidra](https://ghidra-sre.org/) — NSA'nın açık kaynak tersine mühendislik aracı
+
+### Ağ
+- [SSH — Wikipedia](https://en.wikipedia.org/wiki/Secure_Shell)
+- [Nmap Resmi Site](https://nmap.org/) — Port tarayıcı
+- [OpenSSL Dokümantasyon](https://www.openssl.org/docs/) — SSL/TLS aracı
 
 ---
 
