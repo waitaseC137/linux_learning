@@ -16,18 +16,21 @@ linux_learning/
     │   └── bandit_21-33.md    # Cron, bash scripting, brute force, git, shell escape
     ├── leviathan/
     │   └── leviathan_0-7.md   # ltrace, gdb, symlink, privilege escalation
-    └── krypton/
-        └── krypton_0-6.md     # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
+    ├── krypton/
+    │   └── krypton_0-6.md     # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
+    └── natas/
+        ├── natas_0-10.md      # HTML kaynak, cookies, LFI, command injection
+        ├── natas_11-20.md     # XOR, file upload, SQLi, blind SQLi, session brute-force
+        └── natas_21-34.md    # Deserialization, ECB, Perl RCE, type juggling
 ```
 
 ---
 
 ## 🎮 OverTheWire
 
-[OverTheWire](https://overthewire.org/wargames/), Linux ve güvenlik becerilerini **oyun formatında** öğreten ücretsiz bir platform. Her wargame farklı bir konuya odaklanıyor.
+[OverTheWire](https://overthewire.org/wargames/), Linux ve güvenlik becerilerini **oyun formatında** öğreten ücretsiz bir platform.
 
 ### 🏴 Bandit — Linux Temelleri
-
 Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile buradan başlayabilir.
 
 | Dosya | Konular | Level'lar |
@@ -37,20 +40,27 @@ Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile bur
 | [bandit_21-33.md](./overthewire/bandit/bandit_21-33.md) | Cron, bash scripting, brute force, vim escape, git, shell variables | 21 → 33 |
 
 ### 🐙 Leviathan — Tersine Mühendisliğe Giriş
-
-Bandit'ten sonra gelen ilk adım. Binary analizi, sembolik linkler ve privilege escalation öğreniliyor.
+Binary analizi, sembolik linkler ve privilege escalation.
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
 | [leviathan_0-7.md](./overthewire/leviathan/leviathan_0-7.md) | ltrace, strings, gdb, symlink, TOCTOU, binary→ASCII | 0 → 7 |
 
 ### 🔐 Krypton — Kriptografiye Giriş
-
 Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsun.
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
 | [krypton_0-6.md](./overthewire/krypton/krypton_0-6.md) | Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher | 0 → 6 |
+
+### 🌐 Natas — Web Güvenliğine Giriş
+34 level boyunca web güvenliğinin temellerini öğreniyorsun — HTML'den Perl RCE'ye kadar.
+
+| Dosya | Konular | Level'lar |
+|---|---|---|
+| [natas_0-10.md](./overthewire/natas/natas_0-10.md) | HTML kaynak, robots.txt, cookie, LFI, command injection | 0 → 10 |
+| [natas_11-20.md](./overthewire/natas/natas_11-20.md) | XOR kırma, web shell, SQLi, blind SQLi, session brute-force | 11 → 20 |
+| [natas_21-34.md](./overthewire/natas/natas_21-34.md) | Deserialization, ECB, Perl RCE, type juggling, truncation | 21 → 34 |
 
 ---
 
@@ -68,44 +78,46 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 ## 📚 Kaynaklar
 
 ### OverTheWire
-- [OverTheWire Wargames](https://overthewire.org/wargames/) — Oyunların ana sitesi
+- [OverTheWire Wargames](https://overthewire.org/wargames/)
 - [Bandit Walkthrough — MayADevBe](https://mayadevbe.me/posts/overthewire/bandit/overview/)
 - [Leviathan Walkthrough — MayADevBe](https://mayadevbe.me/posts/overthewire/leviathan/overview/)
-- [Krypton Walkthrough — MayADevBe](https://mayadevbe.me/tags/krypton/) (Level 0-5)
-- [Krypton Walkthrough — LearnHacking.io](https://learnhacking.io/overthewire-krypton-levels-0-9/) (Level 6 dahil)
+- [Krypton Walkthrough — MayADevBe](https://mayadevbe.me/tags/krypton/) (0-5)
+- [Krypton Level 6 — LearnHacking.io](https://learnhacking.io/overthewire-krypton-levels-0-9/)
+- [Natas Walkthrough — MayADevBe](https://mayadevbe.me/tags/natas/) (0-6)
+- [Natas 6-10 — LearnHacking.io](https://learnhacking.io/overthewire-natas-walkthrough-levels-6-10/)
+- [Natas 11-12 — LearnHacking.io](https://learnhacking.io/overthewire-natas-level-11-walkthrough/)
+- [Natas 7-13 — JamesCao](https://jameskaois.com/posts/overthewire-natas-level-7-13/)
+- [Natas 14-20 — JamesCao](https://jameskaois.com/posts/overthewire-natas-level-14-20/)
+- [Natas 21-24 — JamesCao](https://jameskaois.com/posts/overthewire-natas-level-21-24/)
+- [Natas 25-31 — LearnHacking.io](https://learnhacking.io/)
 
 ### Linux Referans
-- [Linux Man Pages](https://manpages.ubuntu.com/) — Her komutun resmi dokümantasyonu
-- [Explain Shell](https://explainshell.com/) — Komutları ve bayrakları görsel olarak açıklar
+- [Linux Man Pages](https://manpages.ubuntu.com/)
+- [Explain Shell](https://explainshell.com/)
 - [Linux Komutlarına Giriş](https://manpages.ubuntu.com/manpages/noble/man1/intro.1.html)
 
-### Kriptografi
-- [CyberChef](https://gchq.github.io/CyberChef/) — Her türlü encoding/decoding
-- [dCode.fr](https://www.dcode.fr/) — Şifre analiz araçları (Vigenère, frekans analizi)
-- [Cryptii](https://cryptii.com/) — Klasik şifreler
-- [Base64 — Wikipedia](https://en.wikipedia.org/wiki/Base64)
-- [ROT13 — Wikipedia](https://en.wikipedia.org/wiki/ROT13)
-- [Vigenère Cipher — Wikipedia](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher)
-- [Kasiski Sınaması — Wikipedia](https://en.wikipedia.org/wiki/Kasiski_examination)
-- [Frekans Analizi — Wikipedia](https://en.wikipedia.org/wiki/Frequency_analysis)
-- [Dosya İmzaları Listesi](https://en.wikipedia.org/wiki/List_of_file_signatures) — Magic number'lar
-- [ASCII Tablosu](https://www.asciitable.com/)
+### Web Güvenliği
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [PortSwigger Web Security Academy](https://portswigger.net/web-security)
+- [MDN HTTP Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP)
+- [W3Schools PHP](https://www.w3schools.com/php/)
 
-### Encoding & Sıkıştırma
+### Kriptografi
+- [CyberChef](https://gchq.github.io/CyberChef/)
+- [dCode.fr](https://www.dcode.fr/)
 - [Base64 — Wikipedia](https://en.wikipedia.org/wiki/Base64)
+- [Vigenère Cipher — Wikipedia](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher)
+- [ECB Mode Weakness](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#ECB)
+- [ASCII Tablosu](https://www.asciitable.com/)
+- [Dosya İmzaları](https://en.wikipedia.org/wiki/List_of_file_signatures)
 
 ### Tersine Mühendislik
 - [GDB Cheat Sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf)
+- [Ghidra](https://ghidra-sre.org/)
 - [Intel vs AT&T Assembly Syntax](https://imada.sdu.dk/u/kslarsen/dm546/Material/IntelnATT.htm)
-- [Ghidra](https://ghidra-sre.org/) — NSA'nın açık kaynak tersine mühendislik aracı
-
-### Ağ
-- [Nmap Resmi Site](https://nmap.org/)
-- [OpenSSL Dokümantasyon](https://www.openssl.org/docs/)
 
 ### Git
 - [Git Resmi Dokümantasyon](https://git-scm.com/doc)
-- [GitHub Guides](https://guides.github.com/)
 
 ---
 
