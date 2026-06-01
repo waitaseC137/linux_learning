@@ -104,6 +104,17 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 | [11_sql_injection.md](./konu_anlatimlari/web_guvenligi/11_sql_injection.md) | SQL injection temelleri, `' OR 1=1`, UNION saldırısı |
 | [12_blind_sql_injection.md](./konu_anlatimlari/web_guvenligi/12_blind_sql_injection.md) | Blind SQLi, boolean tabanlı, karakter karakter çekme |
 | [13_command_injection_ileri.md](./konu_anlatimlari/web_guvenligi/13_command_injection_ileri.md) | İleri command injection, grep bypass, filtre aşma |
+| [14_session_brute_force.md](./konu_anlatimlari/web_guvenligi/14_session_brute_force.md) | Session ID brute-force, tahmin edilebilir token saldırısı |
+| [15_session_ve_newline_injection.md](./konu_anlatimlari/web_guvenligi/15_session_ve_newline_injection.md) | PHP session manipülasyonu, newline injection |
+| [16_http_redirect_bypass.md](./konu_anlatimlari/web_guvenligi/16_http_redirect_bypass.md) | HTTP yönlendirme bypass, 302 öncesi içerik okuma |
+| [17_php_type_juggling.md](./konu_anlatimlari/web_guvenligi/17_php_type_juggling.md) | PHP type juggling, loose comparison zafiyetleri |
+| [18_php_object_injection.md](./konu_anlatimlari/web_guvenligi/18_php_object_injection.md) | PHP object injection, deserialization, magic method |
+| [19_sql_truncation.md](./konu_anlatimlari/web_guvenligi/19_sql_truncation.md) | SQL truncation, VARCHAR kesme, kullanıcı taklit saldırısı |
+| [20_ecb_mode_zafiyeti.md](./konu_anlatimlari/web_guvenligi/20_ecb_mode_zafiyeti.md) | ECB mode zafiyeti, blok kesme/yapıştırma saldırısı |
+| [21_perl_rce.md](./konu_anlatimlari/web_guvenligi/21_perl_rce.md) | Perl `open()` injection, RCE, pipe karakteri |
+| [22_perl_cgi_param_bypass.md](./konu_anlatimlari/web_guvenligi/22_perl_cgi_param_bypass.md) | Perl CGI `param()` array bypass, DBI `quote()` atlatma |
+| [23_log_poisoning.md](./konu_anlatimlari/web_guvenligi/23_log_poisoning.md) | Log poisoning, User-Agent injection, LFI + PHP RCE |
+| [24_phar_deserialization.md](./konu_anlatimlari/web_guvenligi/24_phar_deserialization.md) | Phar deserialization, `phar://` wrapper, dosya yükleme + LFI RCE |
 
 ### 🔐 Kriptografi
 
