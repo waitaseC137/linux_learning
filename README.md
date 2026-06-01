@@ -32,7 +32,8 @@ linux_learning/
     │   │   └── brute_force_bash.md     # for döngüsü, koşullar, PIN brute force
     │   └── leviathan_0-7.md   # ltrace, gdb, symlink, privilege escalation
     ├── krypton/
-    │   └── krypton_0-6.md     # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
+    │   ├── krypton_0-6.md                    # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
+    │   └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, for döngüsü, Caesar, Vigenère, XOR
     ├── natas/
     │   ├── natas_0-10.md      # HTML kaynak, cookies, LFI, command injection
     │   ├── natas_11-20.md     # XOR, file upload, SQLi, blind SQLi, session brute-force
@@ -98,6 +99,12 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 | Dosya | Konular | Level'lar |
 |---|---|---|
 | [krypton_0-6.md](./overthewire/krypton/krypton_0-6.md) | Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher | 0 → 6 |
+
+**Krypton Komut ve Kavram Referansı**
+
+| Dosya | Komutlar / Kavramlar |
+|---|---|
+| [krypton_komutlar_ve_kavramlar.md](./overthewire/krypton/krypton_komutlar_ve_kavramlar.md) | `wc -c` `sort -nr` `tr -cd` `for {A..Z}` `python3 -c` · Caesar · Frekans Analizi · Vigenère · Kasiski · Stream Cipher/XOR |
 
 ### 🌐 Natas — Web Güvenliğine Giriş
 34 level boyunca web güvenliğinin temellerini öğreniyorsun — HTML'den Perl RCE'ye kadar.
