@@ -18,6 +18,13 @@ linux_learning/
 │   │   ├── izinler_kullanici.md   # chmod, chown, whoami, SUID/SGID, sudo
 │   │   ├── surec_shell.md         # pipe, yönlendirme, &, değişkenler, for, bash script
 │   │   └── git.md                 # clone, log, show, branch, checkout, tag, push
+│   ├── leviathan_komutlari/
+│   │   ├── dosya_izinleri_suid.md            # chmod, find -perm, SUID, privilege escalation
+│   │   ├── binary_analizi.md                 # file, strings, xxd, od, binary→ASCII
+│   │   ├── ltrace_strace.md                  # ltrace, strace, strcmp, fopen, access, system
+│   │   ├── sembolik_linkler.md               # ln -s, readlink, TOCTOU açığı
+│   │   ├── gdb.md                            # disassemble, breakpoint, register, bellek
+│   │   └── brute_force_bash.md               # for döngüsü, koşullar, PIN brute force
 │   └── kriptografi/
 │       └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
 └── overthewire/
@@ -55,6 +62,17 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 | [surec_shell.md](./konu_anlatimlari/linux_komutlari/surec_shell.md) | `\|` `>` `>>` `&` `jobs` `fg` `$()` `for` `alias` `export` |
 | [git.md](./konu_anlatimlari/linux_komutlari/git.md) | `git clone` `log` `show` `branch` `checkout` `tag` `add` `commit` `push` |
 
+### 🔬 Binary Analizi ve Tersine Mühendislik
+
+| Dosya | Komutlar / Kavramlar |
+|---|---|
+| [dosya_izinleri_suid.md](./konu_anlatimlari/leviathan_komutlari/dosya_izinleri_suid.md) | `chmod` `find -perm` `whoami` `SUID` privilege escalation |
+| [binary_analizi.md](./konu_anlatimlari/leviathan_komutlari/binary_analizi.md) | `file` `strings` `xxd` `od` binary→ASCII |
+| [ltrace_strace.md](./konu_anlatimlari/leviathan_komutlari/ltrace_strace.md) | `ltrace` `strace` `strcmp` `fopen` `access` `system` |
+| [sembolik_linkler.md](./konu_anlatimlari/leviathan_komutlari/sembolik_linkler.md) | `ln -s` `readlink` TOCTOU açığı |
+| [gdb.md](./konu_anlatimlari/leviathan_komutlari/gdb.md) | `disassemble` `break` `run` `info registers` `x` `print/d` |
+| [brute_force_bash.md](./konu_anlatimlari/leviathan_komutlari/brute_force_bash.md) | `for` döngüsü koşullar PIN brute force |
+
 ### 🔐 Kriptografi
 
 | Dosya | Konular |
@@ -78,6 +96,19 @@ Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile bur
 
 ### 🐙 Leviathan — Tersine Mühendisliğe Giriş
 Binary analizi, sembolik linkler ve privilege escalation. Bir binary'nin içini ltrace ile okumak, gdb ile assembly'e bakmak, symlink ile sistemi kandırmak.
+
+**Leviathan Komut Referansı**
+
+| Dosya | Komutlar / Kavramlar |
+|---|---|
+| [dosya_izinleri_suid.md](./konu_anlatimlari/leviathan_komutlari/dosya_izinleri_suid.md) | `chmod` `find -perm` `whoami` `SUID` privilege escalation |
+| [binary_analizi.md](./konu_anlatimlari/leviathan_komutlari/binary_analizi.md) | `file` `strings` `xxd` `od` binary→ASCII |
+| [ltrace_strace.md](./konu_anlatimlari/leviathan_komutlari/ltrace_strace.md) | `ltrace` `strace` `strcmp` `fopen` `access` `system` |
+| [sembolik_linkler.md](./konu_anlatimlari/leviathan_komutlari/sembolik_linkler.md) | `ln -s` `readlink` TOCTOU açığı |
+| [gdb.md](./konu_anlatimlari/leviathan_komutlari/gdb.md) | `disassemble` `break` `run` `info registers` `x` `print/d` |
+| [brute_force_bash.md](./konu_anlatimlari/leviathan_komutlari/brute_force_bash.md) | `for` döngüsü koşullar PIN brute force |
+
+**Level Rehberi**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
