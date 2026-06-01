@@ -25,6 +25,11 @@ linux_learning/
 │   │   ├── sembolik_linkler.md               # ln -s, readlink, TOCTOU açığı
 │   │   ├── gdb.md                            # disassemble, breakpoint, register, bellek
 │   │   └── brute_force_bash.md               # for döngüsü, koşullar, PIN brute force
+│   ├── web_guvenligi/
+│   │   ├── 01_html_kaynak_ve_devtools.md     # HTML kaynak, Developer Tools, gizli alanlar
+│   │   ├── 02_http_protokolu.md              # HTTP istek/cevap, metodlar, header'lar
+│   │   ├── 03_robots_ve_dizin_kesfi.md       # robots.txt, dizin keşfi
+│   │   └── 04_cookie_manipulasyonu.md        # Cookie yapısı, manipülasyon
 │   └── kriptografi/
 │       └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
 └── overthewire/
@@ -73,6 +78,15 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 | [gdb.md](./konu_anlatimlari/leviathan_komutlari/gdb.md) | `disassemble` `break` `run` `info registers` `x` `print/d` |
 | [brute_force_bash.md](./konu_anlatimlari/leviathan_komutlari/brute_force_bash.md) | `for` döngüsü koşullar PIN brute force |
 
+### 🌐 Web Güvenliği
+
+| Dosya | Konular |
+|---|---|
+| [01_html_kaynak_ve_devtools.md](./konu_anlatimlari/web_guvenligi/01_html_kaynak_ve_devtools.md) | HTML kaynak kodu, Developer Tools, gizli alanlar |
+| [02_http_protokolu.md](./konu_anlatimlari/web_guvenligi/02_http_protokolu.md) | HTTP istek/cevap yapısı, metodlar, header'lar |
+| [03_robots_ve_dizin_kesfi.md](./konu_anlatimlari/web_guvenligi/03_robots_ve_dizin_kesfi.md) | robots.txt, dizin keşfi, gizli yollar |
+| [04_cookie_manipulasyonu.md](./konu_anlatimlari/web_guvenligi/04_cookie_manipulasyonu.md) | Cookie yapısı, manipülasyon, güvenlik bayrakları |
+
 ### 🔐 Kriptografi
 
 | Dosya | Konular |
@@ -116,6 +130,8 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 
 ### 🌐 Natas — Web Güvenliğine Giriş
 34 level boyunca web güvenliğinin temellerini öğreniyorsun — HTML'den Perl RCE'ye kadar.
+
+> 📖 Komut açıklamaları ve detaylar için → [Web Güvenliği Konu Anlatımı](#-web-güvenliği)
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
