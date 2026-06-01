@@ -9,6 +9,14 @@
 
 ```
 linux_learning/
+├── linux_komutlari/
+│   ├── dosya_sistemi.md       # pwd, ls, cd, cat, file, find, mkdir, cp, mv, touch, du
+│   ├── metin_isleme.md        # grep, sort, uniq, strings, cut, tr, diff, echo, md5sum
+│   ├── sikistirma_encoding.md # base64, xxd, gzip, bzip2, tar
+│   ├── ag.md                  # ssh, scp, nc, openssl, nmap, curl, wget
+│   ├── izinler_kullanici.md   # chmod, chown, whoami, SUID/SGID, sudo
+│   ├── surec_shell.md         # pipe, yönlendirme, &, değişkenler, for, bash script
+│   └── git.md                 # clone, log, show, branch, checkout, tag, push
 └── overthewire/
     ├── bandit/
     │   ├── bandit_0-10.md     # SSH, cat, ls, find, grep, sort, uniq, strings
@@ -25,6 +33,22 @@ linux_learning/
     └── narnia/
         └── narnia_0-8.md      # Buffer overflow, shellcode, format string, return-to-libc
 ```
+
+---
+
+## 📖 Linux Komutları Referansı
+
+Bandit boyunca kullanılan komutların detaylı açıklamaları, örnekleri ve bayrakları.
+
+| Dosya | Komutlar |
+|---|---|
+| [dosya_sistemi.md](./linux_komutlari/dosya_sistemi.md) | `pwd` `ls` `cd` `cat` `file` `find` `mkdir` `cp` `mv` `touch` `mktemp` `du` |
+| [metin_isleme.md](./linux_komutlari/metin_isleme.md) | `grep` `sort` `uniq` `strings` `cut` `tr` `diff` `echo` `md5sum` `wc` `head` `tail` |
+| [sikistirma_encoding.md](./linux_komutlari/sikistirma_encoding.md) | `base64` `xxd` `gzip` `bzip2` `tar` `zip` |
+| [ag.md](./linux_komutlari/ag.md) | `ssh` `scp` `nc` `openssl` `nmap` `curl` `wget` |
+| [izinler_kullanici.md](./linux_komutlari/izinler_kullanici.md) | `chmod` `chown` `whoami` `id` `su` `sudo` `groups` `SUID/SGID` |
+| [surec_shell.md](./linux_komutlari/surec_shell.md) | `\|` `>` `>>` `&` `jobs` `fg` `$()` `for` `alias` `export` |
+| [git.md](./linux_komutlari/git.md) | `git clone` `log` `show` `branch` `checkout` `tag` `add` `commit` `push` |
 
 ---
 
@@ -78,7 +102,7 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB b
 1. [OverTheWire](https://overthewire.org/wargames/) sitesine gir
 2. Level sayfasındaki görevi oku
 3. Önce **kendi başına dene** — takılırsan buraya bak
-4. Çözümü okurken "neden?" sorusunu sormayı unutma
+4. Bir komut hakkında daha fazla bilgi için `linux_komutlari/` klasörüne bak
 
 > Şifreler zaman zaman değişebilir. Bu rehberlerde yöntem anlatılıyor, şifreler paylaşılmıyor.
 
@@ -103,6 +127,7 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB b
 ### Linux Referans
 - [Linux Man Pages](https://manpages.ubuntu.com/)
 - [Explain Shell](https://explainshell.com/)
+- [Bash Guide for Beginners](https://tldp.org/LDP/Bash-Beginners-Guide/html/)
 
 ### Web Güvenliği
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
@@ -115,7 +140,6 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB b
 - [GDB Cheat Sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf)
 - [Format String Exploits](http://codearcana.com/posts/2013/05/02/introduction-to-format-string-exploits.html)
 - [Ghidra](https://ghidra-sre.org/)
-- [Intel vs AT&T Assembly Syntax](https://imada.sdu.dk/u/kslarsen/dm546/Material/IntelnATT.htm)
 
 ### Kriptografi
 - [CyberChef](https://gchq.github.io/CyberChef/)
@@ -127,6 +151,8 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB b
 
 ### Git
 - [Git Resmi Dokümantasyon](https://git-scm.com/doc)
+- [Pro Git Kitabı](https://git-scm.com/book/tr/v2)
+- [Learn Git Branching](https://learngitbranching.js.org/)
 
 ---
 
