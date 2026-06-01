@@ -5,64 +5,67 @@
 
 ---
 
-## 📁 İçerik
+## 📁 Dosya Yapısı
 
 ```
 linux_learning/
-├── linux_komutlari/
-│   ├── dosya_sistemi.md       # pwd, ls, cd, cat, file, find, mkdir, cp, mv, touch, du
-│   ├── metin_isleme.md        # grep, sort, uniq, strings, cut, tr, diff, echo, md5sum
-│   ├── sikistirma_encoding.md # base64, xxd, gzip, bzip2, tar
-│   ├── ag.md                  # ssh, scp, nc, openssl, nmap, curl, wget
-│   ├── izinler_kullanici.md   # chmod, chown, whoami, SUID/SGID, sudo
-│   ├── surec_shell.md         # pipe, yönlendirme, &, değişkenler, for, bash script
-│   └── git.md                 # clone, log, show, branch, checkout, tag, push
+├── konu_anlatimlari/
+│   ├── linux_komutlari/
+│   │   ├── dosya_sistemi.md       # pwd, ls, cd, cat, file, find, mkdir, cp, mv, touch, du
+│   │   ├── metin_isleme.md        # grep, sort, uniq, strings, cut, tr, diff, echo, md5sum, wc
+│   │   ├── sikistirma_encoding.md # base64, xxd, gzip, bzip2, tar, zip
+│   │   ├── ag.md                  # ssh, scp, nc, openssl, nmap, curl, wget
+│   │   ├── izinler_kullanici.md   # chmod, chown, whoami, SUID/SGID, sudo
+│   │   ├── surec_shell.md         # pipe, yönlendirme, &, değişkenler, for, bash script
+│   │   └── git.md                 # clone, log, show, branch, checkout, tag, push
+│   └── kriptografi/
+│       └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
 └── overthewire/
     ├── bandit/
-    │   ├── bandit_0-10.md     # SSH, cat, ls, find, grep, sort, uniq, strings
-    │   ├── bandit_11-20.md    # Base64, ROT13, hexdump, sıkıştırma, netcat, nmap
-    │   └── bandit_21-33.md    # Cron, bash scripting, brute force, git, shell escape
+    │   ├── bandit_0-10.md         # SSH, cat, ls, find, grep, sort, uniq, strings
+    │   ├── bandit_11-20.md        # Base64, ROT13, hexdump, sıkıştırma, netcat, nmap
+    │   └── bandit_21-33.md        # Cron, bash scripting, brute force, git, shell escape
     ├── leviathan/
-    │   ├── leviathan_komutlari/
-    │   │   ├── dosya_izinleri_suid.md  # chmod, find, SUID, privilege escalation
-    │   │   ├── binary_analizi.md       # file, strings, xxd, od, binary→ASCII
-    │   │   ├── ltrace_strace.md        # ltrace, strace, strcmp, fopen, system
-    │   │   ├── sembolik_linkler.md     # ln -s, readlink, TOCTOU açığı
-    │   │   ├── gdb.md                  # disassemble, breakpoint, register, bellek
-    │   │   └── brute_force_bash.md     # for döngüsü, koşullar, PIN brute force
-    │   └── leviathan_0-7.md   # ltrace, gdb, symlink, privilege escalation
+    │   └── leviathan_0-7.md       # ltrace, gdb, symlink, privilege escalation
     ├── krypton/
-    │   ├── krypton_0-6.md                    # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
-    │   └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, for döngüsü, Caesar, Vigenère, XOR
+    │   └── krypton_0-6.md         # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
     ├── natas/
-    │   ├── natas_0-10.md      # HTML kaynak, cookies, LFI, command injection
-    │   ├── natas_11-20.md     # XOR, file upload, SQLi, blind SQLi, session brute-force
-    │   └── natas_21-34.md     # Deserialization, ECB, Perl RCE, type juggling
+    │   ├── natas_0-10.md          # HTML kaynak, cookies, LFI, command injection
+    │   ├── natas_11-20.md         # XOR, file upload, SQLi, blind SQLi, session brute-force
+    │   └── natas_21-34.md         # Deserialization, ECB, Perl RCE, type juggling
     └── narnia/
-        └── narnia_0-8.md      # Buffer overflow, shellcode, format string, return-to-libc
+        └── narnia_0-8.md          # Buffer overflow, shellcode, format string, return-to-libc
 ```
 
 ---
 
-## 📖 Linux Komutları Referansı
+## 📚 Konu Anlatımları
 
-Bandit boyunca kullanılan komutların detaylı açıklamaları, örnekleri ve bayrakları.
+Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dosyalar.
+
+### 🖥️ Linux Komutları
 
 | Dosya | Komutlar |
 |---|---|
-| [dosya_sistemi.md](./linux_komutlari/dosya_sistemi.md) | `pwd` `ls` `cd` `cat` `file` `find` `mkdir` `cp` `mv` `touch` `mktemp` `du` |
-| [metin_isleme.md](./linux_komutlari/metin_isleme.md) | `grep` `sort` `uniq` `strings` `cut` `tr` `diff` `echo` `md5sum` `wc` `head` `tail` |
-| [sikistirma_encoding.md](./linux_komutlari/sikistirma_encoding.md) | `base64` `xxd` `gzip` `bzip2` `tar` `zip` |
-| [ag.md](./linux_komutlari/ag.md) | `ssh` `scp` `nc` `openssl` `nmap` `curl` `wget` |
-| [izinler_kullanici.md](./linux_komutlari/izinler_kullanici.md) | `chmod` `chown` `whoami` `id` `su` `sudo` `groups` `SUID/SGID` |
-| [surec_shell.md](./linux_komutlari/surec_shell.md) | `\|` `>` `>>` `&` `jobs` `fg` `$()` `for` `alias` `export` |
-| [git.md](./linux_komutlari/git.md) | `git clone` `log` `show` `branch` `checkout` `tag` `add` `commit` `push` |
+| [dosya_sistemi.md](./konu_anlatimlari/linux_komutlari/dosya_sistemi.md) | `pwd` `ls` `cd` `cat` `file` `find` `mkdir` `cp` `mv` `touch` `mktemp` `du` |
+| [metin_isleme.md](./konu_anlatimlari/linux_komutlari/metin_isleme.md) | `grep` `sort` `uniq` `strings` `cut` `tr` `diff` `echo` `md5sum` `wc` `head` `tail` |
+| [sikistirma_encoding.md](./konu_anlatimlari/linux_komutlari/sikistirma_encoding.md) | `base64` `xxd` `gzip` `bzip2` `tar` `zip` |
+| [ag.md](./konu_anlatimlari/linux_komutlari/ag.md) | `ssh` `scp` `nc` `openssl` `nmap` `curl` `wget` |
+| [izinler_kullanici.md](./konu_anlatimlari/linux_komutlari/izinler_kullanici.md) | `chmod` `chown` `whoami` `id` `su` `sudo` `groups` `SUID/SGID` |
+| [surec_shell.md](./konu_anlatimlari/linux_komutlari/surec_shell.md) | `\|` `>` `>>` `&` `jobs` `fg` `$()` `for` `alias` `export` |
+| [git.md](./konu_anlatimlari/linux_komutlari/git.md) | `git clone` `log` `show` `branch` `checkout` `tag` `add` `commit` `push` |
+
+### 🔐 Kriptografi
+
+| Dosya | Konular |
+|---|---|
+| [krypton_komutlar_ve_kavramlar.md](./konu_anlatimlari/kriptografi/krypton_komutlar_ve_kavramlar.md) | `wc -c` `sort -nr` `tr -cd` `for {A..Z}` `python3 -c` · Caesar · Frekans Analizi · Vigenère · Kasiski · Stream Cipher/XOR |
 
 ---
 
-## 🎮 OverTheWire
+## 🎮 OverTheWire War Games
 
-[OverTheWire](https://overthewire.org/wargames/), Linux ve güvenlik becerilerini **oyun formatında** öğreten ücretsiz bir platform.
+[OverTheWire](https://overthewire.org/wargames/), Linux ve güvenlik becerilerini **oyun formatında** öğreten ücretsiz bir platform. Her war game için level-by-level çözüm rehberleri.
 
 ### 🏴 Bandit — Linux Temelleri
 Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile buradan başlayabilir.
@@ -74,37 +77,18 @@ Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile bur
 | [bandit_21-33.md](./overthewire/bandit/bandit_21-33.md) | Cron, bash scripting, brute force, vim escape, git, shell variables | 21 → 33 |
 
 ### 🐙 Leviathan — Tersine Mühendisliğe Giriş
-Binary analizi, sembolik linkler ve privilege escalation. Bandit'ten farklı olarak burada **araçları** kullanmayı öğreniyorsun: bir binary'nin içini ltrace ile okumak, gdb ile assembly'e bakmak, symlink ile sistemi kandırmak.
-
-**Leviathan Komut Referansı**
-
-| Dosya | Komutlar |
-|---|---|
-| [dosya_izinleri_suid.md](./overthewire/leviathan/leviathan_komutlari/dosya_izinleri_suid.md) | `chmod` `find -perm` `whoami` `SUID` `privilege escalation` |
-| [binary_analizi.md](./overthewire/leviathan/leviathan_komutlari/binary_analizi.md) | `file` `strings` `xxd` `od` `binary→ASCII` |
-| [ltrace_strace.md](./overthewire/leviathan/leviathan_komutlari/ltrace_strace.md) | `ltrace` `strace` `strcmp` `fopen` `access` `system` |
-| [sembolik_linkler.md](./overthewire/leviathan/leviathan_komutlari/sembolik_linkler.md) | `ln -s` `readlink` `TOCTOU açığı` |
-| [gdb.md](./overthewire/leviathan/leviathan_komutlari/gdb.md) | `disassemble` `break` `run` `info registers` `x` `print/d` |
-| [brute_force_bash.md](./overthewire/leviathan/leviathan_komutlari/brute_force_bash.md) | `for` döngüsü `koşullar` `PIN brute force` |
-
-**Level Rehberi**
+Binary analizi, sembolik linkler ve privilege escalation. Bir binary'nin içini ltrace ile okumak, gdb ile assembly'e bakmak, symlink ile sistemi kandırmak.
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
 | [leviathan_0-7.md](./overthewire/leviathan/leviathan_0-7.md) | ltrace, strings, gdb, symlink, TOCTOU, binary→ASCII | 0 → 7 |
 
 ### 🔐 Krypton — Kriptografiye Giriş
-Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsun.
+Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsun. Base64'ten stream cipher'a kadar.
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
 | [krypton_0-6.md](./overthewire/krypton/krypton_0-6.md) | Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher | 0 → 6 |
-
-**Krypton Komut ve Kavram Referansı**
-
-| Dosya | Komutlar / Kavramlar |
-|---|---|
-| [krypton_komutlar_ve_kavramlar.md](./overthewire/krypton/krypton_komutlar_ve_kavramlar.md) | `wc -c` `sort -nr` `tr -cd` `for {A..Z}` `python3 -c` · Caesar · Frekans Analizi · Vigenère · Kasiski · Stream Cipher/XOR |
 
 ### 🌐 Natas — Web Güvenliğine Giriş
 34 level boyunca web güvenliğinin temellerini öğreniyorsun — HTML'den Perl RCE'ye kadar.
@@ -129,7 +113,7 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB b
 1. [OverTheWire](https://overthewire.org/wargames/) sitesine gir
 2. Level sayfasındaki görevi oku
 3. Önce **kendi başına dene** — takılırsan buraya bak
-4. Bir komut hakkında daha fazla bilgi için ilgili wargame'in komut referans klasörüne bak
+4. Bir komut veya kavram hakkında daha fazla bilgi için `konu_anlatimlari/` klasörüne bak
 
 > Şifreler zaman zaman değişebilir. Bu rehberlerde yöntem anlatılıyor, şifreler paylaşılmıyor.
 
