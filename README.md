@@ -18,10 +18,12 @@ linux_learning/
     │   └── leviathan_0-7.md   # ltrace, gdb, symlink, privilege escalation
     ├── krypton/
     │   └── krypton_0-6.md     # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
-    └── natas/
-        ├── natas_0-10.md      # HTML kaynak, cookies, LFI, command injection
-        ├── natas_11-20.md     # XOR, file upload, SQLi, blind SQLi, session brute-force
-        └── natas_21-34.md    # Deserialization, ECB, Perl RCE, type juggling
+    ├── natas/
+    │   ├── natas_0-10.md      # HTML kaynak, cookies, LFI, command injection
+    │   ├── natas_11-20.md     # XOR, file upload, SQLi, blind SQLi, session brute-force
+    │   └── natas_21-34.md     # Deserialization, ECB, Perl RCE, type juggling
+    └── narnia/
+        └── narnia_0-8.md      # Buffer overflow, shellcode, format string, return-to-libc
 ```
 
 ---
@@ -62,6 +64,13 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 | [natas_11-20.md](./overthewire/natas/natas_11-20.md) | XOR kırma, web shell, SQLi, blind SQLi, session brute-force | 11 → 20 |
 | [natas_21-34.md](./overthewire/natas/natas_21-34.md) | Deserialization, ECB, Perl RCE, type juggling, truncation | 21 → 34 |
 
+### 💥 Narnia — Binary Exploitation'a Giriş
+C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB bilgisi gerekli.
+
+| Dosya | Konular | Level'lar |
+|---|---|---|
+| [narnia_0-8.md](./overthewire/narnia/narnia_0-8.md) | Buffer overflow, shellcode, EIP kontrolü, format string, return-to-libc | 0 → 8 |
+
 ---
 
 ## 🛠️ Nasıl Kullanılır?
@@ -85,36 +94,36 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 - [Krypton Level 6 — LearnHacking.io](https://learnhacking.io/overthewire-krypton-levels-0-9/)
 - [Natas Walkthrough — MayADevBe](https://mayadevbe.me/tags/natas/) (0-6)
 - [Natas 6-10 — LearnHacking.io](https://learnhacking.io/overthewire-natas-walkthrough-levels-6-10/)
-- [Natas 11-12 — LearnHacking.io](https://learnhacking.io/overthewire-natas-level-11-walkthrough/)
 - [Natas 7-13 — JamesCao](https://jameskaois.com/posts/overthewire-natas-level-7-13/)
 - [Natas 14-20 — JamesCao](https://jameskaois.com/posts/overthewire-natas-level-14-20/)
 - [Natas 21-24 — JamesCao](https://jameskaois.com/posts/overthewire-natas-level-21-24/)
-- [Natas 25-31 — LearnHacking.io](https://learnhacking.io/)
+- [Narnia Full Writeup — cplusperks.com](https://cplusperks.com/narnia/)
+- [Narnia 0-4 — HackMD](https://hackmd.io/@Chivato/B112H_I18)
 
 ### Linux Referans
 - [Linux Man Pages](https://manpages.ubuntu.com/)
 - [Explain Shell](https://explainshell.com/)
-- [Linux Komutlarına Giriş](https://manpages.ubuntu.com/manpages/noble/man1/intro.1.html)
 
 ### Web Güvenliği
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [PortSwigger Web Security Academy](https://portswigger.net/web-security)
 - [MDN HTTP Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP)
-- [W3Schools PHP](https://www.w3schools.com/php/)
+
+### Binary Exploitation
+- [LiveOverflow — Binary Exploitation](https://www.youtube.com/playlist?list=PLhixgUqwRTjxglIswKp9mpkfPNfHkzyeN)
+- [Shell-storm.org Shellcodes](http://shell-storm.org/shellcode/)
+- [GDB Cheat Sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf)
+- [Format String Exploits](http://codearcana.com/posts/2013/05/02/introduction-to-format-string-exploits.html)
+- [Ghidra](https://ghidra-sre.org/)
+- [Intel vs AT&T Assembly Syntax](https://imada.sdu.dk/u/kslarsen/dm546/Material/IntelnATT.htm)
 
 ### Kriptografi
 - [CyberChef](https://gchq.github.io/CyberChef/)
 - [dCode.fr](https://www.dcode.fr/)
-- [Base64 — Wikipedia](https://en.wikipedia.org/wiki/Base64)
 - [Vigenère Cipher — Wikipedia](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher)
 - [ECB Mode Weakness](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#ECB)
 - [ASCII Tablosu](https://www.asciitable.com/)
 - [Dosya İmzaları](https://en.wikipedia.org/wiki/List_of_file_signatures)
-
-### Tersine Mühendislik
-- [GDB Cheat Sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf)
-- [Ghidra](https://ghidra-sre.org/)
-- [Intel vs AT&T Assembly Syntax](https://imada.sdu.dk/u/kslarsen/dm546/Material/IntelnATT.htm)
 
 ### Git
 - [Git Resmi Dokümantasyon](https://git-scm.com/doc)
