@@ -23,6 +23,13 @@ linux_learning/
     │   ├── bandit_11-20.md    # Base64, ROT13, hexdump, sıkıştırma, netcat, nmap
     │   └── bandit_21-33.md    # Cron, bash scripting, brute force, git, shell escape
     ├── leviathan/
+    │   ├── leviathan_komutlari/
+    │   │   ├── dosya_izinleri_suid.md  # chmod, find, SUID, privilege escalation
+    │   │   ├── binary_analizi.md       # file, strings, xxd, od, binary→ASCII
+    │   │   ├── ltrace_strace.md        # ltrace, strace, strcmp, fopen, system
+    │   │   ├── sembolik_linkler.md     # ln -s, readlink, TOCTOU açığı
+    │   │   ├── gdb.md                  # disassemble, breakpoint, register, bellek
+    │   │   └── brute_force_bash.md     # for döngüsü, koşullar, PIN brute force
     │   └── leviathan_0-7.md   # ltrace, gdb, symlink, privilege escalation
     ├── krypton/
     │   └── krypton_0-6.md     # Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher
@@ -66,7 +73,20 @@ Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile bur
 | [bandit_21-33.md](./overthewire/bandit/bandit_21-33.md) | Cron, bash scripting, brute force, vim escape, git, shell variables | 21 → 33 |
 
 ### 🐙 Leviathan — Tersine Mühendisliğe Giriş
-Binary analizi, sembolik linkler ve privilege escalation.
+Binary analizi, sembolik linkler ve privilege escalation. Bandit'ten farklı olarak burada **araçları** kullanmayı öğreniyorsun: bir binary'nin içini ltrace ile okumak, gdb ile assembly'e bakmak, symlink ile sistemi kandırmak.
+
+**Leviathan Komut Referansı**
+
+| Dosya | Komutlar |
+|---|---|
+| [dosya_izinleri_suid.md](./overthewire/leviathan/leviathan_komutlari/dosya_izinleri_suid.md) | `chmod` `find -perm` `whoami` `SUID` `privilege escalation` |
+| [binary_analizi.md](./overthewire/leviathan/leviathan_komutlari/binary_analizi.md) | `file` `strings` `xxd` `od` `binary→ASCII` |
+| [ltrace_strace.md](./overthewire/leviathan/leviathan_komutlari/ltrace_strace.md) | `ltrace` `strace` `strcmp` `fopen` `access` `system` |
+| [sembolik_linkler.md](./overthewire/leviathan/leviathan_komutlari/sembolik_linkler.md) | `ln -s` `readlink` `TOCTOU açığı` |
+| [gdb.md](./overthewire/leviathan/leviathan_komutlari/gdb.md) | `disassemble` `break` `run` `info registers` `x` `print/d` |
+| [brute_force_bash.md](./overthewire/leviathan/leviathan_komutlari/brute_force_bash.md) | `for` döngüsü `koşullar` `PIN brute force` |
+
+**Level Rehberi**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
@@ -102,7 +122,7 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB b
 1. [OverTheWire](https://overthewire.org/wargames/) sitesine gir
 2. Level sayfasındaki görevi oku
 3. Önce **kendi başına dene** — takılırsan buraya bak
-4. Bir komut hakkında daha fazla bilgi için `linux_komutlari/` klasörüne bak
+4. Bir komut hakkında daha fazla bilgi için ilgili wargame'in komut referans klasörüne bak
 
 > Şifreler zaman zaman değişebilir. Bu rehberlerde yöntem anlatılıyor, şifreler paylaşılmıyor.
 
