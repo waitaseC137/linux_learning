@@ -26,10 +26,19 @@ linux_learning/
 │   │   ├── gdb.md                            # disassemble, breakpoint, register, bellek
 │   │   └── brute_force_bash.md               # for döngüsü, koşullar, PIN brute force
 │   ├── web_guvenligi/
-│   │   ├── 01_html_kaynak_ve_devtools.md     # HTML kaynak, Developer Tools, gizli alanlar
+│   │   ├── 01_html_kaynak_ve_devtools.md     # HTML kaynak, Developer Tools
 │   │   ├── 02_http_protokolu.md              # HTTP istek/cevap, metodlar, header'lar
 │   │   ├── 03_robots_ve_dizin_kesfi.md       # robots.txt, dizin keşfi
-│   │   └── 04_cookie_manipulasyonu.md        # Cookie yapısı, manipülasyon
+│   │   ├── 04_cookie_manipulasyonu.md        # Cookie yapısı, manipülasyon
+│   │   ├── 05_php_kaynak_kodu.md             # PHP kaynak okuma, include
+│   │   ├── 06_encoding_ve_obfuscation.md     # Base64, hex, URL encoding
+│   │   ├── 07_command_injection.md           # Command injection temelleri
+│   │   ├── 08_lfi_ve_path_traversal.md       # LFI, path traversal
+│   │   ├── 09_xor_sifrelemesi.md             # XOR, known-plaintext saldırısı
+│   │   ├── 10_dosya_yukleme_bypass.md        # File upload bypass
+│   │   ├── 11_sql_injection.md               # SQL injection temelleri
+│   │   ├── 12_blind_sql_injection.md         # Blind SQLi
+│   │   └── 13_command_injection_ileri.md     # İleri command injection, filtre aşma
 │   └── kriptografi/
 │       └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
 └── overthewire/
@@ -86,6 +95,15 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 | [02_http_protokolu.md](./konu_anlatimlari/web_guvenligi/02_http_protokolu.md) | HTTP istek/cevap yapısı, metodlar, header'lar |
 | [03_robots_ve_dizin_kesfi.md](./konu_anlatimlari/web_guvenligi/03_robots_ve_dizin_kesfi.md) | robots.txt, dizin keşfi, gizli yollar |
 | [04_cookie_manipulasyonu.md](./konu_anlatimlari/web_guvenligi/04_cookie_manipulasyonu.md) | Cookie yapısı, manipülasyon, güvenlik bayrakları |
+| [05_php_kaynak_kodu.md](./konu_anlatimlari/web_guvenligi/05_php_kaynak_kodu.md) | PHP kaynak kodu okuma, include, açık kaynak analizi |
+| [06_encoding_ve_obfuscation.md](./konu_anlatimlari/web_guvenligi/06_encoding_ve_obfuscation.md) | Base64, hex, URL encoding, obfuscation teknikleri |
+| [07_command_injection.md](./konu_anlatimlari/web_guvenligi/07_command_injection.md) | Command injection, `;` `|` `$()` ile komut zincirleme |
+| [08_lfi_ve_path_traversal.md](./konu_anlatimlari/web_guvenligi/08_lfi_ve_path_traversal.md) | LFI, path traversal, `../` ile dizin atlama |
+| [09_xor_sifrelemesi.md](./konu_anlatimlari/web_guvenligi/09_xor_sifrelemesi.md) | XOR şifreleme, known-plaintext saldırısı |
+| [10_dosya_yukleme_bypass.md](./konu_anlatimlari/web_guvenligi/10_dosya_yukleme_bypass.md) | Dosya yükleme bypass, MIME type, uzantı manipülasyonu |
+| [11_sql_injection.md](./konu_anlatimlari/web_guvenligi/11_sql_injection.md) | SQL injection temelleri, `' OR 1=1`, UNION saldırısı |
+| [12_blind_sql_injection.md](./konu_anlatimlari/web_guvenligi/12_blind_sql_injection.md) | Blind SQLi, boolean tabanlı, karakter karakter çekme |
+| [13_command_injection_ileri.md](./konu_anlatimlari/web_guvenligi/13_command_injection_ileri.md) | İleri command injection, grep bypass, filtre aşma |
 
 ### 🔐 Kriptografi
 
