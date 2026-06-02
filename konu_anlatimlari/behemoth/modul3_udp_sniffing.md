@@ -211,6 +211,39 @@ htons(1234)                   = 0xd204   # hex gösterimi, port yine 1234
 
 **`tcpdump` için root yetkisi gerekmesi.** Behemoth sunucusunda `tcpdump` root gerektirebilir. Bu durumda `nc -lu` yeterlidir — paketin ham byte'larını değil, içeriğini yakalamak için uygulama katmanında dinlemek yeterli.
 
+### ⚙️ Teknik Detay: Netcat'in UDP Kapanma Davranışı ve Kalıcı Dinleme (Persistent Listening)
+
+Ağ trafiğini koklarken (sniffing) en sık kullandığımız "İsvçre çakısı" araçlardan biri `nc` (netcat) aracıdır. Ancak netcat'in TCP ve UDP protokollerine yaklaşımında, yeni başlayanları çılgına çeviren çok temel bir davranış farkı vardır.
+
+#### 🛑 Netcat'in UDP Huyunu Anlamak
+Netcat ile bir TCP portunu dinlediğinizde (özellikle `-k` flag'i destekleniyorsa), bir bağlantı gelip kopsa bile netcat arkada dinlemeye devam edebilir. Ancak geleneksel netcat versiyonları ile UDP modunda dinleme yaparken (`nc -lu port`):
+
+1. Netcat belirtilen portu açar ve bekler.
+2. Hedef program (örneğin Behemoth5 binary'si) ağa **tek bir UDP paketi** fırlatır.
+3. Netcat bu paketi yakalar, içeriğini ekrana basar.
+4. **Ve görevinin bittiğini düşünerek kendini tamamen kapatır!**
+
+UDP "bağlantısız" (connectionless) bir protokol olduğu için, netcat gelen paketin devamı olup olmadığını veya bağlantının sürüp sürmediğini bilemez. İlk veriyi aldığı an süreci sonlandırır.
+
+#### 💥 Yaşanan Problem Ne?
+Eğer hedef binary ağa birden fazla paket gönderiyorsa, siz ilk denemede paketi kaçırdıysanız veya exploit scriptinizi test ederken binary'yi arka arkaya defalarca tetiklemeniz gerekiyorsa, netcat'in her paket sonrası kapanması süreci tam bir işkenceye dönüştürür. Siz daha terminale geçip komutu yeniden yazamadan diğer paketler uçup gider.
+
+#### 🛠️ Çözüm: Sonsuz Bash Döngüsü ile Kalıcı Dinleme
+Netcat'in UDP modunda sürekli açık kalmasını sağlamanın en pratik ve hacker-usulü çözümü, onu mini bir `while` döngüsüne sarmalamaktır. Bu sayede netcat paket aldıktan sonra kapansa bile, saliseler içinde otomatik olarak yeniden açılır:
+
+```bash
+# Netcat kapansa bile döngü sayesinde anında tekrar ayağa kalkar 
+# ve siz durdurana kadar portu dinlemeyi bırakmaz:
+while true; do nc -lu 4321; done
+```
+Eğer gelen paketlerin hangi IP/Port kaynaklı olduğunu ve tam olarak ne zaman geldiğini de görmek istersen, döngüyü biraz daha görselleştirebilirsin:
+```bash
+while true; do 
+    echo "--- [Bekleniyor...] ---"
+    nc -lu 4321
+done
+```
+Bu ufak döngü hilesi, CTF'lerde tersine shell (reverse shell) beklerken veya stabil olmayan UDP servislerini manipüle ederken trafiği asla kaçırmamanı garantiler.
 ---
 
 ## Özet
