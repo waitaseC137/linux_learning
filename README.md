@@ -38,9 +38,30 @@ linux_learning/
 │   │   ├── 10_dosya_yukleme_bypass.md        # File upload bypass
 │   │   ├── 11_sql_injection.md               # SQL injection temelleri
 │   │   ├── 12_blind_sql_injection.md         # Blind SQLi
-│   │   └── 13_command_injection_ileri.md     # İleri command injection, filtre aşma
-│   └── kriptografi/
-│       └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
+│   │   ├── 13_command_injection_ileri.md     # İleri command injection, filtre aşma
+│   │   ├── 14_session_brute_force.md         # Session ID brute-force, tahmin edilebilir token
+│   │   ├── 15_session_ve_newline_injection.md # PHP session manipülasyonu, newline injection
+│   │   ├── 16_http_redirect_bypass.md        # HTTP yönlendirme bypass, 302 öncesi içerik okuma
+│   │   ├── 17_php_type_juggling.md           # PHP type juggling, loose comparison
+│   │   ├── 18_php_object_injection.md        # PHP object injection, deserialization, magic method
+│   │   ├── 19_sql_truncation.md              # SQL truncation, VARCHAR kesme, kullanıcı taklit
+│   │   ├── 20_ecb_mode_zafiyeti.md           # ECB mode zafiyeti, blok kesme/yapıştırma
+│   │   ├── 21_perl_rce.md                    # Perl open() injection, RCE, pipe karakteri
+│   │   ├── 22_perl_cgi_param_bypass.md       # Perl CGI param() array bypass, DBI quote() atlatma
+│   │   ├── 23_log_poisoning.md               # Log poisoning, User-Agent injection, LFI + PHP RCE
+│   │   └── 24_phar_deserialization.md        # Phar deserialization, phar:// wrapper, LFI RCE
+│   ├── kriptografi/
+│   │   └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
+│   └── binary_exploitation/
+│       ├── 00_x86_assembly_temelleri.md      # Register'lar, komutlar, stack, CALL/RET, calling convention
+│       ├── 00b_gdb_ile_assembly_okumak.md    # Assembly→C çevirme, kalıplar, GDB komut referansı
+│       ├── 01_bellek_ve_memory_layout.md     # Stack yapısı, değişken komşuluğu, buffer overflow mantığı
+│       ├── 02_little_endian.md               # Byte sırası, adres dönüşümü, struct.pack
+│       ├── 03_eip_register_kontrolu.md       # CALL/RET mekanizması, offset hesabı, cyclic pattern
+│       ├── 04_shellcode_ve_nop_sled.md       # Shellcode, NOP sled, env var adresi, ;cat hilesi
+│       ├── 05_format_string.md               # %x ile bellek sızdırma, %n ile yazma, %hn
+│       ├── 06_return_to_libc_ve_fonksiyon_pointer.md  # NX bypass, system()+exit()+/bin/sh, fp manipülasyonu
+│       └── 07_sembolik_link.md               # Symlink, TOCTOU, race condition exploit
 └── overthewire/
     ├── bandit/
     │   ├── bandit_0-10.md         # SSH, cat, ls, find, grep, sort, uniq, strings
@@ -122,6 +143,20 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 |---|---|
 | [krypton_komutlar_ve_kavramlar.md](./konu_anlatimlari/kriptografi/krypton_komutlar_ve_kavramlar.md) | `wc -c` `sort -nr` `tr -cd` `for {A..Z}` `python3 -c` · Caesar · Frekans Analizi · Vigenère · Kasiski · Stream Cipher/XOR |
 
+### 💥 Binary Exploitation
+
+| Dosya | Konular |
+|---|---|
+| [00_x86_assembly_temelleri.md](./konu_anlatimlari/binary_exploitation/00_x86_assembly_temelleri.md) | Register'lar, veri tipleri, MOV/LEA/aritmetik komutlar, PUSH/POP, CALL/RET, calling convention, prologue/epilogue |
+| [00b_gdb_ile_assembly_okumak.md](./konu_anlatimlari/binary_exploitation/00b_gdb_ile_assembly_okumak.md) | Assembly→C çevirme yöntemi, yaygın kalıplar (memset/memcpy/strlen/switch), GDB komut referansı |
+| [01_bellek_ve_memory_layout.md](./konu_anlatimlari/binary_exploitation/01_bellek_ve_memory_layout.md) | Stack yapısı, değişken komşuluğu, buffer overflow mantığı, `x/20wx $esp` |
+| [02_little_endian.md](./konu_anlatimlari/binary_exploitation/02_little_endian.md) | Byte sırası, `0xdeadbeef` → `\xef\xbe\xad\xde`, `struct.pack`, 32 vs 64-bit farkı |
+| [03_eip_register_kontrolu.md](./konu_anlatimlari/binary_exploitation/03_eip_register_kontrolu.md) | CALL/RET mekanizması, saved EIP, cyclic pattern ile offset, GDB doğrulama |
+| [04_shellcode_ve_nop_sled.md](./konu_anlatimlari/binary_exploitation/04_shellcode_ve_nop_sled.md) | Shellcode anatomy, NOP sled, env var adres bulma, program adı kaydırma, `(payload; cat)` |
+| [05_format_string.md](./konu_anlatimlari/binary_exploitation/05_format_string.md) | `printf(buf)` açığı, `%x` ile bellek sızdırma, `%n` ile yazma, `%hn` iki kademeli yazma |
+| [06_return_to_libc_ve_fonksiyon_pointer.md](./konu_anlatimlari/binary_exploitation/06_return_to_libc_ve_fonksiyon_pointer.md) | NX koruması, `system()+exit()+"/bin/sh"` zinciri, fonksiyon pointer manipülasyonu |
+| [07_sembolik_link.md](./konu_anlatimlari/binary_exploitation/07_sembolik_link.md) | `ln -s`, TOCTOU race condition, `access()`+`open()` arası race window exploit |
+
 ---
 
 ## 🎮 OverTheWire War Games
@@ -169,11 +204,15 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 | [natas_21-34.md](./overthewire/natas/natas_21-34.md) | Deserialization, ECB, Perl RCE, type juggling, truncation | 21 → 34 |
 
 ### 💥 Narnia — Binary Exploitation'a Giriş
-C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB bilgisi gerekli.
+C programlarındaki açıkları exploit etmeyi öğreniyorsun. Stack ve heap yapısını, EIP kontrolünü, shellcode yazmayı, format string saldırılarını ve return-to-libc tekniğini adım adım öğreten 9 seviyeli bir lab.
+
+> ⚠️ **Not:** Narnia 32-bit (x86) Linux sistemde çalışır. 64-bit sistemlerden farklı davranışlar gözlemlenebilir.
+
+> 📖 Kavram açıklamaları ve detaylar için → [Binary Exploitation Konu Anlatımı](#-binary-exploitation)
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
-| [narnia_0-8.md](./overthewire/narnia/narnia_0-8.md) | Buffer overflow, shellcode, EIP kontrolü, format string, return-to-libc | 0 → 8 |
+| [narnia_0-8.md](./overthewire/narnia/narnia_0-8.md) | Buffer overflow, shellcode, EIP kontrolü, TOCTOU, format string, fonksiyon pointer, return-to-libc | 0 → 8 |
 
 ---
 
@@ -220,6 +259,13 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Assembly ve GDB b
 - [GDB Cheat Sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf)
 - [Format String Exploits](http://codearcana.com/posts/2013/05/02/introduction-to-format-string-exploits.html)
 - [Ghidra](https://ghidra-sre.org/)
+- [pwntools Dokümantasyonu](https://docs.pwntools.com/en/stable/)
+- [pwntools GitHub](https://github.com/Gallopsled/pwntools)
+- [Practical Reverse Engineering — Bruce Dang et al. (Wiley, 2014)](https://www.wiley.com/en-us/Practical+Reverse+Engineering%3A+x86%2C+x64%2C+ARM%2C+Windows+Kernel%2C+Reversing+Tools%2C+and+Obfuscation-p-9781118787311)
+- [Intel x86 Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+- [x86 Instruction Reference — Felix Cloutier](https://www.felixcloutier.com/x86/)
+- [Exploit Education — Phoenix](https://exploit.education/phoenix/) *(modern pwntools ile pratik)*
+- [pwn.college](https://pwn.college/) *(binary exploitation eğitim platformu)*
 
 ### Kriptografi
 - [CyberChef](https://gchq.github.io/CyberChef/)
