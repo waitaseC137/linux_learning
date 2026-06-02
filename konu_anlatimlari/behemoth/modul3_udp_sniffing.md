@@ -243,7 +243,9 @@ while true; do
     nc -lu 4321
 done
 ```
+
 Bu ufak döngü hilesi, CTF'lerde tersine shell (reverse shell) beklerken veya stabil olmayan UDP servislerini manipüle ederken trafiği asla kaçırmamanı garantiler.
+
 ---
 
 ## Özet
