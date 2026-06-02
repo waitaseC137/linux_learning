@@ -147,7 +147,40 @@ Hardcoded parola `strings` ile de bulunabilir. Güvenli bir binary'de saklanan d
 
 ## 🚨 4. Yeni Başlayanların Düştüğü Tuzaklar
 
-**`strace` ile başlamak.** Behemoth0'da `strace` çalıştırdığında sistem çağrıları (`read`, `write`, `brk`) görürsün ama `strcmp` sistem çağrısı değildir — library çağrısıdır. Parola orada çıkmaz. Doğru araç `ltrace`.
+### Tuzak 1 — `ltrace` çıktısı `grep`'e gelmiyor (`2>&1`)
+
+`ltrace` veya `strace` kullanırken en sık karşılaşılan ve saatlerce vakit kaybettiren hata, çıktıları `grep` ile filtrelemeye çalışırken yaşanır.
+
+Örneğin sadece `strcmp` satırını görmek için şunu yazabilirsin:
+
+```bash
+ltrace /behemoth/behemoth0 | grep strcmp
+```
+
+Ancak ekrana hiçbir şey gelmez — sanki `strcmp` hiç çağrılmıyormuş gibi.
+
+**Neden?** Linux'ta üç temel veri akışı vardır:
+
+```
+stdin  (Akış 0) — programa giren veri
+stdout (Akış 1) — programın normal çıktısı
+stderr (Akış 2) — hata ve tanı çıktıları
+```
+
+Pipe (`|`) yalnızca **stdout**'u taşır. `ltrace` ve `strace` ise kendi analiz çıktılarını programın normal çıktısıyla karıştırmamak için **stderr** üzerinden basar. `grep`, ltrace'in çıktısını hiç alamadığı için boş döner.
+
+**Çözüm:** Önce stderr'i stdout'a yönlendir (`2>&1`), sonra grep'le:
+
+```bash
+# Doğru — 2. akışı 1. akışa yönlendir, öyle grep'le
+ltrace /behemoth/behemoth0 2>&1 | grep strcmp
+```
+
+Bu refleks sadece Behemoth'ta değil, gerçek hayatta büyük log dosyaları arasında `strace` ile hata ayıklarken de hayatını kurtarır.
+
+### Tuzak 2 — `strace` ile başlamak
+
+`strace` çalıştırdığında sistem çağrıları (`read`, `write`, `brk`) görürsün ama `strcmp` sistem çağrısı değildir — library çağrısıdır. Parola orada çıkmaz. Doğru araç `ltrace`.
 
 ```bash
 # Yanlış — strcmp görünmez
@@ -157,15 +190,21 @@ strace /behemoth/behemoth0
 ltrace /behemoth/behemoth0
 ```
 
-**`ltrace` çıktısını beklemeden Enter'a basmak.** `ltrace` binary'yi başlatır ve girdini bekler. Herhangi bir şey yazıp Enter'a basarsan `strcmp` çağrısını görebilirsin.
+### Tuzak 3 — `ltrace` çıktısını beklemeden Enter'a basmak
 
-**Sadece parola arayıp geçmek.** `ltrace` çıktısı sana programın tam akışını verir: hangi sırayla hangi fonksiyonlar çağrılıyor. Bu çıktıyı okuma alışkanlığı sonraki seviyelerde çok daha karmaşık binary'leri analiz ederken temel olacak.
+`ltrace` binary'yi başlatır ve girdini bekler. Bir şey yazıp Enter'a basarsan `strcmp` çağrısını görürsün — boş ekrana bakıp aracın çalışmadığını sanma.
 
-**Binary'nin SUID olduğunu unutmak.** Behemoth0 bir SUID binary'dir — çalıştığında dosyanın sahibinin (behemoth1) yetkiyle çalışır. Başarılı olduğunda `/bin/sh` açılacak ama kimin shell'ini aldığını `id` komutuyla kontrol et:
+### Tuzak 4 — Sadece parolayı alıp geçmek
+
+`ltrace` çıktısı sana programın tam akışını verir: hangi sırayla hangi fonksiyonlar çağrılıyor. Bu çıktıyı okuma alışkanlığı sonraki seviyelerde çok daha karmaşık binary'leri analiz ederken temel olacak.
+
+### Tuzak 5 — Binary'nin SUID olduğunu unutmak
+
+Behemoth0 bir SUID binary'dir — çalıştığında dosyanın sahibinin (behemoth1) yetkiyle çalışır. Shell açıldıktan sonra kimin shell'ini aldığını `id` komutuyla kontrol et:
 
 ```bash
 $ /behemoth/behemoth0
-Password: eatmyshorts
+Password: <ltrace_ile_buldugun_parola>
 Access granted..
 $ id
 uid=13001(behemoth1) ...   # behemoth1 yetkisinde shell açıldı

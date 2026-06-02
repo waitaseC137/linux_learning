@@ -2,7 +2,7 @@
 
 > **İlgili Seviye:** Behemoth3  
 > **Anahtar Kavramlar:** Format specifier, stack okuma, arbitrary read/write  
-> **Kazanım:** `printf(input)` anti-pattern'inin neden arbitray memory read/write'a yol açtığını anlamak
+> **Kazanım:** `printf(input)` anti-pattern'inin neden arbitrary memory read/write'a yol açtığını anlamak
 
 ---
 
@@ -194,7 +194,8 @@ gcc -D_FORTIFY_SOURCE=2 -O2 vuln.c
 
 ## 🚨 4. Yeni Başlayanların Düştüğü Tuzaklar
 
-**`%x` ile `%s` farkını karıştırmak.**  
+### Tuzak 1 — `%x` ile `%s` farkını karıştırmak
+
 `%x` stack'teki değeri ham hex olarak basar.  
 `%s` stack'teki değeri adres olarak alır ve o adresten okur.  
 Geçersiz bir adres `%s`'e verilirse program segfault verir:
@@ -208,7 +209,8 @@ echo "%s%s%s%s%s%s%s%s" | /behemoth/behemoth3
 echo "%x.%x.%x.%x.%x.%x.%x.%x" | /behemoth/behemoth3
 ```
 
-**Format string'de `$` kullanırken shell escape.**  
+### Tuzak 2 — Format string'de `$` kullanırken shell escape
+
 `%6$x` bash'te değişken genişletmesi yapabilir. Tırnak kullanımına dikkat:
 
 ```bash
@@ -221,7 +223,8 @@ echo '%6$x' | /behemoth/behemoth3
 echo "%6\$x" | /behemoth/behemoth3
 ```
 
-**`fgets` null byte davranışı.**  
+### Tuzak 3 — `fgets` null byte davranışı
+
 `fgets` ile okunan input'ta newline `\n` de gelir. Format string testinde bu bazen offset hesabını bozabilir. Test ederken `printf` ile newline vermeden dene:
 
 ```bash
@@ -230,14 +233,50 @@ printf '%x.%x.%x.%x' | /behemoth/behemoth3
 echo '%x.%x.%x.%x' | /behemoth/behemoth3   # sonunda \n var
 ```
 
-**Offset'i sabit sanmak.**  
-Stack offset'i binary'nin nasıl derlendiğine, ortam değişkenlerine ve çalışma koşullarına göre değişebilir. Her oturumda tekrar doğrula.
+### Tuzak 4 — Offset'i sabit sanmak
+
+Stack offset'i binary'nin nasıl derlendiğine, ortam değişkenlerine ve çalışma koşullarına göre değişebilir. Her oturumda tekrar doğrula:
 
 ```bash
-# Her oturumun başında offset'i teyit et
 echo "AAAA.%1\$x.%2\$x.%3\$x.%4\$x.%5\$x.%6\$x.%7\$x" | /behemoth/behemoth3
 # 41414141 görülen pozisyon = doğru offset
 ```
+
+---
+
+## 💡 İleri Seviye: `%hn` ile Çift Kademeli Yazma
+
+> ⚠️ **Behemoth3 için gerekli değildir.** Bu bölüm ileriki CTF seviyelerinde format string write primitive kullanmak isteyenler için referans niteliğindedir.
+
+`%n` ile bir adrese doğrudan büyük bir sayı yazmak (örneğin `0x0804a000` = 134 milyon) `printf`'in ekrana 134 milyon karakter basmasını gerektirir — hem yavaş hem de bellek açısından imkânsızdır.
+
+**Çözüm:** 4 byte'lık adresi ikişer byte'lık iki parçaya böl ve `%hn` (half-write) ile yaz.
+
+#### `%hn` Matematik Tuzağı: İkinci Değer Birinciden Küçükse?
+
+`printf` o ana kadar ekrana bastığı **toplam karakter sayısını** belleğe yazar. Bu yüzden ikinci yazma değeri birinciden büyük olmak zorundadır — aksi halde `printf` geriye doğru sayamaz.
+
+Eğer ikinci değer birinciden küçükse **16-bit integer overflow** kullan: küçük değere `65536` ekle, birinci değeri bundan çıkar.
+
+```python
+import struct
+
+# Hedef: 0x08049724 adresine 0xf7e2b000 yaz
+# Düşük 2 byte: 0xb000 = 45056
+# Yüksek 2 byte: 0xf7e2 = 63458   (büyük → normal sıra)
+
+yazim1 = 45056   # önce düşük (küçük olan)
+yazim2 = 63458   # sonra yüksek (büyük olan)
+
+dolgu1 = yazim1 - 8          # stack'teki 2 adres 8 byte yer kaplar
+dolgu2 = yazim2 - yazim1     # aradaki fark kadar daha bas
+
+# Eğer yazim2 < yazim1 olsaydı (ters durum):
+# dolgu2 = (yazim2 + 65536) - yazim1
+# 16-bit taşma sayesinde printf istediğin değeri yazar
+```
+
+Bu mekanizmayı anlamak, format string write primitive kullanan her CTF seviyesinde işe yarar.
 
 ---
 

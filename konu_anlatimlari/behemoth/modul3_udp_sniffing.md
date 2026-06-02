@@ -192,7 +192,9 @@ Shared server ortamlarında (OverTheWire sunucuları gibi) aynı makinede onlarc
 
 ## 🚨 4. Yeni Başlayanların Düştüğü Tuzaklar
 
-**TCP yerine UDP dinlemek.** `nc -l 1234` (TCP) ile `nc -lu 1234` (UDP) farklı şeyler. Binary UDP paketi gönderiyorsa TCP dinleyicisi hiçbir şey görmez. `ltrace` çıktısında `SOCK_DGRAM` (UDP) mu yoksa `SOCK_STREAM` (TCP) mi kullanıldığını kontrol et.
+### Tuzak 1 — TCP yerine UDP dinlemek
+
+`nc -l 1234` (TCP) ile `nc -lu 1234` (UDP) farklı şeyler. Binary UDP paketi gönderiyorsa TCP dinleyicisi hiçbir şey görmez. `ltrace` çıktısında `SOCK_DGRAM` (UDP) mu yoksa `SOCK_STREAM` (TCP) mi kullanıldığını kontrol et.
 
 ```bash
 ltrace /behemoth/behemoth5 2>&1 | grep socket
@@ -200,16 +202,50 @@ ltrace /behemoth/behemoth5 2>&1 | grep socket
 # socket(AF_INET, SOCK_STREAM, 0) → TCP
 ```
 
-**Dinleyiciyi başlatmadan binary'yi çalıştırmak.** UDP'de el sıkışma yoktur — binary paketi gönderir ve devam eder. Dinleyici hazır değilse paket kaybolur. Her zaman önce `nc -lu <port>` çalıştır, sonra binary'i başlat.
+### Tuzak 2 — Dinleyiciyi başlatmadan binary'yi çalıştırmak
 
-**Port numarasını yanlış bulmak.** `ltrace` çıktısında `htons(1234)` gibi bir değer görürsün. `htons()` host byte order'ı network byte order'a çevirir — değer aynı port numarasıdır. Ama `tcpdump` veya `nc`'ye doğru portu verdiğinden emin ol.
+UDP'de el sıkışma yoktur — binary paketi gönderir ve devam eder. Dinleyici hazır değilse paket kaybolur. Her zaman önce `nc -lu <port>` çalıştır, sonra binary'i başlat.
+
+### Tuzak 3 — Port numarasını yanlış bulmak
+
+`ltrace` çıktısında `htons(1234)` gibi bir değer görürsün. `htons()` host byte order'ı network byte order'a çevirir — değer aynı port numarasıdır. Ama `tcpdump` veya `nc`'ye doğru portu verdiğinden emin ol.
 
 ```bash
 # ltrace çıktısı:
 htons(1234)                   = 0xd204   # hex gösterimi, port yine 1234
 ```
 
-**`tcpdump` için root yetkisi gerekmesi.** Behemoth sunucusunda `tcpdump` root gerektirebilir. Bu durumda `nc -lu` yeterlidir — paketin ham byte'larını değil, içeriğini yakalamak için uygulama katmanında dinlemek yeterli.
+### Tuzak 4 — `tcpdump` için root yetkisi gerekmesi
+
+Behemoth sunucusunda `tcpdump` root gerektirebilir. Bu durumda `nc -lu` yeterlidir — paketin ham byte'larını değil, içeriğini yakalamak için uygulama katmanında dinlemek yeterli.
+
+---
+
+## 💡 Pro-Tip: Netcat'in UDP Kapanma Davranışı ve Kalıcı Dinleme
+
+Netcat ile UDP portunu dinlerken (`nc -lu <port>`) standart netcat davranışı şudur:
+
+1. Portu açar ve bekler
+2. Hedef binary tek bir UDP paketi gönderir
+3. Netcat paketi ekrana basar
+4. **Görevini tamamladığını düşünüp kendini kapatır**
+
+UDP bağlantısız (connectionless) bir protokol olduğu için netcat devam edecek veri gelip gelmeyeceğini bilemez — ilk veriyle birlikte kapanır.
+
+**Problem:** Binary'yi defalarca çalıştırman gerekiyorsa veya ilk denemede paketi kaçırdıysan, netcat'i her seferinde yeniden başlatmak zorunda kalırsın.
+
+**Çözüm:** Netcat'i bir `while` döngüsüne sar — kapandığında otomatik olarak yeniden açılır:
+
+```bash
+# Netcat kapansa bile döngü anında yeniden başlatır
+while true; do
+    echo "--- [Bekleniyor...] ---"
+    nc -lu 4321
+    sleep 0.1   # CPU'yu rahatlat
+done
+```
+
+Bu döngü, CTF'lerde reverse shell beklerken veya stabil olmayan UDP servislerini manipüle ederken trafiği asla kaçırmamayı garantiler.
 
 ---
 
@@ -219,7 +255,7 @@ htons(1234)                   = 0xd204   # hex gösterimi, port yine 1234
 Binary                    Ağ                    Saldırgan
   │                        │                        │
   │─── UDP plaintext ──────►│◄─────── nc -lu ────────│
-  │    "tioywopk\n"         │         veya            │
+  │    "parola\n"           │         veya            │
   │                         │       tcpdump -A        │
   │                         │                         │
   └─── Şifresiz gönderim ───┘──────── Sniffing ───────┘
