@@ -66,7 +66,8 @@ linux_learning/
 │       ├── modul1_dinamik_analiz.md          # ltrace, strace, gdb — kaynak kodsuz binary analizi
 │       ├── modul2_race_condition.md          # TOCTOU, PID tahmini, symlink saldırısı, /proc
 │       ├── modul3_udp_sniffing.md            # nc -lu, tcpdump, UDP sniffing
-│       └── modul4_buffer_overflow.md         # Girdi kanalları, shellcode, dosya tabanlı exploit, env var
+│       ├── modul4_buffer_overflow.md         # Girdi kanalları, shellcode, dosya tabanlı exploit, env var
+│       └── modul5_format_string.md           # printf(input) anti-pattern, stack okuma, arbitrary read/write
 └── overthewire/
     ├── bandit/
     │   ├── bandit_0-10.md         # SSH, cat, ls, find, grep, sort, uniq, strings
@@ -152,6 +153,7 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 | [modul2_race_condition.md](./konu_anlatimlari/behemoth/modul2_race_condition.md) | TOCTOU, PID tahmini, symlink saldırısı, `/proc` filesystem |
 | [modul3_udp_sniffing.md](./konu_anlatimlari/behemoth/modul3_udp_sniffing.md) | UDP protokolü, `nc -lu`, `tcpdump`, şifresiz ağ trafiği yakalama |
 | [modul4_buffer_overflow.md](./konu_anlatimlari/behemoth/modul4_buffer_overflow.md) | Girdi kanalları, shellcode, dosya tabanlı exploit, environment variable |
+| [modul5_format_string.md](./konu_anlatimlari/behemoth/modul5_format_string.md) | `printf(input)` anti-pattern, format specifier, stack okuma, arbitrary read/write |
 
 ### 🔐 Kriptografi
 
