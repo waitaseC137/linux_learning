@@ -52,7 +52,7 @@ linux_learning/
 │   │   └── 24_phar_deserialization.md        # Phar deserialization, phar:// wrapper, LFI RCE
 │   ├── kriptografi/
 │   │   └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
-│   └── binary_exploitation/
+│   ├── binary_exploitation/
 │       ├── 00_x86_assembly_temelleri.md      # Register'lar, komutlar, stack, CALL/RET, calling convention
 │       ├── 00b_gdb_ile_assembly_okumak.md    # Assembly→C çevirme, kalıplar, GDB komut referansı
 │       ├── 01_bellek_ve_memory_layout.md     # Stack yapısı, değişken komşuluğu, buffer overflow mantığı
@@ -62,6 +62,11 @@ linux_learning/
 │       ├── 05_format_string.md               # %x ile bellek sızdırma, %n ile yazma, %hn
 │       ├── 06_return_to_libc_ve_fonksiyon_pointer.md  # NX bypass, system()+exit()+/bin/sh, fp manipülasyonu
 │       └── 07_sembolik_link.md               # Symlink, TOCTOU, race condition exploit
+│   └── behemoth/
+│       ├── modul1_dinamik_analiz.md          # ltrace, strace, gdb — kaynak kodsuz binary analizi
+│       ├── modul2_race_condition.md          # TOCTOU, PID tahmini, symlink saldırısı, /proc
+│       ├── modul3_udp_sniffing.md            # nc -lu, tcpdump, UDP sniffing
+│       └── modul4_buffer_overflow.md         # Girdi kanalları, shellcode, dosya tabanlı exploit, env var
 └── overthewire/
     ├── bandit/
     │   ├── bandit_0-10.md         # SSH, cat, ls, find, grep, sort, uniq, strings
@@ -75,8 +80,10 @@ linux_learning/
     │   ├── natas_0-10.md          # HTML kaynak, cookies, LFI, command injection
     │   ├── natas_11-20.md         # XOR, file upload, SQLi, blind SQLi, session brute-force
     │   └── natas_21-34.md         # Deserialization, ECB, Perl RCE, type juggling
-    └── narnia/
-        └── narnia_0-8.md          # Buffer overflow, shellcode, format string, return-to-libc
+    ├── narnia/
+    │   └── narnia_0-8.md          # Buffer overflow, shellcode, format string, return-to-libc
+    └── behemoth/
+        └── behemoth_walkthrough.md # Dinamik analiz, race condition, UDP sniffing, gelişmiş buffer overflow
 ```
 
 ---
@@ -136,6 +143,15 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 | [22_perl_cgi_param_bypass.md](./konu_anlatimlari/web_guvenligi/22_perl_cgi_param_bypass.md) | Perl CGI `param()` array bypass, DBI `quote()` atlatma |
 | [23_log_poisoning.md](./konu_anlatimlari/web_guvenligi/23_log_poisoning.md) | Log poisoning, User-Agent injection, LFI + PHP RCE |
 | [24_phar_deserialization.md](./konu_anlatimlari/web_guvenligi/24_phar_deserialization.md) | Phar deserialization, `phar://` wrapper, dosya yükleme + LFI RCE |
+
+### 👾 Behemoth — Dinamik Analiz ve İleri Exploit Teknikleri
+
+| Dosya | Konular |
+|---|---|
+| [modul1_dinamik_analiz.md](./konu_anlatimlari/behemoth/modul1_dinamik_analiz.md) | Kaynak kodsuz binary analizi, `ltrace`/`strace`/`gdb` ile dinamik inceleme |
+| [modul2_race_condition.md](./konu_anlatimlari/behemoth/modul2_race_condition.md) | TOCTOU, PID tahmini, symlink saldırısı, `/proc` filesystem |
+| [modul3_udp_sniffing.md](./konu_anlatimlari/behemoth/modul3_udp_sniffing.md) | UDP protokolü, `nc -lu`, `tcpdump`, şifresiz ağ trafiği yakalama |
+| [modul4_buffer_overflow.md](./konu_anlatimlari/behemoth/modul4_buffer_overflow.md) | Girdi kanalları, shellcode, dosya tabanlı exploit, environment variable |
 
 ### 🔐 Kriptografi
 
@@ -202,6 +218,15 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 | [natas_0-10.md](./overthewire/natas/natas_0-10.md) | HTML kaynak, robots.txt, cookie, LFI, command injection | 0 → 10 |
 | [natas_11-20.md](./overthewire/natas/natas_11-20.md) | XOR kırma, web shell, SQLi, blind SQLi, session brute-force | 11 → 20 |
 | [natas_21-34.md](./overthewire/natas/natas_21-34.md) | Deserialization, ECB, Perl RCE, type juggling, truncation | 21 → 34 |
+
+### 👾 Behemoth — Orta Seviye Binary Exploitation
+Dinamik analiz, race condition, ağ sniffing ve gelişmiş buffer overflow teknikleri. Kaynak kodu olmadan binary'leri anlamak, PID tahmin saldırıları ve şifresiz ağ trafiğini yakalamak.
+
+> 📖 Kavram açıklamaları ve detaylar için → [Behemoth Konu Anlatımı](#-behemoth--dinamik-analiz-ve-i̇leri-exploit-teknikleri)
+
+| Dosya | Konular | Level'lar |
+|---|---|---|
+| [behemoth_walkthrough.md](./overthewire/behemoth/behemoth_walkthrough.md) | Dinamik analiz, race condition, UDP sniffing, gelişmiş buffer overflow | 0 → 7 |
 
 ### 💥 Narnia — Binary Exploitation'a Giriş
 C programlarındaki açıkları exploit etmeyi öğreniyorsun. Stack ve heap yapısını, EIP kontrolünü, shellcode yazmayı, format string saldırılarını ve return-to-libc tekniğini adım adım öğreten 9 seviyeli bir lab.
