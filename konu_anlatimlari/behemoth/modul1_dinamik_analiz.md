@@ -147,6 +147,40 @@ Hardcoded parola `strings` ile de bulunabilir. Güvenli bir binary'de saklanan d
 
 ## 🚨 4. Yeni Başlayanların Düştüğü Tuzaklar
 
+### ⚠️ Kritik İpucu: ltrace/strace ve Standart Hata (2>&1) Tuzağı
+
+Yeni başlayanların `ltrace` veya `strace` kullanırken en sık karşılaştığı ve saatlerce vakit kaybettiren hata, çıktıları `grep` ile filtrelemeye çalışırken yaşanır.
+
+Örneğin, ekranda yüzlerce satır karmaşa görmemek ve sadece parolanın kontrol edildiği fonksiyonu yakalamak için şu komutu yazabilirsin:
+```bash
+ltrace /behemoth/behemoth0 | grep strcmp
+```
+Ancak komutu çalıştırdığında ekrana hiçbir şey gelmediğini, sanki strcmp hiç çağrılmıyormuş gibi bomboş bir satırla karşılaştığını fark edersin.
+
+🕵️‍♂️ Arka Planda Ne Oluyor? (Neden Kaynaklanıyor?)
+Linux işletim sisteminde üç temel standart veri akışı (stream) vardır:
+
+stdin (Standart Girdi — Akış 0)
+
+stdout (Standart Çıktı — Akış 1)
+
+stderr (Standart Hata — Akış 2)
+
+Boru hattı | (pipe) işareti, varsayılan olarak yalnızca soldaki komutun stdout (standart çıktı) akışını sağdaki komutun girdisine bağlar. Fakat ltrace ve strace araçları, kendi analiz çıktılarını programın normal ekran çıktılarıyla karıştırmamak için bilerek stderr (standart hata) akışı üzerinden basarlar.
+
+Yukarıdaki hatalı komutta grep, ltrace'in çıktılarını hiç alamadığı için arama yapamaz ve ekrana hiçbir şey basmaz.
+
+🛠️ Doğru Çözüm
+Bu araçların çıktısını filtrelemek, bir dosyaya kaydetmek veya less ile sayfa sayfa okumak istiyorsan, önce standart hatayı standart çıktıya yönlendirmen (2>&1) gerekir:
+
+### Doğru Kullanım: 2. akışı (stderr) 1. akışa (stdout) yönlendir ve öyle grep'le
+```bash
+ltrace /behemoth/behemoth0 2>&1 | grep strcmp
+```
+Bu ufak yönlendirme hilesi, sadece Behemoth'ta değil, gerçek hayatta büyük log dosyaları arasında strace ile hata ayıklarken (debugging) hayatını kurtaracak en temel Linux reflekslerinden biridir.
+
+---
+
 **`strace` ile başlamak.** Behemoth0'da `strace` çalıştırdığında sistem çağrıları (`read`, `write`, `brk`) görürsün ama `strcmp` sistem çağrısı değildir — library çağrısıdır. Parola orada çıkmaz. Doğru araç `ltrace`.
 
 ```bash
