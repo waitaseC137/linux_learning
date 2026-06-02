@@ -63,11 +63,15 @@ linux_learning/
 │       ├── 06_return_to_libc_ve_fonksiyon_pointer.md  # NX bypass, system()+exit()+/bin/sh, fp manipülasyonu
 │       └── 07_sembolik_link.md               # Symlink, TOCTOU, race condition exploit
 │   └── behemoth/
+│       ├── BEHEMOTH_KONULAR.md               # Tüm modüllerin indeksi ve hızlı araç başvurusu
 │       ├── modul1_dinamik_analiz.md          # ltrace, strace, gdb — kaynak kodsuz binary analizi
 │       ├── modul2_race_condition.md          # TOCTOU, PID tahmini, symlink saldırısı, /proc
 │       ├── modul3_udp_sniffing.md            # nc -lu, tcpdump, UDP sniffing
 │       ├── modul4_buffer_overflow.md         # Girdi kanalları, shellcode, dosya tabanlı exploit, env var
-│       └── modul5_format_string.md           # printf(input) anti-pattern, stack okuma, arbitrary read/write
+│       ├── modul5_format_string.md           # printf(input) anti-pattern, stack okuma, arbitrary read/write
+│       ├── modul6_helper_binary.md           # Helper binary zinciri, shellcode filtresi, 0x0b bypass
+│       ├── modul7_argv_bof.md                # argv BOF, alphanumeric filtre, environment shellcode
+│       └── modul8_genel_ozet.md              # SUID mekanizması, privilege escalation, exploit metodolojisi
 └── overthewire/
     ├── bandit/
     │   ├── bandit_0-10.md         # SSH, cat, ls, find, grep, sort, uniq, strings
@@ -91,89 +95,10 @@ linux_learning/
 
 ## 📚 Konu Anlatımları
 
-Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dosyalar.
+Komutların ve kavramların wargame bağımsız, referans olarak tutulduğu dosyalar.  
+Linux komutları, binary analizi, web güvenliği, kriptografi, binary exploitation ve Behemoth modüllerini kapsar.
 
-### 🖥️ Linux Komutları
-
-| Dosya | Komutlar |
-|---|---|
-| [dosya_sistemi.md](./konu_anlatimlari/linux_komutlari/dosya_sistemi.md) | `pwd` `ls` `cd` `cat` `file` `find` `mkdir` `cp` `mv` `touch` `mktemp` `du` |
-| [metin_isleme.md](./konu_anlatimlari/linux_komutlari/metin_isleme.md) | `grep` `sort` `uniq` `strings` `cut` `tr` `diff` `echo` `md5sum` `wc` `head` `tail` |
-| [sikistirma_encoding.md](./konu_anlatimlari/linux_komutlari/sikistirma_encoding.md) | `base64` `xxd` `gzip` `bzip2` `tar` `zip` |
-| [ag.md](./konu_anlatimlari/linux_komutlari/ag.md) | `ssh` `scp` `nc` `openssl` `nmap` `curl` `wget` |
-| [izinler_kullanici.md](./konu_anlatimlari/linux_komutlari/izinler_kullanici.md) | `chmod` `chown` `whoami` `id` `su` `sudo` `groups` `SUID/SGID` |
-| [surec_shell.md](./konu_anlatimlari/linux_komutlari/surec_shell.md) | `\|` `>` `>>` `&` `jobs` `fg` `$()` `for` `alias` `export` |
-| [git.md](./konu_anlatimlari/linux_komutlari/git.md) | `git clone` `log` `show` `branch` `checkout` `tag` `add` `commit` `push` |
-
-### 🔬 Binary Analizi ve Tersine Mühendislik
-
-| Dosya | Komutlar / Kavramlar |
-|---|---|
-| [dosya_izinleri_suid.md](./konu_anlatimlari/leviathan_komutlari/dosya_izinleri_suid.md) | `chmod` `find -perm` `whoami` `SUID` privilege escalation |
-| [binary_analizi.md](./konu_anlatimlari/leviathan_komutlari/binary_analizi.md) | `file` `strings` `xxd` `od` binary→ASCII |
-| [ltrace_strace.md](./konu_anlatimlari/leviathan_komutlari/ltrace_strace.md) | `ltrace` `strace` `strcmp` `fopen` `access` `system` |
-| [sembolik_linkler.md](./konu_anlatimlari/leviathan_komutlari/sembolik_linkler.md) | `ln -s` `readlink` TOCTOU açığı |
-| [gdb.md](./konu_anlatimlari/leviathan_komutlari/gdb.md) | `disassemble` `break` `run` `info registers` `x` `print/d` |
-| [brute_force_bash.md](./konu_anlatimlari/leviathan_komutlari/brute_force_bash.md) | `for` döngüsü koşullar PIN brute force |
-
-### 🌐 Web Güvenliği
-
-| Dosya | Konular |
-|---|---|
-| [01_html_kaynak_ve_devtools.md](./konu_anlatimlari/web_guvenligi/01_html_kaynak_ve_devtools.md) | HTML kaynak kodu, Developer Tools, gizli alanlar |
-| [02_http_protokolu.md](./konu_anlatimlari/web_guvenligi/02_http_protokolu.md) | HTTP istek/cevap yapısı, metodlar, header'lar |
-| [03_robots_ve_dizin_kesfi.md](./konu_anlatimlari/web_guvenligi/03_robots_ve_dizin_kesfi.md) | robots.txt, dizin keşfi, gizli yollar |
-| [04_cookie_manipulasyonu.md](./konu_anlatimlari/web_guvenligi/04_cookie_manipulasyonu.md) | Cookie yapısı, manipülasyon, güvenlik bayrakları |
-| [05_php_kaynak_kodu.md](./konu_anlatimlari/web_guvenligi/05_php_kaynak_kodu.md) | PHP kaynak kodu okuma, include, açık kaynak analizi |
-| [06_encoding_ve_obfuscation.md](./konu_anlatimlari/web_guvenligi/06_encoding_ve_obfuscation.md) | Base64, hex, URL encoding, obfuscation teknikleri |
-| [07_command_injection.md](./konu_anlatimlari/web_guvenligi/07_command_injection.md) | Command injection, `;` `|` `$()` ile komut zincirleme |
-| [08_lfi_ve_path_traversal.md](./konu_anlatimlari/web_guvenligi/08_lfi_ve_path_traversal.md) | LFI, path traversal, `../` ile dizin atlama |
-| [09_xor_sifrelemesi.md](./konu_anlatimlari/web_guvenligi/09_xor_sifrelemesi.md) | XOR şifreleme, known-plaintext saldırısı |
-| [10_dosya_yukleme_bypass.md](./konu_anlatimlari/web_guvenligi/10_dosya_yukleme_bypass.md) | Dosya yükleme bypass, MIME type, uzantı manipülasyonu |
-| [11_sql_injection.md](./konu_anlatimlari/web_guvenligi/11_sql_injection.md) | SQL injection temelleri, `' OR 1=1`, UNION saldırısı |
-| [12_blind_sql_injection.md](./konu_anlatimlari/web_guvenligi/12_blind_sql_injection.md) | Blind SQLi, boolean tabanlı, karakter karakter çekme |
-| [13_command_injection_ileri.md](./konu_anlatimlari/web_guvenligi/13_command_injection_ileri.md) | İleri command injection, grep bypass, filtre aşma |
-| [14_session_brute_force.md](./konu_anlatimlari/web_guvenligi/14_session_brute_force.md) | Session ID brute-force, tahmin edilebilir token saldırısı |
-| [15_session_ve_newline_injection.md](./konu_anlatimlari/web_guvenligi/15_session_ve_newline_injection.md) | PHP session manipülasyonu, newline injection |
-| [16_http_redirect_bypass.md](./konu_anlatimlari/web_guvenligi/16_http_redirect_bypass.md) | HTTP yönlendirme bypass, 302 öncesi içerik okuma |
-| [17_php_type_juggling.md](./konu_anlatimlari/web_guvenligi/17_php_type_juggling.md) | PHP type juggling, loose comparison zafiyetleri |
-| [18_php_object_injection.md](./konu_anlatimlari/web_guvenligi/18_php_object_injection.md) | PHP object injection, deserialization, magic method |
-| [19_sql_truncation.md](./konu_anlatimlari/web_guvenligi/19_sql_truncation.md) | SQL truncation, VARCHAR kesme, kullanıcı taklit saldırısı |
-| [20_ecb_mode_zafiyeti.md](./konu_anlatimlari/web_guvenligi/20_ecb_mode_zafiyeti.md) | ECB mode zafiyeti, blok kesme/yapıştırma saldırısı |
-| [21_perl_rce.md](./konu_anlatimlari/web_guvenligi/21_perl_rce.md) | Perl `open()` injection, RCE, pipe karakteri |
-| [22_perl_cgi_param_bypass.md](./konu_anlatimlari/web_guvenligi/22_perl_cgi_param_bypass.md) | Perl CGI `param()` array bypass, DBI `quote()` atlatma |
-| [23_log_poisoning.md](./konu_anlatimlari/web_guvenligi/23_log_poisoning.md) | Log poisoning, User-Agent injection, LFI + PHP RCE |
-| [24_phar_deserialization.md](./konu_anlatimlari/web_guvenligi/24_phar_deserialization.md) | Phar deserialization, `phar://` wrapper, dosya yükleme + LFI RCE |
-
-### 👾 Behemoth — Dinamik Analiz ve İleri Exploit Teknikleri
-
-| Dosya | Konular |
-|---|---|
-| [modul1_dinamik_analiz.md](./konu_anlatimlari/behemoth/modul1_dinamik_analiz.md) | Kaynak kodsuz binary analizi, `ltrace`/`strace`/`gdb` ile dinamik inceleme |
-| [modul2_race_condition.md](./konu_anlatimlari/behemoth/modul2_race_condition.md) | TOCTOU, PID tahmini, symlink saldırısı, `/proc` filesystem |
-| [modul3_udp_sniffing.md](./konu_anlatimlari/behemoth/modul3_udp_sniffing.md) | UDP protokolü, `nc -lu`, `tcpdump`, şifresiz ağ trafiği yakalama |
-| [modul4_buffer_overflow.md](./konu_anlatimlari/behemoth/modul4_buffer_overflow.md) | Girdi kanalları, shellcode, dosya tabanlı exploit, environment variable |
-| [modul5_format_string.md](./konu_anlatimlari/behemoth/modul5_format_string.md) | `printf(input)` anti-pattern, format specifier, stack okuma, arbitrary read/write |
-
-### 🔐 Kriptografi
-
-| Dosya | Konular |
-|---|---|
-| [krypton_komutlar_ve_kavramlar.md](./konu_anlatimlari/kriptografi/krypton_komutlar_ve_kavramlar.md) | `wc -c` `sort -nr` `tr -cd` `for {A..Z}` `python3 -c` · Caesar · Frekans Analizi · Vigenère · Kasiski · Stream Cipher/XOR |
-
-### 💥 Binary Exploitation
-
-| Dosya | Konular |
-|---|---|
-| [00_x86_assembly_temelleri.md](./konu_anlatimlari/binary_exploitation/00_x86_assembly_temelleri.md) | Register'lar, veri tipleri, MOV/LEA/aritmetik komutlar, PUSH/POP, CALL/RET, calling convention, prologue/epilogue |
-| [00b_gdb_ile_assembly_okumak.md](./konu_anlatimlari/binary_exploitation/00b_gdb_ile_assembly_okumak.md) | Assembly→C çevirme yöntemi, yaygın kalıplar (memset/memcpy/strlen/switch), GDB komut referansı |
-| [01_bellek_ve_memory_layout.md](./konu_anlatimlari/binary_exploitation/01_bellek_ve_memory_layout.md) | Stack yapısı, değişken komşuluğu, buffer overflow mantığı, `x/20wx $esp` |
-| [02_little_endian.md](./konu_anlatimlari/binary_exploitation/02_little_endian.md) | Byte sırası, `0xdeadbeef` → `\xef\xbe\xad\xde`, `struct.pack`, 32 vs 64-bit farkı |
-| [03_eip_register_kontrolu.md](./konu_anlatimlari/binary_exploitation/03_eip_register_kontrolu.md) | CALL/RET mekanizması, saved EIP, cyclic pattern ile offset, GDB doğrulama |
-| [04_shellcode_ve_nop_sled.md](./konu_anlatimlari/binary_exploitation/04_shellcode_ve_nop_sled.md) | Shellcode anatomy, NOP sled, env var adres bulma, program adı kaydırma, `(payload; cat)` |
-| [05_format_string.md](./konu_anlatimlari/binary_exploitation/05_format_string.md) | `printf(buf)` açığı, `%x` ile bellek sızdırma, `%n` ile yazma, `%hn` iki kademeli yazma |
-| [06_return_to_libc_ve_fonksiyon_pointer.md](./konu_anlatimlari/binary_exploitation/06_return_to_libc_ve_fonksiyon_pointer.md) | NX koruması, `system()+exit()+"/bin/sh"` zinciri, fonksiyon pointer manipülasyonu |
-| [07_sembolik_link.md](./konu_anlatimlari/binary_exploitation/07_sembolik_link.md) | `ln -s`, TOCTOU race condition, `access()`+`open()` arası race window exploit |
+→ **[Tüm konu anlatımlarına buradan ulaşabilirsin](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
 ---
 
@@ -184,7 +109,7 @@ Komutların ve kavramların war game bağımsız, referans olarak tutulduğu dos
 ### 🏴 Bandit — Linux Temelleri
 Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile buradan başlayabilir.
 
-> 📖 Komut açıklamaları ve detaylar için → [Linux Komutları Konu Anlatımı](#️-linux-komutları)
+> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
@@ -195,7 +120,7 @@ Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile bur
 ### 🐙 Leviathan — Tersine Mühendisliğe Giriş
 Binary analizi, sembolik linkler ve privilege escalation. Bir binary'nin içini ltrace ile okumak, gdb ile assembly'e bakmak, symlink ile sistemi kandırmak.
 
-> 📖 Komut açıklamaları ve detaylar için → [Binary Analizi ve Tersine Mühendislik Konu Anlatımı](#-binary-analizi-ve-tersine-mühendislik)
+> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
@@ -204,7 +129,7 @@ Binary analizi, sembolik linkler ve privilege escalation. Bir binary'nin içini 
 ### 🔐 Krypton — Kriptografiye Giriş
 Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsun. Base64'ten stream cipher'a kadar.
 
-> 📖 Komut açıklamaları ve detaylar için → [Kriptografi Konu Anlatımı](#-kriptografi)
+> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
@@ -213,7 +138,7 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 ### 🌐 Natas — Web Güvenliğine Giriş
 34 level boyunca web güvenliğinin temellerini öğreniyorsun — HTML'den Perl RCE'ye kadar.
 
-> 📖 Komut açıklamaları ve detaylar için → [Web Güvenliği Konu Anlatımı](#-web-güvenliği)
+> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
@@ -224,7 +149,7 @@ Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsu
 ### 👾 Behemoth — Orta Seviye Binary Exploitation
 Dinamik analiz, race condition, ağ sniffing ve gelişmiş buffer overflow teknikleri. Kaynak kodu olmadan binary'leri anlamak, PID tahmin saldırıları ve şifresiz ağ trafiğini yakalamak.
 
-> 📖 Kavram açıklamaları ve detaylar için → [Behemoth Konu Anlatımı](#-behemoth--dinamik-analiz-ve-i̇leri-exploit-teknikleri)
+> 📖 Kavram açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
@@ -235,7 +160,7 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Stack ve heap yap
 
 > ⚠️ **Not:** Narnia 32-bit (x86) Linux sistemde çalışır. 64-bit sistemlerden farklı davranışlar gözlemlenebilir.
 
-> 📖 Kavram açıklamaları ve detaylar için → [Binary Exploitation Konu Anlatımı](#-binary-exploitation)
+> 📖 Kavram açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
