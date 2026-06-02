@@ -239,6 +239,56 @@ echo "AAAA.%1\$x.%2\$x.%3\$x.%4\$x.%5\$x.%6\$x.%7\$x" | /behemoth/behemoth3
 # 41414141 görülen pozisyon = doğru offset
 ```
 
+### 💡 Pro-Tip: %hn ile Çift Kademeli Yazma ve "Küçük Sayı" Matematik Hilesi
+
+Format string zafiyetlerini sömürürken, bellekteki bir adrese (örneğin bir fonksiyon pointer'ına veya GOT tablosuna) kendi istediğimiz bir adresi yazmak için `%n` direktifini kullanırız. Ancak doğrudan `%n` kullanmak ve tüm adresi tek seferde yazmaya çalışmak iki büyük probleme yol açar:
+
+1. **Bellek ve Zaman Sınırı:** Eğer yazmak istediğiniz değer `0x0804a000` (desimal olarak `134520832`) ise, `printf`'in belleğe bu değeri yazması için ekrana **134 milyon adet karakter** basması gerekir. Bu durum hem exploit'in dakikalarca sürmesine neden olur hem de hedef sunucunun belleğini doldurup programı kilitleyebilir.
+2. **Çözüm:** Bu yüzden 4 byte'lık adresi ikişer byte'lık iki parçaya bölerek `%hn` (half-write / short) ile yazarız.
+
+#### 📐 %hn Matematik Tuzağı: İkinci Değer Birinciden Küçükse?
+İki kademeli yazmada kural şudur: `printf` o ana kadar ekrana bastığı **toplam karakter sayısını** belleğe yazar. Dolayısıyla her adımda yazacağınız sayı bir öncekinden büyük olmak zorundadır.
+
+Örneğin, `0x08049724` adresine `0xf7e2b000` (system fonksiyonu adresi) değerini yazmak isteyelim:
+* **Düşük 2 byte (Düşük Adres):** `0xb000` (Desimal: 45056)
+* **Yüksek 2 byte (Yüksek Adres):** `0xf7e2` (Desimal: 63458)
+
+Burada sorun yok: Önce ekrana 45056 karakter bastırıp düşük adrese yazarız. Sonra aradaki fark kadar (`63458 - 45056 = 18402`) daha karakter bastırıp yüksek adrese yazarız.
+
+**Peki ya tam tersi olsaydı?** Eğer yüksek 2 byte, düşük 2 byte'tan **daha küçük** bir sayı olsaydı ne yapacaktık? `printf` geriye doğru sayamayacağı için matematik kilitlenecekti.
+
+#### 🛠️ Çözüm: 16-Bit Tamsayı Taşması (Integer Overflow) Hilesi
+Bilgisayar mimarisinde 16-bitlik bir sayı `65535` (`0xFFFF`) değerine ulaştıktan sonra 1 byte daha eklenirse başa döner (`0x0000`). Bu matematiksel gerçeği exploit yazarken avantaja çevirebiliriz.
+
+Eğer ikinci yazmanız gereken değer, birinci değerden küçükse, ikinci değere **`0x10000` (65536)** ekleyin ve birinci değeri bundan çıkarın!
+
+**Formül:** `(Hedef_Küçük_Değer + 65536) - O_Ana_Kadar_Basılan_Karakter`
+
+##### Pratik Python Örneği:
+```python
+import struct
+
+# Diyelim ki yazmak istediğimiz adres parçaları:
+# 1. Yazım (Düşük): 0x9724 (Desimal: 38692)
+# 2. Yazım (Yüksek): 0x0804 (Desimal: 2052)  <-- İkinci değer daha küçük!
+
+yazim1 = 38692
+# Adreslerin kendisi de stack'te yer kaplar (Örn: 2 adet 4 byte'lık adres = 8 byte)
+dolgu1 = yazim1 - 8 
+
+# İkinci değer küçük olduğu için 65536 ekleyerek taşırma yapıyoruz:
+yazim2 = 2052
+dolgu2 = (yazim2 + 65536) - yazim1
+
+payload = struct.pack("<I", hedef_addr)      # 1. offset için adres
+payload += struct.pack("<I", hedef_addr + 2)  # 2. offset için adres (yüksek)
+payload += f"%{dolgu1}x%4$hn".encode()        # Önce büyük olanı yaz
+payload += f"%{dolgu2}x%5$hn".encode()        # Taşma hilesiyle küçük olanı yaz
+```
+Bu taşma mekanizması sayesinde printf arka planda 38692 + 28896 = 67588 karakter basmış olur. Ancak %hn sadece son 2 byte'ı (16-bit) dikkate aldığı için, 67588 sayısı hex tabanında 0x10804 yapar ve baştaki 1 atılarak belleğe tam istediğimiz gibi 0x0804 yazılır!
+
+Format string dünyasında bu matematik refleksine sahip olmak, sizi karmaşık scriptler yazmaktan veya "Neden istediğim değer belleğe yazılmıyor?" diye saatlerce düşünmekten kurtarır.
+
 ---
 
 ## Özet
