@@ -83,6 +83,16 @@
 | [05_format_string.md](./binary_exploitation/05_format_string.md) | `printf(buf)` açığı, `%x` ile bellek sızdırma, `%n` ile yazma, `%hn` iki kademeli yazma |
 | [06_return_to_libc_ve_fonksiyon_pointer.md](./binary_exploitation/06_return_to_libc_ve_fonksiyon_pointer.md) | NX koruması, `system()+exit()+"/bin/sh"` zinciri, fonksiyon pointer manipülasyonu |
 | [07_sembolik_link.md](./binary_exploitation/07_sembolik_link.md) | `ln -s`, TOCTOU race condition, `access()`+`open()` arası race window exploit |
+| [08_pointer_manipulation.md](./binary_exploitation/08_pointer_manipulation.md) | Pointer üzerinden bellek okuma, dolaylı erişim, program akışını yönlendirme |
+| [09_got_plt_overwrite.md](./binary_exploitation/09_got_plt_overwrite.md) | GOT/PLT mekanizması, dinamik linking, format string `%n` ile arbitrary write |
+
+---
+
+## 🕳️ Utumno — İleri Seviye Exploit Konu Anlatımları
+
+| Dosya | Konu |
+|---|---|
+| [UTUMNO_KONULAR.md](./utumno/UTUMNO_KONULAR.md) | Level → konu eşlemesi, ön koşullar, hangi modülü okuyacaksın |
 
 ---
 

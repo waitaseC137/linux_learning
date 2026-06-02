@@ -53,15 +53,19 @@ linux_learning/
 │   ├── kriptografi/
 │   │   └── krypton_komutlar_ve_kavramlar.md  # wc, sort -nr, tr -cd, Caesar, Vigenère, XOR
 │   ├── binary_exploitation/
-│       ├── 00_x86_assembly_temelleri.md      # Register'lar, komutlar, stack, CALL/RET, calling convention
-│       ├── 00b_gdb_ile_assembly_okumak.md    # Assembly→C çevirme, kalıplar, GDB komut referansı
-│       ├── 01_bellek_ve_memory_layout.md     # Stack yapısı, değişken komşuluğu, buffer overflow mantığı
-│       ├── 02_little_endian.md               # Byte sırası, adres dönüşümü, struct.pack
-│       ├── 03_eip_register_kontrolu.md       # CALL/RET mekanizması, offset hesabı, cyclic pattern
-│       ├── 04_shellcode_ve_nop_sled.md       # Shellcode, NOP sled, env var adresi, ;cat hilesi
-│       ├── 05_format_string.md               # %x ile bellek sızdırma, %n ile yazma, %hn
-│       ├── 06_return_to_libc_ve_fonksiyon_pointer.md  # NX bypass, system()+exit()+/bin/sh, fp manipülasyonu
-│       └── 07_sembolik_link.md               # Symlink, TOCTOU, race condition exploit
+│   │   ├── 00_x86_assembly_temelleri.md      # Register'lar, komutlar, stack, CALL/RET, calling convention
+│   │   ├── 00b_gdb_ile_assembly_okumak.md    # Assembly→C çevirme, kalıplar, GDB komut referansı
+│   │   ├── 01_bellek_ve_memory_layout.md     # Stack yapısı, değişken komşuluğu, buffer overflow mantığı
+│   │   ├── 02_little_endian.md               # Byte sırası, adres dönüşümü, struct.pack
+│   │   ├── 03_eip_register_kontrolu.md       # CALL/RET mekanizması, offset hesabı, cyclic pattern
+│   │   ├── 04_shellcode_ve_nop_sled.md       # Shellcode, NOP sled, env var adresi, ;cat hilesi
+│   │   ├── 05_format_string.md               # %x ile bellek sızdırma, %n ile yazma, %hn
+│   │   ├── 06_return_to_libc_ve_fonksiyon_pointer.md  # NX bypass, system()+exit()+/bin/sh, fp manipülasyonu
+│   │   ├── 07_sembolik_link.md               # Symlink, TOCTOU, race condition exploit
+│   │   ├── 08_pointer_manipulation.md        # Pointer üzerinden bellek okuma, dolaylı erişim, akış yönlendirme
+│   │   └── 09_got_plt_overwrite.md           # GOT/PLT mekanizması, format string %n ile arbitrary write
+│   ├── utumno/
+│   │   └── UTUMNO_KONULAR.md                 # Level → konu eşlemesi, ön koşullar, araç referansı
 │   └── behemoth/
 │       ├── BEHEMOTH_KONULAR.md               # Tüm modüllerin indeksi ve hızlı araç başvurusu
 │       ├── modul1_dinamik_analiz.md          # ltrace, strace, gdb — kaynak kodsuz binary analizi
@@ -87,8 +91,10 @@ linux_learning/
     │   └── natas_21-34.md         # Deserialization, ECB, Perl RCE, type juggling
     ├── narnia/
     │   └── narnia_0-8.md          # Buffer overflow, shellcode, format string, return-to-libc
-    └── behemoth/
-        └── behemoth_walkthrough.md # Dinamik analiz, race condition, UDP sniffing, gelişmiş buffer overflow
+    ├── behemoth/
+    │   └── behemoth_walkthrough.md # Dinamik analiz, race condition, UDP sniffing, gelişmiş buffer overflow
+    └── utumno/
+        └── utumno_walkthrough.md   # Pointer manipülasyonu, GOT/PLT, argv BOF, format string — ileri seviye
 ```
 
 ---
@@ -154,6 +160,15 @@ Dinamik analiz, race condition, ağ sniffing ve gelişmiş buffer overflow tekni
 | Dosya | Konular | Level'lar |
 |---|---|---|
 | [behemoth_walkthrough.md](./overthewire/behemoth/behemoth_walkthrough.md) | Dinamik analiz, race condition, UDP sniffing, gelişmiş buffer overflow | 0 → 7 |
+
+### 🕳️ Utumno — İleri Seviye Binary Exploitation
+Pointer manipülasyonu, GOT/PLT yazma, argv BOF ve format string arbitrary write. Leviathan/Behemoth'tan bir adım daha derin — Narnia ile paralel gidilebilir.
+
+> 📖 Kavram açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
+
+| Dosya | Konular | Level'lar |
+|---|---|---|
+| [utumno_walkthrough.md](./overthewire/utumno/utumno_walkthrough.md) | Pointer manipülasyonu, GOT/PLT overwrite, argv BOF, format string, sembolik link | 0 → 7 |
 
 ### 💥 Narnia — Binary Exploitation'a Giriş
 C programlarındaki açıkları exploit etmeyi öğreniyorsun. Stack ve heap yapısını, EIP kontrolünü, shellcode yazmayı, format string saldırılarını ve return-to-libc tekniğini adım adım öğreten 9 seviyeli bir lab.
