@@ -167,74 +167,9 @@ Linux komutları, binary analizi, web güvenliği, kriptografi, binary exploitat
 
 [OverTheWire](https://overthewire.org/wargames/), Linux ve güvenlik becerilerini **oyun formatında** öğreten ücretsiz bir platform. Her war game için level-by-level çözüm rehberleri.
 
-### 🏴 Bandit — Linux Temelleri
-Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile buradan başlayabilir.
+Bandit (Linux temelleri), Leviathan ve Krypton (tersine mühendislik ve kripto), Natas (web güvenliği), Narnia, Behemoth ve Utumno (binary exploitation) — başlangıçtan ileri seviyeye kadar yedi wargame.
 
-> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
-
-| Dosya | Konular | Level'lar |
-|---|---|---|
-| [bandit_0-10.md](./overthewire/bandit/bandit_0-10.md) | SSH, dosya okuma, find, grep, sort, uniq, strings | 0 → 10 |
-| [bandit_11-20.md](./overthewire/bandit/bandit_11-20.md) | Base64, ROT13, hexdump, sıkıştırma, netcat, SSL, nmap, SUID | 11 → 20 |
-| [bandit_21-33.md](./overthewire/bandit/bandit_21-33.md) | Cron, bash scripting, brute force, vim escape, git, shell variables | 21 → 33 |
-
-### 🐙 Leviathan — Tersine Mühendisliğe Giriş
-Binary analizi, sembolik linkler ve privilege escalation. Bir binary'nin içini ltrace ile okumak, gdb ile assembly'e bakmak, symlink ile sistemi kandırmak.
-
-> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
-
-| Dosya | Konular | Level'lar |
-|---|---|---|
-| [leviathan_0-7.md](./overthewire/leviathan/leviathan_0-7.md) | ltrace, strings, gdb, symlink, TOCTOU, binary→ASCII | 0 → 7 |
-
-### 🔐 Krypton — Kriptografiye Giriş
-Klasik şifreleme yöntemlerini öğrenip nasıl kırılacaklarını görüyorsun. Base64'ten stream cipher'a kadar.
-
-> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
-
-| Dosya | Konular | Level'lar |
-|---|---|---|
-| [krypton_0-6.md](./overthewire/krypton/krypton_0-6.md) | Base64, ROT13, Caesar, frekans analizi, Vigenère, stream cipher | 0 → 6 |
-
-### 🌐 Natas — Web Güvenliğine Giriş
-34 level boyunca web güvenliğinin temellerini öğreniyorsun — HTML'den Perl RCE'ye kadar.
-
-> 📖 Komut açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
-
-| Dosya | Konular | Level'lar |
-|---|---|---|
-| [natas_0-10.md](./overthewire/natas/natas_0-10.md) | HTML kaynak, robots.txt, cookie, LFI, command injection | 0 → 10 |
-| [natas_11-20.md](./overthewire/natas/natas_11-20.md) | XOR kırma, web shell, SQLi, blind SQLi, session brute-force | 11 → 20 |
-| [natas_21-34.md](./overthewire/natas/natas_21-34.md) | Deserialization, ECB, Perl RCE, type juggling, truncation | 21 → 34 |
-
-### 👾 Behemoth — Orta Seviye Binary Exploitation
-Dinamik analiz, race condition, ağ sniffing ve gelişmiş buffer overflow teknikleri. Kaynak kodu olmadan binary'leri anlamak, PID tahmin saldırıları ve şifresiz ağ trafiğini yakalamak.
-
-> 📖 Kavram açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
-
-| Dosya | Konular | Level'lar |
-|---|---|---|
-| [behemoth_walkthrough.md](./overthewire/behemoth/behemoth_walkthrough.md) | Dinamik analiz, race condition, UDP sniffing, gelişmiş buffer overflow | 0 → 7 |
-
-### 🕳️ Utumno — İleri Seviye Binary Exploitation
-Pointer manipülasyonu, GOT/PLT yazma, argv BOF ve format string arbitrary write. Leviathan/Behemoth'tan bir adım daha derin — Narnia ile paralel gidilebilir.
-
-> 📖 Kavram açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
-
-| Dosya | Konular | Level'lar |
-|---|---|---|
-| [utumno_walkthrough.md](./overthewire/utumno/utumno_walkthrough.md) | Pointer manipülasyonu, GOT/PLT overwrite, argv BOF, format string, sembolik link | 0 → 7 |
-
-### 💥 Narnia — Binary Exploitation'a Giriş
-C programlarındaki açıkları exploit etmeyi öğreniyorsun. Stack ve heap yapısını, EIP kontrolünü, shellcode yazmayı, format string saldırılarını ve return-to-libc tekniğini adım adım öğreten 9 seviyeli bir lab.
-
-> ⚠️ **Not:** Narnia 32-bit (x86) Linux sistemde çalışır. 64-bit sistemlerden farklı davranışlar gözlemlenebilir.
-
-> 📖 Kavram açıklamaları ve detaylar için → **[Konu Anlatımları](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
-
-| Dosya | Konular | Level'lar |
-|---|---|---|
-| [narnia_0-8.md](./overthewire/narnia/narnia_0-8.md) | Buffer overflow, shellcode, EIP kontrolü, TOCTOU, format string, fonksiyon pointer, return-to-libc | 0 → 8 |
+→ **[Tüm war game rehberlerine buradan ulaşabilirsin](./overthewire/WARGAMES.md)**
 
 ---
 
