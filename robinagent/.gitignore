@@ -1,0 +1,9 @@
+progress.json
+config.json
+__pycache__/
+*.pyc
+.env
+
+*.bak
+*.swp
+*~

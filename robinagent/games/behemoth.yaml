@@ -1,0 +1,21 @@
+description: Orta seviye binary exploitation. Narnia'dan daha karmaşık senaryolar,
+  ASLR ve çeşitli korumalar içerir.
+difficulty: 7/10
+host: behemoth.labs.overthewire.org
+levels: 9
+name: Behemoth
+notebooklm_notebook_id: d24dfff5-6d62-4c4e-8c4f-47130c17464e
+port: 2221
+prereqs:
+- Narnia tamamlanmış olmalı
+- GDB/pwndbg deneyimi
+- C ve assembly orta seviye bilgi
+repo_url: https://github.com/waitaseC137/linux_learning/tree/main/overthewire/behemoth
+start_password: ''
+topics:
+- Stack ve heap overflow
+- Return-to-libc
+- GOT/PLT manipülasyonu
+- Dinamik analiz (ltrace/strace/GDB)
+- Pwntools
+user_prefix: behemoth

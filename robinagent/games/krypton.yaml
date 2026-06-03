@@ -1,0 +1,20 @@
+description: Kriptografi temelleri — klasik şifrelerden modern yaklaşımlara. Şifreli
+  metinleri kırarsın.
+difficulty: 3/10
+host: krypton.labs.overthewire.org
+levels: 7
+name: Krypton
+notebooklm_notebook_id: bb6df6f1-ae11-4d6b-8d63-caddebac9e51
+port: 2231
+prereqs:
+- Bandit tamamlanmış olmalı
+- Temel kriptografi kavramları yardımcı olur
+repo_url: https://github.com/waitaseC137/linux_learning/tree/main/overthewire/krypton
+start_password: ''
+topics:
+- Caesar / ROT şifreleri
+- Vigenere şifresi
+- Frekans analizi
+- Transposition şifreleri
+- XOR
+user_prefix: krypton

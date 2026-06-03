@@ -1,0 +1,22 @@
+description: Web güvenliği — HTTP, kaynak kodu analizi, SQL injection, XSS ve daha
+  fazlası. Tarayıcı üzerinden oynanır.
+difficulty: 4/10
+host: natas{level}.natas.labs.overthewire.org
+levels: 35
+name: Natas
+notebooklm_notebook_id: 92dd6e8f-9ded-45e7-b4fd-c6660db3a249
+port: 80
+prereqs:
+- HTML/CSS temel bilgisi
+- HTTP nasıl çalışır
+repo_url: https://github.com/waitaseC137/linux_learning/tree/main/overthewire/natas
+start_password: ''
+topics:
+- HTTP başlıkları
+- Kaynak kodu inceleme
+- SQL Injection
+- XSS (Cross-Site Scripting)
+- File inclusion
+- PHP güvenlik açıkları
+user_prefix: natas
+web_based: true

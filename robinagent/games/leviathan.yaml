@@ -1,0 +1,19 @@
+description: Binary analiz ve basit exploit tekniklerini öğreten wargame. ltrace/strace
+  ile binary davranışını incelersin.
+difficulty: 3/10
+host: leviathan.labs.overthewire.org
+levels: 8
+name: Leviathan
+notebooklm_notebook_id: 68b85bca-d924-46f5-aa16-d8ffcc7f34ac
+port: 2223
+prereqs:
+- Bandit tamamlanmış olmalı
+- Temel Linux komutları bilinmeli
+repo_url: https://github.com/waitaseC137/linux_learning/tree/main/overthewire/leviathan
+start_password: ''
+topics:
+- ltrace / strace
+- SUID binary analizi
+- Symlink saldırıları
+- Basit binary reverse engineering
+user_prefix: leviathan

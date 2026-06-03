@@ -1,0 +1,21 @@
+description: Binary exploitation — buffer overflow, format string ve temel exploit
+  geliştirme. Assembly okuma gerektirir.
+difficulty: 6/10
+host: narnia.labs.overthewire.org
+levels: 10
+name: Narnia
+notebooklm_notebook_id: 5ad47720-c0f7-4d77-a528-d19cc5a1f5e1
+port: 2226
+prereqs:
+- Leviathan tamamlanmış olmalı
+- C dili temel bilgisi
+- Assembly okuma becerisi (temel)
+repo_url: https://github.com/waitaseC137/linux_learning/tree/main/overthewire/narnia
+start_password: ''
+topics:
+- Stack buffer overflow
+- Format string saldırıları
+- Shellcode yazma
+- GDB kullanımı
+- SUID exploit
+user_prefix: narnia

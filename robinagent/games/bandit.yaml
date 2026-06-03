@@ -1,0 +1,21 @@
+description: Linux terminal becerilerini öğreten başlangıç wargame'i. SSH, dosya okuma,
+  izinler ve temel araçları öğrenirsin.
+difficulty: 1/10
+host: bandit.labs.overthewire.org
+levels: 34
+name: Bandit
+notebooklm_notebook_id: c4a9405e-98eb-400a-bed4-30bd9b9c6343
+port: 2220
+prereqs:
+- Hiç yok — sıfırdan başlayabilirsin
+repo_url: https://github.com/waitaseC137/linux_learning/tree/main/overthewire/bandit
+start_password: bandit0
+topics:
+- SSH
+- Dosya okuma (cat, less, file)
+- grep, sort, uniq, strings
+- find, locate
+- Base64, ROT13
+- Netcat, OpenSSL
+- Git
+user_prefix: bandit
