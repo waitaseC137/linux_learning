@@ -81,7 +81,15 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Stack ve heap yap
 
 | Dosya | Konular | Level'lar |
 |---|---|---|
-| [narnia_0-8.md](./narnia/narnia_0-8.md) | Buffer overflow, shellcode, EIP kontrolü, TOCTOU, format string, fonksiyon pointer, return-to-libc | 0 → 8 |
+| [narnia_0-1.md](./narnia/narnia_0-1.md) | Stack buffer overflow, değişken değiştirme | 0 → 1 |
+| [narnia_1-2.md](./narnia/narnia_1-2.md) | Shellcode, ortam değişkeni, EIP kontrolü | 1 → 2 |
+| [narnia_2-3.md](./narnia/narnia_2-3.md) | Buffer overflow, shellcode injection | 2 → 3 |
+| [narnia_3-4.md](./narnia/narnia_3-4.md) | TOCTOU, symlink, race condition | 3 → 4 |
+| [narnia_4-5.md](./narnia/narnia_4-5.md) | Buffer overflow, NOP sled, shellcode | 4 → 5 |
+| [narnia_5-6.md](./narnia/narnia_5-6.md) | Format string, bellek okuma/yazma | 5 → 6 |
+| [narnia_6-7.md](./narnia/narnia_6-7.md) | Heap, fonksiyon pointer overwrite | 6 → 7 |
+| [narnia_7-8.md](./narnia/narnia_7-8.md) | Return-to-libc | 7 → 8 |
+| [narnia_8-9.md](./narnia/narnia_8-9.md) | İleri seviye format string, arbitrary write | 8 → 9 |
 
 ---
 
