@@ -83,6 +83,8 @@ Buffer'ın başından Saved EIP'ye olan mesafeye **offset** diyoruz. Teorik olar
         ↑ RET buraya (ortaya) atlasın → kayar → shellcode çalışır
 ```
 
+> 💡 **Stack'teki shellcode neden çalışıyor?** Bu binary **çalıştırılabilir stack** ile derlenmiş (NX kapalı / `-z execstack`). Modern bir sistemde NX açık olsaydı stack'e koyduğumuz shellcode'a `ret` ile atlayamaz, segfault alırdık — o zaman narnia6'daki gibi **return-to-libc**'ye geçmek gerekirdi. Burada stack executable olduğu için doğrudan stack'teki shellcode'a atlayabiliyoruz.
+
 ---
 
 ## 🧪 Adım Adım (GDB)

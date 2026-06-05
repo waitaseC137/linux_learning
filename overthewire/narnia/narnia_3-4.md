@@ -87,6 +87,8 @@ Düşük adres → [ ifile (32 byte) ][ ofile (16 byte) = "/dev/null" ] → Yük
                 ^strcpy buradan yazmaya başlar    ^33. byte buraya taşar
 ```
 
+> ℹ️ Kaynakta bir de `buf[32]` var ama **taşma yolunda değil** (sadece `ifile`→`ofile` komşuluğu önemli), o yüzden diyagramda göstermiyoruz. Stack sırasını yine de `ltrace`/gdb ile doğrula (aşağıda).
+
 `strcpy` iki string'i de **aynı bitişik bloğa** yazdığı için iki ince numara çıkıyor:
 
 - `ifile` string'i (ifile[0]'dan null'a kadar) aslında **ofile'a kadar uzanır** — yani `argv[1]`'in tamamı. `open(ifile)` bu tam yolu açar.

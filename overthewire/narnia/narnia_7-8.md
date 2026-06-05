@@ -73,6 +73,7 @@ int goodfunction(){
 }
 
 int hackedfunction(){
+    printf("Way to go!!!!\n");        // ← başarı mesajı (aşağıdaki çıktıda göreceğin satır)
     setreuid(geteuid(), geteuid());   // yetkiyi koru
     system("/bin/sh");                // ← ödül
     return 0;

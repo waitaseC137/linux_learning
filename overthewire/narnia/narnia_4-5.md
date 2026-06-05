@@ -83,6 +83,8 @@ Bu level'ın teorisi neredeyse tamamen narnia2 ile aynı — Saved EIP'yi ezme +
 
 Yeni kavram tek: **environment temizliği.** Bir SUID program, env tabanlı shellcode saldırılarını engellemek için açılışta `environ`'ı sıfırlayabilir. Bu seni shellcode'u **istismar ettiğin buffer'ın içine** koymaya zorlar — bu yüzden buffer'ın yeterince büyük olması gerekir (burada 256 byte, bol).
 
+> 💡 **Hatırlatma:** narnia2'de olduğu gibi burada da **stack çalıştırılabilir** (NX kapalı / `-z execstack`); shellcode'u buffer'ın içine koyup oraya `ret` ile atlayabilmemizin sebebi bu. NX açık olsaydı return-to-libc'ye (narnia6) geçmemiz gerekirdi.
+
 ---
 
 ## 🧪 Adım Adım (GDB)
