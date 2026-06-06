@@ -24,8 +24,8 @@ Natas — web güvenliği, ayrı dal olarak istediğin zaman
 | [Krypton](#-krypton--kriptografiye-giriş) | 3/10 | 7 | Klasik şifreleme |
 | [Natas](#-natas--web-güvenliğine-giriş) | 4/10 | 35 | Web güvenliği |
 | [Narnia](#-narnia--binary-exploitationa-giriş) | 6/10 | 10 | Buffer overflow, shellcode |
-| [Behemoth](#-behemoth--orta-seviye-binary-exploitation) | 7/10 | 9 | Race condition, gelişmiş BOF |
-| [Utumno](#-utumno--ileri-seviye-binary-exploitation) | 9/10 | 8 | GOT/PLT, format string write |
+| [Behemoth](#-behemoth--orta-seviye-binary-exploitation) | 7/10 | 9 | PATH hijack, format string, symlink, UDP, BOF |
+| [Utumno](#-utumno--ileri-seviye-binary-exploitation) | 9/10 | 9 | Keyfi yazma, integer bug'ları, jmp_buf/PTR_MANGLE |
 
 ---
 
@@ -95,21 +95,41 @@ C programlarındaki açıkları exploit etmeyi öğreniyorsun. Stack ve heap yap
 
 ## 👾 Behemoth — Orta Seviye Binary Exploitation
 
-Dinamik analiz, race condition, ağ sniffing ve gelişmiş buffer overflow teknikleri. Kaynak kodu olmadan binary'leri anlamak, PID tahmin saldırıları ve şifresiz ağ trafiğini yakalamak.
+Dinamik analiz, PATH hijack, sembolik link, ağ sniffing, format string ve gelişmiş buffer overflow. Kaynak kodu **olmadan** binary'leri tersine mühendislikle çözmek.
 
-| Dosya | Konular | Level'lar |
+> ⚠️ 32-bit (x86) Linux, ASLR kapalı, executable stack. Şifreler md'lerde gizli (`**********`).
+
+| Dosya | Konu / Teknik | Level'lar |
 |---|---|---|
-| [behemoth_walkthrough.md](./behemoth/behemoth_walkthrough.md) | Dinamik analiz, race condition, UDP sniffing, gelişmiş buffer overflow | 0 → 7 |
+| [behemoth 0 -> 1.md](./behemoth/behemoth%200%20-%3E%201.md) | `ltrace` ile gömülü şifre (`strcmp`) | 0 → 1 |
+| [behemoth 1 -> 2.md](./behemoth/behemoth%201%20-%3E%202.md) | `gets()` overflow → env shellcode (offset 71) | 1 → 2 |
+| [behemoth 2 -> 3.md](./behemoth/behemoth%202%20-%3E%203.md) | PATH hijack (`system("touch %d")`) | 2 → 3 |
+| [behemoth 3 -> 4.md](./behemoth/behemoth%203%20-%3E%204.md) | Format string → `puts@GOT` overwrite | 3 → 4 |
+| [behemoth 4 -> 5.md](./behemoth/behemoth%204%20-%3E%205.md) | `/tmp/<pid>` symlink (pid pencere brute) | 4 → 5 |
+| [behemoth 5 -> 6.md](./behemoth/behemoth%205%20-%3E%206.md) | UDP sniffing (`localhost:1337`) | 5 → 6 |
+| [behemoth 6 -> 7.md](./behemoth/behemoth%206%20-%3E%207.md) | `mmap`-exec shellcode.txt, 0x0b filtresi, strcmp kapısı | 6 → 7 |
+| [behemoth 7 -> 8.md](./behemoth/behemoth%207%20-%3E%208.md) | Env-wipe + kısmi karakter kontrolü → argv[2] shellcode | 7 → 8 |
 
 ---
 
 ## 🕳️ Utumno — İleri Seviye Binary Exploitation
 
-Pointer manipülasyonu, GOT/PLT yazma, argv BOF ve format string arbitrary write. Leviathan/Behemoth'tan bir adım daha derin — Narnia ile paralel gidilebilir.
+Execute-only binary okuma, kasıtlı shellcode exec, `getchar` keyfi-yazma primitifi, integer truncation, signed bounds bypass ve `jmp_buf` + PTR_MANGLE bypass. Serinin en derin tekniklerini içerir.
 
-| Dosya | Konular | Level'lar |
+> 📌 **Başlamadan önce oku:** [00 - Utumno - BAŞLAMADAN ÖNCE OKUYUNUZ.md](./utumno/00%20-%20Utumno%20-%20BAŞLAMADAN%20ÖNCE%20OKUYUNUZ.md) — gereken ön bilgi & konu rehberi.
+>
+> ⚠️ 32-bit (x86) Linux, ASLR kapalı, executable stack. Şifreler md'lerde gizli (`**********`).
+
+| Dosya | Konu / Teknik | Level'lar |
 |---|---|---|
-| [utumno_walkthrough.md](./utumno/utumno_walkthrough.md) | Pointer manipülasyonu, GOT/PLT overwrite, argv BOF, format string, sembolik link | 0 → 7 |
+| [utumno 0 -> 1.md](./utumno/utumno%200%20-%3E%201.md) | Execute-only binary'i bellekten okuma (LD_PRELOAD dump) | 0 → 1 |
+| [utumno 1 -> 2.md](./utumno/utumno%201%20-%3E%202.md) | Dosya adı = shellcode (RWX buffer, ret-overwrite) | 1 → 2 |
+| [utumno 2 -> 3.md](./utumno/utumno%202%20-%3E%203.md) | Stack overflow + `argc=0` hilesi (`argv[10]=envp`) + env shellcode | 2 → 3 |
+| [utumno 3 -> 4.md](./utumno/utumno%203%20-%3E%204.md) | `getchar` keyfi-yazma primitifi → byte-byte ret ezme | 3 → 4 |
+| [utumno 4 -> 5.md](./utumno/utumno%204%20-%3E%205.md) | Integer truncation (16-bit kontrol vs 32-bit `memcpy`) | 4 → 5 |
+| [utumno 5 -> 6.md](./utumno/utumno%205%20-%3E%206.md) | `strncpy` null-eklemeyen overflow (tam 4-byte ret) | 5 → 6 |
+| [utumno 6 -> 7.md](./utumno/utumno%206%20-%3E%207.md) | Signed bounds bypass + `×4` wraparound → keyfi yazma | 6 → 7 |
+| [utumno 7 -> 8.md](./utumno/utumno%207%20-%3E%208.md) | `jmp_buf` overflow + PTR_MANGLE bypass (ebp-pivot) | 7 → 8 |
 
 ---
 
