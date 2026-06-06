@@ -26,15 +26,31 @@
 
   function wire() {
     const btn = document.getElementById('themeBtn');
-    if (!btn) return;
-    syncBtn(btn);
-    btn.addEventListener('click', () => {
-      const i = ORDER.indexOf(current);
-      current = ORDER[(i + 1) % ORDER.length];
-      apply(current);
-      try { localStorage.setItem(KEY, current); } catch (e) {}
+    if (btn) {
       syncBtn(btn);
-    });
+      btn.addEventListener('click', () => {
+        const i = ORDER.indexOf(current);
+        current = ORDER[(i + 1) % ORDER.length];
+        apply(current);
+        try { localStorage.setItem(KEY, current); } catch (e) {}
+        syncBtn(btn);
+      });
+    }
+
+    // hamburger menü (mobil)
+    const burger = document.getElementById('navBurger');
+    const inner = document.querySelector('.nav-inner');
+    if (burger && inner) {
+      const close = () => { inner.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); };
+      burger.addEventListener('click', () => {
+        const open = inner.classList.toggle('open');
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      inner.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', close));
+      document.addEventListener('click', (e) => {
+        if (inner.classList.contains('open') && !inner.contains(e.target)) close();
+      });
+    }
   }
 
   if (document.readyState === 'loading') {
