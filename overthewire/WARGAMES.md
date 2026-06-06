@@ -11,8 +11,8 @@
 ## 🗺️ Önerilen Sıra
 
 ```
-Bandit  →  Leviathan  →  Krypton  →  Narnia  →  Behemoth  →  Utumno
-(temel)    (RE giriş)    (kripto)    (binary)   (orta)       (ileri)
+Bandit  →  Leviathan  →  Krypton  →  Narnia  →  Behemoth  →  Utumno  →  Maze
+(temel)    (RE giriş)    (kripto)    (binary)   (orta)       (ileri)     (karma/capstone)
 
 Natas — web güvenliği, ayrı dal olarak istediğin zaman
 ```
@@ -26,6 +26,7 @@ Natas — web güvenliği, ayrı dal olarak istediğin zaman
 | [Narnia](#-narnia--binary-exploitationa-giriş) | 6/10 | 10 | Buffer overflow, shellcode |
 | [Behemoth](#-behemoth--orta-seviye-binary-exploitation) | 7/10 | 9 | PATH hijack, format string, symlink, UDP, BOF |
 | [Utumno](#-utumno--ileri-seviye-binary-exploitation) | 9/10 | 9 | Keyfi yazma, integer bug'ları, jmp_buf/PTR_MANGLE |
+| [Maze](#-maze--karma-binary-exploitation--re) | 5/10 | 9 | TOCTOU, lib hijack, self-modifying, FSOP, ELF parser, format string |
 
 ---
 
@@ -130,6 +131,33 @@ Execute-only binary okuma, kasıtlı shellcode exec, `getchar` keyfi-yazma primi
 | [utumno 5 -> 6.md](./utumno/utumno%205%20-%3E%206.md) | `strncpy` null-eklemeyen overflow (tam 4-byte ret) | 5 → 6 |
 | [utumno 6 -> 7.md](./utumno/utumno%206%20-%3E%207.md) | Signed bounds bypass + `×4` wraparound → keyfi yazma | 6 → 7 |
 | [utumno 7 -> 8.md](./utumno/utumno%207%20-%3E%208.md) | `jmp_buf` overflow + PTR_MANGLE bypass (ebp-pivot) | 7 → 8 |
+
+---
+
+## 🌀 Maze — Karma Binary Exploitation & RE
+
+Tek bir kalıbı değil, **her seviyede bambaşka bir zafiyet sınıfını** işleyen karma bir lab.
+TOCTOU yarışından FILE-yapısı sömürüsüne, self-modifying koddan format string'e kadar
+serinin tüm tekniklerini bir araya getirir — bu yüzden 5/10 puanına rağmen **Behemoth +
+Utumno sonrası** capstone olarak en sona konuldu.
+
+> 📌 **Başlamadan önce oku:** [00 - Maze - BAŞLAMADAN ÖNCE OKUYUNUZ.md](./maze/00%20-%20Maze%20-%20BAŞLAMADAN%20ÖNCE%20OKUYUNUZ.md) — gereken ön bilgi & konu rehberi.
+>
+> ⚠️ 32-bit (x86) Linux, ASLR kapalı, **No RELRO**; NX/canary seviyeye göre değişir (her seviyede `checksec`). Şifreler md'lerde gizli (`**********`).
+
+| Dosya | Konu / Teknik | Level'lar |
+|---|---|---|
+| [maze 0 -> 1.md](./maze/maze%200%20-%3E%201.md) | TOCTOU yarışı — `access()`/`open()` symlink takası | 0 → 1 |
+| [maze 1 -> 2.md](./maze/maze%201%20-%3E%202.md) | Library hijack — göreli `./libc.so.4`, constructor'lı sahte `.so` | 1 → 2 |
+| [maze 2 -> 3.md](./maze/maze%202%20-%3E%203.md) | Exec stack — buffer'ı fonksiyon çağırma, env shellcode + NOP sled | 2 → 3 |
+| [maze 3 -> 4.md](./maze/maze%203%20-%3E%204.md) | Self-modifying code — `mprotect` RWX + XOR decrypt, sihirli `0x1337c0de` | 3 → 4 |
+| [maze 4 -> 5.md](./maze/maze%204%20-%3E%205.md) | `execv` doğrulama bypass — setuid script + `#!/bin/sh -p` | 4 → 5 |
+| [maze 5 -> 6.md](./maze/maze%205%20-%3E%206.md) | Keygen RE + `ptrace(TRACEME)` anti-debug (auto-continue tracer) | 5 → 6 |
+| [maze 6 -> 7.md](./maze/maze%206%20-%3E%207.md) | FSOP — `fp` overwrite → sahte `FILE` → `fprintf` ile `GOT[exit]` write | 6 → 7 |
+| [maze 7 -> 8.md](./maze/maze%207%20-%3E%208.md) | ELF parser overflow — güvenilmeyen `e_shentsize` → ret2env | 7 → 8 |
+| [maze 8 -> 9.md](./maze/maze%208%20-%3E%209.md) | Format string — `snprintf(buf,n,user)` → `%n` → `GOT[strlen]=system` | 8 → 9 |
+
+> 🔒 OverTheWire, Maze çözümlerinin web'de yayınlanmamasını rica eder; bu notlar kişisel çalışma içindir.
 
 ---
 
