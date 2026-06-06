@@ -101,24 +101,3 @@
 | [18_ag_servisi_exploitasyonu.md](./binary_exploitation/18_ag_servisi_exploitasyonu.md) | socket/bind/fork server, soket üzerinden exploit, UDP sniffing | Maze 8, Behemoth 5 |
 
 ---
-
-## 🕳️ Utumno — İleri Seviye Exploit Konu Anlatımları
-
-| Dosya | Konu |
-|---|---|
-| [UTUMNO_KONULAR.md](./utumno/UTUMNO_KONULAR.md) | Level → konu eşlemesi, ön koşullar, hangi modülü okuyacaksın |
-
----
-
-## 👾 Behemoth — Dinamik Analiz ve İleri Exploit Teknikleri
-
-| Modül | Dosya | Konu |
-|---|---|---|
-| 1 | [modul1_dinamik_analiz.md](./behemoth/modul1_dinamik_analiz.md) | `ltrace`/`strace`/`gdb`, kaynak kodsuz binary analizi |
-| 2 | [modul2_race_condition.md](./behemoth/modul2_race_condition.md) | TOCTOU, PID tahmini, symlink saldırısı, `/proc` |
-| 3 | [modul3_udp_sniffing.md](./behemoth/modul3_udp_sniffing.md) | UDP sniffing, `nc -lu`, `tcpdump` |
-| 4 | [modul4_buffer_overflow.md](./behemoth/modul4_buffer_overflow.md) | Girdi kanalları, shellcode, dosya tabanlı exploit, env var |
-| 5 | [modul5_format_string.md](./behemoth/modul5_format_string.md) | Format string, stack okuma, arbitrary read/write |
-| 6 | [modul6_helper_binary.md](./behemoth/modul6_helper_binary.md) | Helper binary zinciri, shellcode filtresi, `0x0b` bypass |
-| 7 | [modul7_argv_bof.md](./behemoth/modul7_argv_bof.md) | argv BOF, alphanumeric filtre, environment shellcode |
-| 8 | [modul8_genel_ozet.md](./behemoth/modul8_genel_ozet.md) | SUID, privilege escalation, exploit metodolojisi |
