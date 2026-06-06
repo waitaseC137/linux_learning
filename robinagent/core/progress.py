@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 
@@ -16,12 +17,12 @@ _DEFAULT = {
 
 def load() -> dict:
     if not os.path.exists(PROGRESS_FILE):
-        return {k: dict(v) for k, v in _DEFAULT.items()}
+        return copy.deepcopy(_DEFAULT)
     with open(PROGRESS_FILE) as f:
         data = json.load(f)
     # fill missing games
     for game, default in _DEFAULT.items():
-        data.setdefault(game, dict(default))
+        data.setdefault(game, copy.deepcopy(default))
     return data
 
 
