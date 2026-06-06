@@ -67,8 +67,6 @@ uid=14001(narnia1) gid=14000(narnia0) groups=14000(narnia0)
 **********
 ```
 
-## 6. Doğrulama
-`ssh narnia1@... -p 2226` → `uid=14001(narnia1)` ✅
 
 ## Dersler
 | Konu | Not |
@@ -79,4 +77,3 @@ uid=14001(narnia1) gid=14000(narnia0) groups=14000(narnia0)
 | stdio buffering | `scanf` pipe'ı slurp eder → komutu zamanlı besle |
 | Offset doğrula | Kaynaktaki `buf[20]` ≠ garanti; disasm'dan teyit (`ebp-0x20` vs `ebp-0xc`) |
 
-**narnia1 şifresi: `**********`**

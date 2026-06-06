@@ -53,8 +53,7 @@ cat readthis                                               # narnia4 şifresi (+
 ```
 Çıktı: `copied contents of /tmp/n3.../AAA.../readthis to a safer place... (readthis)`
 
-## 5. Doğrulama
-`cat readthis` → 10 karakter şifre ✅
+
 
 ## Dersler
 | Konu | Not |
@@ -64,4 +63,4 @@ cat readthis                                               # narnia4 şifresi (+
 | izinler kritik | çıktı `chmod 666`, dizinler `755` (euid=narnia4 erişsin); `mktemp -d` 700 → 755 |
 | dolgu = path uzunluğu | `len(WD)+1+N+1=32` olacak N hesapla |
 
-**narnia4 şifresi: `**********`**
+

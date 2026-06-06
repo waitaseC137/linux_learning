@@ -58,8 +58,6 @@ python3 -c 'timed: bekle, sonra "id; cat /etc/narnia_pass/narnia3"' | \
 ```
 Çıktı: `ADDR=ffff8f9e RET=ffffb6ae` → `uid=14003(narnia3)` → şifre.
 
-## 6. Doğrulama
-`uid=14003(narnia3)` ✅
 
 ## Dersler
 | Konu | Not |
@@ -70,4 +68,3 @@ python3 -c 'timed: bekle, sonra "id; cat /etc/narnia_pass/narnia3"' | \
 | gcc /tmp | ev dizini yazılamaz → `cd /tmp` |
 | segfault → düzelt | rc=139 + EIP=0x41414141 → offset fazla; disasm ile düzelt |
 
-**narnia3 şifresi: `**********`**

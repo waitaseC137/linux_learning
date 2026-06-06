@@ -53,8 +53,7 @@ payload = struct.pack('<I', iaddr) + b'%.496x%1$n'
 > **bytes'lı argv:** Python `subprocess` POSIX'te **bytes args** kabul eder → adres baytları
 > (0xff vb.) utf-8 kodlamasıyla bozulmaz.
 
-## 6. Doğrulama
-`uid=14006(narnia6)` ✅
+
 
 ## Dersler
 | Konu | Not |
@@ -65,4 +64,3 @@ payload = struct.pack('<I', iaddr) + b'%.496x%1$n'
 | leak ≡ exploit uzunluk | `%1$x` vs `%1$n` aynı uzunluk → `&i` sabit |
 | `snprintf` kırpsa da | `%n` tam sayacı alır → 64 buffer'a rağmen 500 yazılır |
 
-**narnia6 şifresi: `**********`**

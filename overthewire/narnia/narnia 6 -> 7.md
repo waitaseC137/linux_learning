@@ -56,8 +56,6 @@ python3 -c 'timed: "/usr/bin/id; /bin/cat /etc/narnia_pass/narnia7"' | \
 ```
 Çıktı: `uid=14007(narnia7)` → şifre.
 
-## 6. Doğrulama
-`uid=14007(narnia7)` ✅
 
 ## Dersler
 | Konu | Not |
@@ -67,5 +65,3 @@ python3 -c 'timed: "/usr/bin/id; /bin/cat /etc/narnia_pass/narnia7"' | \
 | ret2libc | `fp=system`, argüman (`"/bin/sh"`) `b1`'e yaz → `system("/bin/sh")` |
 | sıra | önce b1→fp, sonra b2→b1 (b2 taşması fp'ye ulaşmaz) |
 | system adresi | ASLR kapalı → helper `&system` = hedefinki |
-
-**narnia7 şifresi: `**********`**

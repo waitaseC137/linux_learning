@@ -55,8 +55,7 @@ python3 -c 'timed: "/usr/bin/id; /bin/cat /etc/narnia_pass/narnia5"' | \
 ```
 Çıktı: `ADDR=ffff877d RET=ffffae8d` → `uid=14005(narnia5)` → şifre. (İlk denemede tuttu.)
 
-## 7. Doğrulama
-`uid=14005(narnia5)` ✅
+
 
 ## Dersler
 | Konu | Not |
@@ -66,4 +65,4 @@ python3 -c 'timed: "/usr/bin/id; /bin/cat /etc/narnia_pass/narnia5"' | \
 | adres = aynı | env içeriği silinse de stack adresleri değişmez → helper geçerli |
 | PATH yok | env wipe sonrası shell'de **mutlak yol** (`/bin/cat`, `/usr/bin/id`) |
 
-**narnia5 şifresi: `**********`**
+
