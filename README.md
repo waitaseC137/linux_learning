@@ -140,3 +140,5 @@ Bandit (Linux temelleri), Leviathan ve Krypton (tersine mühendislik ve kripto),
 ---
 
 *Repo büyümeye devam ediyor — katkı ve önerilere açık.*
+
+Lisans: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) · Kod: MIT
