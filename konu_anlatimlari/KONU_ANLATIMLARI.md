@@ -86,6 +86,20 @@
 | [08_pointer_manipulation.md](./binary_exploitation/08_pointer_manipulation.md) | Pointer üzerinden bellek okuma, dolaylı erişim, program akışını yönlendirme |
 | [09_got_plt_overwrite.md](./binary_exploitation/09_got_plt_overwrite.md) | GOT/PLT mekanizması, dinamik linking, format string `%n` ile arbitrary write |
 
+### İleri Konular (Behemoth · Utumno · Maze)
+
+| Dosya | Konular | Oyun |
+|---|---|---|
+| [10_bellek_korumalari_ve_checksec.md](./binary_exploitation/10_bellek_korumalari_ve_checksec.md) | NX, ASLR, Stack Canary, PIE, RELRO + `checksec`, karar ağacı | Hepsi |
+| [11_integer_bug_truncation_signedness.md](./binary_exploitation/11_integer_bug_truncation_signedness.md) | Truncation (16/8-bit), signed/unsigned bypass, `×4` wraparound | Utumno 4/6, Maze 7 |
+| [12_dinamik_linker_ve_kutuphane_hijacking.md](./binary_exploitation/12_dinamik_linker_ve_kutuphane_hijacking.md) | DT_NEEDED göreli yol, LD_PRELOAD, AT_SECURE, constructor | Maze 1, Utumno 0 |
+| [13_ptrace_anti_debugging.md](./binary_exploitation/13_ptrace_anti_debugging.md) | `PTRACE_TRACEME`, auto-continue tracer, `setsid` | Maze 5 |
+| [14_self_modifying_code_ve_mprotect.md](./binary_exploitation/14_self_modifying_code_ve_mprotect.md) | `mprotect` RWX, runtime XOR decrypt, sihirli sabitler | Maze 3, Behemoth 6 |
+| [15_elf_formati_ve_parser_zafiyetleri.md](./binary_exploitation/15_elf_formati_ve_parser_zafiyetleri.md) | ELF header alanları, güvenilmeyen boyut → parser overflow | Maze 7 |
+| [16_file_yapisi_fsop.md](./binary_exploitation/16_file_yapisi_fsop.md) | `_IO_FILE`, `fp` overwrite, vtable check, write-what-where | Maze 6 |
+| [17_setjmp_longjmp_ptr_mangle.md](./binary_exploitation/17_setjmp_longjmp_ptr_mangle.md) | `jmp_buf`, PTR_MANGLE, ebp-pivot bypass | Utumno 7 |
+| [18_ag_servisi_exploitasyonu.md](./binary_exploitation/18_ag_servisi_exploitasyonu.md) | socket/bind/fork server, soket üzerinden exploit, UDP sniffing | Maze 8, Behemoth 5 |
+
 ---
 
 ## 🕳️ Utumno — İleri Seviye Exploit Konu Anlatımları
