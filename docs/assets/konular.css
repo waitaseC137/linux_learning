@@ -296,3 +296,35 @@
   }
   .side-toggle { display: block; }
 }
+
+/* ---------- okuyucu: uzun içerik & mobil tipografi ---------- */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 20px 0; }
+.table-wrap .md table, .md table { margin: 0; }
+.md p, .md li, .md blockquote { overflow-wrap: anywhere; }
+.md a { word-break: break-word; }
+.md :not(pre) > code { overflow-wrap: anywhere; }
+
+/* dokunmatik cihazlarda kod-kopyala butonu hep görünür */
+@media (hover: none) {
+  .code-copy { opacity: 1; }
+}
+
+@media (max-width: 720px) {
+  .md { font-size: 14.5px; }
+  .md h1 { font-size: 26px; }
+  .md h2 { font-size: 20px; }
+  .md h3 { font-size: 16px; }
+  .md pre code { font-size: 12px; padding: 13px 14px; }
+  .md table { font-size: 12.5px; }
+  .md th, .md td { padding: 8px 10px; }
+  /* alt köşedeki kenar-çubuğu düğmesi sesi engellemesin, dokunma hedefi büyük */
+  .side-toggle { padding: 13px 20px; font-size: 14px; }
+  /* breadcrumb'taki GitHub linki alta düşmesin diye sıkıştır */
+  .gh-view { margin-left: 0; }
+  .read-progress { top: 57px; }
+}
+
+@media (max-width: 880px) {
+  /* kenar çubuğu açıkken arkaplan kaymasını kilitle (görsel netlik) */
+  .side { padding-bottom: 80px; }
+}

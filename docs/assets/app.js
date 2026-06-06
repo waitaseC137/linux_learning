@@ -3,7 +3,7 @@
    ============================================================ */
 
 /* ---------- 1. Robin: terminal yazma demosu ---------- */
-const SCRIPT = [
+const SCRIPT_DESKTOP = [
   { t: 'prompt', text: '~/linux_learning $ ', cmd: 'cd robinagent && python robinagent.py' },
   { t: 'blank' },
   { t: 'cat' },
@@ -22,6 +22,30 @@ const SCRIPT = [
   { t: 'blank' },
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
 ];
+
+/* mobil: kısa, hizaya dayanmayan satırlar (sarma/taşma olmaz) */
+const SCRIPT_MOBILE = [
+  { t: 'prompt', text: '~/ll $ ', cmd: 'python robinagent.py' },
+  { t: 'blank' },
+  { t: 'cat' },
+  { t: 'raw', html: '<span class="ty">Robin Agent</span>' },
+  { t: 'raw', html: '<span class="td">Terminal Wargame Asistanı</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Wargame seç:</span>' },
+  { t: 'raw', html: '  <span class="tm">▸</span> <span class="tw">Bandit</span> <span class="td">· 34 lvl · 1/10</span>' },
+  { t: 'raw', html: '    <span class="td">Natas · 35 lvl · 4/10</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Mod:</span> <span class="ty">[1] AI</span> <span class="td">[2] Hard</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">SSH →</span> <span class="tc">bandit…:2220</span>' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Oturum açıldı</span>' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Defter hazır 🐱</span>' },
+  { t: 'blank' },
+  { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
+];
+
+const SCRIPT = (window.matchMedia && window.matchMedia('(max-width: 560px)').matches)
+  ? SCRIPT_MOBILE : SCRIPT_DESKTOP;
 
 /* etkileşimli kedi: gözler imleci takip eder, ara sıra kırpar */
 function buildCat() {

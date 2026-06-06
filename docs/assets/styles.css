@@ -422,6 +422,7 @@ section { position: relative; z-index: 2; }
 .filter-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
 .chip {
   font-family: var(--mono); font-size: 12.5px;
+  white-space: nowrap;
   color: var(--fg-dim);
   background: var(--bg-2);
   border: 1px solid var(--line);

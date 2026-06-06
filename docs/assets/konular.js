@@ -156,6 +156,14 @@
     scope.querySelectorAll('.md h1, .md h2, .md h3, .md h4').forEach(h => {
       if (!h.id) h.id = slug(h.textContent);
     });
+    // geniş tabloları yatay kaydırılır kutuya sar (mobil taşmayı engeller)
+    scope.querySelectorAll('.md table').forEach(tbl => {
+      if (tbl.parentElement && tbl.parentElement.classList.contains('table-wrap')) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      tbl.parentNode.insertBefore(wrap, tbl);
+      wrap.appendChild(tbl);
+    });
     // kod blokları: highlight + kopyala butonu
     scope.querySelectorAll('.md pre').forEach(pre => {
       const code = pre.querySelector('code');
