@@ -111,7 +111,7 @@ Caesar'ı kırmak için tek bir harf çiftini bilmek yeterli:
 - Şifreli harfin alfabedeki sırası - düz harfin sırası = şifreleme anahtarı
 - Çözme anahtarı = 26 - şifreleme anahtarı
 
-E�er `A` → `M` ise: M=13. sıra, anahtar = 13-1 = **12**.  
+Eğer `A` → `M` ise: M=13. sıra, anahtar = 13-1 = **12**.  
 Çözme anahtarı = 26-12 = **14**.
 
 **SUID binary olan `encrypt`'i kullanarak kendi seçtiğimiz metni şifreleyip anahtarı çıkarabiliriz.**

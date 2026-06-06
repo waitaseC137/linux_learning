@@ -97,7 +97,7 @@ http://site.com/files/image.png
 → sunucuda /files/image.png konumunda
 ```
 
-E�er sunucu klasör listelemeye (directory listing) izin veriyorsa:
+Eğer sunucu klasör listelemeye (directory listing) izin veriyorsa:
 ```
 http://site.com/files/
 → klasördeki tüm dosyaları listeler!

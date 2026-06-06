@@ -43,7 +43,7 @@ ciphertext XOR plaintext = key   ← bunu kullanacağız!
 Cookie oluşturma: `json_encode → XOR → base64_encode`  
 Cookie okuma: `base64_decode → XOR → json_decode`
 
-E�er hem şifreli cookie'yi hem de şifresiz içeriğini biliyorsak → ikisini XOR'layınca anahtarı buluruz!
+Eğer hem şifreli cookie'yi hem de şifresiz içeriğini biliyorsak → ikisini XOR'layınca anahtarı buluruz!
 
 ### 🔧 Çözüm
 
@@ -211,7 +211,7 @@ Direkt hata yok ama "var/yok" cevabı binary bilgi veriyor. Her karakteri tek te
 ```sql
 username: natas16" AND password LIKE BINARY "a%" --
 ```
-E�er "This user exists" dönerse → şifre 'a' ile başlıyor!
+Eğer "This user exists" dönerse → şifre 'a' ile başlıyor!
 
 ### 🔧 Çözüm
 
@@ -416,7 +416,7 @@ PHP session dosyaları `key value` formatında satır satır saklanır:
 name|s:4:"test";
 ```
 
-E�er değere newline (`\n` / `%0A`) ekleyebiliyorsak, yeni satır eklenir:
+Eğer değere newline (`\n` / `%0A`) ekleyebiliyorsak, yeni satır eklenir:
 ```
 name|s:14:"test
 admin 1";
