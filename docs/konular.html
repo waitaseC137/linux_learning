@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Konu Anlatımları — linux_learning</title>
+<meta name="description" content="Linux komutları, web güvenliği, binary exploitation ve kriptografi konu anlatımları — site içinde, terminal estetiğinde okunur." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<link rel="stylesheet" href="assets/konular.css" />
+<script src="assets/theme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="pp">🐧</span><b>linux_learning</b>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#robin">robin&nbsp;agent</a>
+      <a href="index.html#wargames">wargames</a>
+      <a href="konular.html" style="color:var(--magenta)">konu&nbsp;anlatımları</a>
+      <a href="index.html#kaynaklar">kaynaklar</a>
+    </div>
+    <a class="nav-gh" href="https://github.com/waitasec137/linux_learning" target="_blank" rel="noopener">
+      <span>★</span> GitHub
+    </a>
+    <button class="theme-btn" id="themeBtn" title="Tema: açık / karanlık"><span class="sw"></span><span class="lbl">açık</span></button>
+    <button class="theme-btn sfx-btn" id="sfxBtn" title="Menü sesleri"><span class="sw"></span><span class="lbl">ses</span></button>
+  </div>
+</nav>
+
+<div class="read-progress" id="readProgress"></div>
+
+<!-- ============ DOCS ============ -->
+<div class="docs" id="docs">
+  <aside class="side">
+    <div class="search-wrap">
+      <span class="sp">/</span>
+      <input class="search" id="search" type="text" placeholder="konu ara…" autocomplete="off" spellcheck="false" />
+    </div>
+    <nav id="tree"></nav>
+  </aside>
+
+  <main class="content" id="content"></main>
+
+  <div class="scrim" id="scrim"></div>
+</div>
+
+<button class="side-toggle" id="sideToggle">☰ konular</button>
+
+<script src="assets/konular-data.js"></script>
+<script src="assets/konular.js"></script>
+<script src="assets/sfx.js"></script>
+</body>
+</html>

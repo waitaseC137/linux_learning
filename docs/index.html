@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>linux_learning — terminale bakarak öğren</title>
+<meta name="description" content="OverTheWire wargame çözümleri, konu anlatımları ve Robin Agent — terminal tabanlı wargame asistanı. Linux ve güvenliği oyun oynayarak öğren." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<script src="assets/theme.js"></script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <span class="pp">🐧</span><b>linux_learning</b>
+    </a>
+    <div class="nav-links">
+      <a href="#robin">robin&nbsp;agent</a>
+      <a href="#wargames">wargames</a>
+      <a href="#konular">konu&nbsp;anlatımları</a>
+      <a href="#kaynaklar">kaynaklar</a>
+    </div>
+    <a class="nav-gh" href="https://github.com/waitasec137/linux_learning" target="_blank" rel="noopener">
+      <span>★</span> GitHub
+    </a>
+    <button class="theme-btn" id="themeBtn" title="Tema: açık / karanlık"><span class="sw"></span><span class="lbl">açık</span></button>
+    <button class="theme-btn sfx-btn" id="sfxBtn" title="Menü sesleri"><span class="sw"></span><span class="lbl">ses</span></button>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="hero-kicker"><span class="dot"></span> 7 wargame · 130+ çözüm · açık kaynak</span>
+      <h1>Terminale bakarak <em>Linux'u</em> ve <u>güvenliği</u> <span class="pp">öğren.</span></h1>
+      <p class="hero-lede">
+        OverTheWire wargame'lerini <b>level-by-level</b> çözümlerle, kavramları
+        <b>wargame-bağımsız konu anlatımlarıyla</b> öğren. Yanında ise
+        <b>Robin</b> — SSH oturumunu açan, ilerlemeni kaydeden ve takıldığında
+        AI'a soru sorabildiğin terminal asistanın. 🐱
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#robin">▸ Robin Agent'ı tanı</a>
+        <a class="btn btn-ghost" href="#wargames">wargame'lere göz at</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="n m">7</div><div class="l">Wargame</div></div>
+        <div class="hstat"><div class="n y">5</div><div class="l">Konu Başlığı</div></div>
+        <div class="hstat"><div class="n g">20</div><div class="l">Pwn Modülü</div></div>
+        <div class="hstat"><div class="n">∞</div><div class="l">Merak</div></div>
+      </div>
+    </div>
+
+    <div class="hero-term-wrap">
+      <div class="term">
+        <div class="term-bar">
+          <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+          <span class="tt"><b>robin</b>@linux_learning: ~/robinagent</span>
+        </div>
+        <div class="term-body" id="hero-term"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ ROBIN AGENT ============ -->
+<section class="band band-alt" id="robin">
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">./robin</span> <span class="arg">--agent</span></div>
+    <p class="sec-sub">
+      Robin Agent, wargame'leri çözerken sana eşlik eden terminal tabanlı bir eğitim aracı.
+      SSH'ı senin yerine açar, ilerlemeni tutar ve takıldığın yerde o oyuna özel
+      NotebookLM defterine soru sormanı sağlar — hepsi tek ekranda.
+    </p>
+
+    <div class="robin-grid">
+      <div>
+        <div class="feat-list">
+          <div class="feat">
+            <span class="ic">01</span>
+            <div><h4>Wargame seçim menüsü</h4>
+            <p>Bandit, Leviathan, Krypton, Natas, Narnia, Behemoth ve Utumno arasından seç — her biri zorluk ve konularıyla listelenir.</p></div>
+          </div>
+          <div class="feat">
+            <span class="ic">02</span>
+            <div><h4>Otomatik SSH + ilerleme takibi</h4>
+            <p>Şifreni girer, oturumu açar, nerede kaldığını <span class="flag">progress.json</span> içinde tutar. Kaldığın yerden devam edersin.</p></div>
+          </div>
+          <div class="feat">
+            <span class="ic">03</span>
+            <div><h4>Yan panelde AI sohbeti</h4>
+            <p>TMUX split ekranı: solda wargame, sağda Robin Chat. Takılınca o oyunun NotebookLM defterine soru sorarsın.</p></div>
+          </div>
+          <div class="feat">
+            <span class="ic">04</span>
+            <div><h4>İki mod</h4>
+            <p><span class="flag">[1]</span> AI destekli — her oyun için defter hazırlanır. <span class="flag">[2]</span> Hard mode — AI yok, direkt wargame.</p></div>
+          </div>
+        </div>
+
+        <div class="install">
+          <div class="install-head">
+            <span>kurulum &amp; çalıştırma</span>
+            <button class="copy-btn" data-copy="#install-pre">kopyala</button>
+          </div>
+<pre id="install-pre"><span class="c"># sanal ortam + bağımlılıklar</span>
+<span class="p">$</span> cd robinagent
+<span class="p">$</span> python3 -m venv .venv <span class="k">&amp;&amp;</span> source .venv/bin/activate
+<span class="p">$</span> pip install -r requirements.txt
+
+<span class="c"># AI modu (opsiyonel)</span>
+<span class="p">$</span> pip install <span class="k">"notebooklm-py[browser]"</span>
+<span class="p">$</span> playwright install chromium
+
+<span class="c"># başlat — TMUX içinde açılır</span>
+<span class="p">$</span> python robinagent.py</pre>
+        </div>
+      </div>
+
+      <!-- split-screen TUI mock -->
+      <div>
+        <div class="tui">
+          <div class="tui-bar">
+            <span>tmux</span>
+            <span class="seg">[0] wargame</span>
+            <span class="seg" style="color:var(--magenta)">[1] robin chat</span>
+          </div>
+          <div class="tui-split">
+            <div class="tui-pane left">
+              <div class="ph">wargame · ssh</div>
+              <div class="td">bandit12@bandit:~$ <span class="tw">ls</span></div>
+              <div class="tw">data.txt</div>
+              <div class="td">bandit12@bandit:~$ <span class="tw">file data.txt</span></div>
+              <div class="td">data.txt: ASCII text, hexdump</div>
+              <div class="td">bandit12@bandit:~$ <span class="tw">xxd -r data.txt &gt; /tmp/o</span></div>
+              <div class="td">bandit12@bandit:~$ <span class="tw">file /tmp/o</span></div>
+              <div class="ty">/tmp/o: gzip compressed data</div>
+              <div class="td">bandit12@bandit:~$ <span class="cursor"></span></div>
+            </div>
+            <div class="tui-pane right">
+              <div class="ph">robin chat · notebooklm</div>
+              <div class="chat-msg">
+                <div class="who">sen</div>
+                <div class="bub">gzip dosyasını nasıl açarım, uzantısı yok?</div>
+              </div>
+              <div class="chat-msg bot">
+                <div class="who">🐱 robin</div>
+                <div class="bub">Uzantıdan bağımsız: <span class="flag">mv /tmp/o /tmp/o.gz</span> sonra <span class="flag">gzip -d</span>. Her katmanda <span class="flag">file</span> ile tipi kontrol etmeye devam et — bu level iç içe sıkıştırma.</div>
+              </div>
+              <div class="chat-msg">
+                <div class="who">sen</div>
+                <div class="bub">peki bzip2 çıkarsa?</div>
+              </div>
+              <div class="chat-msg bot">
+                <div class="who">🐱 robin</div>
+                <div class="bub"><span class="flag">bzip2 -d</span> ile, tar ise <span class="flag">tar xf</span>...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="sec-sub" style="margin-top:16px;margin-bottom:0;font-size:12.5px">
+          Bağımlılıklar: <span class="flag">textual</span> (TUI) · <span class="flag">pexpect</span> (SSH pty) ·
+          <span class="flag">rich</span> · <span class="flag">pyyaml</span> · <span class="flag">notebooklm-py</span> <span class="td">(ops.)</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WARGAMES ============ -->
+<section class="band" id="wargames">
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">ls</span> <span class="arg">overthewire/</span></div>
+    <p class="sec-sub">
+      OverTheWire, Linux ve güvenlik becerilerini oyun formatında öğreten ücretsiz bir platform.
+      Başlangıçtan ileri seviyeye, önerilen sırayla:
+    </p>
+
+    <div class="path-rail">
+      <span class="n">Bandit</span><span class="arr">→</span>
+      <span class="n">Leviathan</span><span class="arr">→</span>
+      <span class="n">Krypton</span><span class="arr">→</span>
+      <span class="n">Natas</span><span class="arr">→</span>
+      <span class="n">Narnia</span><span class="arr">→</span>
+      <span class="n">Behemoth</span><span class="arr">→</span>
+      <span class="n">Utumno</span>
+    </div>
+
+    <div class="filter-row">
+      <button class="chip on" data-filter="all">// tümü</button>
+      <button class="chip" data-filter="baslangic">başlangıç · 1–2</button>
+      <button class="chip" data-filter="orta">orta · 3–5</button>
+      <button class="chip" data-filter="ileri">ileri · 6–10</button>
+    </div>
+
+    <div class="wg-grid">
+
+      <!-- Bandit -->
+      <article class="wg" data-band="baslangic" data-wg="bandit" data-levels="34" style="--accent: var(--d-low)">
+        <div class="wg-top"><span class="wg-name">Bandit</span><span class="wg-idx">01 / 07</span></div>
+        <p class="wg-desc">Linux terminal becerilerini öğreten başlangıç wargame'i — SSH, dosya okuma, izinler ve temel araçlar. Sıfırdan başlayabilirsin.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">1</span>/10</div><div class="k">Zorluk</div></div>
+          <div class="m"><div class="v">34</div><div class="k">Level</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:10%"></i></div>
+        <div class="tags"><span class="tag">SSH</span><span class="tag">cat · less · file</span><span class="tag">grep · sort</span><span class="tag">find</span><span class="tag">base64 · rot13</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">bandit.labs.overthewire.org:2220</span>
+          <a class="wg-link" href="cozumler.html#bandit">çözümler →</a>
+        </div>
+      </article>
+
+      <!-- Leviathan -->
+      <article class="wg" data-band="orta" data-wg="leviathan" data-levels="8" style="--accent: var(--d-mid)">
+        <div class="wg-top"><span class="wg-name">Leviathan</span><span class="wg-idx">02 / 07</span></div>
+        <p class="wg-desc">Binary analiz ve basit exploit teknikleri. ltrace/strace ile binary davranışını incelersin. Bandit gerektirir.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">3</span>/10</div><div class="k">Zorluk</div></div>
+          <div class="m"><div class="v">8</div><div class="k">Level</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:30%"></i></div>
+        <div class="tags"><span class="tag">ltrace · strace</span><span class="tag">SUID binary</span><span class="tag">symlink</span><span class="tag">basit RE</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">leviathan.labs...:2223</span>
+          <a class="wg-link" href="cozumler.html#leviathan">çözümler →</a>
+        </div>
+      </article>
+
+      <!-- Krypton -->
+      <article class="wg" data-band="orta" data-wg="krypton" data-levels="7" style="--accent: var(--d-mid)">
+        <div class="wg-top"><span class="wg-name">Krypton</span><span class="wg-idx">03 / 07</span></div>
+        <p class="wg-desc">Kriptografi temelleri — klasik şifrelerden modern yaklaşımlara. Şifreli metinleri kırarsın.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">3</span>/10</div><div class="k">Zorluk</div></div>
+          <div class="m"><div class="v">7</div><div class="k">Level</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:30%"></i></div>
+        <div class="tags"><span class="tag">Caesar · ROT</span><span class="tag">Vigenère</span><span class="tag">frekans analizi</span><span class="tag">XOR</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">krypton.labs...:2231</span>
+          <a class="wg-link" href="cozumler.html#krypton">çözümler →</a>
+        </div>
+      </article>
+
+      <!-- Natas -->
+      <article class="wg" data-band="orta" data-wg="natas" data-levels="35" style="--accent: var(--d-mid)">
+        <div class="wg-top"><span class="wg-name">Natas</span><span class="wg-idx">04 / 07</span></div>
+        <p class="wg-desc">Web güvenliği — HTTP, kaynak kodu analizi, SQL injection, XSS ve fazlası. Tarayıcı üzerinden oynanır.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">4</span>/10</div><div class="k">Zorluk</div></div>
+          <div class="m"><div class="v">35</div><div class="k">Level</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:40%"></i></div>
+        <div class="tags"><span class="tag">HTTP başlıkları</span><span class="tag">SQL injection</span><span class="tag">XSS</span><span class="tag">file inclusion</span><span class="tag">PHP</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">natas.labs.overthewire.org</span>
+          <a class="wg-link" href="cozumler.html#natas">çözümler →</a>
+        </div>
+      </article>
+
+      <!-- Narnia -->
+      <article class="wg" data-band="ileri" data-wg="narnia" data-levels="10" style="--accent: var(--d-high)">
+        <div class="wg-top"><span class="wg-name">Narnia</span><span class="wg-idx">05 / 07</span></div>
+        <p class="wg-desc">Binary exploitation — buffer overflow, format string ve temel exploit geliştirme. Assembly okuma gerektirir.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">6</span>/10</div><div class="k">Zorluk</div></div>
+          <div class="m"><div class="v">10</div><div class="k">Level</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:60%"></i></div>
+        <div class="tags"><span class="tag">stack overflow</span><span class="tag">format string</span><span class="tag">shellcode</span><span class="tag">GDB</span><span class="tag">SUID exploit</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">narnia.labs...:2226</span>
+          <a class="wg-link" href="cozumler.html#narnia">çözümler →</a>
+        </div>
+      </article>
+
+      <!-- Behemoth -->
+      <article class="wg" data-band="ileri" data-wg="behemoth" data-levels="9" style="--accent: var(--d-high)">
+        <div class="wg-top"><span class="wg-name">Behemoth</span><span class="wg-idx">06 / 07</span></div>
+        <p class="wg-desc">Orta seviye binary exploitation. Narnia'dan daha karmaşık senaryolar, ASLR ve çeşitli korumalar.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">7</span>/10</div><div class="k">Zorluk</div></div>
+          <div class="m"><div class="v">9</div><div class="k">Level</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:70%"></i></div>
+        <div class="tags"><span class="tag">stack · heap overflow</span><span class="tag">ret-to-libc</span><span class="tag">GOT/PLT</span><span class="tag">pwntools</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">behemoth.labs...:2221</span>
+          <a class="wg-link" href="cozumler.html#behemoth">çözümler →</a>
+        </div>
+      </article>
+
+      <!-- Utumno -->
+      <article class="wg" data-band="ileri" data-wg="utumno" data-levels="8" style="--accent: var(--d-max)">
+        <div class="wg-top"><span class="wg-name">Utumno</span><span class="wg-idx">07 / 07</span></div>
+        <p class="wg-desc">İleri seviye binary exploitation. Minimum ipucu, maksimum zorluk — sadece tecrübeli exploit geliştiricileri için.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">9</span>/10</div><div class="k">Zorluk</div></div>
+          <div class="m"><div class="v">8</div><div class="k">Level</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:90%"></i></div>
+        <div class="tags"><span class="tag">ROP</span><span class="tag">heap exploitation</span><span class="tag">ASLR bypass</span><span class="tag">PIE bypass</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">utumno.labs...:2227</span>
+          <a class="wg-link" href="cozumler.html#utumno">çözümler →</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ KONU ANLATIMLARI ============ -->
+<section class="band band-alt" id="konular">
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">tree</span> <span class="arg">konu_anlatimlari/</span></div>
+    <p class="sec-sub">
+      Komutların ve kavramların wargame-bağımsız, referans olarak tutulduğu dosyalar —
+      <b style="color:var(--fg)">artık tamamı site içinde okunuyor.</b> Bir kategoriye tıkla,
+      okuyucu açılsın.
+    </p>
+
+    <div class="tree-grid">
+      <div class="tree">
+        <a class="tree-row" href="konular.html#linux_komutlari/dosya_sistemi.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">linux_komutlari/</div><div class="ds">dosya sistemi · metin işleme · ağ · izinler · süreç · git</div></div></div>
+          <span class="cnt">7 konu</span>
+        </a>
+        <a class="tree-row" href="konular.html#binary_exploitation/00_x86_assembly_temelleri.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">binary_exploitation/</div><div class="ds">x86 assembly → format string → ROP → GOT/PLT → korumalar</div></div></div>
+          <span class="cnt">21 modül</span>
+        </a>
+        <a class="tree-row" href="konular.html#web_guvenligi/01_html_kaynak_ve_devtools.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">web_guvenligi/</div><div class="ds">HTTP · kaynak &amp; devtools · cookie · injection · deserialization</div></div></div>
+          <span class="cnt">24 konu</span>
+        </a>
+        <a class="tree-row" href="konular.html#kriptografi/krypton_komutlar_ve_kavramlar.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">kriptografi/</div><div class="ds">Krypton komutları, kavramlar ve klasik şifreler</div></div></div>
+          <span class="cnt">1 konu</span>
+        </a>
+        <a class="tree-row" href="konular.html#leviathan_komutlari/binary_analizi.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">leviathan_komutlari/</div><div class="ds">binary analizi · gdb · ltrace/strace · symlink · brute force</div></div></div>
+          <span class="cnt">6 konu</span>
+        </a>
+      </div>
+
+      <div class="tree-side">
+        <h4>Nasıl kullanılır?</h4>
+        <p>Rehberlerde <b>yöntem</b> anlatılıyor, şifreler paylaşılmıyor. Önce kendin dene, takılırsan bak.</p>
+        <ul>
+          <li><span class="b">01</span> OverTheWire'da level görevini oku</li>
+          <li><span class="b">02</span> Önce <b>kendi başına</b> dene</li>
+          <li><span class="b">03</span> Takılırsan ilgili çözüme / konuya bak</li>
+          <li><span class="b">04</span> Kavramı <b>konu anlatımıyla</b> pekiştir</li>
+        </ul>
+        <a class="btn btn-primary" href="konular.html" style="margin-top:20px;width:100%;justify-content:center">▸ Konu anlatımlarını aç</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KAYNAKLAR ============ -->
+<section class="band" id="kaynaklar">
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">cat</span> <span class="arg">kaynaklar.md</span></div>
+    <p class="sec-sub">Repoda derlenen harici kaynaklardan bir seçki — derinleşmek istediğinde.</p>
+
+    <div class="res-grid">
+      <div class="res">
+        <h4>// linux referans</h4>
+        <a href="https://manpages.ubuntu.com/" target="_blank" rel="noopener">Linux Man Pages</a>
+        <a href="https://explainshell.com/" target="_blank" rel="noopener">Explain Shell</a>
+        <a href="https://tldp.org/LDP/Bash-Beginners-Guide/html/" target="_blank" rel="noopener">Bash Beginners Guide</a>
+      </div>
+      <div class="res">
+        <h4>// web güvenliği</h4>
+        <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10</a>
+        <a href="https://portswigger.net/web-security" target="_blank" rel="noopener">PortSwigger Academy</a>
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" target="_blank" rel="noopener">MDN HTTP Docs</a>
+      </div>
+      <div class="res">
+        <h4>// binary exploitation</h4>
+        <a href="https://www.youtube.com/playlist?list=PLhixgUqwRTjxglIswKp9mpkfPNfHkzyeN" target="_blank" rel="noopener">LiveOverflow — Pwn</a>
+        <a href="https://docs.pwntools.com/en/stable/" target="_blank" rel="noopener">pwntools Dokümantasyonu</a>
+        <a href="https://pwn.college/" target="_blank" rel="noopener">pwn.college</a>
+        <a href="https://www.felixcloutier.com/x86/" target="_blank" rel="noopener">x86 Instruction Reference</a>
+      </div>
+      <div class="res">
+        <h4>// kriptografi</h4>
+        <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">CyberChef</a>
+        <a href="https://www.dcode.fr/" target="_blank" rel="noopener">dCode.fr</a>
+        <a href="https://www.asciitable.com/" target="_blank" rel="noopener">ASCII Tablosu</a>
+      </div>
+      <div class="res">
+        <h4>// git</h4>
+        <a href="https://git-scm.com/book/tr/v2" target="_blank" rel="noopener">Pro Git (Türkçe)</a>
+        <a href="https://learngitbranching.js.org/" target="_blank" rel="noopener">Learn Git Branching</a>
+        <a href="https://git-scm.com/doc" target="_blank" rel="noopener">Git Resmi Dokümantasyon</a>
+      </div>
+      <div class="res">
+        <h4>// overthewire</h4>
+        <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire Wargames</a>
+        <a href="https://mayadevbe.me/posts/overthewire/bandit/overview/" target="_blank" rel="noopener">Bandit Walkthrough</a>
+        <a href="https://exploit.education/phoenix/" target="_blank" rel="noopener">Exploit.education — Phoenix</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand"><span class="pp">🐧</span><b>linux_learning</b></div>
+      <p>Oyun oynayarak, deneye yanıla, terminal ekranına bakarak. Repo büyümeye devam ediyor — katkı ve önerilere açık.</p>
+      <p class="lic">Lisans: <b>CC BY-SA 4.0</b> · Kod: <b>MIT</b></p>
+      <div class="foot-cat" id="footCat" aria-hidden="true"></div>
+    </div>
+    <div class="foot-links">
+      <a href="https://github.com/waitasec137/linux_learning" target="_blank" rel="noopener">★ GitHub'da aç</a>
+      <a href="#robin">Robin Agent</a>
+      <a href="#wargames">Wargames</a>
+      <a href="#konular">Konu Anlatımları</a>
+      <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire ↗</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+<script src="assets/sfx.js"></script>
+</body>
+</html>
