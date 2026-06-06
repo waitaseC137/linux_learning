@@ -729,6 +729,20 @@ body { animation: pageIn .45s ease both; }
 .sec-head { padding-left: 2px; }
 
 /* ============================================================
+   TAŞMA GÜVENLİĞİ — grid/flex min-width:auto taşmasını engelle
+   (her ekran boyutunda güvenli)
+   ============================================================ */
+.robin-grid > *, .hero-grid > *, .tree-grid > * { min-width: 0; }
+.tui, .tui-split, .tui-split > *, .tui-pane { min-width: 0; }
+.tui-pane { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.install, .install pre, .term, .term-body { min-width: 0; }
+.install pre { overflow-x: auto; }
+.feat, .wg, .res { min-width: 0; }
+/* okuyucu: içerik sütunu geniş kod/tablodan taşmasın */
+.docs > *, .content, .content .reader { min-width: 0; }
+.content { overflow-x: hidden; }
+
+/* ============================================================
    MOBİL / TELEFON  (≤ 760px)
    ============================================================ */
 @media (max-width: 760px) {
