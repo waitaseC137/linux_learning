@@ -157,7 +157,6 @@ Utumno sonrası** capstone olarak en sona konuldu.
 | [maze 7 -> 8.md](./maze/maze%207%20-%3E%208.md) | ELF parser overflow — güvenilmeyen `e_shentsize` → ret2env | 7 → 8 |
 | [maze 8 -> 9.md](./maze/maze%208%20-%3E%209.md) | Format string — `snprintf(buf,n,user)` → `%n` → `GOT[strlen]=system` | 8 → 9 |
 
-> 🔒 OverTheWire, Maze çözümlerinin web'de yayınlanmamasını rica eder; bu notlar kişisel çalışma içindir.
 
 ---
 
