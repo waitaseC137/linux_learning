@@ -63,3 +63,5 @@ printf 'cat /etc/maze_pass/maze5\n' | /maze/maze4 "$PWD/check"
 | Setuid script & `-p` | `#!/bin/sh -p` olmadan dash/bash yetkiyi `ruid`'e düşürür; `-p` korur |
 | Shebang + stdin | `exec sh -p` (argümansız) komutları stdin'den okur → uzun yolu script'e gömmeden besle |
 | Parse sınırı | Kabuğu erken `exec` ettirip kalan baytları (NUL'lu kontrol verisi) "ölü bölgeye" koy |
+
+> 📚 Konu anlatımı: [setuid, yetki düşürme & `-p` bayrağı](../../konu_anlatimlari/binary_exploitation/19_setuid_yetki_dususu_ve_p_bayragi.md) — `#!/bin/sh -p` ve `setresuid`'in neden gerektiği (ruid/euid/suid modeli).

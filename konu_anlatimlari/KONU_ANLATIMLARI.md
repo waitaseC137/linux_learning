@@ -99,5 +99,6 @@
 | [16_file_yapisi_fsop.md](./binary_exploitation/16_file_yapisi_fsop.md) | `_IO_FILE`, `fp` overwrite, vtable check, write-what-where | Maze 6 |
 | [17_setjmp_longjmp_ptr_mangle.md](./binary_exploitation/17_setjmp_longjmp_ptr_mangle.md) | `jmp_buf`, PTR_MANGLE, ebp-pivot bypass | Utumno 7 |
 | [18_ag_servisi_exploitasyonu.md](./binary_exploitation/18_ag_servisi_exploitasyonu.md) | socket/bind/fork server, soket üzerinden exploit, UDP sniffing | Maze 8, Behemoth 5 |
+| [19_setuid_yetki_dususu_ve_p_bayragi.md](./binary_exploitation/19_setuid_yetki_dususu_ve_p_bayragi.md) | ruid/euid/suid, `setresuid`, yetki düşürme, `#!/bin/sh -p`, setuid script | Maze 4 + Hepsi |
 
 ---
