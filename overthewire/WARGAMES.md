@@ -44,11 +44,21 @@ Mutlak başlangıç noktası. Komut satırını hiç kullanmamış biri bile bur
 
 ## 🐙 Leviathan — Tersine Mühendisliğe Giriş
 
-Binary analizi, sembolik linkler ve privilege escalation. Bir binary'nin içini `ltrace` ile okumak, `gdb` ile assembly'e bakmak, symlink ile sistemi kandırmak.
+Binary analizi, sembolik linkler ve privilege escalation. Bir binary'nin içini `ltrace` ile okumak, `objdump`/`gdb` ile assembly'e bakmak, symlink ile sistemi kandırmak. Exploit yazmaktan çok **temel Linux + SUID + dinamik analiz** refleksi kazandırır.
 
-| Dosya | Konular | Level'lar |
+> 📖 **Başlamadan önce oku:** [Leviathan ön bilgileri](../konu_anlatimlari/leviathan_komutlari/baslamadan_once_on_bilgiler.md) · [Leviathan ne öğretiyor?](../konu_anlatimlari/leviathan_komutlari/leviathan_ne_ogretiyor.md)
+>
+> ⚠️ Şifreler md'lerde gizli (`**********`).
+
+| Dosya | Konu / Teknik | Level'lar |
 |---|---|---|
-| [leviathan_0-7.md](./leviathan/leviathan_0-7.md) | ltrace, strings, gdb, symlink, TOCTOU, binary→ASCII | 0 → 7 |
+| [leviathan 0 -> 1.md](./leviathan/leviathan%200%20-%3E%201.md) | Yedek dosyasında gömülü şifre — `bookmarks.html` bilgi sızıntısı (`grep`) | 0 → 1 |
+| [leviathan 1 -> 2.md](./leviathan/leviathan%201%20-%3E%202.md) | `ltrace` ile gömülü şifre (`strcmp` → "sex") | 1 → 2 |
+| [leviathan 2 -> 3.md](./leviathan/leviathan%202%20-%3E%203.md) | `access()` + boşlukla argüman bölme (`system("/bin/cat …")`) | 2 → 3 |
+| [leviathan 3 -> 4.md](./leviathan/leviathan%203%20-%3E%204.md) | `ltrace` ile gömülü şifre (yanıltıcı + gerçek `strcmp`) | 3 → 4 |
+| [leviathan 4 -> 5.md](./leviathan/leviathan%204%20-%3E%205.md) | binary→ASCII — 8-bit ikili çıktıyı çözme | 4 → 5 |
+| [leviathan 5 -> 6.md](./leviathan/leviathan%205%20-%3E%206.md) | Symlink — `/tmp/file.log` → parola dosyası | 5 → 6 |
+| [leviathan 6 -> 7.md](./leviathan/leviathan%206%20-%3E%207.md) | 4-haneli kod — `objdump`/`gdb` ile sabit (`0x1bd3`=7123) veya brute force | 6 → 7 |
 
 ---
 

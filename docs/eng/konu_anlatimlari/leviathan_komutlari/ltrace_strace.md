@@ -1,18 +1,18 @@
-# ltrace ve strace
+# ltrace and strace
 
-Binary'lerin çalışma anındaki davranışını izlemeye yarayan araçlar. Kaynak koda gerek kalmadan binary'nin ne yaptığını anlayabilirsin.
+Tools for observing a binary's behavior at runtime. Without needing source code, you can understand what the binary does.
 
 ---
 
-## ltrace — Kütüphane Çağrısı İzleyici
+## ltrace — Library Call Tracer
 
 ```bash
 ltrace ./binary
-ltrace ./binary argüman
-ltrace -e strcmp ./binary     # sadece strcmp çağrılarını göster
+ltrace ./binary argument
+ltrace -e strcmp ./binary     # show only strcmp calls
 ```
 
-Binary çalışırken yaptığı **C kütüphane fonksiyon çağrılarını** (libc) gerçek zamanlı gösterir.
+Shows, in real time, the **C library function calls** (libc) a binary makes while running.
 
 ```bash
 $ ltrace ./check
@@ -20,98 +20,98 @@ printf("password: ")
 getchar()          → 's'
 getchar()          → 'e'
 getchar()          → 'x'
-strcmp("sex", "sex")   = 0   ← eşleşti!
-system("/bin/sh")              ← shell açıldı
+strcmp("sex", "sex")   = 0   ← matched!
+system("/bin/sh")              ← shell opened
 ```
 
-**Neden bu kadar güçlü?**  
-Şifre kontrolü sıklıkla `strcmp(girilen, gerçek_şifre)` şeklinde yapılır. `ltrace` her iki argümanı da gösterir — gerçek şifre doğrudan görünür.
+**Why is it so powerful?**  
+Password checks are often done as `strcmp(entered, real_password)`. `ltrace` shows both arguments — the real password appears directly.
 
-**Dikkat — Yanıltıcı çağrılar:**
+**Watch out — decoy calls:**
 ```bash
 $ ltrace ./level3
-strcmp("h0no33", "kakaka")     ← BU GERÇEK DEĞİL (bizi şaşırtmak için)
+strcmp("h0no33", "kakaka")     ← THIS IS NOT THE REAL ONE (a distraction)
 printf("Enter the password> ")
 fgets("test\n", 256, ...)
-strcmp("test\n", "snlprintf\n") ← GERÇEK KARŞILAŞTIRMA
+strcmp("test\n", "snlprintf\n") ← THE REAL COMPARISON
 ```
 
-Binary içinde birden fazla `strcmp` olabilir. Hangisinin asıl kontrol olduğunu anlamak için sıralamaya ve bağlama dikkat et.
+A binary may contain more than one `strcmp`. To figure out which one is the actual check, pay attention to the ordering and context.
 
 ---
 
-## İzlenen Yaygın Fonksiyonlar
+## Commonly Traced Functions
 
-### strcmp — String Karşılaştırma
+### strcmp — String Comparison
 
 ```c
 strcmp(s1, s2)
-// Dönüş: 0 → eşit, <0 → s1 < s2, >0 → s1 > s2
+// Return: 0 → equal, <0 → s1 < s2, >0 → s1 > s2
 ```
 
-Şifre kontrollerinde en sık kullanılan fonksiyon. `ltrace` çıktısında:
+The function most often used in password checks. In `ltrace` output:
 ```
-strcmp("girilen_şifre", "gerçek_şifre") = -1
+strcmp("entered_password", "real_password") = -1
 ```
 
-### fgets — Girdi Okuma
+### fgets — Reading Input
 
 ```c
-fgets(buffer, boyut, stdin)
+fgets(buffer, size, stdin)
 ```
 
-Kullanıcıdan satır okur. `ltrace` çıktısında hangi buffer'a ne yazıldığını görebilirsin.
+Reads a line from the user. In `ltrace` output you can see which buffer received what.
 
-### fopen — Dosya Açma
+### fopen — Opening a File
 
 ```c
 fopen("/tmp/file.log", "r")
-// Dönüş: 0 → dosya bulunamadı, diğer → başarılı
+// Return: 0 → file not found, otherwise → success
 ```
 
-Binary'nin hangi dosyayı açmaya çalıştığını görürsün:
+You see which file the binary tries to open:
 ```bash
 $ ltrace ./leviathan5
-fopen("/tmp/file.log", "r") = 0   ← dosya yok
+fopen("/tmp/file.log", "r") = 0   ← file does not exist
 puts("Cannot find /tmp/file.log")
 ```
 
-Bu bilgiyle `/tmp/file.log`'u şifre dosyasına link edebilirsin.
+With this info you can link `/tmp/file.log` to the password file.
 
-### access — Erişim Kontrolü
+### access — Access Check
 
 ```c
-access("/path/to/file", 4)   // 4 = okuma izni
-// Dönüş: 0 → erişim var, -1 → yok
+access("/path/to/file", 4)   // 4 = read permission
+// Return: 0 → access granted, -1 → denied
 ```
 
-TOCTOU açıklarını tespit etmek için kritik. Eğer `access()` ve ardından `open()` veya `system()` çağrısı görüyorsan, aralarındaki fark exploit edilebilir.
+Watch out when you see `access()` followed by `open()`/`system()`: the **difference** between the two can be exploited. There are two ways — (1) by parsing the string differently (the space-based argument splitting in Leviathan 2), (2) by swapping the file in the time window between them (a real **TOCTOU** race).
 
-### system — Komut Çalıştırma
+### system — Running a Command
 
 ```c
 system("/bin/cat /path/to/file")
 ```
 
-Binary'nin çalıştırdığı shell komutlarını gösterir:
+Shows the shell commands the binary runs:
 ```bash
 $ ltrace ./printfile .bashrc
 access(".bashrc", 4)                     = 0
 snprintf("/bin/cat .bashrc", 511, ...)   = 16
-system("/bin/cat .bashrc")               ← komut bu!
+system("/bin/cat .bashrc")               ← here is the command!
 ```
 
 ---
 
-## strace — Sistem Çağrısı İzleyici
+## strace — System Call Tracer
 
 ```bash
 strace ./binary
-strace -e open,read ./binary    # sadece open ve read çağrıları
-strace -p <PID>                 # çalışan sürece bağlan
+strace -e open,read ./binary    # only open and read calls
+strace -p <PID>                 # attach to a running process
 ```
 
-`ltrace`'ten daha düşük seviye — kütüphane fonksiyonları değil, **kernel sistem çağrılarını** (syscall) gösterir.
+Lower level than `ltrace` — instead of library functions, it shows **kernel system calls** (syscalls).
 
 ```bash
 $ strace ./check
@@ -127,9 +127,9 @@ read(0, "test\n", 1024)
 
 | | ltrace | strace |
 |---|---|---|
-| Gösterdiği | Kütüphane fonksiyonları (strcmp, printf...) | Kernel çağrıları (read, write, open...) |
-| Seviye | Yüksek (anlaşılır) | Düşük (ayrıntılı) |
-| Şifre bulmak için | ✅ Daha iyi | ❌ Daha zor |
-| Dosya erişimi görmek için | ✅ fopen ile | ✅ open syscall ile |
+| Shows | Library functions (strcmp, printf...) | Kernel calls (read, write, open...) |
+| Level | High (readable) | Low (detailed) |
+| For finding passwords | ✅ Better | ❌ Harder |
+| For seeing file access | ✅ via fopen | ✅ via open syscall |
 
-Leviathan'da genellikle `ltrace` yeterlidir. `strace` daha çok dosya sistemi erişimlerini araştırmak için kullanılır.
+In Leviathan, `ltrace` is usually enough. `strace` is used more for investigating file-system accesses.

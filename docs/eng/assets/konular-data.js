@@ -16,12 +16,12 @@ window.KONULAR = {
       tag: "Bandit",
       blurb: "The foundation of moving around the terminal — files, text, networking, permissions and git.",
       files: [
-        { f: "linux_komutlari/dosya_sistemi.md",        t: "File System",          h: "pwd · ls · cd · cat · file · find · cp · mv" },
-        { f: "linux_komutlari/metin_isleme.md",          t: "Text Processing",      h: "grep · sort · uniq · strings · cut · tr · diff" },
-        { f: "linux_komutlari/sikistirma_encoding.md",   t: "Compression & Encoding", h: "base64 · xxd · gzip · bzip2 · tar · zip" },
-        { f: "linux_komutlari/ag.md",                    t: "Networking",            h: "ssh · scp · nc · openssl · nmap · curl · wget" },
-        { f: "linux_komutlari/izinler_kullanici.md",     t: "Permissions & Users",   h: "chmod · chown · id · su · sudo · SUID/SGID" },
-        { f: "linux_komutlari/surec_shell.md",           t: "Processes & Shell",     h: "| · > · & · jobs · $() · for · alias" },
+        { f: "linux_komutlari/file_system.md",          t: "File System",          h: "pwd · ls · cd · cat · file · find · cp · mv" },
+        { f: "linux_komutlari/text_processing.md",       t: "Text Processing",      h: "grep · sort · uniq · strings · cut · tr · diff" },
+        { f: "linux_komutlari/compression_encoding.md",  t: "Compression & Encoding", h: "base64 · xxd · gzip · bzip2 · tar · zip" },
+        { f: "linux_komutlari/networking.md",            t: "Networking",            h: "ssh · scp · nc · openssl · nmap · curl · wget" },
+        { f: "linux_komutlari/permissions_users.md",     t: "Permissions & Users",   h: "chmod · chown · id · su · sudo · SUID/SGID" },
+        { f: "linux_komutlari/process_shell.md",         t: "Processes & Shell",     h: "| · > · & · jobs · $() · for · alias" },
         { f: "linux_komutlari/git.md",                   t: "Git",                   h: "clone · log · show · branch · checkout · commit" }
       ]
     },
@@ -32,10 +32,10 @@ window.KONULAR = {
       tag: "Leviathan",
       blurb: "Inspecting how binaries behave: tracing, symbolic links, GDB.",
       files: [
-        { f: "leviathan_komutlari/dosya_izinleri_suid.md", t: "File Permissions & SUID", h: "chmod · find -perm · privilege escalation" },
-        { f: "leviathan_komutlari/binary_analizi.md",      t: "Binary Analysis",        h: "file · strings · xxd · od" },
+        { f: "leviathan_komutlari/file_permissions_suid.md", t: "File Permissions & SUID", h: "chmod · find -perm · privilege escalation" },
+        { f: "leviathan_komutlari/binary_analysis.md",     t: "Binary Analysis",        h: "file · strings · xxd · od" },
         { f: "leviathan_komutlari/ltrace_strace.md",       t: "ltrace / strace",       h: "strcmp · fopen · access · system" },
-        { f: "leviathan_komutlari/sembolik_linkler.md",    t: "Symbolic Links",        h: "ln -s · readlink · TOCTOU" },
+        { f: "leviathan_komutlari/symbolic_links.md",      t: "Symbolic Links",        h: "ln -s · readlink · argument splitting" },
         { f: "leviathan_komutlari/gdb.md",                 t: "GDB",                   h: "disassemble · break · run · x · print" },
         { f: "leviathan_komutlari/brute_force_bash.md",    t: "Brute Force (bash)",    h: "for loop · conditionals · PIN brute force" }
       ]
@@ -48,26 +48,26 @@ window.KONULAR = {
       blurb: "From HTTP to injection — the entire Natas web attack surface.",
       numbered: true,
       files: [
-        { f: "web_guvenligi/01_html_kaynak_ve_devtools.md",   n: "01", t: "HTML Source & DevTools",      h: "Hidden fields, Developer Tools" },
-        { f: "web_guvenligi/02_http_protokolu.md",            n: "02", t: "HTTP Protocol",               h: "Request/response, methods, headers" },
-        { f: "web_guvenligi/03_robots_ve_dizin_kesfi.md",     n: "03", t: "robots.txt & Directory Discovery", h: "Hidden paths, directory discovery" },
-        { f: "web_guvenligi/04_cookie_manipulasyonu.md",      n: "04", t: "Cookie Manipulation",         h: "Cookie structure, security flags" },
-        { f: "web_guvenligi/05_php_kaynak_kodu.md",           n: "05", t: "PHP Source Code",             h: "Reading source, include analysis" },
-        { f: "web_guvenligi/06_encoding_ve_obfuscation.md",   n: "06", t: "Encoding & Obfuscation",      h: "Base64, hex, URL encoding" },
+        { f: "web_guvenligi/01_html_source_and_devtools.md",   n: "01", t: "HTML Source & DevTools",      h: "Hidden fields, Developer Tools" },
+        { f: "web_guvenligi/02_http_protocol.md",             n: "02", t: "HTTP Protocol",               h: "Request/response, methods, headers" },
+        { f: "web_guvenligi/03_robots_and_directory_discovery.md", n: "03", t: "robots.txt & Directory Discovery", h: "Hidden paths, directory discovery" },
+        { f: "web_guvenligi/04_cookie_manipulation.md",       n: "04", t: "Cookie Manipulation",         h: "Cookie structure, security flags" },
+        { f: "web_guvenligi/05_php_source_code.md",           n: "05", t: "PHP Source Code",             h: "Reading source, include analysis" },
+        { f: "web_guvenligi/06_encoding_and_obfuscation.md",  n: "06", t: "Encoding & Obfuscation",      h: "Base64, hex, URL encoding" },
         { f: "web_guvenligi/07_command_injection.md",         n: "07", t: "Command Injection",           h: "Chaining commands with ; · | · $()" },
-        { f: "web_guvenligi/08_lfi_ve_path_traversal.md",     n: "08", t: "LFI & Path Traversal",        h: "Directory traversal with ../" },
-        { f: "web_guvenligi/09_xor_sifrelemesi.md",           n: "09", t: "XOR Encryption",              h: "Known-plaintext attack" },
-        { f: "web_guvenligi/10_dosya_yukleme_bypass.md",      n: "10", t: "File Upload Bypass",          h: "MIME type, extension manipulation" },
+        { f: "web_guvenligi/08_lfi_and_path_traversal.md",    n: "08", t: "LFI & Path Traversal",        h: "Directory traversal with ../" },
+        { f: "web_guvenligi/09_xor_encryption.md",            n: "09", t: "XOR Encryption",              h: "Known-plaintext attack" },
+        { f: "web_guvenligi/10_file_upload_bypass.md",        n: "10", t: "File Upload Bypass",          h: "MIME type, extension manipulation" },
         { f: "web_guvenligi/11_sql_injection.md",             n: "11", t: "SQL Injection",               h: "' OR 1=1 · UNION attack" },
         { f: "web_guvenligi/12_blind_sql_injection.md",       n: "12", t: "Blind SQL Injection",         h: "Boolean-based, char extraction" },
-        { f: "web_guvenligi/13_command_injection_ileri.md",   n: "13", t: "Command Injection (Advanced)", h: "grep bypass, filter evasion" },
+        { f: "web_guvenligi/13_command_injection_advanced.md", n: "13", t: "Command Injection (Advanced)", h: "grep bypass, filter evasion" },
         { f: "web_guvenligi/14_session_brute_force.md",       n: "14", t: "Session Brute Force",         h: "Session token brute force" },
-        { f: "web_guvenligi/15_session_ve_newline_injection.md", n: "15", t: "Session & Newline Injection", h: "CRLF, session injection" },
+        { f: "web_guvenligi/15_session_and_newline_injection.md", n: "15", t: "Session & Newline Injection", h: "CRLF, session injection" },
         { f: "web_guvenligi/16_http_redirect_bypass.md",      n: "16", t: "HTTP Redirect Bypass",        h: "302 interception, response cutting" },
         { f: "web_guvenligi/17_php_type_juggling.md",         n: "17", t: "PHP Type Juggling",           h: "== loose comparison" },
         { f: "web_guvenligi/18_php_object_injection.md",      n: "18", t: "PHP Object Injection",        h: "unserialize vulnerability" },
         { f: "web_guvenligi/19_sql_truncation.md",            n: "19", t: "SQL Truncation",              h: "Field length overflow" },
-        { f: "web_guvenligi/20_ecb_mode_zafiyeti.md",         n: "20", t: "ECB Mode Weakness",           h: "Block cipher pattern leak" },
+        { f: "web_guvenligi/20_ecb_mode_vulnerability.md",    n: "20", t: "ECB Mode Weakness",           h: "Block cipher pattern leak" },
         { f: "web_guvenligi/21_perl_rce.md",                  n: "21", t: "Perl RCE",                    h: "Command execution via open()" },
         { f: "web_guvenligi/22_perl_cgi_param_bypass.md",     n: "22", t: "Perl CGI Param Bypass",       h: "Parameter manipulation" },
         { f: "web_guvenligi/23_log_poisoning.md",             n: "23", t: "Log Poisoning",               h: "RCE via log + LFI" },
@@ -112,7 +112,7 @@ window.KONULAR = {
       tag: "Krypton",
       blurb: "From classic ciphers to frequency analysis — the concepts behind Krypton.",
       files: [
-        { f: "kriptografi/krypton_komutlar_ve_kavramlar.md", t: "Krypton: Commands & Concepts", h: "Caesar · Vigenère · XOR · frequency" }
+        { f: "kriptografi/krypton_commands_and_concepts.md", t: "Krypton: Commands & Concepts", h: "Caesar · Vigenère · XOR · frequency" }
       ]
     }
   ]
