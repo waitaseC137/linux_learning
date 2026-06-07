@@ -22,6 +22,8 @@
 
 | Dosya | Komutlar / Kavramlar |
 |---|---|
+| [baslamadan_once_on_bilgiler.md](./leviathan_komutlari/baslamadan_once_on_bilgiler.md) | Leviathan'a başlamadan önce: SSH bağlantısı, oyun mantığı, ön gereksinimler, keşif refleksi |
+| [leviathan_ne_ogretiyor.md](./leviathan_komutlari/leviathan_ne_ogretiyor.md) | Leviathan'ın dersleri: info disclosure, command injection, symlink/TOCTOU, encoding≠güvenlik, seviye→kavram haritası |
 | [dosya_izinleri_suid.md](./leviathan_komutlari/dosya_izinleri_suid.md) | `chmod` `find -perm` `whoami` `SUID` privilege escalation |
 | [binary_analizi.md](./leviathan_komutlari/binary_analizi.md) | `file` `strings` `xxd` `od` binary→ASCII |
 | [ltrace_strace.md](./leviathan_komutlari/ltrace_strace.md) | `ltrace` `strace` `strcmp` `fopen` `access` `system` |

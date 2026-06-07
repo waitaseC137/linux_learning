@@ -66,20 +66,23 @@ $ ./leviathan5
 
 ---
 
-## TOCTOU — Time of Check to Time of Use
+## access() Kontrolünü Atlatma — Boşlukla Argüman Bölme (Leviathan Level 2)
 
-**TOCTOU açığı:** Bir programın bir dosyayı **kontrol ettiği an** ile **kullandığı an** arasındaki zaman farkından doğan güvenlik açığı.
+> **Dikkat:** Bu seviye sık sık yanlışlıkla "TOCTOU" diye anılır. Aslında burada bir **zaman yarışı (race) yoktur**. Açık, `access()` ile `system()`'in **aynı string'i farklı yorumlamasıdır**. Symlink'i ise, `cat`'in okuduğu parçayı parola dosyasına yönlendirmek için kullanırız.
 
-**Leviathan Level 2 örneği — detaylı açıklama:**
+`printfile` bir dosyayı `access()` ile kontrol edip `system("/bin/cat " + argv[1])` ile basar:
 
 ```bash
 $ ltrace ./printfile .bashrc
-access(".bashrc", 4)                    ← 1. KONTROL: erişim var mı?
+access(".bashrc", 4)                    ← 1. KONTROL: TÜM string'e tek yol olarak bakar
 snprintf("/bin/cat .bashrc", 511, ...)
-system("/bin/cat .bashrc")              ← 2. KULLANIM: cat ile oku
+system("/bin/cat .bashrc")              ← 2. KULLANIM: /bin/sh string'i BOŞLUKTAN böler
 ```
 
-`access()` tam dosya adına bakıyor. `system("/bin/cat ...")` ise boşluğu ayırıcı olarak kullanıyor.
+- `access()` argv[1]'i **tek bir bütün yol** olarak görür → bizim oluşturduğumuz gerçek dosyada geçer.
+- `system()` → `/bin/sh` string'i **boşluktan böler** → `cat`'e birden çok argüman verir.
+
+> Neden saf symlink yetmez? `access()` symlink'i **gerçek uid (leviathan2)** ile takip eder; leviathan2 parola dosyasını okuyamadığı için doğrudan symlink'te `access()` başarısız olur. Bu yüzden access'i okunabilir gerçek bir dosyayla geçirip, symlink'i yalnızca `cat`'in (efektif uid = leviathan3) okuduğu parçaya koyarız.
 
 **Exploit:**
 
@@ -108,7 +111,7 @@ system("/bin/cat /tmp/tmp.BykcxJXZxD/test file.txt")
          → cat file.txt                       ← yok, hata (önemli değil)
 ```
 
-**Gerçek dünyada TOCTOU:** `access()` + `open()` arasına yarış koşulu (race condition) sokulabilir. Bu nedenle modern kodlarda `access()` yerine doğrudan `open()` ve hata kontrolü tercih edilir.
+**Asıl TOCTOU farkı:** Gerçek bir TOCTOU açığında, `access()` ile `open()` *arasındaki* zaman penceresinde dosya (örn. symlink ile) değiştirilir — yani istismar edilen şey **zamanlamadır**. Leviathan 2'de ise zamanlama değil, **string'in farklı ayrıştırılması** istismar edilir. Ortak ders aynı: `access()` ile sonraki işlemi (aynı string'e bile olsa) farklı yorumlamak tehlikelidir; modern kodlarda `access()` yerine doğrudan `open()` + hata kontrolü tercih edilir.
 
 ---
 

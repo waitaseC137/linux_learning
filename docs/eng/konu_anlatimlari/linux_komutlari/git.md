@@ -1,14 +1,14 @@
-# 🌿 Linux Komutları — Git
+# 🌿 Linux Commands — Git
 
-> Git, kod değişikliklerini takip eden dağıtık versiyon kontrol sistemidir.  
-> Bandit'in son bölümünde (Level 27-31) git'in farklı özelliklerini  
-> tek tek kullandık — klonlamadan push'a, branch'ten tag'e kadar.
+> Git is a distributed version control system that tracks code changes.  
+> In Bandit's final section (Levels 27-31) we used git's different features  
+> one by one — from cloning to pushing, from branches to tags.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [Git Nedir?](#git-nedir)
+- [What Is Git?](#what-is-git)
 - [git clone](#git-clone)
 - [git log](#git-log)
 - [git show](#git-show)
@@ -21,83 +21,83 @@
 - [git diff](#git-diff)
 - [git status](#git-status)
 - [.gitignore](#gitignore)
-- [Git Güvenlik Açıkları](#git-güvenlik-açıkları)
+- [Git Security Vulnerabilities](#git-security-vulnerabilities)
 
 ---
 
-## Git Nedir?
+## What Is Git?
 
-Git, dosyalardaki değişiklikleri takip eden bir sistemdir. Her "commit" o anki durumun fotoğrafıdır.
+Git is a system that tracks changes in files. Each "commit" is a snapshot of the state at that moment.
 
 ```
-Proje Tarihçesi:
-  commit A (ilk)  →  commit B  →  commit C (son)
-      "init"          "özellik"    "düzeltme"
+Project History:
+  commit A (first)  →  commit B  →  commit C (last)
+      "init"           "feature"    "fix"
 ```
 
-### Temel Kavramlar
+### Core Concepts
 
-| Kavram | Açıklama |
+| Concept | Description |
 |---|---|
-| **Repository (Repo)** | Projenin tüm dosyaları + tarihçe |
-| **Commit** | Değişikliklerin kaydedilmiş anlık görüntüsü |
-| **Branch** | Paralel geliştirme hattı |
-| **Tag** | Önemli noktaları işaret eden etiket |
-| **Remote** | Uzak sunucudaki repo (GitHub gibi) |
-| **Clone** | Uzak repoyu yerel kopyalama |
-| **Push** | Yerel değişiklikleri uzağa gönderme |
-| **Pull** | Uzak değişiklikleri yerele alma |
-| **Merge** | Branch'leri birleştirme |
-| **HEAD** | Şu an bulunduğun commit |
+| **Repository (Repo)** | All of a project's files + history |
+| **Commit** | A saved snapshot of changes |
+| **Branch** | A parallel line of development |
+| **Tag** | A label marking important points |
+| **Remote** | A repo on a remote server (like GitHub) |
+| **Clone** | A local copy of a remote repo |
+| **Push** | Sending local changes to a remote |
+| **Pull** | Fetching remote changes to local |
+| **Merge** | Combining branches |
+| **HEAD** | The commit you're currently on |
 
-### Git Yapısı
+### Git Structure
 
 ```
-Çalışma Dizini → Staging (git add) → Yerel Repo (git commit) → Uzak Repo (git push)
+Working Directory → Staging (git add) → Local Repo (git commit) → Remote Repo (git push)
 ```
 
 ---
 
 ## git clone
 
-Uzak bir repoyu yerel makineye kopyalar.
+Copies a remote repo to your local machine.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
 git clone https://github.com/user/repo
-git clone https://github.com/user/repo hedef-klasor
-git clone ssh://user@host/yol/repo
-git clone ssh://user@host:port/yol/repo
+git clone https://github.com/user/repo target-folder
+git clone ssh://user@host/path/repo
+git clone ssh://user@host:port/path/repo
 ```
 
-### Önemli Bayraklar
+### Important Flags
 
-| Bayrak | Açıklama |
+| Flag | Description |
 |---|---|
-| `--depth 1` | Sadece son commit'i al (hızlı) |
-| `--branch <branch>` | Belirli branch'i klonla |
-| `--single-branch` | Sadece bir branch |
-| `-q` | Sessiz mod |
+| `--depth 1` | Get only the last commit (fast) |
+| `--branch <branch>` | Clone a specific branch |
+| `--single-branch` | Only one branch |
+| `-q` | Quiet mode |
 
-### Protokoller
+### Protocols
 
 ```bash
-# HTTPS (kullanıcı adı/şifre)
+# HTTPS (username/password)
 git clone https://github.com/user/repo
 
-# SSH (key ile)
+# SSH (with a key)
 git clone git@github.com:user/repo
 
-# Yerel (Bandit'te kullanılan)
+# Local (used in Bandit)
 git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 27: repo'yu klonla
+# Level 27: clone the repo
 cd $(mktemp -d)
 git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo
-# Şifre sor → bandit27'nin şifresini gir
+# it asks for a password → enter bandit27's password
 cd repo
 cat README
 ```
@@ -106,19 +106,19 @@ cat README
 
 ## git log
 
-Commit geçmişini gösterir.
+Shows the commit history.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git log                     # tüm geçmiş
-git log --oneline           # kısa özet (1 satır/commit)
-git log -n 5                # son 5 commit
-git log --all               # tüm branch'lerdeki commitler
-git log --graph             # branch grafiği
-git log --oneline --graph --all  # güzel özet
+git log                     # the full history
+git log --oneline           # a short summary (1 line/commit)
+git log -n 5                # the last 5 commits
+git log --all               # commits across all branches
+git log --graph             # branch graph
+git log --oneline --graph --all  # a nice summary
 ```
 
-### Örnek Çıktı
+### Example Output
 
 ```bash
 $ git log
@@ -126,7 +126,7 @@ commit edd935d60906b33f0619605abd1689808ccdd5ee
 Author: Morla Pussygato <morla@overthewire.org>
 Date:   Thu May 7 2020 ...
 
-    fix info leak        ← commit mesajı
+    fix info leak        ← commit message
 
 commit c086d11b00cad37ed77e1abf54c4bde3dfba15bb
 ...
@@ -134,25 +134,25 @@ commit c086d11b00cad37ed77e1abf54c4bde3dfba15bb
     add missing data
 ```
 
-### Bayraklar
+### Flags
 
-| Bayrak | Açıklama |
+| Flag | Description |
 |---|---|
-| `--oneline` | Her commit tek satırda |
-| `--graph` | ASCII branch grafiği |
-| `--all` | Tüm branch ve tag'ler |
-| `-n N` | Son N commit |
-| `--author="ad"` | Belirli yazarın commitleri |
-| `--since="2024-01-01"` | Belirli tarihten itibaren |
-| `--grep="kelime"` | Commit mesajında ara |
-| `-p` | Değişiklikleri de göster |
-| `--stat` | Dosya değişiklik istatistiği |
+| `--oneline` | Each commit on a single line |
+| `--graph` | ASCII branch graph |
+| `--all` | All branches and tags |
+| `-n N` | The last N commits |
+| `--author="name"` | Commits by a specific author |
+| `--since="2024-01-01"` | From a specific date onward |
+| `--grep="word"` | Search in commit messages |
+| `-p` | Also show the changes |
+| `--stat` | Statistics of file changes |
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 28: commit geçmişinde şifre gizlenmiş
+# Level 28: the password is hidden in the commit history
 git log
-# commit edd935d...  "fix info leak" ← şüpheli!
+# commit edd935d...  "fix info leak" ← suspicious!
 git show edd935d...
 ```
 
@@ -160,18 +160,18 @@ git show edd935d...
 
 ## git show
 
-Commit veya tag'in detaylarını gösterir.
+Shows the details of a commit or tag.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git show                    # son commit'in değişiklikleri
-git show <commit_id>        # belirli commit
-git show HEAD               # son commit
-git show HEAD~1             # sondan bir önceki
-git show <tag_adı>          # tag detayı
+git show                    # the last commit's changes
+git show <commit_id>        # a specific commit
+git show HEAD               # the last commit
+git show HEAD~1             # the one before last
+git show <tag_name>         # a tag's details
 ```
 
-### Çıktıyı Okumak
+### Reading the Output
 
 ```bash
 $ git show edd935d...
@@ -187,17 +187,17 @@ index ...
 +++ b/README.md
 @@ -4,3 +4,3 @@
  username: natas9
--password: W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl   ← ESKİ (silinen)
-+password: xxxxxxxxxx                            ← YENİ (eklenen)
+-password: W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl   ← OLD (removed)
++password: xxxxxxxxxx                            ← NEW (added)
 ```
 
-`-` ile başlayan satırlar kaldırıldı, `+` ile başlayanlar eklendi.
+Lines starting with `-` were removed, lines starting with `+` were added.
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 28: şifrenin silindiği commit'i göster
+# Level 28: show the commit where the password was removed
 git show edd935d60906b33f0619605abd1689808ccdd5ee
-# - password: <ESKİ_ŞİFRE>   ← bunu arıyoruz
+# - password: <OLD_PASSWORD>   ← this is what we're looking for
 # + password: xxxxxxxxxx
 ```
 
@@ -205,71 +205,71 @@ git show edd935d60906b33f0619605abd1689808ccdd5ee
 
 ## git branch
 
-Branch'leri listeler, oluşturur veya siler.
+Lists, creates, or deletes branches.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git branch                  # yerel branch'leri listele
-git branch -a               # tüm branch'ler (remote dahil)
-git branch -r               # sadece remote branch'ler
-git branch yeni-branch      # yeni branch oluştur
-git branch -d branch-adı    # branch sil (merged olmalı)
-git branch -D branch-adı    # zorla sil
+git branch                  # list local branches
+git branch -a               # all branches (including remote)
+git branch -r               # remote branches only
+git branch new-branch       # create a new branch
+git branch -d branch-name   # delete a branch (must be merged)
+git branch -D branch-name   # force delete
 ```
 
-### Branch Adlandırma Kuralları
+### Branch Naming Conventions
 
 ```
-master / main   → production kodu
-dev             → geliştirme
-feature/login   → yeni özellik
-bugfix/login    → hata düzeltme
-hotfix/login    → acil düzeltme
+master / main   → production code
+dev             → development
+feature/login   → new feature
+bugfix/login    → bug fix
+hotfix/login    → urgent fix
 ```
 
-### Örnek Çıktı
+### Example Output
 
 ```bash
 $ git branch -a
-* master                          ← * = şu an buradasın
+* master                          ← * = where you currently are
   remotes/origin/dev              ← remote branch
   remotes/origin/master
   remotes/origin/sploits-dev
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 29: tüm branch'leri listele
+# Level 29: list all branches
 git branch -a
-# remotes/origin/dev ← production'da şifre yok ama dev'de var!
+# remotes/origin/dev ← no password in production, but there is in dev!
 
 git checkout dev
-cat README.md   # şifre burada
+cat README.md   # the password is here
 ```
 
 ---
 
 ## git checkout
 
-Branch veya commit'e geçiş yapar.
+Switches to a branch or commit.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git checkout branch-adı         # branch'e geç
-git checkout -b yeni-branch     # yeni branch oluşturup geç
-git checkout <commit_id>        # belirli commit'e git (detached HEAD)
-git checkout -- dosya.txt       # dosyayı son commit'e geri al
+git checkout branch-name        # switch to a branch
+git checkout -b new-branch      # create a new branch and switch to it
+git checkout <commit_id>        # go to a specific commit (detached HEAD)
+git checkout -- file.txt        # revert a file to the last commit
 ```
 
-### Branch Geçişi
+### Switching Branches
 
 ```bash
-# Remote branch'e geç
+# switch to a remote branch
 git checkout dev
-# veya tam yol:
+# or the full path:
 git checkout -b dev origin/dev
 
-# Yeni branch oluştur ve geç
+# create a new branch and switch
 git checkout -b feature/login
 ```
 
@@ -277,87 +277,87 @@ git checkout -b feature/login
 
 ```bash
 git checkout abc1234
-# HEAD artık bir branch değil, doğrudan o commit'i gösteriyor
-# Uyarı: detached HEAD state
+# HEAD is no longer a branch, it points directly to that commit
+# Warning: detached HEAD state
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 29: dev branch'ine geç
+# Level 29: switch to the dev branch
 git checkout dev
-cat README.md   # şifre!
+cat README.md   # the password!
 ```
 
 ---
 
 ## git tag
 
-Tag oluşturur veya listeler. Tag'ler önemli noktaları işaretler (versiyon numaraları gibi).
+Creates or lists tags. Tags mark important points (like version numbers).
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git tag                     # tag'leri listele
-git tag v1.0                # lightweight tag oluştur
-git tag -a v1.0 -m "mesaj" # annotated tag (mesajlı)
-git show v1.0               # tag detayını göster
-git tag -d v1.0             # tag sil
+git tag                     # list tags
+git tag v1.0                # create a lightweight tag
+git tag -a v1.0 -m "message" # annotated tag (with a message)
+git show v1.0               # show a tag's details
+git tag -d v1.0             # delete a tag
 ```
 
-### Tag Türleri
+### Tag Types
 
 ```bash
-# Lightweight (basit işaret)
+# lightweight (a simple marker)
 git tag v1.0
 
-# Annotated (mesajlı, imzalı)
-git tag -a v1.0 -m "Versiyon 1.0 yayınlandı"
+# annotated (with a message, signed)
+git tag -a v1.0 -m "Version 1.0 released"
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 30: README boş, log tek commit, branch yok...
+# Level 30: README is empty, log has one commit, no branches...
 git tag
-# secret    ← gizli tag!
+# secret    ← a hidden tag!
 
 git show secret
-# <şifre buraya gelir>
+# <the password appears here>
 ```
 
 ---
 
 ## git add
 
-Değiştirilmiş dosyaları "staging area"ya ekler. Commit'lenmeden önce hazırlama alanı.
+Adds modified files to the "staging area." A preparation area before committing.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git add dosya.txt           # tek dosya ekle
-git add .                   # mevcut dizindeki tüm değişiklikleri ekle
-git add -A                  # tüm değişiklikleri ekle (silmeler dahil)
-git add -p                  # değişiklikleri parça parça ekle (interactive)
-git add -f dosya.txt        # .gitignore'a rağmen zorla ekle
+git add file.txt            # add a single file
+git add .                   # add all changes in the current directory
+git add -A                  # add all changes (including deletions)
+git add -p                  # add changes piece by piece (interactive)
+git add -f file.txt         # force add despite .gitignore
 ```
 
-### -f (force) Bayrağı
+### The -f (force) Flag
 
-`.gitignore` dosyasında listelenen dosyalar normalde `git add` ile eklenemez. `-f` bayrağı bunu zorlar:
+Files listed in `.gitignore` normally can't be added with `git add`. The `-f` flag forces it:
 
 ```bash
-# .gitignore içinde *.txt var
+# .gitignore contains *.txt
 cat .gitignore
 # *.txt
 
-git add key.txt         # hata! gitignore'da
-git add -f key.txt      # zorla ekle!
+git add key.txt         # error! it's in gitignore
+git add -f key.txt      # force add!
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 31: .gitignore *.txt'yi engelliyor
+# Level 31: .gitignore blocks *.txt
 cat .gitignore    # *.txt
 
 echo 'May I come in?' > key.txt
-git add -f key.txt  # zorla ekle
+git add -f key.txt  # force add
 git commit -m "add key"
 git push
 ```
@@ -366,44 +366,44 @@ git push
 
 ## git commit
 
-Staging area'daki değişiklikleri kalıcı olarak kaydeder.
+Permanently saves the changes in the staging area.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git commit -m "Commit mesajı"       # mesajla commit
-git commit -am "Mesaj"              # add + commit (takip edilen dosyalar)
-git commit --amend                  # son commit'i düzelt
-git commit --amend -m "Yeni mesaj"  # son commit mesajını değiştir
+git commit -m "Commit message"      # commit with a message
+git commit -am "Message"            # add + commit (for tracked files)
+git commit --amend                  # amend the last commit
+git commit --amend -m "New message" # change the last commit message
 ```
 
-### İyi Commit Mesajı Yazımı
+### Writing a Good Commit Message
 
 ```bash
-# KÖTÜ
-git commit -m "düzeltme"
+# BAD
+git commit -m "fix"
 git commit -m "aaa"
 
-# İYİ
-git commit -m "feat: kullanıcı giriş sayfası eklendi"
-git commit -m "fix: şifre sıfırlama hatası düzeltildi"
-git commit -m "docs: README güncellendi"
+# GOOD
+git commit -m "feat: add user login page"
+git commit -m "fix: fix the password reset bug"
+git commit -m "docs: update the README"
 ```
 
 ### Conventional Commits
 
 ```
-feat:     yeni özellik
-fix:      hata düzeltme
-docs:     dokümantasyon
-style:    format değişikliği
-refactor: kod yeniden yapılandırma
-test:     test ekleme/düzenleme
-chore:    bakım işleri
+feat:     new feature
+fix:      bug fix
+docs:     documentation
+style:    formatting change
+refactor: code restructuring
+test:     adding/editing tests
+chore:    maintenance work
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 31: değişiklikleri kaydet
+# Level 31: save the changes
 git add -f key.txt
 git commit -m "add key"
 git push
@@ -413,192 +413,192 @@ git push
 
 ## git push
 
-Yerel commit'leri uzak repo'ya gönderir.
+Sends local commits to the remote repo.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git push                            # mevcut branch'i push'la
-git push origin main                # belirli remote ve branch
-git push -u origin main             # upstream ayarla ve push'la
-git push --force                    # zorla push (dikkatli!)
-git push origin --delete branch     # remote branch sil
+git push                            # push the current branch
+git push origin main                # a specific remote and branch
+git push -u origin main             # set the upstream and push
+git push --force                    # force push (careful!)
+git push origin --delete branch     # delete a remote branch
 ```
 
-### İlk Push
+### The First Push
 
 ```bash
-# Remote bağlantısı yoksa ekle
+# if there's no remote connection, add one
 git remote add origin https://github.com/user/repo.git
 
-# Upstream ayarla
+# set the upstream
 git push -u origin main
-# Sonraki seferler sadece "git push" yeterli
+# next times, just "git push" is enough
 ```
 
-### Kimlik Doğrulama
+### Authentication
 
 ```bash
-# HTTPS (kullanıcı adı + token)
-git push    # kullanıcı adı ve şifre/token sorar
+# HTTPS (username + token)
+git push    # asks for username and password/token
 
-# SSH (key ile otomatik)
+# SSH (automatic with a key)
 git remote set-url origin git@github.com:user/repo.git
-git push    # şifre sormaz
+git push    # doesn't ask for a password
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 31: push'la, remote şifreyi verir
+# Level 31: push, and the remote gives the password
 git push -u origin master
 # remote: Well done! Here is the password:
-# remote: <şifre>
+# remote: <password>
 ```
 
 ---
 
 ## git diff
 
-Değişiklikleri karşılaştırır.
+Compares changes.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
 git diff                    # working directory vs staging
-git diff --staged           # staging vs son commit
-git diff HEAD               # working directory vs son commit
-git diff branch1 branch2    # iki branch karşılaştır
-git diff <commit1> <commit2>  # iki commit karşılaştır
+git diff --staged           # staging vs the last commit
+git diff HEAD               # working directory vs the last commit
+git diff branch1 branch2    # compare two branches
+git diff <commit1> <commit2>  # compare two commits
 ```
 
 ---
 
 ## git status
 
-Çalışma dizininin durumunu gösterir.
+Shows the state of the working directory.
 
-### Temel Kullanım
+### Basic Usage
 ```bash
-git status                  # durum göster
-git status -s               # kısa özet
+git status                  # show the state
+git status -s               # a short summary
 ```
 
-### Örnek Çıktı
+### Example Output
 
 ```bash
 $ git status
 On branch main
 Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
-        new file:   key.txt        ← staging'de
+        new file:   key.txt        ← in staging
 
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
-        modified:   README.md      ← değiştirildi ama add edilmedi
+        modified:   README.md      ← modified but not added
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
-        temp.txt                   ← git bilmiyor
+        temp.txt                   ← git doesn't know about it
 ```
 
 ---
 
 ## .gitignore
 
-Hangi dosyaların git tarafından **yoksayılacağını** belirtir.
+Specifies which files git should **ignore**.
 
-### Sözdizimi
+### Syntax
 
 ```gitignore
-# Yorum satırı
-*.log           # tüm .log dosyaları
-*.txt           # tüm .txt dosyaları
-build/          # build klasörü
-!README.txt     # README.txt'yi yoksayma (istisna)
-/root.txt       # sadece kök dizindeki root.txt
-doc/*.txt       # doc klasöründeki .txt dosyaları
-**/*.log        # tüm alt dizinlerdeki .log dosyaları
+# comment line
+*.log           # all .log files
+*.txt           # all .txt files
+build/          # the build folder
+!README.txt     # don't ignore README.txt (exception)
+/root.txt       # only root.txt in the root directory
+doc/*.txt       # .txt files in the doc folder
+**/*.log        # .log files in all subdirectories
 ```
 
-### Bandit'te Kullanım
+### Usage in Bandit
 ```bash
-# Level 31: .gitignore *.txt'yi engelliyor
+# Level 31: .gitignore blocks *.txt
 cat .gitignore
 # *.txt
 
-# Ama -f ile bypass edilebilir
+# but it can be bypassed with -f
 git add -f key.txt
 ```
 
 ---
 
-## Git Güvenlik Açıkları
+## Git Security Vulnerabilities
 
-Bandit'te öğrendiğimiz kritik güvenlik dersleri:
+The critical security lessons we learned in Bandit:
 
-### 1. Git Geçmişi Her Şeyi Saklar
+### 1. Git History Keeps Everything
 
 ```bash
-# Bir dosyayı silsen bile geçmişte kalır!
-git rm şifre.txt
-git commit -m "şifreyi sildim"
+# even if you delete a file, it stays in the history!
+git rm password.txt
+git commit -m "removed the password"
 
-# Ama hala erişilebilir:
+# but it's still accessible:
 git log --all
-git show <eski_commit>
-# şifre hala burada!
+git show <old_commit>
+# the password is still here!
 ```
 
-**Çözüm:** Hassas veriyi hiç commit'leme. `git-secrets`, `gitleaks` gibi araçlar kullan.
+**Solution:** Never commit sensitive data at all. Use tools like `git-secrets` and `gitleaks`.
 
-### 2. Tüm Branch'leri Kontrol Et
+### 2. Check All Branches
 
 ```bash
-# Sadece main'e bakma!
+# don't just look at main!
 git branch -a
-git checkout dev   # başka branch'te bilgi olabilir
+git checkout dev   # there might be information in another branch
 ```
 
-### 3. Tag'ler Gizli Bilgi İçerebilir
+### 3. Tags Can Contain Secrets
 
 ```bash
 git tag
-git show <tag>   # hassas bilgi olabilir
+git show <tag>   # there might be sensitive information
 ```
 
-### 4. .gitignore Güvenlik Değildir
+### 4. .gitignore Is Not Security
 
-`.gitignore` dosyaları gizlemez, sadece takip etmez. Zaten commit'lenmiş dosyalar hala görünür.
+`.gitignore` doesn't hide files, it just doesn't track them. Files that are already committed are still visible.
 
 ---
 
-## 📚 Hızlı Referans Tablosu
+## 📚 Quick Reference Table
 
-| Komut | Kullanım | Ne Yapar |
+| Command | Usage | What It Does |
 |---|---|---|
-| `git clone` | `git clone <url>` | Repo'yu indir |
-| `git log` | `git log --oneline` | Commit geçmişi |
-| `git show` | `git show <id>` | Commit detayı |
-| `git branch -a` | `git branch -a` | Tüm branch'ler |
-| `git checkout` | `git checkout dev` | Branch değiştir |
-| `git tag` | `git tag` | Tag'leri listele |
-| `git show <tag>` | `git show secret` | Tag içeriği |
-| `git add -f` | `git add -f dosya` | gitignore bypass |
-| `git commit -m` | `git commit -m "msg"` | Değişiklikleri kaydet |
-| `git push` | `git push` | Remote'a gönder |
-| `git status` | `git status` | Durum göster |
-| `git diff` | `git diff` | Değişiklikleri göster |
+| `git clone` | `git clone <url>` | Download a repo |
+| `git log` | `git log --oneline` | Commit history |
+| `git show` | `git show <id>` | Commit details |
+| `git branch -a` | `git branch -a` | All branches |
+| `git checkout` | `git checkout dev` | Switch branches |
+| `git tag` | `git tag` | List tags |
+| `git show <tag>` | `git show secret` | Tag contents |
+| `git add -f` | `git add -f file` | gitignore bypass |
+| `git commit -m` | `git commit -m "msg"` | Save changes |
+| `git push` | `git push` | Send to the remote |
+| `git status` | `git status` | Show the state |
+| `git diff` | `git diff` | Show changes |
 
 ---
 
-## 🔗 Daha Fazla Bilgi
+## 🔗 More Information
 
-- [Git Resmi Dokümantasyon](https://git-scm.com/doc)
-- [Pro Git Kitabı (Türkçe)](https://git-scm.com/book/tr/v2)
+- [Official Git Documentation](https://git-scm.com/doc)
+- [Pro Git Book](https://git-scm.com/book/en/v2)
 - [GitHub Guides](https://guides.github.com/)
-- [Learn Git Branching](https://learngitbranching.js.org/) — interaktif öğrenme
-- [gitleaks](https://github.com/gitleaks/gitleaks) — git'te hassas veri tespiti
+- [Learn Git Branching](https://learngitbranching.js.org/) — interactive learning
+- [gitleaks](https://github.com/gitleaks/gitleaks) — detect sensitive data in git
 
 ---
 
-**Önceki bölüm:** [surec_shell.md](./surec_shell.md)
+**Previous section:** [process_shell.md](./process_shell.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

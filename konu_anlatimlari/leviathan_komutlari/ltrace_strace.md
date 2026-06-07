@@ -85,7 +85,7 @@ access("/path/to/file", 4)   // 4 = okuma izni
 // Dönüş: 0 → erişim var, -1 → yok
 ```
 
-TOCTOU açıklarını tespit etmek için kritik. Eğer `access()` ve ardından `open()` veya `system()` çağrısı görüyorsan, aralarındaki fark exploit edilebilir.
+`access()` ardından `open()`/`system()` görüyorsan dikkat: ikisi arasındaki **fark** exploit edilebilir. İki yol vardır — (1) string'i farklı ayrıştırarak (Leviathan 2'deki boşlukla argüman bölme), (2) aradaki zaman penceresinde dosyayı değiştirerek (gerçek **TOCTOU** yarışı).
 
 ### system — Komut Çalıştırma
 

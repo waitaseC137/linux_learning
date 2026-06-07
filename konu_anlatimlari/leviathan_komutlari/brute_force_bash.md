@@ -129,7 +129,7 @@ done
 wait
 ```
 
-Leviathan için genellikle sıralı çalışma yeterlidir — suncuya fazla yük bindirmemek için paralel kullanma.
+Leviathan için genellikle sıralı çalışma yeterlidir — sunucuya fazla yük bindirmemek için paralel kullanma.
 
 ---
 

