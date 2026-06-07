@@ -8,11 +8,19 @@
   let enabled = true;
   try { enabled = (localStorage.getItem(KEY) || 'on') !== 'off'; } catch (e) {}
 
+  // betiğin kendi konumundan asset tabanını türet (alt klasörlerden de çalışsın, ör. /en/)
+  const SFX_BASE = (function () {
+    const s = document.currentScript ||
+      [].slice.call(document.querySelectorAll('script')).filter(function (x) { return /sfx\.js(\?|$)/.test(x.src); }).pop();
+    if (s && s.src) return s.src.replace(/sfx\.js.*$/, '');
+    return 'assets/';
+  })();
+
   const FILES = {
-    hover:  'assets/sfx/5.wav',
-    select: 'assets/sfx/4.wav',
-    open:   'assets/sfx/3.wav',
-    power:  'assets/sfx/6.wav'
+    hover:  SFX_BASE + 'sfx/5.wav',
+    select: SFX_BASE + 'sfx/4.wav',
+    open:   SFX_BASE + 'sfx/3.wav',
+    power:  SFX_BASE + 'sfx/6.wav'
   };
   const GAIN = { hover: 0.55, select: 0.85, open: 0.7, power: 0.85 };
 
@@ -94,7 +102,10 @@
   function syncBtn(btn) {
     btn.classList.toggle('off', !enabled);
     const lbl = btn.querySelector('.lbl');
-    if (lbl) lbl.textContent = enabled ? 'ses' : 'sessiz';
+    if (lbl) {
+      const en = document.documentElement.lang === 'en';
+      lbl.textContent = en ? (enabled ? 'sound' : 'muted') : (enabled ? 'ses' : 'sessiz');
+    }
   }
   function wire() {
     const btn = document.getElementById('sfxBtn');

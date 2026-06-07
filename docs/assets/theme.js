@@ -6,7 +6,10 @@
 (function () {
   const KEY = 'll_theme';
   const ORDER = ['acik', 'dark'];
-  const LABEL = { acik: 'açık', dark: 'karanlık' };
+  const IS_EN = document.documentElement.lang === 'en';
+  const LABEL = IS_EN
+    ? { acik: 'light', dark: 'dark' }
+    : { acik: 'açık', dark: 'karanlık' };
 
   function apply(theme) {
     if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');

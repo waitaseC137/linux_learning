@@ -181,17 +181,20 @@ a { color: inherit; text-decoration: none; }
 .nav-gh:hover { border-color: var(--green); color: var(--green); }
 /* dil değiştirici (TR/EN) */
 .nav-lang {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: stretch;
   border: 1px solid var(--line-2);
-  padding: 7px 11px;
   border-radius: 7px;
-  font-size: 13px; font-weight: 600;
-  color: var(--fg-dim);
-  letter-spacing: .04em;
-  transition: all .15s;
+  overflow: hidden;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .05em;
+  white-space: nowrap;
+  line-height: 1;
+  transition: border-color .15s;
 }
-.nav-lang:hover { border-color: var(--magenta); color: var(--magenta); }
-.nav-lang .cur { color: var(--magenta); }
+.nav-lang span { padding: 7px 9px; color: var(--fg-dim); transition: background .15s, color .15s; }
+.nav-lang .cur { background: var(--magenta); color: var(--bg); }
+.nav-lang:hover { border-color: var(--magenta); }
+.nav-lang:hover .oth { color: var(--magenta); }
 @media (max-width: 760px){ .nav-links { display: none; } }
 
 /* ============================================================
@@ -783,7 +786,7 @@ body { animation: pageIn .45s ease both; }
   /* sağ kümeyi sağa yasla, github'ı ikona indir */
   .nav-gh { margin-left: auto; order: 2; padding: 9px 11px; font-size: 0; gap: 0; }
   .nav-gh span { font-size: 15px; }
-  .nav-lang { order: 1; padding: 9px 10px; }
+  .nav-lang { order: 1; }
   .theme-btn { order: 3; padding: 0; width: 40px; height: 40px; justify-content: center; }
   .theme-btn .lbl { display: none; }
   .sfx-btn { order: 4; }

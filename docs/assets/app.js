@@ -44,8 +44,51 @@ const SCRIPT_MOBILE = [
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
 ];
 
-const SCRIPT = (window.matchMedia && window.matchMedia('(max-width: 560px)').matches)
-  ? SCRIPT_MOBILE : SCRIPT_DESKTOP;
+const SCRIPT_DESKTOP_EN = [
+  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'cd robinagent && python robinagent.py' },
+  { t: 'blank' },
+  { t: 'cat' },
+  { t: 'raw', html: '<span class="ty">Robin Agent</span><span class="td"> — Terminal Wargame Assistant</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Pick a wargame:</span>' },
+  { t: 'raw', html: '  <span class="tm">▸</span> <span class="tw">Bandit</span>     <span class="td">Linux basics · 34 levels · 1/10</span>' },
+  { t: 'raw', html: '  <span class="td">  Leviathan  Binary analysis · 8 levels · 3/10</span>' },
+  { t: 'raw', html: '  <span class="td">  Natas      Web security · 35 levels · 4/10</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Mode:</span> <span class="ty">[1] AI-assisted</span>  <span class="td">[2] Hard mode</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Connecting via SSH</span> <span class="tc">bandit.labs.overthewire.org:2220</span>' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Session opened · progress saved to</span> <span class="tm">progress.json</span>' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">NotebookLM notebook ready — ask questions in the right pane</span>' },
+  { t: 'blank' },
+  { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
+];
+
+const SCRIPT_MOBILE_EN = [
+  { t: 'prompt', text: '~/ll $ ', cmd: 'python robinagent.py' },
+  { t: 'blank' },
+  { t: 'cat' },
+  { t: 'raw', html: '<span class="ty">Robin Agent</span>' },
+  { t: 'raw', html: '<span class="td">Terminal Wargame Assistant</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Pick a wargame:</span>' },
+  { t: 'raw', html: '  <span class="tm">▸</span> <span class="tw">Bandit</span> <span class="td">· 34 lvl · 1/10</span>' },
+  { t: 'raw', html: '    <span class="td">Natas · 35 lvl · 4/10</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Mode:</span> <span class="ty">[1] AI</span> <span class="td">[2] Hard</span>' },
+  { t: 'blank' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">SSH →</span> <span class="tc">bandit…:2220</span>' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Session opened</span>' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Notebook ready 🐱</span>' },
+  { t: 'blank' },
+  { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
+];
+
+const IS_EN = document.documentElement.lang === 'en';
+const isMobileVP = window.matchMedia && window.matchMedia('(max-width: 560px)').matches;
+const SCRIPT = IS_EN
+  ? (isMobileVP ? SCRIPT_MOBILE_EN : SCRIPT_DESKTOP_EN)
+  : (isMobileVP ? SCRIPT_MOBILE : SCRIPT_DESKTOP);
 
 /* etkileşimli kedi: gözler imleci takip eder, ara sıra kırpar */
 function buildCat() {
