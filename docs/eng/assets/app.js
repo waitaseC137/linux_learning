@@ -198,7 +198,7 @@ function wireCopy() {
       const txt = pre.innerText.replace(/^\$\s?/gm, '').trim();
       navigator.clipboard && navigator.clipboard.writeText(txt);
       const old = btn.textContent;
-      btn.textContent = '✓ kopyalandı'; btn.classList.add('ok');
+      btn.textContent = IS_EN ? '✓ copied' : '✓ kopyalandı'; btn.classList.add('ok');
       setTimeout(() => { btn.textContent = old; btn.classList.remove('ok'); }, 1600);
     });
   });
