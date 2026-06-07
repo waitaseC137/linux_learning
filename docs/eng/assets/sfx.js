@@ -75,7 +75,7 @@
   window.SFX = SFX;
 
   /* ---------- olay delegasyonu ---------- */
-  const HOVER_SEL = '.nav-links a, .nav-gh, .theme-btn, .feat, .file-link, .tree-row, .chip, .wcard, .cat-head, .btn, .wg, .wg-link, .res a, .doc-nav a, .copy-btn, .code-copy, .gh-view, .side-toggle';
+  const HOVER_SEL = '.nav-links a, .nav-gh, .nav-lang, .theme-btn, .feat, .file-link, .tree-row, .chip, .wcard, .cat-head, .btn, .wg, .wg-link, .res a, .doc-nav a, .copy-btn, .code-copy, .gh-view, .side-toggle';
   // tık seçimi: doc açan öğeler hariç (onlar 'open' sesini çalar)
   const SKIP_CLICK = '.file-link, .doc-nav a, .wcard';
 
@@ -93,6 +93,16 @@
   document.addEventListener('click', (e) => {
     if (!enabled) return;
     if (e.target.closest && e.target.closest('#sfxBtn')) return;     // toggle kendi sesini çalar
+    // dil değiştirici: seçim sesini çal, navigasyonu sesin duyulması için kısa geciktir
+    const lang = e.target.closest && e.target.closest('.nav-lang');
+    if (lang && lang.href && !e.defaultPrevented && e.button === 0 &&
+        !e.metaKey && !e.ctrlKey && !e.shiftKey && lang.target !== '_blank') {
+      e.preventDefault();
+      SFX.select();
+      const href = lang.href;
+      setTimeout(() => { window.location.href = href; }, 160);
+      return;
+    }
     if (e.target.closest && e.target.closest(SKIP_CLICK)) return;    // doc açılışı 'open' çalacak
     const el = e.target.closest && e.target.closest(HOVER_SEL);
     if (el) SFX.select();
