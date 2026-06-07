@@ -769,7 +769,7 @@ body { animation: pageIn .45s ease both; }
   body { -webkit-text-size-adjust: 100%; }
 
   /* ---- nav: hamburger menü ---- */
-  .nav-inner { padding: 0 16px; gap: 10px; }
+  .nav-inner { padding: 0 14px; gap: 8px; }
   .nav-burger { display: flex; order: 5; }
 
   .nav-links {
@@ -787,13 +787,19 @@ body { animation: pageIn .45s ease both; }
     border-radius: 7px; width: 100%;
   }
 
-  /* sağ kümeyi sağa yasla, github'ı ikona indir */
-  .nav-gh { margin-left: auto; order: 2; padding: 9px 11px; font-size: 0; gap: 0; }
+  /* sağ kontrol kümesi: tek sıra, sabit 38px kare, eşit aralık — üst üste binmez */
+  .brand { min-width: 0; flex: 1 1 auto; overflow: hidden; }
+  .brand b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .nav-lang, .nav-gh, .theme-btn, .sfx-btn, .nav-burger { flex: 0 0 auto; }
+  .nav-lang { order: 1; margin-left: auto; height: 38px; }
+  .nav-lang span { display: inline-flex; align-items: center; padding: 0 9px; }
+  .nav-gh { order: 2; padding: 0; width: 38px; height: 38px; justify-content: center; font-size: 0; gap: 0; }
   .nav-gh span { font-size: 15px; }
-  .nav-lang { order: 1; }
-  .theme-btn { order: 3; padding: 0; width: 40px; height: 40px; justify-content: center; }
+  .theme-btn { order: 3; padding: 0; width: 38px; height: 38px; justify-content: center; }
   .theme-btn .lbl { display: none; }
   .sfx-btn { order: 4; }
+  .nav-burger { order: 5; width: 38px; height: 38px; }
 
   /* ---- genel boşluk ---- */
   .wrap { padding: 0 20px; }
