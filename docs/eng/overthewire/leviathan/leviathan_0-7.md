@@ -1,52 +1,52 @@
-# 🐙 OverTheWire: Leviathan — Level 0'dan Level 7'ye Türkçe Rehber
+# 🐙 OverTheWire: Leviathan — Level 0 to Level 7 Guide
 
-> Leviathan, Bandit'ten sonra gelen ilk gerçek **tersine mühendislik** deneyimi.  
-> Programlama bilgisi gerekmiyor — ama binary'leri analiz etmeyi, SUID'i kullanmayı  
-> ve sistemin açıklarını bulmayı öğreniyorsun.
+> Leviathan is the first real **reverse engineering** experience after Bandit.  
+> No programming knowledge required — but you'll learn to analyze binaries, use SUID,  
+> and find exploitable weaknesses in the system.
 
 **Platform:** `leviathan.labs.overthewire.org` | **Port:** `2223`  
-**Başlangıç:** kullanıcı `leviathan0`, şifre `leviathan0`  
-**Referans:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/leviathan/overview/) · [overthewire.org](https://overthewire.org/wargames/leviathan/)
+**Starting:** user `leviathan0`, password `leviathan0`  
+**Reference:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/leviathan/overview/) · [overthewire.org](https://overthewire.org/wargames/leviathan/)
 
 ---
 
-## 🗺️ Genel Bakış
+## 🗺️ Overview
 
-Leviathan'da her level'da home dizininde bir **SUID binary** bulursun. Bu binary'leri analiz edip, şifreyi elde etmek için sistemi manipüle etmek gerekiyor. Temel araçlar:
+At each Leviathan level, you'll find a **SUID binary** in the home directory. You need to analyze these binaries and manipulate the system to obtain the password. Core tools:
 
-| Araç | Ne işe yarar |
+| Tool | What it does |
 |---|---|
-| `strings` | Binary içindeki okunabilir metinleri çıkarır |
-| `ltrace` | Binary çalışırken yapılan kütüphane çağrılarını gösterir |
-| `gdb` | Binary'yi adım adım debug etmeye yarar |
-| `ln -s` | Sembolik link oluşturur |
+| `strings` | Extracts readable text from a binary |
+| `ltrace` | Shows library calls made while a binary runs |
+| `gdb` | Used to debug a binary step by step |
+| `ln -s` | Creates a symbolic link |
 
-Şifreler her zaman `/etc/leviathan_pass/leviathan<N>` konumundadır.
+Passwords are always located at `/etc/leviathan_pass/leviathan<N>`.
 
 ---
 
-## Level 0 — Giriş
+## Level 0 — Login
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh leviathan0@leviathan.labs.overthewire.org -p 2223
-# Şifre: leviathan0
+# Password: leviathan0
 ```
 
-Bağlandın. Artık Level 0 → Level 1'e geç.
+You're in. Now move on to Level 0 → Level 1.
 
 ---
 
-## Level 0 → Level 1 — Yedek Dosyada Gizli Şifre
+## Level 0 → Level 1 — Hidden Password in a Backup File
 
-### 🎯 Görev
-Home dizinini araştır, gizli klasörleri bul.
+### 🎯 Objective
+Explore the home directory and find hidden folders.
 
-### 📖 Teori: Yedekler ve Privilege Escalation
+### 📖 Theory: Backups and Privilege Escalation
 
-**Yedekleme (Backup)** veri güvenliğinin temel parçasıdır. Ama yanlış korunursa saldırganlar için açık kapı olur. **Privilege escalation** (yetki yükseltme), daha fazla erişim hakkı elde etme tekniğidir — bu oyunun tüm konusu bu.
+**Backup** is a fundamental part of data security. But if poorly protected, it becomes an open door for attackers. **Privilege escalation** is the technique of gaining higher access rights — that's what this entire game is about.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 leviathan0@leviathan:~$ ls -la
@@ -57,41 +57,41 @@ leviathan0@leviathan:~$ cd .backup/
 leviathan0@leviathan:~/.backup$ ls -la
 -rw-r----- 1 leviathan1 leviathan0 133259 bookmarks.html
 
-# Dosya çok büyük, önce yapısına bak
+# File is large, first check its structure
 leviathan0@leviathan:~/.backup$ head bookmarks.html
-# Firefox bookmark dosyası çıkar
+# A Firefox bookmarks file appears
 
-# "leviathan" kelimesini ara
+# Search for the word "leviathan"
 leviathan0@leviathan:~/.backup$ grep "leviathan" bookmarks.html
 <DT><A HREF="http://leviathan.labs.overthewire.org/passwordus.html | 
-This will be fixed later, the password for leviathan1 is <ŞİFRE>" ...
+This will be fixed later, the password for leviathan1 is <PASSWORD>" ...
 ```
 
-> 💡 **Ders:** Yedek dosyalar hassas bilgi içerebilir. Gerçek dünyada da böyle açıklar yaygındır — saldırganlar ilk önce yedeklere bakar.
+> 💡 **Lesson:** Backup files may contain sensitive information. Such exposures are common in the real world too — attackers look at backups first.
 
 ---
 
-## Level 1 → Level 2 — ltrace ile Binary Analizi
+## Level 1 → Level 2 — Binary Analysis with ltrace
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh leviathan1@leviathan.labs.overthewire.org -p 2223
 ```
 
-### 🎯 Görev
-Home dizininde SUID bir binary var. Doğru şifreyi bul ve leviathan2 shell'ini ele geçir.
+### 🎯 Objective
+There's a SUID binary in the home directory. Find the correct password and take over the leviathan2 shell.
 
-### 📖 Teori: ltrace ve strcmp
+### 📖 Theory: ltrace and strcmp
 
-**`ltrace`:** Bir binary çalışırken yaptığı **kütüphane fonksiyon çağrılarını** gösterir. Şifre kontrolü gibi işlemler sıklıkla `strcmp` (string compare) kütüphane fonksiyonuyla yapılır — ve ltrace bunu açığa çıkarır.
+**`ltrace`:** Shows the **library function calls** a binary makes while running. Password checks are often done with the `strcmp` (string compare) library function — and ltrace exposes it.
 
 ```
-strcmp("girdiğin_şifre", "gerçek_şifre") → ltrace bunu gösterir!
+strcmp("your_input", "real_password") → ltrace shows this!
 ```
 
-**`strings`:** Binary içindeki okunabilir metin dizilerini çıkarır. Şifre bazen doğrudan binary'de saklanmış olabilir.
+**`strings`:** Extracts readable text strings from a binary. Sometimes the password is stored directly in the binary.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 leviathan1@leviathan:~$ ls -la
@@ -101,113 +101,113 @@ leviathan1@leviathan:~$ ./check
 password: test
 Wrong password, Good Bye ...
 
-# strings ile dene
+# Try with strings
 leviathan1@leviathan:~$ strings check
-# Şüpheli şeyler var ama net değil
+# Suspicious things but not clear
 
-# ltrace ile çalıştır
+# Run with ltrace
 leviathan1@leviathan:~$ ltrace ./check
 printf("password: ")
-getchar(...)          # ilk harf: t
-getchar(...)          # ikinci harf: e
-getchar(...)          # üçüncü harf: s
-strcmp("tes", "sex")  # ← GERÇEK ŞİFRE BURADA!
+getchar(...)          # first char: t
+getchar(...)          # second char: e
+getchar(...)          # third char: s
+strcmp("tes", "sex")  # ← REAL PASSWORD HERE!
 puts("Wrong password, Good Bye ...")
 ```
 
-Binary sadece ilk 3 karakteri karşılaştırıyor. Şifre: `sex`
+The binary only compares the first 3 characters. Password: `sex`
 
 ```bash
 leviathan1@leviathan:~$ ./check
 password: sex
-$                      # shell açıldı!
+$                      # shell opened!
 
 $ whoami
-leviathan2             # SUID sayesinde leviathan2 olduk
+leviathan2             # we became leviathan2 thanks to SUID
 
 $ cat /etc/leviathan_pass/leviathan2
-<şifre buraya gelir>
+<password goes here>
 ```
 
 ---
 
-## Level 2 → Level 3 — Sembolik Link + Boşluk Manipülasyonu
+## Level 2 → Level 3 — Symbolic Link + Space Manipulation
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh leviathan2@leviathan.labs.overthewire.org -p 2223
 ```
 
-### 🎯 Görev
-`printfile` adlı SUID binary var. Yetkin olmadığı dosyaları okumasını sağla.
+### 🎯 Objective
+There's a SUID binary called `printfile`. Make it read a file you don't have permission to access.
 
-### 📖 Teori: Symbolic Link ve İsim Manipülasyonu
+### 📖 Theory: Symbolic Links and Name Manipulation
 
-**Symbolic Link (Sembolik Bağ):** Bir dosyaya başka bir yerden işaret eden kısayol. `ln -s hedef bağ` komutuyla oluşturulur.
+**Symbolic Link:** A shortcut that points to a file from another location. Created with the `ln -s target link` command.
 
-Bu level'da iki kritik davranış var:
-- `access()` fonksiyonu → tam dosya adıyla kontrol eder (boşluk dahil)
-- `/bin/cat` → boşluğu ayırıcı olarak kullanır, sadece ilk parçayı okur
+This level has two critical behaviors:
+- `access()` function → checks with the full filename (including spaces)
+- `/bin/cat` → uses space as a separator, only reads the first part
 
-Bu farkı exploit edebiliriz:
+We can exploit this difference:
 
 ```
 "test file.txt" → access("/tmp/dir/test file.txt") = OK ✓
                 → cat /tmp/dir/test file.txt       = cat /tmp/dir/test + cat file.txt
 ```
 
-`test` dosyası şifre dosyasına sembolik link olursa, `cat` onu okur!
+If the `test` file is a symbolic link to the password file, `cat` will read it!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 leviathan2@leviathan:~$ ls -la
 -r-sr-x---  1 leviathan3 leviathan2 7436 printfile   # SUID
 
 leviathan2@leviathan:~$ ./printfile /etc/leviathan_pass/leviathan3
-You cant have that file...   # direkt erişim yok
+You cant have that file...   # no direct access
 
-# ltrace ile nasıl çalıştığını anlayalım
+# Understand how it works with ltrace
 leviathan2@leviathan:~$ ltrace ./printfile .bashrc
-access(".bashrc", 4)                  # önce erişim kontrolü
-snprintf("/bin/cat .bashrc", ...)     # sonra cat ile oku
+access(".bashrc", 4)                  # access check first
+snprintf("/bin/cat .bashrc", ...)     # then read with cat
 
 # PLAN:
-# 1. Geçici klasör oluştur
+# 1. Create a temp directory
 leviathan2@leviathan:~$ mktemp -d
 /tmp/tmp.BykcxJXZxD
 
-# 2. İsimde boşluk olan boş bir dosya oluştur
+# 2. Create an empty file with a space in the name
 leviathan2@leviathan:~$ touch "/tmp/tmp.BykcxJXZxD/test file.txt"
 
-# 3. "test" adıyla şifre dosyasına sembolik link oluştur
+# 3. Create a symbolic link named "test" pointing to the password file
 leviathan2@leviathan:~$ ln -s /etc/leviathan_pass/leviathan3 /tmp/tmp.BykcxJXZxD/test
 
-# 4. Klasöre herkes erişebilsin
+# 4. Allow everyone to access the directory
 leviathan2@leviathan:~$ chmod 777 /tmp/tmp.BykcxJXZxD
 
-# 5. Binary'yi "test file.txt" ile çalıştır
+# 5. Run the binary with "test file.txt"
 leviathan2@leviathan:~$ ./printfile "/tmp/tmp.BykcxJXZxD/test file.txt"
-<şifre buraya gelir>        # access() tüm adı gördü ✓
-                             # cat sadece "test"i okudu → symlink → şifre!
-/bin/cat: file.txt: No such file or directory   # bu hata normal
+<password goes here>        # access() saw the full name ✓
+                             # cat only read "test" → symlink → password!
+/bin/cat: file.txt: No such file or directory   # this error is normal
 ```
 
-> 💡 **Ders:** `access()` ve `open()` arasındaki zaman farkına dayanan bu tür açıklara **TOCTOU (Time-of-check to time-of-use)** denir. Gerçek güvenlik açıklarında sık rastlanır.
+> 💡 **Lesson:** Vulnerabilities based on the time gap between `access()` and `open()` are called **TOCTOU (Time-of-check to time-of-use)**. Frequently encountered in real security vulnerabilities.
 
 ---
 
-## Level 3 → Level 4 — ltrace ile Şifre Tespiti (Tekrar)
+## Level 3 → Level 4 — Password Detection with ltrace (Again)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh leviathan3@leviathan.labs.overthewire.org -p 2223
 ```
 
-### 🎯 Görev
-`level3` adlı binary doğru şifreyi ister. `ltrace` ile bul.
+### 🎯 Objective
+A binary called `level3` asks for the correct password. Find it with `ltrace`.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 leviathan3@leviathan:~$ ls -la
@@ -217,16 +217,16 @@ leviathan3@leviathan:~$ ./level3
 Enter the password> test
 bzzzzzzzzap. WRONG
 
-# ltrace ile şifreyi yakala
+# Catch the password with ltrace
 leviathan3@leviathan:~$ ltrace ./level3
-strcmp("h0no33", "kakaka")        # ilk sahte karşılaştırma (yanıltıcı!)
+strcmp("h0no33", "kakaka")        # first fake comparison (misleading!)
 printf("Enter the password> ")
 fgets("test\n", 256, ...)
-strcmp("test\n", "snlprintf\n")   # ← GERÇEK KARŞILAŞTIRMA
+strcmp("test\n", "snlprintf\n")   # ← REAL COMPARISON
 puts("bzzzzzzzzap. WRONG")
 ```
 
-Şifre: `snlprintf`
+Password: `snlprintf`
 
 ```bash
 leviathan3@leviathan:~$ ./level3
@@ -237,38 +237,38 @@ $ whoami
 leviathan4
 
 $ cat /etc/leviathan_pass/leviathan4
-<şifre buraya gelir>
+<password goes here>
 ```
 
-> 💡 Binary'de birden fazla `strcmp` olabilir — hangisinin gerçek kontrol olduğunu bulmak için dikkatli oku. Burada ilki sahte (yanıltıcı), ikincisi gerçek.
+> 💡 A binary may have multiple `strcmp` calls — read carefully to find which one is the real check. Here the first is fake (a decoy), the second is real.
 
 ---
 
-## Level 4 → Level 5 — Binary'den ASCII'ye Çevirme
+## Level 4 → Level 5 — Converting Binary to ASCII
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh leviathan4@leviathan.labs.overthewire.org -p 2223
 ```
 
-### 🎯 Görev
-`.trash/` klasöründeki binary çalışınca bir sürü 0 ve 1 döndürüyor. Bunları çözümle.
+### 🎯 Objective
+Running the binary in the `.trash/` folder outputs a bunch of 0s and 1s. Decode them.
 
-### 📖 Teori: Binary ve ASCII
+### 📖 Theory: Binary and ASCII
 
-**Binary (İkili) sayı sistemi:** Bilgisayarın temel dili — sadece 0 ve 1 vardır. Her karakter 8 bit (1 byte) ile temsil edilir.
+**Binary (base-2) number system:** The fundamental language of computers — only 0 and 1. Every character is represented by 8 bits (1 byte).
 
-**ASCII:** Harfleri sayılara eşleştiren standart kodlama sistemi. Örneğin:
+**ASCII:** The standard encoding system that maps letters to numbers. For example:
 - `01000001` → 65 → `A`
 - `01101000` → 104 → `h`
 
-Binary'yi ASCII'ye çevirmek için Perl'in `pack` fonksiyonu kullanılabilir:
+Perl's `pack` function can be used to convert binary to ASCII:
 ```bash
 echo "01000001" | perl -lpe '$_=pack"B*",$_'
-# Çıktı: A
+# Output: A
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 leviathan4@leviathan:~$ ls -la
@@ -282,39 +282,39 @@ leviathan4@leviathan:~/.trash$ ./bin
 01010100 01101001 01110100 01101000 00110100 01100011 01101111 01101011 01100101 01101001 00001010
 ```
 
-Boşlukları kaldırıp tek string yap, Perl ile çevir:
+Remove the spaces to make a single string, then convert with Perl:
 
 ```bash
 leviathan4@leviathan:~/.trash$ echo "0101010001101001011101000110100000110100011000110110111101101011011001010110100100001010" | perl -lpe '$_=pack"B*",$_'
-<şifre buraya gelir>
+<password goes here>
 ```
 
-> 💡 Binary'yi elle çevirmek yerine komut satırı araçlarını kullan. `python3 -c "print(bytes.fromhex(hex(int('01010100',2))[2:]).decode())"` gibi Python ile de yapılabilir.
+> 💡 Instead of converting binary by hand, use command-line tools. It can also be done with Python: `python3 -c "print(bytes.fromhex(hex(int('01010100',2))[2:]).decode())"`.
 
 ---
 
-## Level 5 → Level 6 — Symlink ile Binary Kandırma
+## Level 5 → Level 6 — Tricking a Binary with Symlink
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh leviathan5@leviathan.labs.overthewire.org -p 2223
 ```
 
-### 🎯 Görev
-`leviathan5` binary'si `/tmp/file.log` dosyasını okumaya çalışıyor. Bu dosyanın yerine şifre dosyasına sembolik link koy.
+### 🎯 Objective
+The `leviathan5` binary tries to read `/tmp/file.log`. Replace that file with a symbolic link pointing to the password file.
 
-### 📖 Teori: Binary'leri Sembolik Linkle Kandırmak
+### 📖 Theory: Tricking Binaries with Symbolic Links
 
-Binary'ler çoğunlukla sabit bir dosya yolunu okur. Eğer o dosyayı kontrol edebiliyorsan ve binary SUID ise → binary'yi istediğin dosyayı okutabilirsin.
+Binaries often read from a hardcoded file path. If you can control that file and the binary is SUID → you can make the binary read any file you want.
 
-Mantık:
+The logic:
 ```
-binary → /tmp/file.log okur
-biz    → /tmp/file.log'u leviathan6 şifresine link ederiz
-binary → aslında leviathan6 şifresini okur
+binary → reads /tmp/file.log
+we     → link /tmp/file.log to leviathan6's password
+binary → actually reads leviathan6's password
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 leviathan5@leviathan:~$ ls -la
@@ -323,56 +323,56 @@ leviathan5@leviathan:~$ ls -la
 leviathan5@leviathan:~$ ./leviathan5
 Cannot find /tmp/file.log
 
-# ltrace ile doğrula
+# Verify with ltrace
 leviathan5@leviathan:~$ ltrace ./leviathan5
-fopen("/tmp/file.log", "r") = 0    # dosya yok, 0 döndü
+fopen("/tmp/file.log", "r") = 0    # file doesn't exist, returned 0
 puts("Cannot find /tmp/file.log")
 
-# Symlink oluştur: /tmp/file.log → leviathan6'nın şifresi
+# Create symlink: /tmp/file.log → leviathan6's password
 leviathan5@leviathan:~$ ln -s /etc/leviathan_pass/leviathan6 /tmp/file.log
 
-# Binary şimdi şifreyi okur
+# Binary now reads the password
 leviathan5@leviathan:~$ ./leviathan5
-<şifre buraya gelir>
+<password goes here>
 ```
 
 ---
 
-## Level 6 → Level 7 — GDB ile Tersine Mühendislik
+## Level 6 → Level 7 — Reverse Engineering with GDB
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh leviathan6@leviathan.labs.overthewire.org -p 2223
 ```
 
-### 🎯 Görev
-`leviathan6` binary'si 4 haneli bir PIN ister. `ltrace` işe yaramıyor — PIN'i GDB ile assembly kodunu okuyarak bul.
+### 🎯 Objective
+The `leviathan6` binary asks for a 4-digit PIN. `ltrace` doesn't help — find the PIN by reading the assembly code with GDB.
 
-### 📖 Teori: GDB ve Assembly
+### 📖 Theory: GDB and Assembly
 
-**GDB (GNU Debugger):** Binary'leri adım adım çalıştırmaya ve iç durumlarını incelemeye yarayan hata ayıklama aracı.
+**GDB (GNU Debugger):** A debugging tool for running binaries step by step and inspecting their internal state.
 
-**Assembly:** Makine koduna en yakın programlama dili. Her satır genellikle tek bir işlem yapar.
+**Assembly:** The programming language closest to machine code. Each line typically performs a single operation.
 
-Kritik GDB komutları:
+Key GDB commands:
 ```
-gdb --args program argüman   → GDB başlat
-disassemble main             → main fonksiyonunun assembly kodunu göster
-break *0xADRES               → o adreste dur
-run                          → programı çalıştır
-info registers               → register değerlerini göster
-print $ebp-0xc               → adresi hesapla
-x 0xADRES                   → o adresteki değeri göster
-print/d 0xHEX                → hex'i decimal'e çevir
+gdb --args program argument   → start GDB
+disassemble main              → show assembly code of main function
+break *0xADDRESS              → stop at that address
+run                           → run the program
+info registers                → show register values
+print $ebp-0xc                → calculate address
+x 0xADDRESS                  → show value at that address
+print/d 0xHEX                 → convert hex to decimal
 ```
 
-**Temel assembly kavramları:**
-- `cmp a, b` → a ile b'yi karşılaştır
-- `jne adres` → eşit değilse o adrese atla
-- `atoi` → string'i integer'a çevirir (bizim girişimiz)
-- `movl $0x1bd3, -0xc(%ebp)` → sabit değeri belleğe yaz (PIN burada!)
+**Basic assembly concepts:**
+- `cmp a, b` → compare a and b
+- `jne address` → jump to address if not equal
+- `atoi` → converts a string to an integer (our input)
+- `movl $0x1bd3, -0xc(%ebp)` → writes a constant to memory (PIN is here!)
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 leviathan6@leviathan:~$ ls -la
@@ -381,20 +381,20 @@ leviathan6@leviathan:~$ ls -la
 leviathan6@leviathan:~$ ./leviathan6 0000
 Wrong
 
-# ltrace işe yaramıyor — farklı bir yöntem lazım
-# GDB ile assembly'ye bakalım
+# ltrace doesn't work — need a different approach
+# Let's look at the assembly with GDB
 leviathan6@leviathan:~$ gdb --args leviathan6 0000
 
 (gdb) disassemble main
 # ...
-0x080491ea <+20>: movl $0x1bd3,-0xc(%ebp)   # ← sabit değer yükleniyor!
+0x080491ea <+20>: movl $0x1bd3,-0xc(%ebp)   # ← constant value being loaded!
 # ...
-0x08049222 <+76>: call atoi                  # bizim girişimizi integer'a çevir
-0x0804922a <+84>: cmp %eax,-0xc(%ebp)        # karşılaştır
-0x0804922d <+87>: jne ...                    # eşit değilse atla (başarısız)
+0x08049222 <+76>: call atoi                  # convert our input to integer
+0x0804922a <+84>: cmp %eax,-0xc(%ebp)        # compare
+0x0804922d <+87>: jne ...                    # jump if not equal (failure)
 ```
 
-Breakpoint koy, register değerlerini oku:
+Set a breakpoint and read register values:
 
 ```bash
 (gdb) break *0x0804922a
@@ -409,22 +409,22 @@ $1 = 0xffffd4cc
 0xffffd4cc: 0x00001bd3
 
 (gdb) print/d 0x00001bd3
-$3 = 7123          # ← PIN bu!
+$3 = 7123          # ← this is the PIN!
 ```
 
 ```bash
 leviathan6@leviathan:~$ ./leviathan6 7123
-$                  # shell açıldı!
+$                  # shell opened!
 
 $ whoami
 leviathan7
 
 $ cat /etc/leviathan_pass/leviathan7
-<şifre buraya gelir>
+<password goes here>
 ```
 
-### 🔧 Alternatif — Brute Force
-GDB'yi öğrenmek istemiyorsan kaba kuvvetle de çözülebilir:
+### 🔧 Alternative — Brute Force
+If you don't want to learn GDB, it can also be solved with brute force:
 ```bash
 for i in {0000..9999}; do
     result=$(./leviathan6 $i 2>/dev/null)
@@ -437,7 +437,7 @@ done
 
 ---
 
-## 🏁 Level 7 — Tebrikler!
+## 🏁 Level 7 — Congratulations!
 
 ```bash
 ssh leviathan7@leviathan.labs.overthewire.org -p 2223
@@ -448,36 +448,36 @@ Well done, you seem to have used a light to see in the dark...
 
 ---
 
-## 📚 Öğrenilen Komutlar ve Kavramlar
+## 📚 Commands and Concepts Summary
 
-| Komut / Kavram | Ne yapar |
+| Command / Concept | What it does |
 |---|---|
-| `grep "kelime" dosya` | Dosyada kelime arar |
-| `strings binary` | Binary içindeki metinleri çıkarır |
-| `ltrace ./binary` | Kütüphane çağrılarını gösterir (strcmp şifresi!) |
-| `ln -s hedef bağ` | Sembolik link oluşturur |
-| `chmod 777 klasör` | Herkese tam yetki verir |
-| `gdb --args prog arg` | GDB ile debug başlatır |
-| `disassemble main` | Assembly kodunu gösterir |
-| `break *0xADRES` | Breakpoint koyar |
-| `info registers` | Register değerlerini gösterir |
-| `print/d 0xHEX` | Hex'i decimal'e çevirir |
-| `perl -lpe '$_=pack"B*",$_'` | Binary'yi ASCII'ye çevirir |
-| **SUID binary** | Sahibinin yetkileriyle çalışan program |
-| **Privilege Escalation** | Daha yüksek yetki elde etme |
-| **TOCTOU** | Kontrol ile kullanım arasındaki açık |
-| **Symbolic Link** | Dosyaya işaret eden kısayol |
+| `grep "word" file` | Searches for a word in a file |
+| `strings binary` | Extracts text from a binary |
+| `ltrace ./binary` | Shows library calls (exposes strcmp password!) |
+| `ln -s target link` | Creates a symbolic link |
+| `chmod 777 folder` | Gives full permissions to everyone |
+| `gdb --args prog arg` | Starts debugging with GDB |
+| `disassemble main` | Shows assembly code |
+| `break *0xADDRESS` | Sets a breakpoint |
+| `info registers` | Shows register values |
+| `print/d 0xHEX` | Converts hex to decimal |
+| `perl -lpe '$_=pack"B*",$_'` | Converts binary to ASCII |
+| **SUID binary** | Program that runs with its owner's privileges |
+| **Privilege Escalation** | Gaining higher access rights |
+| **TOCTOU** | Vulnerability between check and use |
+| **Symbolic Link** | A shortcut that points to a file |
 
 ---
 
-## 🔗 Faydalı Kaynaklar
+## 🔗 Useful Resources
 
 - [OverTheWire Leviathan](https://overthewire.org/wargames/leviathan/)
 - [MayADevBe Leviathan Walkthrough](https://mayadevbe.me/posts/overthewire/leviathan/overview/)
 - [GDB Cheat Sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf)
-- [ASCII Tablosu](https://www.asciitable.com/)
+- [ASCII Table](https://www.asciitable.com/)
 - [Intel vs AT&T Assembly Syntax](https://imada.sdu.dk/u/kslarsen/dm546/Material/IntelnATT.htm)
 
 ---
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

@@ -1,134 +1,134 @@
-# 🏴 OverTheWire: Bandit — Level 0'dan Level 10'a Türkçe Rehber
+# 🏴 OverTheWire: Bandit — Level 0 to Level 10 Guide
 
-> **Bandit**, Linux terminal becerilerini oyun oynayarak geliştirmenin en iyi yollarından biri.  
-> Bu rehberde ilk 10 seviyeyi adım adım, **neden böyle yaptığımızı açıklayarak** çözeceğiz.  
-> Şifreler zaman zaman değiştiğinden burada **yöntem** paylaşılıyor, şifreler değil.
+> **Bandit** is one of the best ways to improve Linux terminal skills through gameplay.  
+> In this guide, we'll solve the first 10 levels step by step, **explaining why we do what we do**.  
+> Since passwords change occasionally, we share the **method** here, not the passwords.
 
-**Referans:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/bandit/overview/) · [overthewire.org](https://overthewire.org/wargames/bandit/)
+**Reference:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/bandit/overview/) · [overthewire.org](https://overthewire.org/wargames/bandit/)
 
 ---
 
-## 📋 Genel Bilgi
+## 📋 General Info
 
-| Bilgi | Değer |
+| Info | Value |
 |---|---|
-| **Sunucu** | `bandit.labs.overthewire.org` |
+| **Server** | `bandit.labs.overthewire.org` |
 | **Port** | `2220` |
-| **Başlangıç kullanıcısı** | `bandit0` |
-| **Başlangıç şifresi** | `bandit0` |
+| **Starting user** | `bandit0` |
+| **Starting password** | `bandit0` |
 
-> 💡 Her level'da bulduğun şifreyi bir yere not et. Şifreler otomatik kaydedilmez!
-
----
-
-## Level 0 — SSH ile Bağlan
-
-### 🎯 Görev
-Sunucuya SSH ile bağlan.
-
-### 📖 Teori: SSH Nedir?
-**SSH (Secure Shell Protocol)**, uzak bir sunucuya şifreli bağlantı kurmanı sağlar. İki bilgisayar arasındaki tüm iletişimi şifreler, bu yüzden güvenlidir.
-
-Temel komut yapısı:
-```
-ssh <kullanici>@<sunucu> -p <port>
-```
-
-- `kullanici@sunucu` → kimin, nereye bağlandığını belirtir
-- `-p 2220` → varsayılan SSH portu 22'dir; biz farklı bir port kullanıyoruz
-- Herhangi bir komut hakkında daha fazla bilgi için: `man ssh`
-
-Windows kullanıcıları için [PuTTY](https://www.putty.org/) ile de bağlanabilirsin.
-
-### 🔧 Çözüm
-```bash
-ssh bandit0@bandit.labs.overthewire.org -p 2220
-# Şifre sorduğunda: bandit0
-```
-
-Bağlantı kurulunca `bandit0@bandit:~$` promptunu görürsün — başardın!
+> 💡 Write down the password you find at each level. Passwords are not saved automatically!
 
 ---
 
-## Level 0 → Level 1 — Temel Dosya Komutları
+## Level 0 — Connect via SSH
 
-### 🔐 Bağlantı
-```bash
-ssh bandit0@bandit.labs.overthewire.org -p 2220
-# Şifre: bandit0
+### 🎯 Objective
+Connect to the server via SSH.
+
+### 📖 Theory: What is SSH?
+**SSH (Secure Shell Protocol)** lets you establish an encrypted connection to a remote server. It encrypts all communication between two computers, making it secure.
+
+Basic command syntax:
+```
+ssh <user>@<server> -p <port>
 ```
 
-### 🎯 Görev
-Home dizinindeki `readme` dosyasını oku, içindeki şifreyi bul.
+- `user@server` → specifies who is connecting and where
+- `-p 2220` → the default SSH port is 22; we're using a different one
+- For more info about any command: `man ssh`
 
-### 📖 Teori: pwd, ls, cat
+Windows users can also connect with [PuTTY](https://www.putty.org/).
 
-SSH ile bağlandığında **home dizinine** düşersin. Prompttaki `~` sembolü bunu gösterir:
+### 🔧 Solution
+```bash
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+# When asked for password: bandit0
+```
+
+Once connected, you'll see the `bandit0@bandit:~$` prompt — you made it!
+
+---
+
+## Level 0 → Level 1 — Basic File Commands
+
+### 🔐 Connection
+```bash
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+# Password: bandit0
+```
+
+### 🎯 Objective
+Read the `readme` file in the home directory and find the password inside.
+
+### 📖 Theory: pwd, ls, cat
+
+When you connect via SSH, you land in your **home directory**. The `~` symbol in the prompt indicates this:
 ```
 bandit0@bandit:~$
 ```
 
-Temel komutlar:
-- `pwd` → hangi dizinde olduğunu gösterir *(print working directory)*
-- `ls` → bulunduğun dizindeki dosyaları listeler. `-l` ile detaylı, `-a` ile gizliler dahil gösterir
-- `cat <dosya>` → dosyanın içeriğini terminale basar
+Basic commands:
+- `pwd` → shows which directory you're in *(print working directory)*
+- `ls` → lists files in the current directory. `-l` for detailed, `-a` to include hidden files
+- `cat <file>` → prints the file contents to the terminal
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit0@bandit:~$ ls
 readme
 
 bandit0@bandit:~$ cat readme
-# Çıktı: sonraki level'ın şifresi
+# Output: next level's password
 ```
 
 ---
 
-## Level 1 → Level 2 — Özel İsimli Dosya: `-`
+## Level 1 → Level 2 — File with Special Name: `-`
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit1@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`-` adlı dosyayı oku.
+### 🎯 Objective
+Read the file named `-`.
 
-### 📖 Teori: Tire (`-`) Karakteri
+### 📖 Theory: The Dash (`-`) Character
 
-`-` Linux'ta **standart opsiyon karakteridir** — komutlara bayrak eklemek için kullanılır (`-p`, `-a` gibi). Bu yüzden dosya adı olarak kullanmak sorun çıkarır:
+`-` is the **standard option character** in Linux — used to add flags to commands (like `-p`, `-a`). So using it as a filename causes problems:
 
 ```bash
 bandit1@bandit:~$ cat -
-# Terminal bekler, hiçbir şey döndürmez — çünkü stdin'i okumaya çalışır
+# Terminal waits, returns nothing — because it tries to read from stdin
 ```
 
-Çözüm: dosyayı **tam yoluyla** belirtmek. `./` "şu an bulunduğum dizin" anlamına gelir, böylece `-` özel karakter değil gerçek bir dosya adı olarak yorumlanır.
+Solution: specify the file by its **full path**. `./` means "the directory I'm currently in", so `-` is interpreted as a real filename rather than a special character.
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit1@bandit:~$ ls
 -
 
 bandit1@bandit:~$ cat ./-
-# Çıktı: sonraki level'ın şifresi
+# Output: next level's password
 ```
 
 ---
 
-## Level 2 → Level 3 — İsimde Boşluk Olan Dosya
+## Level 2 → Level 3 — File with Spaces in Name
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit2@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`spaces in this filename` adlı dosyayı oku.
+### 🎯 Objective
+Read the file named `spaces in this filename`.
 
-### 📖 Teori: Boşluk ve Tırnak İşareti
+### 📖 Theory: Spaces and Quotes
 
-Linux terminali **boşluğu argüman ayırıcı** olarak kullanır. Bu yüzden:
+The Linux terminal uses **spaces as argument separators**. So:
 ```bash
 bandit2@bandit:~$ cat spaces in this filename
 cat: spaces: No such file or directory
@@ -136,69 +136,69 @@ cat: in: No such file or directory
 cat: this: No such file or directory
 cat: filename: No such file or directory
 ```
-4 ayrı dosya aradı, hiçbirini bulamadı.
+It looked for 4 separate files and found none.
 
-**İki çözüm yolu:**
+**Two solutions:**
 
-**Yöntem 1 — Tırnak içine al:**  
-Tüm string'i tek bir argüman sayar.
+**Method 1 — Wrap in quotes:**  
+Treats the entire string as a single argument.
 
-**Yöntem 2 — Backslash ile escape et:**  
-`\` bir sonraki karakteri özel anlam taşımayan düz karakter yapar.
+**Method 2 — Escape with backslash:**  
+`\` makes the next character a plain character with no special meaning.
 
-> 💡 **İpucu:** Dosya adının başını yazıp **Tab** tuşuna bassanın otomatik tamamlama boşlukları otomatik escape'ler!
+> 💡 **Tip:** Type the beginning of the filename and press **Tab** — autocomplete will escape the spaces automatically!
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit2@bandit:~$ cat "spaces in this filename"
-# ya da
+# or
 bandit2@bandit:~$ cat spaces\ in\ this\ filename
-# Çıktı: sonraki level'ın şifresi
+# Output: next level's password
 ```
 
 ---
 
-## Level 3 → Level 4 — Gizli Dosyalar
+## Level 3 → Level 4 — Hidden Files
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit3@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`inhere` klasöründeki gizli dosyayı bul ve oku.
+### 🎯 Objective
+Find and read the hidden file in the `inhere` folder.
 
-### 📖 Teori: Gizli Dosyalar ve cd
+### 📖 Theory: Hidden Files and cd
 
-Linux'ta adı **`.` ile başlayan dosyalar gizlidir** — `ls` bunları varsayılan olarak göstermez. `.bashrc`, `.gitignore` gibi yapılandırma dosyaları bu yüzden gizlidir.
+In Linux, **files whose names start with `.` are hidden** — `ls` won't show them by default. Configuration files like `.bashrc`, `.gitignore` are hidden for this reason.
 
 ```bash
-ls      # sadece normal dosyaları gösterir
-ls -a   # tüm dosyaları gösterir (gizliler dahil)
-ls -la  # tüm dosyaları, detaylı liste formatında gösterir
+ls      # shows only normal files
+ls -a   # shows all files (including hidden)
+ls -la  # shows all files in detailed list format
 ```
 
-`-a` çıktısında ilk iki gizli girdi özeldir:
-- `.` → mevcut dizin
-- `..` → üst dizin
+The first two hidden entries in `-a` output are special:
+- `.` → current directory
+- `..` → parent directory
 
-**Dizin gezmek için `cd` komutu:**
-- `cd inhere` → inhere klasörüne gir
-- `cd ..` → bir üst dizine çık
-- `cd ~` → home dizinine dön
-- `cd /` → kök dizinine git
+**Navigate directories with `cd`:**
+- `cd inhere` → enter the inhere folder
+- `cd ..` → go up one directory
+- `cd ~` → return to home directory
+- `cd /` → go to the root directory
 
-### 🔧 Çözüm — Dizin Gezinerek
+### 🔧 Solution — Navigating the Directory
 ```bash
 bandit3@bandit:~$ cd inhere
 bandit3@bandit:~/inhere$ ls -a
 .  ..  .hidden
 
 bandit3@bandit:~/inhere$ cat .hidden
-# Çıktı: sonraki level'ın şifresi
+# Output: next level's password
 ```
 
-### 🔧 Alternatif — Dizine Girmeden
+### 🔧 Alternative — Without Entering the Directory
 ```bash
 bandit3@bandit:~$ ls -a inhere/
 bandit3@bandit:~$ cat inhere/.hidden
@@ -206,27 +206,27 @@ bandit3@bandit:~$ cat inhere/.hidden
 
 ---
 
-## Level 4 → Level 5 — İnsan Okunabilir Dosya
+## Level 4 → Level 5 — Human-Readable File
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit4@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`inhere` klasöründeki 10 dosyadan sadece **insan okunabilir** olanı bul.
+### 🎯 Objective
+Find the only **human-readable** file among 10 files in the `inhere` folder.
 
-### 📖 Teori: file Komutu ve Wildcard
+### 📖 Theory: file Command and Wildcard
 
-`file <dosya>` komutu dosyanın **veri tipini** söyler: `ASCII text`, `data`, `ELF`, `Perl script` vb.
+The `file <file>` command tells you the **data type** of a file: `ASCII text`, `data`, `ELF`, `Perl script`, etc.
 
-Binary (ikili) dosyayı `cat` ile okumaya çalışırsan terminale anlamsız karakterler dolar. **İnsan okunabilir** demek ASCII veya Unicode kodlamalı metin demektir.
+If you try to `cat` a binary file, your terminal fills with meaningless characters. **Human-readable** means text encoded in ASCII or Unicode.
 
-**Wildcard (`*`):** Birden fazla dosya için pattern matching sağlar. `file ./*` komutu, mevcut dizindeki tüm dosyaların tipini tek seferde gösterir.
+**Wildcard (`*`):** Provides pattern matching for multiple files. `file ./*` shows the type of all files in the current directory at once.
 
-Dosya adları `-` ile başladığından yine `./` prefixi gerekli (Level 1'deki sebep).
+Since filenames start with `-`, the `./` prefix is needed again (same reason as Level 1).
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit4@bandit:~$ cd inhere
 bandit4@bandit:~/inhere$ file ./*
@@ -237,237 +237,237 @@ bandit4@bandit:~/inhere$ file ./*
 ./-file04: data
 ./-file05: data
 ./-file06: data
-./-file07: ASCII text   ← bu!
+./-file07: ASCII text   ← this one!
 ./-file08: data
 ./-file09: data
 
 bandit4@bandit:~/inhere$ cat ./-file07
-# Çıktı: sonraki level'ın şifresi
+# Output: next level's password
 ```
 
 ---
 
-## Level 5 → Level 6 — `find` ile Çok Kriterli Arama
+## Level 5 → Level 6 — Multi-Criteria Search with `find`
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit5@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`inhere` altındaki klasörlerde şu özelliklere sahip dosyayı bul:
-- İnsan okunabilir (ASCII)
-- Boyutu **1033 byte**
-- Çalıştırılamaz (non-executable)
+### 🎯 Objective
+Find the file under `inhere` with these properties:
+- Human-readable (ASCII)
+- Size **1033 bytes**
+- Non-executable
 
-### 📖 Teori: find ve grep
+### 📖 Theory: find and grep
 
-`find` komutu dosyaları birden fazla kritere göre arar:
+The `find` command searches for files by multiple criteria:
 ```
-find [nereden] [kriter1] [kriter2] ...
+find [where] [criteria1] [criteria2] ...
 ```
 
-Önemli bayraklar:
-- `-type f` → sadece dosyalar (dizinler hariç)
-- `-size 1033c` → tam olarak 1033 byte (`c` = byte)
-- `! -executable` → çalıştırılamaz olanlar
-- `-exec <komut> '{}' \;` → bulunan her dosyaya komut uygular
+Key flags:
+- `-type f` → files only (no directories)
+- `-size 1033c` → exactly 1033 bytes (`c` = bytes)
+- `! -executable` → non-executable files
+- `-exec <command> '{}' \;` → runs a command on each found file
 
-`grep` ile `|` (pipe) kombinasyonu: bir komutun çıktısını diğerine giriş olarak verir.
-- `grep "ASCII"` → ASCII içeren satırları filtreler
-- `grep -v "pattern"` → o pattern'i **içermeyen** satırları gösterir
+`grep` with `|` (pipe): feeds one command's output as input to another.
+- `grep "ASCII"` → filters lines containing ASCII
+- `grep -v "pattern"` → shows lines that **don't** contain the pattern
 
-### 🔧 Çözüm — Tek Komut
+### 🔧 Solution — Single Command
 ```bash
 bandit5@bandit:~/inhere$ find . -type f -size 1033c ! -executable -exec file '{}' \; | grep ASCII
 ./maybehere07/.file2: ASCII text, with very long lines
 
 bandit5@bandit:~/inhere$ cat ./maybehere07/.file2
-# Çıktı: sonraki level'ın şifresi
+# Output: next level's password
 ```
 
-### 🔧 Alternatif — Boyuta Göre
+### 🔧 Alternative — By Size
 ```bash
 bandit5@bandit:~/inhere$ du -b -a | grep 1033
 1033    ./maybehere07/.file2
 ```
-`du -b -a` her dosyanın byte cinsinden boyutunu verir; `grep 1033` ile filtreleriz.
+`du -b -a` shows each file's size in bytes; we filter with `grep 1033`.
 
 ---
 
-## Level 6 → Level 7 — Tüm Sunucuda Arama
+## Level 6 → Level 7 — Searching the Entire Server
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit6@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Şifre **sunucunun herhangi bir yerinde** saklanmış. Özellikleri:
-- Sahibi (user): `bandit7`
-- Grubu (group): `bandit6`
-- Boyutu: **33 byte**
+### 🎯 Objective
+The password is stored **somewhere on the server**. Properties:
+- Owner (user): `bandit7`
+- Group: `bandit6`
+- Size: **33 bytes**
 
-### 📖 Teori: Dosya Sahipliği ve 2>/dev/null
+### 📖 Theory: File Ownership and 2>/dev/null
 
-Linux'ta her dosyanın bir **kullanıcısı** ve bir **grubu** vardır. `ls -l` ile görürsün:
+In Linux, every file has an **owner** and a **group**. You can see it with `ls -l`:
 ```
 -rw-r----- 1 bandit7 bandit6 33 May 7 2020 bandit7.password
              ^user    ^group
 ```
 
-`find` ile sahiplik bazlı arama:
-- `-user bandit7` → sahibi bandit7 olan dosyalar
-- `-group bandit6` → grubu bandit6 olan dosyalar
+Ownership-based search with `find`:
+- `-user bandit7` → files owned by bandit7
+- `-group bandit6` → files in group bandit6
 
-**`2>/dev/null` nedir?**  
-`/` kök dizinden tarama yaparken erişim iznin olmayan yüzlerce klasör için `Permission denied` hatası alırsın. `2>` **standart hata çıktısını** yönlendirir; `/dev/null` ise Linux'taki "çöp kutusu" — oraya gönderilen her şey kaybolur.
+**What is `2>/dev/null`?**  
+Scanning from `/` root will generate hundreds of `Permission denied` errors for folders you can't access. `2>` redirects **standard error output**; `/dev/null` is Linux's "trash bin" — anything sent there disappears.
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit6@bandit:~$ find / -type f -user bandit7 -group bandit6 -size 33c 2>/dev/null
 /var/lib/dpkg/info/bandit7.password
 
 bandit6@bandit:~$ cat /var/lib/dpkg/info/bandit7.password
-# Çıktı: sonraki level'ın şifresi
+# Output: next level's password
 ```
 
 ---
 
-## Level 7 → Level 8 — `grep` ile Metin İçi Arama
+## Level 7 → Level 8 — Searching Inside Text with `grep`
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit7@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`data.txt` dosyasında `millionth` kelimesinin yanındaki şifreyi bul.
+### 🎯 Objective
+Find the password next to the word `millionth` in `data.txt`.
 
-### 📖 Teori: grep ve pipe
+### 📖 Theory: grep and pipe
 
-`data.txt` yaklaşık 4 MB büyüklüğünde — binlerce satır içerir, elle aramak imkânsız:
+`data.txt` is about 4 MB — thousands of lines, impossible to search manually:
 ```bash
 bandit7@bandit:~$ du -b data.txt
 4184396 data.txt
 ```
 
-`grep <pattern> <dosya>` komutu, dosya içinde pattern ile eşleşen satırları bulur. Gerçek dünyada log analizi ve hata ayıklamada çok kritiktir.
+`grep <pattern> <file>` finds lines matching the pattern in a file. Critical in real-world log analysis and debugging.
 
-**Pipe (`|`):** Bir komutun çıktısını doğrudan bir sonraki komuta giriş olarak verir:
+**Pipe (`|`):** Feeds one command's output directly as input to the next:
 ```bash
 cat data.txt | grep millionth
-# cat çıktısı → grep'e giriş olur
+# cat's output → becomes grep's input
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit7@bandit:~$ cat data.txt | grep millionth
-millionth       <şifre buraya gelir>
+millionth       <password goes here>
 
-# Ya da daha kısa:
+# Or shorter:
 bandit7@bandit:~$ grep millionth data.txt
 ```
 
 ---
 
-## Level 8 → Level 9 — Tekil Satırı Bul
+## Level 8 → Level 9 — Find the Unique Line
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit8@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`data.txt` içinde **sadece bir kez geçen** satırı bul.
+### 🎯 Objective
+Find the line in `data.txt` that appears **only once**.
 
-### 📖 Teori: sort ve uniq
+### 📖 Theory: sort and uniq
 
-**`sort`:** Satırları alfabetik sıraya dizer. `-r` ile ters sıralar, `-n` ile sayısal sıralar.
+**`sort`:** Sorts lines alphabetically. `-r` reverses, `-n` sorts numerically.
 
-**`uniq`:** Aynı satırların tekrar eden kopyalarını filtreler. Ama dikkat: `uniq` yalnızca **yan yana aynı olan** satırları yakalar. Bu yüzden önce `sort` gereklidir.
+**`uniq`:** Filters consecutive duplicate lines. But note: `uniq` only catches lines that are **adjacent and identical**. That's why `sort` is needed first.
 
 ```
-uniq bayrakları:
-  -u  → sadece unique (tekil, yalnızca 1 kez geçen) satırlar
-  -d  → sadece duplicate (tekrar eden) satırlar
-  -c  → her satırın kaç kez geçtiğini sayar
+uniq flags:
+  -u  → only unique (appearing exactly once) lines
+  -d  → only duplicate (repeated) lines
+  -c  → counts how many times each line appears
 ```
 
-**Pipe zinciri:** `sort data.txt | uniq -u`  
-→ sort çıktısı → uniq'e giriş → tekil satır ekrana gelir
+**Pipe chain:** `sort data.txt | uniq -u`  
+→ sort output → uniq input → unique line appears
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit8@bandit:~$ sort data.txt | uniq -u
-# Çıktı: sonraki level'ın şifresi (tek satır)
+# Output: next level's password (single line)
 ```
 
 ---
 
-## Level 9 → Level 10 — Binary Dosyada String Arama
+## Level 9 → Level 10 — String Search in Binary File
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit9@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`data.txt` binary bir dosya. İçindeki **okunabilir string**lerden, birkaç `=` işaretiyle başlayan birini bul.
+### 🎯 Objective
+`data.txt` is a binary file. Find a readable string inside it that starts with several `=` signs.
 
-### 📖 Teori: strings Komutu
+### 📖 Theory: strings Command
 
-Binary dosyayı `cat` ile açarsan ekrana anlamsız karakterler dolar — çünkü dosya binary formatta. `strings` komutu binary dosyalardaki **yazdırılabilir karakter dizilerini** (minimum 4 karakter) çıkarır. Özellikle binary/executable analiz için kullanılır.
+If you open the binary file with `cat`, the screen fills with meaningless characters — the file is in binary format. The `strings` command extracts **printable character sequences** (minimum 4 characters) from binary files. Especially useful for binary/executable analysis.
 
-Ardından `grep "==="` ile `=` içeren satırları filtreleyebiliriz.
+Then we can filter lines containing `=` with `grep "==="`.
 
-**Pipe zinciri:** `strings data.txt | grep "==="`  
-→ strings çıktısı → grep filtreler → şifre görünür
+**Pipe chain:** `strings data.txt | grep "==="`  
+→ strings output → grep filters → password appears
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit9@bandit:~$ strings data.txt | grep ===
 ========== the
 ========== password
 ========== is
-========== <şifre buraya gelir>
+========== <password goes here>
 ```
 
-> Kaç `=` koyduğun pek fark etmez; 1 ile 10 arası aynı sonucu verir.
+> The number of `=` signs doesn't matter much; 1 through 10 give the same result.
 
 ---
 
-## 📚 Öğrenilen Komutlar Özeti
+## 📚 Commands Summary
 
-| Komut | Ne yapar |
+| Command | What it does |
 |---|---|
-| `ssh user@host -p port` | Uzak sunucuya güvenli bağlan |
-| `pwd` | Mevcut dizini göster |
-| `ls` / `ls -la` | Dosyaları listele (gizliler dahil) |
-| `cat dosya` | Dosya içeriğini göster |
-| `cat ./-` | Özel karakterli (`-`) dosyaları oku |
-| `cat "ad li dosya"` | İsimde boşluk olan dosyaları oku |
-| `cd klasör` | Klasöre gir |
-| `file ./*` | Tüm dosyaların türünü göster |
-| `find / -user X -group Y -size 33c` | Kritere göre dosya ara |
-| `grep "pattern" dosya` | Dosya içinde metin ara |
-| `sort dosya` | Satırları sırala |
-| `uniq -u` | Tekil satırları göster |
-| `strings dosya` | Binary'den okunabilir metin çıkar |
-| `du -b dosya` | Dosya boyutunu byte cinsinden göster |
-| `2>/dev/null` | Hata mesajlarını sustur |
-| `\|` (pipe) | Komutları zincir gibi bağla |
+| `ssh user@host -p port` | Securely connect to a remote server |
+| `pwd` | Show current directory |
+| `ls` / `ls -la` | List files (including hidden) |
+| `cat file` | Show file contents |
+| `cat ./-` | Read files with special characters (`-`) |
+| `cat "file with spaces"` | Read files with spaces in name |
+| `cd folder` | Enter a folder |
+| `file ./*` | Show type of all files |
+| `find / -user X -group Y -size 33c` | Search files by criteria |
+| `grep "pattern" file` | Search text inside a file |
+| `sort file` | Sort lines |
+| `uniq -u` | Show unique lines |
+| `strings file` | Extract readable text from binary |
+| `du -b file` | Show file size in bytes |
+| `2>/dev/null` | Suppress error messages |
+| `\|` (pipe) | Chain commands together |
 
 ---
 
-## 🔗 Faydalı Kaynaklar
+## 🔗 Useful Resources
 
 - [OverTheWire Bandit](https://overthewire.org/wargames/bandit/)
 - [MayADevBe Full Walkthrough](https://mayadevbe.me/posts/overthewire/bandit/overview/)
 - [Linux Man Pages](https://manpages.ubuntu.com/)
-- [Explain Shell](https://explainshell.com/) — Komutları görsel olarak açıklar
-- [Linux Komutlarına Giriş](https://manpages.ubuntu.com/manpages/noble/man1/intro.1.html)
+- [Explain Shell](https://explainshell.com/) — Visually explains commands
+- [Linux Commands Introduction](https://manpages.ubuntu.com/manpages/noble/man1/intro.1.html)
 
 ---
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

