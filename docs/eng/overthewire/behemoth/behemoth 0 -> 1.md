@@ -1,30 +1,30 @@
 # OverTheWire — Behemoth Level 0 → 1
 
-> Hedef: `behemoth0`'dan `behemoth1` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: `ltrace` ile gömülü şifre karşılaştırmasını (`strcmp`) okuma.
+> Goal: Get behemoth1 password from `behemoth0`. Result: **`**********`** (hidden)
+> Technique: Read the hardcoded password comparison (`strcmp`) via `ltrace`.
 
 ---
 
-## 1. Bağlantı
+## 1. Connection
 ```bash
-ssh behemoth0@behemoth.labs.overthewire.org -p 2221   # şifre: behemoth0
+ssh behemoth0@behemoth.labs.overthewire.org -p 2221   # password: behemoth0
 ```
-Binary'ler okunabilir/çalıştırılabilir (`-r-sr-x---`, grup r-x).
+Binaries are readable/executable (`-r-sr-x---`, group r-x).
 
-## 2. Davranış
+## 2. Behavior
 ```
 /behemoth/behemoth0   →   "Password: " ... "Access denied.."
 ```
 
-## 3. Zafiyet — ltrace
-Şifre binary'de gömülü, `strcmp` ile karşılaştırılıyor:
+## 3. Vulnerability — ltrace
+The password is embedded in the binary and compared with `strcmp`:
 ```bash
 echo "test123" | ltrace /behemoth/behemoth0
 # printf("Password: ")
-# strcmp("test123", "eatmyshorts")    <-- GERÇEK ŞİFRE
+# strcmp("test123", "eatmyshorts")    <-- REAL PASSWORD
 # puts("Access denied..")
 ```
-Şifre = **`eatmyshorts`**. Doğru girilince `Access granted` + shell (behemoth1) açıyor.
+Password = **`eatmyshorts`**. Entering it correctly gives `Access granted` + a behemoth1 shell.
 
 ## 4. Exploit
 ```bash
@@ -34,15 +34,13 @@ sys.stdout.buffer.write(b"eatmyshorts\n"); sys.stdout.flush(); time.sleep(1.0)
 sys.stdout.buffer.write(b"id; cat /etc/behemoth_pass/behemoth1\n"); sys.stdout.flush(); time.sleep(1.0)
 ' | /behemoth/behemoth0
 ```
-> Şifreyi gönderip kısa bekle, sonra komutu besle (spawn olan shell'in stdin'i için — stdio buffering).
-Çıktı: `Access granted..` → `uid=13001(behemoth1)` → şifre.
+> Send the password and wait briefly, then feed the command (for the spawned shell's stdin — stdio buffering).
+Output: `Access granted..` → `uid=13001(behemoth1)` → password.
 
 
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| ltrace | libc çağrılarını gösterir → `strcmp(input, gizli)` ile şifreyi ele verir |
-| gömülü şifre | binary içinde sabit string olarak tutulan parolalar `strings`/`ltrace` ile bulunur |
-
-
+## Lessons
+| Topic | Note |
+|-------|------|
+| ltrace | Shows libc calls → reveals `strcmp(input, secret)`, giving away the password |
+| Embedded password | Hardcoded strings in a binary are visible via `strings`/`ltrace` |

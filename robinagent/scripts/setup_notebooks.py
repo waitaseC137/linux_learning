@@ -63,32 +63,36 @@ GAME_SOURCES: dict[str, tuple[list[str], str]] = {
         "natas",
     ),
 
-    # Narnia: Binary exploitation. Assembly okuma ve GDB zorunlu.
-    # Ek olarak: environment variable, shellcode, NOP sled, format string.
-    # leviathan_komutlari'ndaki gdb.md ve ltrace_strace.md Narnia'da da kullanılıyor.
-    # linux_komutlari: python -c, export, env gibi temel shell kullanımı gerekli.
+    # Narnia: Binary exploitation girişi. assembly, BOF, shellcode, NOP sled,
+    # format string, return-to-libc, function pointer — hepsi 00-09 aralığında.
+    # 10-19 (checksec, FSOP, ptrace…) narnia'da geçmiyor; notebook'u kirletmemek için dışarıda.
     "narnia": (
-        ["binary_exploitation", "leviathan_komutlari", "linux_komutlari"],
+        ["binary_exploitation/0[0-9]*.md", "leviathan_komutlari", "linux_komutlari"],
         "narnia",
     ),
 
-    # Behemoth: Orta seviye binary. ltrace/dinamik analiz (Leviathan'dan geliyor),
-    # buffer overflow + format string (Narnia'dan geliyor).
-    # Race condition ve UDP sniffing Behemoth'a özgü → behemoth klasörü şart.
-    # linux_komutlari: mktemp, ln, bash scripting race condition için gerekli.
+    # Behemoth: Orta seviye binary. BOF+shellcode, PATH hijack, format string+GOT,
+    # symlink, UDP sniffing, mmap RWX (beh6 → 14_self_modifying), env-wipe BOF.
+    # konu_anlatimlari/behemoth/ dizini yok; tüm konular binary_exploitation'da mevcut.
     "behemoth": (
-        ["behemoth", "binary_exploitation", "leviathan_komutlari", "linux_komutlari"],
+        ["binary_exploitation", "leviathan_komutlari", "linux_komutlari"],
         "behemoth",
     ),
 
-    # Utumno: İleri seviye binary. GOT/PLT overwrite, pointer manipulation,
-    # argv BOF, format string okuma+yazma — hepsi binary_exploitation'da.
-    # ltrace/strace utumno'nun ilk levelında zorunlu → leviathan_komutlari.
-    # behemoth modülleri (dinamik analiz, BOF) utumno için referans kaynak.
-    # linux_komutlari: strace, env, python shell scripting için gerekli.
+    # Utumno: İleri seviye binary. relative write (03), integer truncation (04,06 → 11),
+    # strncpy null (05), setuid (00 → 19) — binary_exploitation 00-19 tamamı gerekli.
+    # konu_anlatimlari/utumno/ ve behemoth/ dizinleri yok; tümü binary_exploitation'da.
     "utumno": (
-        ["utumno", "binary_exploitation", "behemoth", "leviathan_komutlari", "linux_komutlari"],
+        ["binary_exploitation", "leviathan_komutlari", "linux_komutlari"],
         "utumno",
+    ),
+
+    # Maze: Capstone — her seviye farklı teknik. lib hijacking (12), self-modifying (14),
+    # setuid-p (19), ptrace (13), FSOP (16), ELF parser (15), format string (05).
+    # Tüm binary_exploitation 00-19 gerekli.
+    "maze": (
+        ["binary_exploitation", "leviathan_komutlari", "linux_komutlari"],
+        "maze",
     ),
 }
 
@@ -111,7 +115,11 @@ def _collect_md_files(game: str) -> list[str]:
     topic_dirs, ow_subdir = GAME_SOURCES[game]
     files: list[str] = []
     for subdir in topic_dirs:
-        pattern = os.path.join(LINUX_LEARNING, "konu_anlatimlari", subdir, "*.md")
+        # glob pattern içeriyorsa (örn. "binary_exploitation/0[0-9]*.md") olduğu gibi kullan
+        if "*" in subdir or "?" in subdir or "[" in subdir:
+            pattern = os.path.join(LINUX_LEARNING, "konu_anlatimlari", subdir)
+        else:
+            pattern = os.path.join(LINUX_LEARNING, "konu_anlatimlari", subdir, "*.md")
         files.extend(sorted(glob.glob(pattern)))
     ow_pattern = os.path.join(LINUX_LEARNING, "overthewire", ow_subdir, "*.md")
     files.extend(sorted(glob.glob(ow_pattern)))
@@ -328,11 +336,26 @@ async def _create_notebook_async(game: str) -> str | None:
         raise  # _ensure_notebook'ta görünür hale gelsin
 
     _step(f"Kaynaklar yükleniyor ({len(sources)} dosya)...")
+    failed: list[str] = []
     try:
         async with await NotebookLMClient.from_storage() as client:
             for path in sources:
-                await client.sources.add_file(notebook_id, path, wait=True)
-        _ok()
+                try:
+                    await client.sources.add_file(notebook_id, path, wait=False)
+                    await asyncio.sleep(1.0)
+                except Exception as e:
+                    failed.append(os.path.basename(path))
+                    console.print(
+                        f"\n    [dim]⚠ {os.path.basename(path)}: {e}[/dim]",
+                        end="",
+                    )
+        if failed:
+            console.print(
+                f"\n  [yellow]⚠ {len(failed)}/{len(sources)} dosya yüklenemedi:[/yellow] "
+                + ", ".join(failed)
+            )
+        else:
+            _ok()
     except Exception as e:
         _fail(str(e))
         # Notebook oluştu, ID'yi yine de döndür

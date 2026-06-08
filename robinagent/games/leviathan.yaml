@@ -4,7 +4,7 @@ difficulty: 3/10
 host: leviathan.labs.overthewire.org
 levels: 8
 name: Leviathan
-notebooklm_notebook_id: 68b85bca-d924-46f5-aa16-d8ffcc7f34ac
+notebooklm_notebook_id: fdcee447-ad69-4832-98c0-42d4b6b09061
 port: 2223
 prereqs:
 - Bandit tamamlanmış olmalı

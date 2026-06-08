@@ -1,0 +1,24 @@
+description: Capstone binary exploitation lab. Her seviye farklı teknik — TOCTOU,
+  lib hijacking, self-modifying code, FSOP, ELF parser, ptrace, format string.
+difficulty: 5/10
+host: maze.labs.overthewire.org
+levels: 9
+name: Maze
+notebooklm_notebook_id: ''
+port: 2225
+prereqs:
+- Utumno tamamlanmış olmalı
+- FSOP ve ELF format bilgisi
+- ptrace anti-debugging
+repo_url: https://github.com/waitaseC137/linux_learning/tree/main/overthewire/maze
+start_password: maze0
+topics:
+- TOCTOU race condition
+- Library hijacking (DT_NEEDED)
+- Self-modifying code + mprotect
+- FSOP (FILE* struct corruption)
+- ELF section-header parser zafiyeti
+- ptrace anti-debugging bypass
+- Format string (arbitrary write)
+- setuid + -p flag
+user_prefix: maze

