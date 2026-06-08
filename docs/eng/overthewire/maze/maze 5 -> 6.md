@@ -1,19 +1,21 @@
 # OverTheWire — Maze Level 5 → 6
 
-> Hedef: `maze5`'ten `maze6` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: Basit bir **keygen** (anahtar üretici) tersine mühendisliği + `ptrace(TRACEME)` anti-debug atlatma (auto-continue tracer) + stdio buffering zamanlaması.
+> Goal: Get `maze6` password from `maze5`. Result: **`**********`** (hidden)
+> Technique: Simple **keygen** (key generator) reverse engineering + `ptrace(TRACEME)` anti-debug
+> bypass (auto-continue tracer) + stdio buffering timing.
 
 ---
 
-## 1. İlk Bakış
+## 1. First Look
 ```bash
 /maze/maze5
 # X----------------
 #  Username:       Key: Wrong length you!
 ```
-`scanf("%8s")` ile **Username** ve **Key** okur; ikisi de **tam 8 karakter** olmalı. Sonra `foo(user,key)` doğruysa kabuk verir.
+Reads **Username** and **Key** via `scanf("%8s")`; both must be **exactly 8 characters**. Then
+calls `foo(user,key)` and gives a shell if it returns true.
 
-## 2. Analiz — `main`
+## 2. Analysis — `main`
 ```c
 scanf("%8s", user);  scanf("%8s", key);
 if (strlen(user)!=8 || strlen(key)!=8) { puts("Wrong length you!"); exit(-1); }
@@ -21,29 +23,36 @@ if (ptrace(PTRACE_TRACEME,0,0,0) != 0) { puts("nahnah..."); return; }   // anti-
 if (foo(user, key)) {
     puts("Yeh, here's your shell");
     setreuid(geteuid(), geteuid());
-    system("/bin/sh");                  // <-- maze6 kabuğu
+    system("/bin/sh");                  // <-- maze6 shell
 } else puts("Nah, wrong.");
 ```
 
-## 3. Analiz — `foo` (keygen)
+## 3. Analysis — `foo` (keygen)
 ```c
 char buf[9] = "printlol";
 for (i=0; i<strlen(user); i++)
-    buf[i] = buf[i] - (2*i + (user[i]-'A'));   // user'a bağlı dönüşüm
+    buf[i] = buf[i] - (2*i + (user[i]-'A'));   // transform based on user
 for (i=7; i>=0; i--)
-    if (buf[i] != key[i]) return 0;            // key, dönüşmüş buf'a EŞİT olmalı
+    if (buf[i] != key[i]) return 0;            // key must EQUAL the transformed buf
 return 1;
 ```
-Hem `user` hem `key` **bizde**. `user="AAAAAAAA"` seçersek `user[i]-'A'=0` → `buf[i]="printlol"[i] - 2*i`:
+We control both `user` and `key`. Choosing `user="AAAAAAAA"` makes `user[i]-'A'=0` →
+`buf[i]="printlol"[i] - 2*i`:
 ```
-p p e h l b c ^   ->  key = "ppehlbc^"   (hepsi yazdırılabilir, scanf %s ile girilebilir)
+p p e h l b c ^   ->  key = "ppehlbc^"   (all printable, enterable via scanf %s)
 ```
-(Anahtar baytlarının boşluk/NUL içermemesi gerek — bu seçim onu sağlar.)
+(Key bytes must not contain spaces/NUL — this choice guarantees that.)
 
-## 4. İki Pürüz
-- **`ptrace(PTRACE_TRACEME)`**: Debugger altında (-1) "nahnah" der. Normal çalıştırmada 0 döner → **geçer**. Ama yan etkisi var: süreç artık ebeveyni tarafından "izleniyor" sayılır; `system()` sırasında SIGCHLD geldiğinde **takılıp kalır**.
-  - **Çözüm:** maze5'i, çocuk durduğunda otomatik `PTRACE_CONT` yapan minik bir **ebeveyn-tracer** altında çalıştır. TRACEME yine 0 döner (kontrol geçer) ama akış tıkanmaz. `setsid()` ile controlling-tty kaldırılır → job-control durması da olmaz.
-- **stdio buffering**: `scanf` stdin'i blok hâlinde okur; kabuk komutlarını da yutup `system("/bin/sh")` spawn olunca kaybeder. **Çözüm:** önce kimlik bilgilerini gönder, **kısa bekle** (scanf bitsin), sonra komutları gönder → kabuk onları ham pipe'tan okur.
+## 4. Two Complications
+- **`ptrace(PTRACE_TRACEME)`**: returns -1 under a debugger → prints "nahnah". Returns 0 when
+  run normally → **passes**. But it has a side effect: the process is now considered "traced" by
+  its parent; a SIGCHLD during `system()` causes it to **hang**.
+  - **Solution:** run maze5 under a tiny **parent tracer** that auto-sends `PTRACE_CONT` when
+    the child stops. TRACEME still returns 0 (check passes) but the flow doesn't block.
+    Use `setsid()` to remove the controlling tty → prevents job-control stops too.
+- **stdio buffering**: `scanf` reads stdin in blocks; it slurps up shell commands too, so by the
+  time `system("/bin/sh")` spawns, those bytes are lost. **Solution:** send credentials first,
+  **wait briefly** (let scanf finish), then send commands → the shell reads them from the raw pipe.
 
 ## 5. Exploit
 ```c
@@ -57,14 +66,14 @@ while(waitpid(pid,&st,0)==pid && !WIFEXITED(st)){
 ```bash
 ( printf 'AAAAAAAA\nppehlbc^\n'; sleep 2; printf 'cat /etc/maze_pass/maze6\n'; sleep 1 ) | ./tr
 # Yeh, here's your shell
-# uid=15006(maze6) ... <maze6 şifresi>
+# uid=15006(maze6) ... <maze6 password>
 ```
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| Keygen RE | Doğrulama algoritması tersine çevrilerek geçerli giriş üretilir; user+key ikisi de kontrol edildiği için triviyal |
-| Yazdırılabilirlik | `scanf %s` boşluk/NUL kabul etmez → girişi buna uygun seçmek gerekir |
-| `ptrace(TRACEME)` anti-debug | -1 ⇒ debugger var; bypass: pre-trace ETME (yoksa TRACEME başarısız), bunun yerine **auto-continue tracer** ile yan etkiyi söndür |
-| `setsid` | Controlling tty'yi kaldırıp job-control (SIGTTIN/TTOU) durmalarını engeller |
-| stdio buffering | `scanf`/`read` farkı; spawn edilen kabuğa girdi vermek için **zamanlama** (önce kimlik, sonra komut) |
+## Lessons
+| Topic | Note |
+|-------|------|
+| Keygen RE | Reverse the validation algorithm to produce valid input; trivial when we control both user and key |
+| Printability | `scanf %s` rejects spaces/NUL → choose input that satisfies this |
+| `ptrace(TRACEME)` anti-debug | -1 ⇒ debugger present; bypass: DON'T pre-trace (TRACEME would fail), instead use an **auto-continue tracer** to suppress the side effect |
+| `setsid` | Removes the controlling tty, preventing job-control stops (SIGTTIN/TTOU) |
+| stdio buffering | Difference between `scanf`/`read`; **timing** (credentials first, then commands) is needed to feed input to the spawned shell |

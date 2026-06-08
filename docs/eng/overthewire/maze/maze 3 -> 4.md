@@ -1,65 +1,69 @@
 # OverTheWire — Maze Level 3 → 4
 
-> Hedef: `maze3`'ten `maze4` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: **Kendini değiştiren kod (self-modifying)** + `mprotect` ile RWX + XOR çözme → gizli "sihirli bayt" parolası.
+> Goal: Get `maze4` password from `maze3`. Result: **`**********`** (hidden)
+> Technique: **Self-modifying code** + `mprotect` RWX + XOR decryption → hidden "magic byte"
+> password.
 
 ---
 
-## 1. İlk Bakış
+## 1. First Look
 ```bash
-file /maze/maze3       # statically linked, 32-bit, NOT stripped, sadece 4728 bayt
-/maze/maze3            # çıktı: "./level4 ev0lcmds!"   <-- TUZAK / yanıltma
+file /maze/maze3       # statically linked, 32-bit, NOT stripped, only 4728 bytes
+/maze/maze3            # output: "./level4 ev0lcmds!"   <-- TRAP / misdirection
 ```
-Statik linkli, çok küçük, elle yazılmış assembly (`maze3.asm`). 11 sembol: `_start, fine, l1, d1, d1sz, prgmsz`.
+Statically linked, very small, hand-written assembly (`maze3.asm`). 11 symbols:
+`_start, fine, l1, d1, d1sz, prgmsz`.
 
-## 2. Analiz — `_start`
+## 2. Analysis — `_start`
 ```asm
-pop eax ; dec eax ; jne fine     ; argc==1 mi? (yani argümansız mı)
-call ...                          ; jmp/call/pop hilesiyle string adresi al
-; write(1, "./level4 ev0lcmds!\n", 20) ; exit(1)   <-- argümansız çalışınca bu TUZAK basılır
+pop eax ; dec eax ; jne fine     ; is argc==1? (i.e., no arguments?)
+call ...                          ; jmp/call/pop trick to get string address
+; write(1, "./level4 ev0lcmds!\n", 20) ; exit(1)   <-- printed when run without args (TRAP)
 ```
-Argüman verilirse `fine`'a gidilir — asıl iş orada.
+If an argument is provided, execution goes to `fine` — the real work happens there.
 
-## 3. Analiz — `fine` (self-modifying)
+## 3. Analysis — `fine` (self-modifying)
 ```asm
 mov eax, 0x7d                ; __NR_mprotect (125)
-mov ebx, 0x8049000 ; and ebx, 0xfffff000   ; kod sayfasını hizala
-mov ecx, 0xa3 ; mov edx, 0x7 ; int 0x80     ; mprotect(page, , PROT_RWX)  -> kod yazılabilir
-lea esi, [0x804906b]         ; esi = d1 (şifreli bölge)
-mov edi, esi ; mov ecx, 0x38 ; mov edx, 0x12345678   ; XOR anahtarı
-l1: lodsd ; xor eax, edx ; stosd ; loop l1  ; d1'i YERİNDE çöz
-; ... çözülen d1'e düşülür ve çalıştırılır
+mov ebx, 0x8049000 ; and ebx, 0xfffff000   ; align code page
+mov ecx, 0xa3 ; mov edx, 0x7 ; int 0x80     ; mprotect(page, , PROT_RWX) -> code is writable
+lea esi, [0x804906b]         ; esi = d1 (encrypted region)
+mov edi, esi ; mov ecx, 0x38 ; mov edx, 0x12345678   ; XOR key
+l1: lodsd ; xor eax, edx ; stosd ; loop l1  ; decrypt d1 IN-PLACE
+; ... falls through to decrypted d1 and executes it
 ```
-`d1` bölgesi `0x12345678` ile XOR'lanmış. Yerinde çözülüp icra ediliyor → statik analizde görünmeyen gizli kod.
+The `d1` region is XOR-encrypted with `0x12345678`. It is decrypted in place then executed →
+code hidden from static analysis.
 
-## 4. Şifrenin Kırılması
-`d1`'i lokalde XOR ile çözüp disassemble ettim:
+## 4. Cracking the Password
+I decrypted `d1` locally with XOR and disassembled it:
 ```asm
 pop eax                        ; eax = argv[1]
-cmp DWORD PTR [eax], 0x1337c0de ; argv[1]'in ilk 4 baytı SİHİRLİ değer olmalı
-jne  exit                       ; değilse exit(1)
+cmp DWORD PTR [eax], 0x1337c0de ; first 4 bytes of argv[1] must equal the MAGIC value
+jne  exit                       ; if not, exit(1)
 mov ebx, 0x3a9c                 ; 0x3a9c = 15004 = maze4 UID
 push 0x46 ; pop eax             ; eax = 70 = __NR_setreuid
-mov ecx, ebx ; int 0x80         ; setreuid(15004, 15004)  -> maze4'e geç
+mov ecx, ebx ; int 0x80         ; setreuid(15004, 15004)  -> switch to maze4
 ; execve("/bin//sh", ...)
 exit: exit(1)
 ```
-Yani `argv[1]` `0x1337c0de` ("1337 c0de") ile başlamalı → little-endian baytlar `\xde\xc0\x37\x13`. Doğru baytlarla program `setreuid(maze4)` + `execve("/bin/sh")` yapıyor.
+So `argv[1]` must start with `0x1337c0de` ("1337 c0de") → little-endian bytes `\xde\xc0\x37\x13`.
+With the correct bytes the program does `setreuid(maze4)` + `execve("/bin/sh")`.
 
 ## 5. Exploit
 ```bash
 # argv[1] = \xde\xc0\x37\x13  (0x1337c0de little-endian)
 printf 'cat /etc/maze_pass/maze4; id\n' | \
   python3 -c "import os; os.execve('/maze/maze3',['/maze/maze3', bytes.fromhex('dec03713')], {'PATH':'/usr/bin:/bin'})"
-# uid=15004(maze4) ... <maze4 şifresi>
+# uid=15004(maze4) ... <maze4 password>
 ```
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| Self-modifying code | Şifreli/paketlenmiş payload çalışma anında çözülür → sadece statik disasm yetmez |
-| `mprotect(...,PROT_EXEC|WRITE)` | Kod sayfasını RWX yapıp kendini yazma; runtime-decrypt'in göstergesi |
-| XOR çözme | Anahtar (`0x12345678`) + şifreli bölge (`d1`) elde varsa offline çöz, disasm et |
-| Yanıltma (red herring) | "./level4 ev0lcmds!" sadece argümansız çalışınca basılan tuzak |
-| jmp/call/pop | Konumdan-bağımsız string adresi elde etme klasik shellcode hilesi |
-| Sihirli sabit | `0x1337c0de`, `0x3a9c`(=hedef uid) gibi sabitler niyeti ele verir |
+## Lessons
+| Topic | Note |
+|-------|------|
+| Self-modifying code | Encrypted/packed payload is decrypted at runtime → static disasm alone is insufficient |
+| `mprotect(...,PROT_EXEC|WRITE)` | Makes code page RWX and writes to itself; signature of runtime-decrypt |
+| XOR decryption | With key (`0x12345678`) + encrypted region (`d1`) in hand, decrypt offline and disassemble |
+| Misdirection (red herring) | "./level4 ev0lcmds!" is only a trap printed when run without arguments |
+| jmp/call/pop | Classic shellcode trick for position-independent string address retrieval |
+| Magic constants | Constants like `0x1337c0de` and `0x3a9c` (=target uid) reveal intent |

