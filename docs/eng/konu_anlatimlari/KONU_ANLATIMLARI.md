@@ -72,7 +72,7 @@
 
 ## 💥 Binary Exploitation
 
-> ⚠️ This section's content is not translated to English yet (still Turkish). The links open the Turkish files for now.
+> 🧭 **New to this?** Start here → [00_buradan_basla.md](./binary_exploitation/00_buradan_basla.md) — an intro for people who don't know assembly: minimum instruction dictionary, the little-endian trap, an end-to-end first exploit, and the reading order.
 
 | File | Topics |
 |---|---|

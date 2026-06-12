@@ -4,7 +4,7 @@ difficulty: 4/10
 host: natas{level}.natas.labs.overthewire.org
 levels: 35
 name: Natas
-notebooklm_notebook_id: 3cc08b91-6195-4c8d-9999-16a22e6079df
+notebooklm_notebook_id: 20e87a05-6f4d-43ae-b399-3741cb593f34
 port: 80
 prereqs:
 - HTML/CSS temel bilgisi

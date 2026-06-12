@@ -61,6 +61,8 @@ Linux komutları, binary analizi, web güvenliği, kriptografi, binary exploitat
 
 → **[Tüm konu anlatımlarına buradan ulaşabilirsin](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
+> 💥 **Binary exploitation'a sıfırdan mı başlıyorsun?** Assembly bilmeden de takip edebileceğin giriş rehberi: **[00_buradan_basla.md](./konu_anlatimlari/binary_exploitation/00_buradan_basla.md)**
+
 ---
 
 ## 🎮 OverTheWire War Games

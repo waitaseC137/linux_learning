@@ -4,7 +4,7 @@ difficulty: 3/10
 host: krypton.labs.overthewire.org
 levels: 7
 name: Krypton
-notebooklm_notebook_id: 10402cca-7fac-4439-94a6-47019293d8e8
+notebooklm_notebook_id: c34c0884-17e8-47b7-8622-ab4a233007ca
 port: 2231
 prereqs:
 - Bandit tamamlanmış olmalı

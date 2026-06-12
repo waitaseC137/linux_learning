@@ -74,6 +74,8 @@
 
 ## 💥 Binary Exploitation
 
+> 🧭 **Yeni mi başlıyorsun?** Önce buradan başla → [00_buradan_basla.md](./binary_exploitation/00_buradan_basla.md) — assembly bilmeyenler için giriş, minimum komut sözlüğü, little-endian tuzağı, uçtan uca ilk exploit ve dosyaların okuma sırası.
+
 | Dosya | Konular |
 |---|---|
 | [00_x86_assembly_temelleri.md](./binary_exploitation/00_x86_assembly_temelleri.md) | Register'lar, veri tipleri, MOV/LEA/aritmetik komutlar, PUSH/POP, CALL/RET, calling convention, prologue/epilogue |
