@@ -12,6 +12,7 @@ _DEFAULT = {
     "narnia": {"current_level": 0, "passwords": {}},
     "behemoth": {"current_level": 0, "passwords": {}},
     "utumno": {"current_level": 0, "passwords": {}},
+    "maze": {"current_level": 0, "passwords": {}},
 }
 
 

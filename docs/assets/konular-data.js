@@ -78,6 +78,7 @@ window.KONULAR = {
       blurb: "Stack overflow'dan ROP'a — sıfırdan ileri seviye exploit geliştirme.",
       numbered: true,
       files: [
+        { f: "binary_exploitation/00_buradan_basla.md",                     n: "→",   t: "Buradan Başla",               h: "Assembly bilmeyenler için giriş + okuma sırası" },
         { f: "binary_exploitation/00_x86_assembly_temelleri.md",            n: "00",  t: "x86 Assembly Temelleri",       h: "Register'lar, instruction'lar" },
         { f: "binary_exploitation/00b_gdb_ile_assembly_okumak.md",          n: "00b", t: "GDB ile Assembly Okumak",      h: "disassemble, stepi, x/i" },
         { f: "binary_exploitation/01_bellek_ve_memory_layout.md",           n: "01",  t: "Bellek & Memory Layout",       h: "Stack, heap, .text, .bss" },

@@ -82,6 +82,7 @@ window.KONULAR = {
       blurb: "From stack overflow to ROP — exploit development from scratch to advanced.",
       numbered: true,
       files: [
+        { f: "binary_exploitation/00_buradan_basla.md",                     n: "→",   t: "Start Here",                  h: "Intro for non-assembly readers + reading order" },
         { f: "binary_exploitation/00_x86_assembly_temelleri.md",            n: "00",  t: "x86 Assembly Basics",          h: "Registers, instructions" },
         { f: "binary_exploitation/00b_gdb_ile_assembly_okumak.md",          n: "00b", t: "Reading Assembly with GDB",    h: "disassemble, stepi, x/i" },
         { f: "binary_exploitation/01_bellek_ve_memory_layout.md",           n: "01",  t: "Memory & Memory Layout",       h: "Stack, heap, .text, .bss" },
