@@ -1,5 +1,5 @@
 /* ============================================================
-   Tema seçici — fosfor modları (robin / yeşil / amber / magenta)
+   Tema seçici — açık / karanlık modları
    Tüm sayfalarda paylaşılır, localStorage'da saklanır.
    <head> içinde yüklenir: tema anında uygulanır (parlama olmaz).
    ============================================================ */

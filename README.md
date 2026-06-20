@@ -5,55 +5,6 @@
 
 ---
 
-## 🐱 Robin Agent — Terminal Wargame Asistanı
-
-**Robin Agent**, OverTheWire wargame'lerini çözerken sana eşlik eden terminal tabanlı bir eğitim aracıdır. SSH oturumunu senin yerine açar, ilerlemeni kaydeder ve takıldığın yerde NotebookLM destekli yapay zekâya soru sorabilmeni sağlar — hepsi tek bir terminal ekranında.
-
-### Ne yapar?
-
-- **Wargame seçim menüsü** — Bandit, Leviathan, Krypton, Natas, Narnia, Behemoth, Utumno arasından seç
-- **Otomatik SSH bağlantısı** — şifreni girer, oturumu açar, ilerlemeni `progress.json`'da tutar
-- **Yan panelde AI sohbeti** — TMUX split ekranıyla solda wargame, sağda Robin Chat. Çözerken takılınca o oyuna özel NotebookLM defterine soru sorarsın
-- **İki mod** — `[1] AI destekli` (NotebookLM kurulur, her wargame için defter hazırlanır) veya `[2] Hard mode` (AI yok, direkt wargame)
-- **Repoyla entegre** — her oyunun konu anlatımları ve walkthrough'ları NotebookLM defterine kaynak olarak yüklenir
-
-### Kurulum ve Çalıştırma
-
-```bash
-cd robinagent
-
-# Sanal ortam oluştur ve bağımlılıkları kur
-python3 -m venv .venv
-source .venv/bin/activate          # fish için: source .venv/bin/activate.fish
-pip install -r requirements.txt
-
-# AI modu istiyorsan (opsiyonel)
-pip install "notebooklm-py[browser]"
-playwright install chromium
-
-# Çalıştır
-python robinagent.py
-```
-
-> **Not:** Robin Agent TMUX içinde çalışır (yan panel için). TMUX kurulu değilse otomatik kurmaya çalışır; kuruluysa kendi oturumunu başlatır.
-
-### Bağımlılıklar
-
-`textual` (TUI arayüzü) · `pexpect` (SSH pty yönetimi) · `rich` (terminal çıktısı) · `pyyaml` (oyun tanımları) · `notebooklm-py` (opsiyonel, AI modu)
-
-### Yapı
-
-```
-robinagent/
-├── robinagent.py        # giriş noktası
-├── core/                # SSH yönetimi, ilerleme takibi, NotebookLM köprüsü
-├── ui/                  # Textual ekranları (welcome, oyun seçimi, sohbet)
-├── games/               # her wargame için YAML tanımı (host, port, konular)
-└── scripts/             # NotebookLM kurulum ve defter oluşturma
-```
-
----
-
 ## 📚 Konu Anlatımları
 
 Komutların ve kavramların wargame bağımsız, referans olarak tutulduğu dosyalar.  

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>linux_learning — terminale bakarak öğren</title>
-<meta name="description" content="OverTheWire wargame çözümleri, konu anlatımları ve Robin Agent — terminal tabanlı wargame asistanı. Linux ve güvenliği oyun oynayarak öğren." />
+<meta name="description" content="OverTheWire wargame çözümleri ve konu anlatımları. Linux ve güvenliği oyun oynayarak öğren." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
@@ -20,7 +20,6 @@
       <span class="pp">🐧</span><b>linux_learning</b>
     </a>
     <div class="nav-links">
-      <a href="#robin">robin&nbsp;agent</a>
       <a href="#wargames">wargames</a>
       <a href="#konular">konu&nbsp;anlatımları</a>
       <a href="#kaynaklar">kaynaklar</a>
@@ -43,13 +42,12 @@
       <h1>Terminale bakarak <em>Linux'u</em> ve <u>güvenliği</u> <span class="pp">öğren.</span></h1>
       <p class="hero-lede">
         OverTheWire wargame'lerini <b>level-by-level</b> çözümlerle, kavramları
-        <b>wargame-bağımsız konu anlatımlarıyla</b> öğren. Yanında ise
-        <b>Robin</b> — SSH oturumunu açan, ilerlemeni kaydeden ve takıldığında
-        AI'a soru sorabildiğin terminal asistanın. 🐱
+        <b>wargame-bağımsız konu anlatımlarıyla</b> öğren — hepsi tek bir repoda,
+        terminale bakarak. 🐧
       </p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#robin">▸ Robin Agent'ı tanı</a>
-        <a class="btn btn-ghost" href="#wargames">wargame'lere göz at</a>
+        <a class="btn btn-primary" href="#wargames">▸ wargame'lere göz at</a>
+        <a class="btn btn-ghost" href="#konular">konu anlatımları</a>
       </div>
       <div class="hero-stats">
         <div class="hstat"><div class="n m">7</div><div class="l">Wargame</div></div>
@@ -63,117 +61,13 @@
       <div class="term">
         <div class="term-bar">
           <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
-          <span class="tt"><b>robin</b>@linux_learning: ~/robinagent</span>
+          <span class="tt"><b>you</b>@linux_learning: ~</span>
         </div>
         <div class="term-body" id="hero-term"></div>
       </div>
     </div>
   </div>
 </header>
-
-<!-- ============ ROBIN AGENT ============ -->
-<section class="band band-alt" id="robin">
-  <div class="wrap reveal">
-    <div class="sec-head"><span class="sig">$</span> <span class="cmd">./robin</span> <span class="arg">--agent</span></div>
-    <p class="sec-sub">
-      Robin Agent, wargame'leri çözerken sana eşlik eden terminal tabanlı bir eğitim aracı.
-      SSH'ı senin yerine açar, ilerlemeni tutar ve takıldığın yerde o oyuna özel
-      NotebookLM defterine soru sormanı sağlar — hepsi tek ekranda.
-    </p>
-
-    <div class="robin-grid">
-      <div>
-        <div class="feat-list">
-          <div class="feat">
-            <span class="ic">01</span>
-            <div><h4>Wargame seçim menüsü</h4>
-            <p>Bandit, Leviathan, Krypton, Natas, Narnia, Behemoth ve Utumno arasından seç — her biri zorluk ve konularıyla listelenir.</p></div>
-          </div>
-          <div class="feat">
-            <span class="ic">02</span>
-            <div><h4>Otomatik SSH + ilerleme takibi</h4>
-            <p>Şifreni girer, oturumu açar, nerede kaldığını <span class="flag">progress.json</span> içinde tutar. Kaldığın yerden devam edersin.</p></div>
-          </div>
-          <div class="feat">
-            <span class="ic">03</span>
-            <div><h4>Yan panelde AI sohbeti</h4>
-            <p>TMUX split ekranı: solda wargame, sağda Robin Chat. Takılınca o oyunun NotebookLM defterine soru sorarsın.</p></div>
-          </div>
-          <div class="feat">
-            <span class="ic">04</span>
-            <div><h4>İki mod</h4>
-            <p><span class="flag">[1]</span> AI destekli — her oyun için defter hazırlanır. <span class="flag">[2]</span> Hard mode — AI yok, direkt wargame.</p></div>
-          </div>
-        </div>
-
-        <div class="install">
-          <div class="install-head">
-            <span>kurulum &amp; çalıştırma</span>
-            <button class="copy-btn" data-copy="#install-pre">kopyala</button>
-          </div>
-<pre id="install-pre"><span class="c"># sanal ortam + bağımlılıklar</span>
-<span class="p">$</span> cd robinagent
-<span class="p">$</span> python3 -m venv .venv <span class="k">&amp;&amp;</span> source .venv/bin/activate
-<span class="p">$</span> pip install -r requirements.txt
-
-<span class="c"># AI modu (opsiyonel)</span>
-<span class="p">$</span> pip install <span class="k">"notebooklm-py[browser]"</span>
-<span class="p">$</span> playwright install chromium
-
-<span class="c"># başlat — TMUX içinde açılır</span>
-<span class="p">$</span> python robinagent.py</pre>
-        </div>
-      </div>
-
-      <!-- split-screen TUI mock -->
-      <div>
-        <div class="tui">
-          <div class="tui-bar">
-            <span>tmux</span>
-            <span class="seg">[0] wargame</span>
-            <span class="seg" style="color:var(--magenta)">[1] robin chat</span>
-          </div>
-          <div class="tui-split">
-            <div class="tui-pane left">
-              <div class="ph">wargame · ssh</div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">ls</span></div>
-              <div class="tw">data.txt</div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">file data.txt</span></div>
-              <div class="td">data.txt: ASCII text, hexdump</div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">xxd -r data.txt &gt; /tmp/o</span></div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">file /tmp/o</span></div>
-              <div class="ty">/tmp/o: gzip compressed data</div>
-              <div class="td">bandit12@bandit:~$ <span class="cursor"></span></div>
-            </div>
-            <div class="tui-pane right">
-              <div class="ph">robin chat · notebooklm</div>
-              <div class="chat-msg">
-                <div class="who">sen</div>
-                <div class="bub">gzip dosyasını nasıl açarım, uzantısı yok?</div>
-              </div>
-              <div class="chat-msg bot">
-                <div class="who">🐱 robin</div>
-                <div class="bub">Uzantıdan bağımsız: <span class="flag">mv /tmp/o /tmp/o.gz</span> sonra <span class="flag">gzip -d</span>. Her katmanda <span class="flag">file</span> ile tipi kontrol etmeye devam et — bu level iç içe sıkıştırma.</div>
-              </div>
-              <div class="chat-msg">
-                <div class="who">sen</div>
-                <div class="bub">peki bzip2 çıkarsa?</div>
-              </div>
-              <div class="chat-msg bot">
-                <div class="who">🐱 robin</div>
-                <div class="bub"><span class="flag">bzip2 -d</span> ile, tar ise <span class="flag">tar xf</span>...</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p class="sec-sub" style="margin-top:16px;margin-bottom:0;font-size:12.5px">
-          Bağımlılıklar: <span class="flag">textual</span> (TUI) · <span class="flag">pexpect</span> (SSH pty) ·
-          <span class="flag">rich</span> · <span class="flag">pyyaml</span> · <span class="flag">notebooklm-py</span> <span class="td">(ops.)</span>
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============ WARGAMES ============ -->
 <section class="band" id="wargames">
@@ -427,7 +321,6 @@
     </div>
     <div class="foot-links">
       <a href="https://github.com/waitasec137/linux_learning" target="_blank" rel="noopener">★ GitHub'da aç</a>
-      <a href="#robin">Robin Agent</a>
       <a href="#wargames">Wargames</a>
       <a href="#konular">Konu Anlatımları</a>
       <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire ↗</a>

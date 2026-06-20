@@ -165,6 +165,5 @@ it brings together all the techniques in the series, which is why despite a 5/10
 2. Read the task on the level page
 3. **Try it yourself first** — look here only if you get stuck
 4. For command and concept explanations, see the [Topic Guides](../konu_anlatimlari/KONU_ANLATIMLARI.md)
-5. For automatic SSH + AI-assisted solutions, use the **🐱 Robin Agent** in the root directory
 
 > Passwords may change from time to time. These guides explain the method, not the passwords.

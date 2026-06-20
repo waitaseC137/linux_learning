@@ -2,84 +2,52 @@
    linux_learning — interactions
    ============================================================ */
 
-/* ---------- 1. Robin: terminal yazma demosu ---------- */
+/* ---------- 1. hero: terminal yazma demosu ---------- */
 const SCRIPT_DESKTOP = [
-  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'cd robinagent && python robinagent.py' },
+  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'tree -L 1' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">overthewire/</span>      <span class="td">7 wargame · level-by-level çözümler</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">konu_anlatimlari/</span> <span class="td">wargame-bağımsız konu anlatımları</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">docs/</span>             <span class="td">bu site</span>' },
   { t: 'blank' },
-  { t: 'cat' },
-  { t: 'raw', html: '<span class="ty">Robin Agent</span><span class="td"> — Terminal Wargame Asistanı</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Bir wargame seç:</span>' },
-  { t: 'raw', html: '  <span class="tm">▸</span> <span class="tw">Bandit</span>     <span class="td">Linux temelleri · 34 level · 1/10</span>' },
-  { t: 'raw', html: '  <span class="td">  Leviathan  Binary analizi · 8 level · 3/10</span>' },
-  { t: 'raw', html: '  <span class="td">  Natas      Web güvenliği · 35 level · 4/10</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Mod:</span> <span class="ty">[1] AI destekli</span>  <span class="td">[2] Hard mode</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">SSH bağlanıyor</span> <span class="tc">bandit.labs.overthewire.org:2220</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Oturum açıldı · ilerleme</span> <span class="tm">progress.json</span> <span class="td">kaydedildi</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">NotebookLM defteri hazır — sağ panelden soru sorabilirsin</span>' },
+  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'ssh bandit0@bandit.labs.overthewire.org -p 2220' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">bağlandı —</span> <span class="tc">bandit.labs.overthewire.org:2220</span>' },
   { t: 'blank' },
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
 ];
 
 /* mobil: kısa, hizaya dayanmayan satırlar (sarma/taşma olmaz) */
 const SCRIPT_MOBILE = [
-  { t: 'prompt', text: '~/ll $ ', cmd: 'python robinagent.py' },
+  { t: 'prompt', text: '~/ll $ ', cmd: 'tree -L 1' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">overthewire/</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">konu_anlatimlari/</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">docs/</span>' },
   { t: 'blank' },
-  { t: 'cat' },
-  { t: 'raw', html: '<span class="ty">Robin Agent</span>' },
-  { t: 'raw', html: '<span class="td">Terminal Wargame Asistanı</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Wargame seç:</span>' },
-  { t: 'raw', html: '  <span class="tm">▸</span> <span class="tw">Bandit</span> <span class="td">· 34 lvl · 1/10</span>' },
-  { t: 'raw', html: '    <span class="td">Natas · 35 lvl · 4/10</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Mod:</span> <span class="ty">[1] AI</span> <span class="td">[2] Hard</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">SSH →</span> <span class="tc">bandit…:2220</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Oturum açıldı</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Defter hazır 🐱</span>' },
+  { t: 'prompt', text: '~/ll $ ', cmd: 'ssh bandit0@…:2220' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">bağlandı</span>' },
   { t: 'blank' },
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
 ];
 
 const SCRIPT_DESKTOP_EN = [
-  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'cd robinagent && python robinagent.py' },
+  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'tree -L 1' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">overthewire/</span>      <span class="td">7 wargames · level-by-level writeups</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">konu_anlatimlari/</span> <span class="td">wargame-independent topic guides</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">docs/</span>             <span class="td">this site</span>' },
   { t: 'blank' },
-  { t: 'cat' },
-  { t: 'raw', html: '<span class="ty">Robin Agent</span><span class="td"> — Terminal Wargame Assistant</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Pick a wargame:</span>' },
-  { t: 'raw', html: '  <span class="tm">▸</span> <span class="tw">Bandit</span>     <span class="td">Linux basics · 34 levels · 1/10</span>' },
-  { t: 'raw', html: '  <span class="td">  Leviathan  Binary analysis · 8 levels · 3/10</span>' },
-  { t: 'raw', html: '  <span class="td">  Natas      Web security · 35 levels · 4/10</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Mode:</span> <span class="ty">[1] AI-assisted</span>  <span class="td">[2] Hard mode</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Connecting via SSH</span> <span class="tc">bandit.labs.overthewire.org:2220</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Session opened · progress saved to</span> <span class="tm">progress.json</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">NotebookLM notebook ready — ask questions in the right pane</span>' },
+  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'ssh bandit0@bandit.labs.overthewire.org -p 2220' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">connected —</span> <span class="tc">bandit.labs.overthewire.org:2220</span>' },
   { t: 'blank' },
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
 ];
 
 const SCRIPT_MOBILE_EN = [
-  { t: 'prompt', text: '~/ll $ ', cmd: 'python robinagent.py' },
+  { t: 'prompt', text: '~/ll $ ', cmd: 'tree -L 1' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">overthewire/</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">konu_anlatimlari/</span>' },
+  { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">docs/</span>' },
   { t: 'blank' },
-  { t: 'cat' },
-  { t: 'raw', html: '<span class="ty">Robin Agent</span>' },
-  { t: 'raw', html: '<span class="td">Terminal Wargame Assistant</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Pick a wargame:</span>' },
-  { t: 'raw', html: '  <span class="tm">▸</span> <span class="tw">Bandit</span> <span class="td">· 34 lvl · 1/10</span>' },
-  { t: 'raw', html: '    <span class="td">Natas · 35 lvl · 4/10</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">?</span> <span class="tw">Mode:</span> <span class="ty">[1] AI</span> <span class="td">[2] Hard</span>' },
-  { t: 'blank' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">SSH →</span> <span class="tc">bandit…:2220</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Session opened</span>' },
-  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">Notebook ready 🐱</span>' },
+  { t: 'prompt', text: '~/ll $ ', cmd: 'ssh bandit0@…:2220' },
+  { t: 'raw', html: '<span class="tg">✓</span> <span class="td">connected</span>' },
   { t: 'blank' },
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
 ];
@@ -89,51 +57,6 @@ const isMobileVP = window.matchMedia && window.matchMedia('(max-width: 560px)').
 const SCRIPT = IS_EN
   ? (isMobileVP ? SCRIPT_MOBILE_EN : SCRIPT_DESKTOP_EN)
   : (isMobileVP ? SCRIPT_MOBILE : SCRIPT_DESKTOP);
-
-/* etkileşimli kedi: gözler imleci takip eder, ara sıra kırpar */
-function buildCat() {
-  const line = document.createElement('span');
-  line.className = 'line';
-  const eye = '<span class="r-eye"><span class="r-pupil"></span></span>';
-  const cat =
-    '  /\\_____/\\\n' +
-    ' /  ' + eye + '   ' + eye + '  \\\n' +
-    '( ==  ω  == )\n' +
-    ' )         (\n' +
-    '(__|___|___|__)';
-  line.innerHTML =
-    '<span class="cat-name">Robin</span>\n' +
-    '<span class="cat-int" data-cat>' + cat + '</span>';
-  return line;
-}
-
-function wireCat(scope) {
-  const cats = scope.querySelectorAll('.cat-int');
-  if (!cats.length) return;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!reduce) {
-    window.addEventListener('mousemove', (e) => {
-      cats.forEach(cat => {
-        const r = cat.getBoundingClientRect();
-        const cx = r.left + r.width / 2, cy = r.top + r.height * 0.38;
-        let dx = e.clientX - cx, dy = e.clientY - cy;
-        const d = Math.hypot(dx, dy) || 1;
-        const m = Math.min(d / 90, 1) * 2.3; // max ~2.3px
-        cat.style.setProperty('--ex', (dx / d * m).toFixed(2) + 'px');
-        cat.style.setProperty('--ey', (dy / d * m).toFixed(2) + 'px');
-      });
-    }, { passive: true });
-  }
-
-  // göz kırpma
-  function blink() {
-    cats.forEach(c => c.classList.add('blink'));
-    setTimeout(() => cats.forEach(c => c.classList.remove('blink')), 150);
-    setTimeout(blink, 2600 + Math.random() * 2800);
-  }
-  if (!reduce) setTimeout(blink, 1800);
-}
 
 function typeTerminal(el) {
   let i = 0;
@@ -147,11 +70,6 @@ function typeTerminal(el) {
       const l = document.createElement('span');
       l.className = 'line'; l.innerHTML = '\u00A0';
       el.appendChild(l); i++; setTimeout(addLine, 130); return;
-    }
-    if (step.t === 'cat') {
-      el.appendChild(buildCat());
-      wireCat(el);
-      i++; setTimeout(addLine, 380); return;
     }
     if (step.t === 'raw') {
       const l = document.createElement('span');

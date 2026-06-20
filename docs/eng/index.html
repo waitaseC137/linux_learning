@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>linux_learning — learn by watching the terminal</title>
-<meta name="description" content="OverTheWire wargame writeups, topic guides and Robin Agent — a terminal-based wargame assistant. Learn Linux and security by playing." />
+<meta name="description" content="OverTheWire wargame writeups and topic guides. Learn Linux and security by playing." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
@@ -20,7 +20,6 @@
       <span class="pp">🐧</span><b>linux_learning</b>
     </a>
     <div class="nav-links">
-      <a href="#robin">robin&nbsp;agent</a>
       <a href="#wargames">wargames</a>
       <a href="#konular">topic&nbsp;guides</a>
       <a href="#kaynaklar">resources</a>
@@ -43,13 +42,12 @@
       <h1>Learn <em>Linux</em> and <u>security</u> by <span class="pp">watching the terminal.</span></h1>
       <p class="hero-lede">
         Work through the OverTheWire wargames with <b>level-by-level</b> writeups, and
-        learn the concepts through <b>wargame-independent topic guides</b>. By your side is
-        <b>Robin</b> — a terminal assistant that opens your SSH session, tracks your
-        progress, and lets you ask an AI for help when you get stuck. 🐱
+        learn the concepts through <b>wargame-independent topic guides</b> — all in one
+        repo, by watching the terminal. 🐧
       </p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#robin">▸ Meet Robin Agent</a>
-        <a class="btn btn-ghost" href="#wargames">browse the wargames</a>
+        <a class="btn btn-primary" href="#wargames">▸ browse the wargames</a>
+        <a class="btn btn-ghost" href="#konular">topic guides</a>
       </div>
       <div class="hero-stats">
         <div class="hstat"><div class="n m">7</div><div class="l">Wargames</div></div>
@@ -63,117 +61,13 @@
       <div class="term">
         <div class="term-bar">
           <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
-          <span class="tt"><b>robin</b>@linux_learning: ~/robinagent</span>
+          <span class="tt"><b>you</b>@linux_learning: ~</span>
         </div>
         <div class="term-body" id="hero-term"></div>
       </div>
     </div>
   </div>
 </header>
-
-<!-- ============ ROBIN AGENT ============ -->
-<section class="band band-alt" id="robin">
-  <div class="wrap reveal">
-    <div class="sec-head"><span class="sig">$</span> <span class="cmd">./robin</span> <span class="arg">--agent</span></div>
-    <p class="sec-sub">
-      Robin Agent is a terminal-based learning tool that rides along while you solve the
-      wargames. It opens SSH for you, keeps track of your progress, and lets you ask
-      questions in a NotebookLM notebook built for that specific game — all on one screen.
-    </p>
-
-    <div class="robin-grid">
-      <div>
-        <div class="feat-list">
-          <div class="feat">
-            <span class="ic">01</span>
-            <div><h4>Wargame picker menu</h4>
-            <p>Choose from Bandit, Leviathan, Krypton, Natas, Narnia, Behemoth and Utumno — each listed with its difficulty and topics.</p></div>
-          </div>
-          <div class="feat">
-            <span class="ic">02</span>
-            <div><h4>Automatic SSH + progress tracking</h4>
-            <p>It enters your password, opens the session, and remembers where you left off in <span class="flag">progress.json</span>. You pick up right where you stopped.</p></div>
-          </div>
-          <div class="feat">
-            <span class="ic">03</span>
-            <div><h4>AI chat in the side pane</h4>
-            <p>A TMUX split screen: wargame on the left, Robin Chat on the right. When you're stuck, ask that game's NotebookLM notebook.</p></div>
-          </div>
-          <div class="feat">
-            <span class="ic">04</span>
-            <div><h4>Two modes</h4>
-            <p><span class="flag">[1]</span> AI-assisted — a notebook is prepared for each game. <span class="flag">[2]</span> Hard mode — no AI, straight into the wargame.</p></div>
-          </div>
-        </div>
-
-        <div class="install">
-          <div class="install-head">
-            <span>install &amp; run</span>
-            <button class="copy-btn" data-copy="#install-pre">copy</button>
-          </div>
-<pre id="install-pre"><span class="c"># virtualenv + dependencies</span>
-<span class="p">$</span> cd robinagent
-<span class="p">$</span> python3 -m venv .venv <span class="k">&amp;&amp;</span> source .venv/bin/activate
-<span class="p">$</span> pip install -r requirements.txt
-
-<span class="c"># AI mode (optional)</span>
-<span class="p">$</span> pip install <span class="k">"notebooklm-py[browser]"</span>
-<span class="p">$</span> playwright install chromium
-
-<span class="c"># launch — opens inside TMUX</span>
-<span class="p">$</span> python robinagent.py</pre>
-        </div>
-      </div>
-
-      <!-- split-screen TUI mock -->
-      <div>
-        <div class="tui">
-          <div class="tui-bar">
-            <span>tmux</span>
-            <span class="seg">[0] wargame</span>
-            <span class="seg" style="color:var(--magenta)">[1] robin chat</span>
-          </div>
-          <div class="tui-split">
-            <div class="tui-pane left">
-              <div class="ph">wargame · ssh</div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">ls</span></div>
-              <div class="tw">data.txt</div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">file data.txt</span></div>
-              <div class="td">data.txt: ASCII text, hexdump</div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">xxd -r data.txt &gt; /tmp/o</span></div>
-              <div class="td">bandit12@bandit:~$ <span class="tw">file /tmp/o</span></div>
-              <div class="ty">/tmp/o: gzip compressed data</div>
-              <div class="td">bandit12@bandit:~$ <span class="cursor"></span></div>
-            </div>
-            <div class="tui-pane right">
-              <div class="ph">robin chat · notebooklm</div>
-              <div class="chat-msg">
-                <div class="who">you</div>
-                <div class="bub">how do I open a gzip file with no extension?</div>
-              </div>
-              <div class="chat-msg bot">
-                <div class="who">🐱 robin</div>
-                <div class="bub">Extension doesn't matter: <span class="flag">mv /tmp/o /tmp/o.gz</span> then <span class="flag">gzip -d</span>. Keep checking the type with <span class="flag">file</span> at each layer — this level is nested compression.</div>
-              </div>
-              <div class="chat-msg">
-                <div class="who">you</div>
-                <div class="bub">and if it turns out to be bzip2?</div>
-              </div>
-              <div class="chat-msg bot">
-                <div class="who">🐱 robin</div>
-                <div class="bub">use <span class="flag">bzip2 -d</span>, or <span class="flag">tar xf</span> if it's a tar...</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p class="sec-sub" style="margin-top:16px;margin-bottom:0;font-size:12.5px">
-          Dependencies: <span class="flag">textual</span> (TUI) · <span class="flag">pexpect</span> (SSH pty) ·
-          <span class="flag">rich</span> · <span class="flag">pyyaml</span> · <span class="flag">notebooklm-py</span> <span class="td">(opt.)</span>
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============ WARGAMES ============ -->
 <section class="band" id="wargames">
@@ -427,7 +321,6 @@
     </div>
     <div class="foot-links">
       <a href="https://github.com/waitasec137/linux_learning" target="_blank" rel="noopener">★ Open on GitHub</a>
-      <a href="#robin">Robin Agent</a>
       <a href="#wargames">Wargames</a>
       <a href="#konular">Topic Guides</a>
       <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire ↗</a>

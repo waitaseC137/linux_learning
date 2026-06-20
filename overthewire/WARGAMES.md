@@ -176,6 +176,5 @@ Utumno sonrası** capstone olarak en sona konuldu.
 2. Level sayfasındaki görevi oku
 3. Önce **kendi başına dene** — takılırsan buraya bak
 4. Bir komut veya kavram için [Konu Anlatımları](../konu_anlatimlari/KONU_ANLATIMLARI.md)'na bak
-5. Otomatik SSH + AI destekli çözüm için kök dizindeki **🐱 Robin Agent**'ı kullan
 
 > Şifreler zaman zaman değişebilir. Bu rehberlerde yöntem anlatılıyor, şifreler paylaşılmıyor.

@@ -1,6 +1,6 @@
 /* ============================================================
    linux_learning — terminal landing
-   Robin'in renkleri: magenta (kedi) + sarı (isim) + fosfor yeşili (prompt)
+   renk paleti: magenta + sarı + fosfor yeşili (prompt)
    ============================================================ */
 
 :root {
@@ -324,68 +324,13 @@ a { color: inherit; text-decoration: none; }
 }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* the ascii cat */
-.cat-art {
-  color: var(--magenta);
-  font-weight: 700;
-  text-shadow: 0 0 14px rgba(var(--glow),.35);
-}
-.cat-name { color: var(--yellow); font-weight: 700; }
-
 /* ============================================================
-   ROBIN AGENT FEATURE
+   SECTIONS / BANDS
    ============================================================ */
 section { position: relative; z-index: 2; }
 .band { padding: 72px 0; }
 .band-alt { background: var(--bg-1); border-block: 1px solid var(--line); }
 
-.robin-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: start;
-}
-@media (max-width: 920px){ .robin-grid { grid-template-columns: 1fr; gap: 32px; } }
-
-.feat-list { display: flex; flex-direction: column; gap: 14px; margin: 8px 0 26px; }
-.feat {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 14px;
-  align-items: start;
-  padding: 16px 18px;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  transition: border-color .15s, transform .15s;
-}
-.band-alt .feat { background: var(--bg-2); }
-.feat:hover { border-color: var(--magenta-d); transform: translateX(3px); }
-.feat .ic {
-  font-size: 12px; font-weight: 700;
-  color: var(--green);
-  border: 1px solid var(--line-2);
-  border-radius: 6px;
-  width: 34px; height: 34px;
-  display: grid; place-items: center;
-  background: var(--bg);
-}
-.feat h4 { font-size: 14.5px; color: var(--fg); margin-bottom: 3px; }
-.feat p { font-size: 13px; color: var(--fg-dim); line-height: 1.55; }
-
-/* install block */
-.install {
-  background: var(--bg);
-  border: 1px solid var(--line-2);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.install-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 9px 14px; background: var(--bg-2);
-  border-bottom: 1px solid var(--line);
-  font-size: 12px; color: var(--fg-mute);
-}
 .copy-btn {
   font-family: var(--mono); font-size: 12px;
   color: var(--fg-dim); background: transparent;
@@ -394,48 +339,6 @@ section { position: relative; z-index: 2; }
 }
 .copy-btn:hover { color: var(--green); border-color: var(--green); }
 .copy-btn.ok { color: var(--green); border-color: var(--green); }
-.install pre {
-  padding: 16px;
-  font-size: 12.5px; line-height: 1.85;
-  overflow-x: auto;
-}
-.install pre .c { color: var(--fg-mute); }
-.install pre .p { color: var(--green); }
-.install pre .k { color: var(--magenta); }
-
-/* split-screen TUI mock */
-.tui {
-  background: var(--bg);
-  border: 1px solid var(--line-2);
-  border-radius: 11px;
-  overflow: hidden;
-  box-shadow: 0 20px 44px -34px rgba(40,36,24,.45);
-}
-.tui-bar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 13px; background: var(--bg-2);
-  border-bottom: 1px solid var(--line); font-size: 11.5px; color: var(--fg-mute);
-}
-.tui-bar .seg { color: var(--green); }
-.tui-split { display: grid; grid-template-columns: 1fr 1fr; min-height: 300px; }
-.tui-pane { padding: 14px; font-size: 11.5px; line-height: 1.65; }
-.tui-pane.left { border-right: 1px solid var(--line-2); }
-.tui-pane .ph {
-  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--fg-mute); margin-bottom: 10px;
-  display: flex; align-items: center; gap: 7px;
-}
-.tui-pane .ph::before { content:""; width:6px;height:6px;border-radius:50%; }
-.tui-pane.left .ph::before { background: var(--green); }
-.tui-pane.right .ph::before { background: var(--magenta); }
-.chat-msg { margin-bottom: 10px; }
-.chat-msg .who { font-size: 10.5px; color: var(--fg-mute); margin-bottom: 2px; }
-.chat-msg.bot .who { color: var(--magenta); }
-.chat-msg .bub { color: var(--fg-dim); }
-.chat-msg.bot .bub { color: var(--fg); }
-
-@media (max-width: 560px){ .tui-split { grid-template-columns: 1fr; } .tui-pane.left { border-right: none; border-bottom: 1px solid var(--line-2); } }
-
 /* ============================================================
    WARGAMES
    ============================================================ */
@@ -634,27 +537,6 @@ body { animation: pageIn .45s ease both; }
 .nav-inner.open .nav-burger span:nth-child(2) { opacity: 0; }
 .nav-inner.open .nav-burger span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-/* ---------- etkileşimli Robin (göz takip) ---------- */
-.cat-int { display: inline-block; color: var(--magenta); font-weight: 700; line-height: 1.15;
-  text-shadow: 0 0 14px rgba(var(--glow),.35); white-space: pre; }
-.cat-int .r-eye {
-  display: inline-block; position: relative;
-  width: 1ch; height: 1em; vertical-align: baseline;
-}
-.cat-int .r-eye::before {
-  content: ""; position: absolute; inset: 14% 8%;
-  border: 1.5px solid currentColor; border-radius: 50%;
-  opacity: .9;
-}
-.cat-int .r-pupil {
-  position: absolute; left: 50%; top: 52%;
-  width: 0.30em; height: 0.30em; border-radius: 50%;
-  background: currentColor;
-  transform: translate(calc(-50% + var(--ex,0px)), calc(-50% + var(--ey,0px)));
-  transition: transform .12s ease-out, height .09s ease;
-}
-.cat-int.blink .r-pupil { height: 0.05em; }
-
 /* ---------- kart 3B tilt ---------- */
 .wg-grid { perspective: 1200px; }
 .wg { transform-style: preserve-3d; will-change: transform; }
@@ -732,16 +614,16 @@ body { animation: pageIn .45s ease both; }
 .tree-row:hover .cnt { color: var(--bg); border-color: transparent; background: rgba(0,0,0,.18); }
 
 /* framed paneller: NieR köşe çentikleri */
-.term, .tui, .tree, .install, .wg, .res, .tree-side, .wg-card {
+.term, .tree, .wg, .res, .tree-side, .wg-card {
   position: relative;
 }
-.term::before, .tui::before, .tree::before, .wg::before {
+.term::before, .tree::before, .wg::before {
   content: ""; position: absolute; top: 6px; left: 6px;
   width: 9px; height: 9px;
   border-top: 2px solid var(--line-2); border-left: 2px solid var(--line-2);
   pointer-events: none; opacity: .8; z-index: 3;
 }
-.term::after, .tui::after, .tree::after {
+.term::after, .tree::after {
   /* not: .wg::after üst aksan çizgisi için kullanılıyor, ona dokunma */
 }
 
@@ -752,12 +634,9 @@ body { animation: pageIn .45s ease both; }
    TAŞMA GÜVENLİĞİ — grid/flex min-width:auto taşmasını engelle
    (her ekran boyutunda güvenli)
    ============================================================ */
-.robin-grid > *, .hero-grid > *, .tree-grid > * { min-width: 0; }
-.tui, .tui-split, .tui-split > *, .tui-pane { min-width: 0; }
-.tui-pane { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.install, .install pre, .term, .term-body { min-width: 0; }
-.install pre { overflow-x: auto; }
-.feat, .wg, .res { min-width: 0; }
+.hero-grid > *, .tree-grid > * { min-width: 0; }
+.term, .term-body { min-width: 0; }
+.wg, .res { min-width: 0; }
 /* okuyucu: içerik sütunu geniş kod/tablodan taşmasın */
 .docs > *, .content, .content .reader { min-width: 0; }
 .content { overflow-x: hidden; }
@@ -817,9 +696,6 @@ body { animation: pageIn .45s ease both; }
 
   /* ---- terminal: yatay taşmayı engelle ---- */
   .term-body { font-size: 12px; padding: 16px 14px 18px; min-height: 0; overflow-x: auto; }
-
-  /* ---- robin özellik kutuları ---- */
-  .feat { padding: 14px 15px; }
 
   /* ---- wargame kartları ---- */
   .wg { padding: 18px; }

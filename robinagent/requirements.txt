@@ -1,5 +1,0 @@
-textual
-pexpect
-rich
-pyyaml
-# notebooklm-py  # opsiyonel — AI modu için pip install notebooklm-py
