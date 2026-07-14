@@ -9,7 +9,7 @@
 > daha önce hiç kod yazmamış olman, "register ne demek" bilmemen tamamen normal —
 > hepsini buradan, sıfırdan kuracağız. Tek ön koşul: sabır ve merak.
 
-> 🚧 **Bu kurs YAZIM AŞAMASINDA — devam ediyor.** Şu an yazılı: **Ünite 0** (makine modeli, 00–04.5) + **Ünite 1'in başı** (05, 05.5, 06 — ilk `mov` programı — ve **07** — gdb ile tek adım). Yol haritasındaki **08'den sonrası planlı ama henüz yazılmadı** (aşağıda `🚧` işaretli, linksiz). Kurs ilerledikçe eklenecek.
+> 🚧 **Bu kurs YAZIM AŞAMASINDA — devam ediyor.** Şu an yazılı: **Ünite 0** (makine modeli, 00–04.5) + **Ünite 1'in başı** (05, 05.5, 06 ilk `mov` programı, **07** gdb ile tek adım, **08** mov & bellek/pointer). Yol haritasındaki **08.5'ten sonrası planlı ama henüz yazılmadı** (aşağıda `🚧` işaretli, linksiz). Kurs ilerledikçe eklenecek.
 
 ---
 
@@ -104,7 +104,8 @@ Dosyaları bu sırayla oku. Her ünite bir öncekine yaslanır.
 | 5.5 | [05.5_perde_arkasi](./05.5_perde_arkasi.md) | Perde arkası: `./` ve PATH, `nasm` vs `ld`, `_start` aslında ne | (kod yok) |
 | 6 | [06_ilk_gercek_program](./06_ilk_gercek_program.md) | `mov` ile register'a değer, çıkış kodu, `echo $?` | Ekranda bir sayı: "8!" |
 | 7 | [07_gdb_tek_adim](./07_gdb_tek_adim.md) | GDB'de tek adım at, register'ları izle | "Komut yaz → ne değişti gör" |
-| 8 | 08_mov_ve_bellek 🚧 *(yazılıyor)* | `mov` çeşitleri, `[...]` = kutudaki adresin gösterdiği yer | İlk pointer sezgisi |
+| 8 | [08_mov_ve_bellek](./08_mov_ve_bellek.md) | `mov` çeşitleri, `[...]` = kutudaki adresin gösterdiği yer; ilk pointer takibi | İlk pointer sezgisi |
+| 8.5 | 08.5_little_endian 🚧 *(yazılıyor)* | Belleğe byte byte bakmak; "aynen ters" byte sırası (little-endian) | Byte diziliş sezgisi |
 | 9 | 09_aritmetik 🚧 *(yazılıyor)* | `add`, `sub`, `inc`, `dec` | Minik bir hesap makinesi |
 
 ### 🔀 Ünite 2 — Akış: İşçiye Karar Verdirmek

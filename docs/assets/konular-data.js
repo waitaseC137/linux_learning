@@ -77,7 +77,7 @@ window.KONULAR = {
       label: "x86 Assembly (sıfırdan)",
       accent: "var(--cyan)",
       tag: "🚧 yazılıyor",
-      blurb: "Sıfırdan x86 assembly — makine modeli, register, ilk program, gdb ile tek adım. Yazım aşamasında: şu an Ünite 0 + Ünite 1'in başı (00–07).",
+      blurb: "Sıfırdan x86 assembly — makine modeli, register, ilk program, gdb, bellek & pointer. Yazım aşamasında: şu an Ünite 0 + Ünite 1'in başı (00–08).",
       files: [
         { f: "x86_assembly/00_buradan_basla.md",           n: "→",    t: "Buradan Başla",         h: "Kurs haritası + ne öğreneceksin (🚧 yazılıyor)" },
         { f: "x86_assembly/01_bilgisayar_nedir.md",        n: "01",   t: "Bilgisayar Nedir?",     h: "Numaralı kutular + işçi; zihin modeli" },
@@ -89,7 +89,8 @@ window.KONULAR = {
         { f: "x86_assembly/05_kurulum_ve_ilk_program.md",  n: "05",   t: "Kurulum & İlk Program", h: "nasm/ld/gdb; yaz→çevir→çalıştır" },
         { f: "x86_assembly/05.5_perde_arkasi.md",          n: "05.5", t: "Perde Arkası",          h: "PATH, nasm vs ld, _start" },
         { f: "x86_assembly/06_ilk_gercek_program.md",      n: "06",   t: "İlk Gerçek Program",    h: "mov ile değer, çıkış kodu, echo $?" },
-        { f: "x86_assembly/07_gdb_tek_adim.md",            n: "07",   t: "GDB ile Tek Adım",      h: "starti · si · info registers · eip; kutuları canlı izle" }
+        { f: "x86_assembly/07_gdb_tek_adim.md",            n: "07",   t: "GDB ile Tek Adım",      h: "starti · si · info registers · eip; kutuları canlı izle" },
+        { f: "x86_assembly/08_mov_ve_bellek.md",           n: "08",   t: "mov ve Bellek",         h: "[...] adresleme · section .data · AL/BIRAK · ilk pointer takibi" }
       ]
     },
     {
