@@ -73,6 +73,25 @@ window.KONULAR = {
       ]
     },
     {
+      id: "x86_assembly",
+      label: "x86 Assembly (sıfırdan)",
+      accent: "var(--cyan)",
+      tag: "🚧 yazılıyor",
+      blurb: "Sıfırdan x86 assembly — makine modeli, register, ilk program. Yazım aşamasında: şu an Ünite 0 + ilk mov programı (00–06).",
+      files: [
+        { f: "x86_assembly/00_buradan_basla.md",           n: "→",    t: "Buradan Başla",         h: "Kurs haritası + ne öğreneceksin (🚧 yazılıyor)" },
+        { f: "x86_assembly/01_bilgisayar_nedir.md",        n: "01",   t: "Bilgisayar Nedir?",     h: "Numaralı kutular + işçi; zihin modeli" },
+        { f: "x86_assembly/01.5_sayi_ve_anlam.md",         n: "01.5", t: "Aynı Sayı, Bin Anlam",  h: "Sayı ≠ anlam; anlamı kod verir" },
+        { f: "x86_assembly/02_terminal_ile_tanisma.md",    n: "02",   t: "Terminal ile Tanışma",  h: "Terminal, komut yazma, çıktı okuma" },
+        { f: "x86_assembly/03_sayilar_ikilik_onaltilik.md",n: "03",   t: "İkilik & Onaltılık",    h: "Makinenin saydığı gibi saymak" },
+        { f: "x86_assembly/04_bellek_ve_registerlar.md",   n: "04",   t: "Bellek & Register'lar", h: "Kutular + işçinin elleri" },
+        { f: "x86_assembly/04.5_registerin_ici.md",        n: "04.5", t: "Register'ın İçi",       h: "AL/AH/AX/EAX — boyut oyunları" },
+        { f: "x86_assembly/05_kurulum_ve_ilk_program.md",  n: "05",   t: "Kurulum & İlk Program", h: "nasm/ld/gdb; yaz→çevir→çalıştır" },
+        { f: "x86_assembly/05.5_perde_arkasi.md",          n: "05.5", t: "Perde Arkası",          h: "PATH, nasm vs ld, _start" },
+        { f: "x86_assembly/06_ilk_gercek_program.md",      n: "06",   t: "İlk Gerçek Program",    h: "mov ile değer, çıkış kodu, echo $?" }
+      ]
+    },
+    {
       id: "binary_exploitation",
       label: "Binary Exploitation",
       accent: "var(--d-high)",

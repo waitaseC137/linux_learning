@@ -72,6 +72,26 @@
 
 ---
 
+## ⚙️ x86 Assembly (sıfırdan)
+
+> 🚧 **Bu kurs yazım aşamasında** — şu an **Ünite 0** (makine modeli) + **Ünite 1'in başı** (ilk `mov` programı) yazılı (00–06); Ünite 1–4 (jmp/stack/call/syscall/C köprüsü) ekleniyor.
+>
+> 🧭 **Yeni mi başlıyorsun?** → [00_buradan_basla.md](./x86_assembly/00_buradan_basla.md) — assembly'yi *yazarak* gerçekten sıfırdan öğrenmek isteyenler için. Binary Exploitation'ın derin ön hazırlığıdır ("önce işçiye emir vermeyi öğren, sonra emri bük").
+
+| Dosya | Konular |
+|---|---|
+| [00_buradan_basla.md](./x86_assembly/00_buradan_basla.md) | Kurs haritası, zihin modeli, çalışma yöntemi |
+| [01_bilgisayar_nedir.md](./x86_assembly/01_bilgisayar_nedir.md) | Numaralı kutular + işçi; "çalışmak" ne demek |
+| [02_terminal_ile_tanisma.md](./x86_assembly/02_terminal_ile_tanisma.md) | Terminal, komut yazma, çıktı okuma |
+| [03_sayilar_ikilik_onaltilik.md](./x86_assembly/03_sayilar_ikilik_onaltilik.md) | İkilik/onaltılık — makinenin saydığı gibi saymak |
+| [04_bellek_ve_registerlar.md](./x86_assembly/04_bellek_ve_registerlar.md) | Bellek (kutular) + register (işçinin elleri); AL/AH/EAX |
+| [05_kurulum_ve_ilk_program.md](./x86_assembly/05_kurulum_ve_ilk_program.md) | nasm/ld/gdb kurulumu, yaz→çevir→çalıştır zinciri |
+| [06_ilk_gercek_program.md](./x86_assembly/06_ilk_gercek_program.md) | `mov` ile register'a değer, çıkış kodu, `echo $?` |
+
+*(Ara dersler 01.5 / 04.5 / 05.5 kurs içinde bağlı; sıradaki üniteler 07–20 yazılıyor.)*
+
+---
+
 ## 💥 Binary Exploitation
 
 > 🧭 **Yeni mi başlıyorsun?** Önce buradan başla → [00_buradan_basla.md](./binary_exploitation/00_buradan_basla.md) — assembly bilmeyenler için giriş, minimum komut sözlüğü, little-endian tuzağı, uçtan uca ilk exploit ve dosyaların okuma sırası.
