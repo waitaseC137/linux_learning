@@ -154,7 +154,7 @@ eax            0x63                99
 
 `eax` bu kez `42` değil `99` (`0x63`) — çünkü artık bellekte 99 yazıyor. AL → BIRAK → tekrar AL: 04'ün dansını baştan sona gerçek komutlarla döndün. (Program biterse `echo $?` — fish: `echo $status` — **99** der; çünkü çıkışta `ebx`'e koyduğumuz o 99 okunur.)
 
-> 💡 İleri-not: `x/1dw` ile belleğe "tek büyük sayı" olarak baktık ve düzgün `42`/`99` gördük. Ama o 4 byte belleğe *tek tek* nasıl diziliyor — hangi byte önce? — ilk bakışta tuhaf gelen kendine has bir kuralı var. Bu "aynen ters" sürprizini bir sonraki kısa derste (08.5_little_endian 🚧 *yazılıyor*) belleğe byte byte bakarak açacağız. Şimdilik "`[sayi]` = oradaki değer" yeter.
+> 💡 İleri-not: `x/1dw` ile belleğe "tek büyük sayı" olarak baktık ve düzgün `42`/`99` gördük. Ama o 4 byte belleğe *tek tek* nasıl diziliyor — hangi byte önce? — ilk bakışta tuhaf gelen kendine has bir kuralı var. Bu "aynen ters" sürprizini bir sonraki kısa derste ([08.5_little_endian](./08.5_little_endian.md)) belleğe byte byte bakarak açacağız. Şimdilik "`[sayi]` = oradaki değer" yeter.
 
 ---
 
@@ -255,6 +255,6 @@ eax            0x2a                42
 ---
 
 **Önceki konu:** [07_gdb_tek_adim.md](./07_gdb_tek_adim.md)
-**Sonraki konu:** 08.5_little_endian.md 🚧 *(yazılıyor)*
+**Sonraki konu:** [08.5_little_endian.md](./08.5_little_endian.md)
 
 *Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*

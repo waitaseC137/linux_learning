@@ -89,8 +89,9 @@
 | [06_ilk_gercek_program.md](./x86_assembly/06_ilk_gercek_program.md) | `mov` ile register'a değer, çıkış kodu, `echo $?` |
 | [07_gdb_tek_adim.md](./x86_assembly/07_gdb_tek_adim.md) | GDB'de tek adım (`starti` / `si`), register'ları canlı izleme, `eip` |
 | [08_mov_ve_bellek.md](./x86_assembly/08_mov_ve_bellek.md) | `[...]` bellek adresleme, `section .data`, AL/BIRAK, ilk pointer takibi (`[ebx]`) |
+| [08.5_little_endian.md](./x86_assembly/08.5_little_endian.md) | Belleğe byte byte bakmak; "aynen ters" byte sırası (little-endian) |
 
-*(Ara dersler 01.5 / 04.5 / 05.5 kurs içinde bağlı; sıradaki üniteler 08.5–20 yazılıyor.)*
+*(Ara dersler 01.5 / 04.5 / 05.5 kurs içinde bağlı; sıradaki üniteler 09–20 yazılıyor.)*
 
 ---
 
