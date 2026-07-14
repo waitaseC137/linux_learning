@@ -177,10 +177,9 @@ sort file.txt | uniq        # sort, then remove duplicates
 
 ```bash
 $ echo -e "apple\napple\npear\napplE\npear" | sort | uniq -c
-      1 apple
-      1 applE     # different case → counted separately
       2 apple
-      1 pear
+      1 applE     # different case → counted separately from 'apple'
+      2 pear
 
 $ echo -e "apple\napple\npear\npear" | sort | uniq -u
 # Output: (empty — every line appears at least twice)
@@ -316,7 +315,7 @@ echo "hello" | tr -s 'l'              # squeeze consecutive 'l's into one
 ```bash
 tr 'a-z' 'A-Z'          # make all lowercase letters uppercase
 tr 'A-Za-z' 'a-zA-Z'    # swap upper/lower case
-tr '0-9' '9-0'          # reverse the digits
+tr '0-9' '9876543210'   # reverse the digits (tr does not accept a descending range; write the reversed set explicitly)
 tr -d '0-9'             # delete all digits
 tr -d '\n'              # delete line breaks
 tr -s ' '               # squeeze multiple spaces into one

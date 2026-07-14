@@ -113,10 +113,11 @@ In Leviathan Level 4, running the binary prints output made of 0s and 1s. To con
 
 **With Perl:**
 ```bash
-echo "01010100 01101001 ..." | perl -lpe '$_=pack"B*",$_'
+# IMPORTANT: pack "B*" counts spaces as bits too → strip the spaces first
+echo "01010100 01101001 ..." | tr -d ' ' | perl -lpe '$_=pack"B*",$_'
 ```
 
-`pack "B*"` → converts a binary string into a byte sequence.
+`pack "B*"` → converts a binary string into a byte sequence. With space-separated input, each space is interpreted as an extra bit and throws off the alignment (you get garbage), so the spaces must be stripped first with `tr -d ' '`. Likewise, the Python example below expects a contiguous bit string.
 
 **With Python:**
 ```bash

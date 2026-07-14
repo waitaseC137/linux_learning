@@ -137,15 +137,17 @@ username=admin&password=test
 username=admin&password=password&password=1
 ```
 
-`param('password')` → list context → `("password", 1)`
+`param('password')` returns `("password", 1)` in list context.
 
-`quote(("password", 1))` → behaves differently depending on the Perl DBI version:
+`$dbh->quote(param('password'))` flattens into a `quote("password", 1)` call. **In DBI, the 2nd argument of `quote()` is an SQL data type (`$data_type`).** When a numeric/non-empty type is supplied, `quote()` does **not** wrap the value in single quotes (the `unless ($data_type)` guard in the base implementation is skipped) → the value is returned AS-IS.
 
-In old versions: `quote()` handles the numeric value in the list differently → without quotes → injection!
+So `quote("password", 1)` → an unquoted `password`. The query becomes:
 
 ```sql
-SELECT * FROM users WHERE username='admin' AND password=password OR 1
+SELECT * FROM users WHERE username='admin' AND password=password
 ```
+
+The unquoted `password` is not a string literal but is interpreted as a **column name** → `password=password` (the column compared to itself) is **always true** → all rows are returned → auth bypass.
 
 **With curl:**
 

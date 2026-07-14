@@ -200,7 +200,9 @@ done | sort -nr
 ```
 
 Cipher order: `SQJUBNGCDZVWMYTXKELAFIORHP`  
-English order: `ETAOINSRHDLUCMFYWGPBVKXQJZ`
+English order (theoretical reference): `ETAOINSRHDLUCMFYWGPBVKXQJZ`
+
+> ⚠️ The `tr` **target** sequence below (`EATSORNIHC...`) is NOT this raw ETAOIN order — because frequency doesn't hold exactly in a small text, it's the **final substitution key** refined by trial and error (the first ~9 letters are still the E,T,A,O,I,N,S,R,H set, just rearranged to produce readable output).
 
 ```bash
 krypton3@krypton:/krypton/krypton3$ cat krypton4 | tr 'SQJUBNGCDZVWMYTXKELAFIORHP' 'EATSORNIHCLDUPYFWGMBKVXQJZ'
@@ -289,7 +291,7 @@ Password: `RANDOM`
 
 ---
 
-## Level 6 → Level 7 — Stream Cipher (XOR Attack)
+## Level 6 → Level 7 — Stream Cipher (mod-26 shift, LFSR keystream)
 
 ### 🔐 Connection
 ```bash
@@ -300,21 +302,20 @@ ssh krypton6@krypton.labs.overthewire.org -p 2231
 ### 🎯 Task
 This level uses a **stream cipher**. The keyfile is unreadable, but you can use the `encrypt6` binary to encrypt your own texts. Exploit the weak random number generator.
 
-### 📖 Theory: Stream Cipher and XOR
+### 📖 Theory: Stream Cipher (mod-26 shift)
 
-**Stream Cipher:** XORs each byte separately with a "random" keystream.
+**Careful — this is not XOR, it's mod-26 addition.** "Stream cipher" usually brings XOR to mind, but Krypton 6 uses its keystream as a **shift amount** (0–25), Vigenère-style. Proof: the `encrypt6` output stays entirely within the A–Z range (a bitwise XOR would produce unprintable bytes), and the flag is `LFSRISNOTRANDOM`.
+
 ```
-ciphertext = plaintext XOR keystream
-plaintext  = ciphertext XOR keystream
+cipher_letter    = (plaintext_letter + shift) mod 26
+plaintext_letter = (cipher_letter    - shift) mod 26
 ```
 
-XOR property: XORing the ciphertext with the same keystream gives back the original text.
+**Important vulnerability:** If the keystream repeats (weak LFSR), every letter at the same position is encrypted with the same shift. In this case:
 
-**Important vulnerability:** If the keystream repeats (weak RNG), the same keystream byte is XORed with every character at the same position. In this case:
-
-1. Compare the output encrypted with a known plaintext (`AAAA...`)
-2. `A XOR keystream = cipher` → `keystream = A XOR cipher`
-3. After finding the keystream: `ciphertext XOR keystream = plaintext`
+1. Run `encrypt6` with a known plaintext (`AAAA...`) → the output directly reveals the keystream's shifts.
+2. Extract the shift: `shift[i] = ord(cipher[i]) - ord('A')` (since the plaintext is 'A').
+3. Decode the target: for each letter, `plaintext = cipher - shift` (if the result drops below 'A', add `+26`).
 
 ### 🔧 Solution
 

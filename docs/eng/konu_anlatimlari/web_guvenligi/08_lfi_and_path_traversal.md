@@ -26,9 +26,11 @@ Normal request:
   /var/www/html/files/welcome.txt  ✓
 
 Path Traversal:
-  ?file=../../../etc/passwd
-  /var/www/html/files/../../../etc/passwd
+  ?file=../../../../etc/passwd
+  /var/www/html/files/../../../../etc/passwd
   → /etc/passwd  ✓ (the server reads this)
+  # /var/www/html/files/ is 4 levels deep from root → 4 ../ are needed to reach root
+  # (3 ../ only climb up to /var and give /var/etc/passwd)
 ```
 
 This attack can be used both to read local files (LFI) and for remote resources (RFI).

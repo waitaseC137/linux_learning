@@ -397,12 +397,12 @@ We can use this to include the password file directly in the search scope.
 
 Type in the search box:
 ```
-.* /etc/natas_webpass/natas10
+.* /etc/natas_webpass/natas11
 ```
 
 The command that will be executed:
 ```bash
-grep -i .* /etc/natas_webpass/natas10 dictionary.txt
+grep -i .* /etc/natas_webpass/natas11 dictionary.txt
 ```
 
 `.*` matches all lines → entire contents of the password file are output!

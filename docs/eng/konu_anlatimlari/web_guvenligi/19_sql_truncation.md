@@ -145,11 +145,11 @@ function doesUserExist($link, $usr) {
 
 **Problem:**
 
-`doesUserExist()` → `WHERE username='admin                 x'` → after truncation `WHERE username='admin'` → the record exists, `createUser` is not called.
+`doesUserExist()` → `WHERE username='admin                 x'` → this value does **not match** the existing `admin` record, because **the string literal in a SELECT's WHERE clause is NOT truncated** (truncation only happens on INSERT) → the trailing `x` remains, so `doesUserExist` returns **false** → `createUser` **is called**.
 
-But `checkCredentials()` → `WHERE username='admin' AND password='our_md5'` → admin's registered password doesn't match ours.
+The key point is *where* the truncation happens: not in the SELECT, but only in the **INSERT** performed by `createUser`. When the value `'admin'+spaces+'x'` is written to the VARCHAR(64) column, everything past the 64th character (i.e., the `x`) is trimmed.
 
-The subtle difference here: `doesUserExist` checks before truncation, but in some MySQL versions and with `strict mode` off, a duplicate record can be created via truncation.
+Result: a **second `admin` record** is created in the table — with a password that *we* chose. Then `checkCredentials('admin', our_password)` matches this new record → admin login. (When MySQL strict mode is off, an overly long VARCHAR value is silently trimmed instead of raising an error.)
 
 **Exploit:**
 
@@ -160,8 +160,8 @@ url      = "http://natas27.natas.labs.overthewire.org/"
 username = "natas27"
 password = "[natas27_password]"
 
-# "admin" + 57 spaces + "x" = 63 characters (truncates VARCHAR(64))
-evil_user = "admin" + " " * 57 + "x"
+# "admin" + 59 spaces + "x" = 65 characters (EXCEEDS the VARCHAR(64) limit → "x" is trimmed, leaving "admin"+spaces)
+evil_user = "admin" + " " * 59 + "x"
 evil_pass = "hello"
 
 # Step 1: Create the fake admin account

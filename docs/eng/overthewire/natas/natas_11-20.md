@@ -54,16 +54,16 @@ Copy the "data" cookie value
 e.g.: ClVLIh4ASCsCBE8lAxMacFMZV2hdVVotEhhUJQNVAmhSEV4sFxFeaAw=
 ```
 
-**Step 2 — Generate the base64 of the same values unencrypted:**
+**Step 2 — Note the raw (unencrypted) JSON content:**
 ```
 {"showpassword":"no","bgcolor":"#ffffff"}
-→ base64: eyJzaG93cGFzc3dvcmQiOiJubyIsImJnY29sb3IiOiIjZmZmZmZmIn0=
 ```
+> ⚠️ Do **not** base64-encode this. Since the scheme is `json → XOR → base64`, finding the key requires the **raw JSON plaintext**: `base64_decode(cookie) XOR raw_json = key`.
 
 **Step 3 — Find the key with CyberChef XOR:**
 1. Open [CyberChef](https://gchq.github.io/CyberChef/)
 2. Cookie value → "From Base64" operation
-3. Result → "XOR" operation (key: base64 encoded plaintext)
+3. Result → "XOR" operation (key operand = **raw JSON plaintext**, UTF8: `{"showpassword":"no","bgcolor":"#ffffff"}` — not its base64)
 4. Key: `qw8J` (repeating)
 
 **Step 4 — Create a new cookie (`showpassword=yes`):**

