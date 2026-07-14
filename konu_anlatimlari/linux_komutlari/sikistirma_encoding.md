@@ -27,7 +27,7 @@ Binary veri (resim, şifreli veri vb.) doğrudan metin kanallarından (e-posta, 
 
 ```
 Örnek:
-"Merhaba" → TW VyaGFiYQ==
+"Merhaba" → TWVyaGFiYQ==
 ```
 
 - Her 3 byte → 4 base64 karakteri

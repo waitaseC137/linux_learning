@@ -302,7 +302,7 @@ nmap hedef                      # temel tarama
 nmap 192.168.1.0/24             # ağ tarama
 nmap -p 80,443 hedef            # belirli portları tara
 nmap -p 1-1000 hedef            # port aralığı tara
-nmap -p- hedef                  # tüm portları tara (0-65535)
+nmap -p- hedef                  # tüm portları tara (1-65535; port 0 dahil değil)
 ```
 
 ### Önemli Bayraklar

@@ -19,7 +19,7 @@
    - [Frekans Analizi](#frekans-analizi)
    - [Vigenère Cipher](#vigenère-cipher)
    - [Kasiski Sınaması](#kasiski-sinamasi)
-   - [Stream Cipher ve XOR](#stream-cipher-ve-xor)
+   - [Stream Cipher (Krypton 6: mod-26 kaydırma)](#stream-cipher-krypton-6-mod-26-kaydırma)
 3. [Online Araçlar](#online-araçlar)
 
 ---
@@ -153,7 +153,7 @@ python3 -c "print('A'*50, end='')" > test.txt
 
 `end=''` parametresi `print`'in normalde eklediği `\n` (satır sonu) karakterini kaldırır — şifreleme binary'lerine saf metin göndermek için kritik.
 
-Krypton 6. levelde XOR keystream'ini çözmek için de kullandık:
+Krypton 6. levelde mod-26 keystream (kaydırma miktarını) çözmek için de kullandık:
 
 ```python
 cipher_flag = "PNUKLYLWRQKGKBE"
@@ -353,12 +353,12 @@ Kriptanaliz için güçlü bir platform. Krypton'da en çok kullandığımız ö
 | `sort -nr` | Level 3 | Frekans sıralaması (büyükten küçüğe) |
 | `tr -cd 'X'` | Level 3 | Belirli harf dışındakileri silme |
 | `for i in {A..Z}` | Level 3 | A'dan Z'ye harf tarama döngüsü |
-| `python3 -c "..."` | Level 6 | Inline Python, XOR çözme |
+| `python3 -c "..."` | Level 6 | Inline Python, mod-26 çözme |
 | **Caesar Cipher** | Level 2 | Sabit kaydırmalı şifre |
 | **Frekans Analizi** | Level 3 | Harf sıklığıyla monoalfabetik şifre kırma |
 | **Vigenère Cipher** | Level 4-5 | Anahtar kelimeli polialfabetik şifre |
 | **Kasiski Sınaması** | Level 5 | Vigenère key uzunluğunu bulma |
-| **Stream Cipher/XOR** | Level 6 | Byte-byte XOR tabanlı şifreleme |
+| **Stream Cipher (mod-26)** | Level 6 | mod-26 kaydırmalı akış şifresi (Vigenère tarzı, XOR değil) |
 | CyberChef | Level 0+ | Genel encode/decode |
 | dCode.fr | Level 4-5 | Vigenère otomatik kırma |
 

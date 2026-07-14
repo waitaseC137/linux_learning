@@ -240,7 +240,8 @@ ciphertext = base64.b64decode(cookie)
 
 ```python
 import json
-plaintext = json.encode({"showpassword": "no", "bgcolor": "#ffffff"})
+# separators ile boşluksuz üret — PHP json_encode çıktısıyla birebir eşleşsin (yoksa anahtar yanlış çıkar)
+plaintext = json.dumps({"showpassword": "no", "bgcolor": "#ffffff"}, separators=(',', ':'))
 # '{"showpassword":"no","bgcolor":"#ffffff"}'
 ```
 

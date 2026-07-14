@@ -54,7 +54,7 @@ Natas 29, "natas" kelimesini ve bazı karakterleri filtreler.
 ### Natas Filtresi
 
 ```perl
-if($. =~ /natas/) {
+if($file =~ /natas/) {   # $file = kullanıcının verdiği dosya adı
     print "filtered";
 }
 ```

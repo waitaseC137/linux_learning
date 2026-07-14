@@ -123,7 +123,8 @@ Artık `exif_imagetype()` ile dosyanın gerçekten resim olup olmadığı kontro
 ### 📖 Teori: Magic Byte / Dosya İmzası
 
 Her dosya tipi başında özel byte'lar (magic bytes) taşır:
-- JPEG: `FF D8 FF` (ya da `GIF87a`)
+- JPEG: `FF D8 FF`
+- GIF: `GIF87a` / `GIF89a`  (GIF87a bir GIF imzasıdır, JPEG değil)
 - PNG: `89 50 4E 47`
 
 `exif_imagetype()` bu byte'lara bakarak dosya tipini belirler. Eğer dosyanın başına gerçek bir JPEG header koyarsak, PHP kodu ekleyebiliriz!
@@ -409,19 +410,21 @@ Doğru hex değerini tarayıcı cookie'sine yaz → şifre görünür.
 ### 🎯 Görev
 Session verisine `admin=1` satırı ekle. `%0A` (newline) ile session dosyasına yeni satır enjekte et.
 
-### 📖 Teori: Session File Injection
+### 📖 Teori: Session File Injection (custom handler)
 
-PHP session dosyaları `key value` formatında satır satır saklanır:
+> ⚠️ Native PHP session formatı **uzunluk-öneklidir** (`name|s:4:"test";`) ve gömülü `\n` yeni entry OLUŞTURMAZ. Natas 20'nin zafiyeti, uygulamanın **kendi (custom) handler**'ından gelir: veriyi satır bazlı `anahtar değer\n` saklayıp `explode("\n")` ile okur.
+
+Custom handler dosya formatı (satır bazlı, boşlukla ayrılmış):
 ```
-name|s:4:"test";
+name test
 ```
 
-Eğer değere newline (`\n` / `%0A`) ekleyebiliyorsak, yeni satır eklenir:
+Değere newline (`\n` / `%0A`) enjekte edersen sahte bir satır eklenir:
 ```
-name|s:14:"test
-admin 1";
+name test
+admin 1
 ```
-→ Session dosyasında `admin = 1` satırı oluşur!
+→ `explode("\n")` ile okununca `admin = 1` sahte entry'si oluşur!
 
 ### 🔧 Çözüm
 

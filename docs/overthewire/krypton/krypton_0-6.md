@@ -22,7 +22,7 @@ Krypton'da her level daha karmaşık bir şifreleme yöntemi kullanıyor:
 | 3 → 4 | Frekans Analizi | ⭐⭐⭐ |
 | 4 → 5 | Vigenère (bilinen key uzunluğu) | ⭐⭐⭐ |
 | 5 → 6 | Vigenère (bilinmeyen key uzunluğu) | ⭐⭐⭐⭐ |
-| 6 → 7 | Stream Cipher (XOR) | ⭐⭐⭐⭐⭐ |
+| 6 → 7 | Stream Cipher (mod-26 kaydırma) | ⭐⭐⭐⭐⭐ |
 
 Faydalı online araçlar:
 - [CyberChef](https://gchq.github.io/CyberChef/) — Her türlü encoding/decoding
@@ -395,7 +395,7 @@ ssh krypton7@krypton.labs.overthewire.org -p 2231
 | **Caesar Cipher** | Sabit pozisyon kaydırma | Bilinen metin saldırısı veya brute force |
 | **Frekans Analizi** | Harf sıklığını kullanarak kırma | İngilizce frekans tablosuyla eşleştirme |
 | **Vigenère** | Anahtar kelime bazlı kaydırma | Kasiski sınaması + frekans analizi |
-| **Stream Cipher** | XOR tabanlı byte-byte şifreleme | Tekrar eden keystream tespiti |
+| **Stream Cipher** | mod-26 kaydırmalı akış şifresi (Vigenère tarzı, XOR değil) | Tekrar eden keystream tespiti |
 
 ## 📚 Kullanılan Araçlar
 

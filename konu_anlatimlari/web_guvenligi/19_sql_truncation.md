@@ -92,7 +92,7 @@ INSERT INTO users VALUES ('admin          x', 'sifre3');
 INSERT INTO users (username, password)
 VALUES ('admin                                                              x', 'bizim_şifre');
 --       ↑ 64+ karakter: "admin" + 59 boşluk + "x"
--- MySQL truncate eder → "admin" + 58 boşluk (64 karakter)
+-- MySQL truncate eder → "admin" + 59 boşluk (5+59 = 64 karakter, sondaki "x" düşer)
 -- Trailing space → "admin" gibi saklanır
 
 -- Giriş:

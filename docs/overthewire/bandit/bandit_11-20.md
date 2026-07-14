@@ -97,7 +97,7 @@ ssh bandit12@bandit.labs.overthewire.org -p 2220
 **Magic Number / Dosya imzası:** Her dosya tipi başında özel byte'lar taşır. `file` komutu bunu kullanır. Başlıcaları:
 - `1f 8b` → gzip
 - `42 5a 68` (BZh) → bzip2
-- `75 73 74 61 72` → tar arşivi
+- `75 73 74 61 72` (ustar) → tar arşivi  *(dikkat: bu imza dosya BAŞINDA değil, ofset 257'dedir — tar için "başlangıç magic byte" istisnadır)*
 
 **Sıkıştırma komutları:**
 - `gzip -d dosya.gz` → gzip açar

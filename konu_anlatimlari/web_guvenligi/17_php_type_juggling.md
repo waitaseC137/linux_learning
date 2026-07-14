@@ -105,7 +105,7 @@ if($secret == NULL) {
 }
 // Girdi: "0" → "0" == NULL → false ✓
 // Girdi: "" → "" == NULL → true ← bypass!
-// Girdi: [] → [] == NULL → false
+// Girdi: [] → [] == NULL → true ← boş dizi de null'a eşit (o da bypass eder)
 ```
 
 ---

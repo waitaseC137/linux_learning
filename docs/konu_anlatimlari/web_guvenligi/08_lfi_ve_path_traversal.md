@@ -257,14 +257,14 @@ curl -u natas7:[şifre] \
 
 ```
 Uygulama dizini: /var/www/html/
-                 ^   ^   ^   ^
-                 1   2   3   4. seviye
+                  ^    ^    ^
+                  1    2    3. dizin
 
 Hedef: /etc/natas_webpass/natas8
 
-/var/www/html/ → 3 üst git → /
-../../../../etc/natas_webpass/natas8
-^ 4 tane (fazlası zarar vermez)
+/var/www/html/ = 3 dizin derin → köke çıkmak için 3 adet ../
+../../../etc/natas_webpass/natas8
+^ 3 tane yeter (kökün üstüne çıkmak zarar vermez — fazlası da / kökünde kalır)
 ```
 
 Emin değilsen:

