@@ -54,9 +54,9 @@ echo "TWVyaGFiYQ==" | base64 -d  # string decode et
 
 ```bash
 $ echo "Merhaba Dünya" | base64
-TWVyaGFiYSBEw7xuecEK==
+TWVyaGFiYSBEw7xueWEK
 
-$ echo "TWVyaGFiYSBEw7xuecEK==" | base64 -d
+$ echo "TWVyaGFiYSBEw7xueWEK" | base64 -d
 Merhaba Dünya
 ```
 

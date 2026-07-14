@@ -228,7 +228,7 @@ done | sort -nr
 Sonra şifreli frekans sırası ile İngilizce frekans sırası eşleştirilir:
 
 ```bash
-# Şifreli: SQJUBNGCD... → İngilizce: EATSORNIHC...
+# Şifreli: SQJUBNGCD...  → hedef: EATSORNIHC...  (İngilizce frekans sırasından türetilip deneme-yanılmayla rafine edilmiş ikame anahtarı; ham ETAOIN sırası değil)
 cat krypton4 | tr 'SQJUBNGCDZVWMYTXKELAFIORHP' 'EATSORNIHCLDUPYFWGMBKVXQJZ'
 ```
 
@@ -282,28 +282,27 @@ Bir dizi aynı key pozisyonuna denk geldiğinde aynı şekilde şifrelenir → a
 
 ---
 
-### Stream Cipher ve XOR
+### Stream Cipher (Krypton 6: mod-26 kaydırma)
 
-**Stream Cipher (Akış Şifresi):** Her byte'ı ayrı ayrı, "sözde rastgele" bir **keystream** ile XOR'lar.
+**Stream Cipher (Akış Şifresi):** Her harf/byte'ı, "sözde rastgele" bir **keystream** ile birleştirir. Bu birleştirme iki biçimde olabilir:
 
-```
-şifreli_byte  = düz_metin_byte  XOR keystream_byte
-düz_metin_byte = şifreli_byte   XOR keystream_byte
-```
+- **XOR tabanlı** (AES-CTR, ChaCha20 gibi): `şifreli_byte = düz_metin_byte XOR keystream_byte`
+- **Kaydırma (mod-26) tabanlı** — Vigenère tarzı, **Krypton 6 bunu kullanır**: keystream bir *kaydırma miktarıdır* (0–25), bir XOR baytı DEĞİL.
 
-**XOR'un temel özelliği:**
+**Krypton 6 formülleri (mod-26 toplama):**
 ```
-A XOR B = C
-C XOR B = A   ← aynı değerle tekrar XOR'larsan orijinale dönersin
+şifreli_harf   = (düz_metin_harf + kaydırma) mod 26
+düz_metin_harf = (şifreli_harf   − kaydırma) mod 26
 ```
+> Kanıt: `encrypt6` çıktısı tümüyle A–Z aralığında kalır (gerçek bitwise XOR olsaydı basılamayan baytlar çıkardı) ve flag zaten `LFSRISNOTRANDOM` — keystream zayıf bir LFSR ile üretilen kaydırmalardan oluşuyor.
 
 **Zafiyet — Tekrar Eden Keystream:**
 
-Zayıf rastgele sayı üreteci (RNG) kullanan implementasyonlarda keystream belirli uzunlukta tekrar eder. Bu durumda:
+Zayıf RNG/LFSR kullanan implementasyonlarda keystream belirli uzunlukta tekrar eder. Kırmak için:
 
-1. Bilinen düz metin (`AAAA...`) ile binary'yi şifrele
-2. Her pozisyon için: `keystream[i] = ord(known_cipher[i]) - ord('A')`
-3. Hedef şifreli metni: `düz_metin[i] = (ord(cipher[i]) - keystream[i]) % 26 + ord('A')`
+1. Bilinen düz metin (`AAAA...`) ile binary'yi şifrele.
+2. Her pozisyonun **kaydırmasını** çıkar: `kaydırma[i] = (ord(known_cipher[i]) − ord('A')) % 26`  (düz metin 'A' iken şifreli = 'A' + kaydırma).
+3. Hedef şifreli metni çöz: `düz_metin[i] = (ord(cipher[i]) − ord('A') − kaydırma[i]) % 26 + ord('A')`  (mod'dan ÖNCE `ord('A')` çıkarılır — aksi halde sonuç hatalı olur).
 
 ```bash
 # Keystream'i keşfet: 50 A şifrele
@@ -314,7 +313,7 @@ cat output.txt
 #              ^30 karakterde tekrar ediyor → keystream uzunluğu 30
 ```
 
-> 💡 Güvenli stream cipher'lar (AES-CTR, ChaCha20) kriptografik açıdan güvenli RNG kullanır — keystream asla tekrar etmez.
+> 💡 Not: XOR tabanlı güvenli stream cipher'lar (AES-CTR, ChaCha20) kriptografik güvenli RNG kullanır — keystream asla tekrar etmez. Krypton 6'nın zayıflığı hem tekrar eden LFSR keystream'i hem de kaydırmanın kolay kırılmasıdır.
 
 ---
 

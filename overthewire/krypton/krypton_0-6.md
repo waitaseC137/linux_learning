@@ -200,7 +200,9 @@ done | sort -nr
 ```
 
 Şifreli sıralama: `SQJUBNGCDZVWMYTXKELAFIORHP`  
-İngilizce sıralama: `ETAOINSRHDLUCMFYWGPBVKXQJZ`
+İngilizce sıralama (teorik referans): `ETAOINSRHDLUCMFYWGPBVKXQJZ`
+
+> ⚠️ Aşağıdaki `tr` **hedef** dizisi (`EATSORNIHC...`) bu ham ETAOIN sırası DEĞİL — küçük metinde frekans tam tutmadığı için deneme-yanılmayla düzeltilmiş **son ikame anahtarıdır** (ilk ~9 harf yine E,T,A,O,I,N,S,R,H kümesidir, yalnızca okunur çıktı için yeniden dizilmiş).
 
 ```bash
 krypton3@krypton:/krypton/krypton3$ cat krypton4 | tr 'SQJUBNGCDZVWMYTXKELAFIORHP' 'EATSORNIHCLDUPYFWGMBKVXQJZ'
@@ -289,7 +291,7 @@ Bu sefer key uzunluğu da bilinmiyor. Önce uzunluğu tahmin et, sonra şifreyi 
 
 ---
 
-## Level 6 → Level 7 — Stream Cipher (XOR Saldırısı)
+## Level 6 → Level 7 — Stream Cipher (mod-26 kaydırma, LFSR keystream)
 
 ### 🔐 Bağlantı
 ```bash
@@ -300,21 +302,20 @@ ssh krypton6@krypton.labs.overthewire.org -p 2231
 ### 🎯 Görev
 Bu seviye bir **stream cipher** kullanıyor. Keyfile okunabilir değil, ama `encrypt6` binary'sini kullanarak kendi metinlerini şifreleyebilirsin. Zayıf rastgele sayı üretecini exploit et.
 
-### 📖 Teori: Stream Cipher ve XOR
+### 📖 Teori: Stream Cipher (mod-26 kaydırma)
 
-**Stream Cipher:** Her byte'ı ayrı ayrı, bir "rastgele" keystream ile XOR'lar.
+**Dikkat — bu XOR değil, mod-26 toplama.** "Stream cipher" deyince akla genelde XOR gelir, ama Krypton 6 keystream'i bir **kaydırma miktarı** (0–25) olarak kullanır (Vigenère tarzı). Kanıt: `encrypt6` çıktısı tümüyle A–Z aralığındadır (bitwise XOR olsaydı basılamayan baytlar çıkardı) ve flag `LFSRISNOTRANDOM`.
+
 ```
-şifreli = düz_metin XOR keystream
-düz_metin = şifreli XOR keystream
+şifreli_harf   = (düz_metin_harf + kaydırma) mod 26
+düz_metin_harf = (şifreli_harf   − kaydırma) mod 26
 ```
 
-XOR'un özelliği: Aynı keystream ile şifreli metni XOR'larsan orijinal metni geri alırsın.
+**Önemli zafiyet:** Keystream tekrar ediyorsa (zayıf LFSR), aynı pozisyondaki her harf aynı kaydırma ile şifrelenir. Bu durumda:
 
-**Önemli zafiyet:** Keystream tekrar ediyorsa (zayıf RNG), aynı pozisyondaki her karakter aynı keystream byte'ı ile XOR'lanıyor demektir. Bu durumda:
-
-1. Bilinen düz metin (`AAAA...`) ile şifrelenmiş çıktıyı karşılaştır
-2. `A XOR keystream = cipher` → `keystream = A XOR cipher`
-3. Keystream'i bulduktan sonra `şifreli XOR keystream = düz_metin`
+1. Bilinen düz metin (`AAAA...`) ile `encrypt6`'yı çalıştır → çıktı, keystream'in kaydırmalarını doğrudan verir.
+2. Kaydırmayı çıkar: `kaydırma[i] = ord(cipher[i]) − ord('A')`  (düz metin 'A' iken).
+3. Hedefi çöz: her harf için `düz_metin = cipher − kaydırma` (sonuç 'A'nın altına düşerse `+26`).
 
 ### 🔧 Çözüm
 

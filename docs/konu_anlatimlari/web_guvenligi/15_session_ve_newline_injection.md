@@ -37,16 +37,16 @@ Eğer `admin|i:1;` yazılabilirse → admin yetkisi kazanılır.
 
 ## Newline Injection Nedir?
 
-Uygulama kullanıcı girdisini session dosyasına yazıyorsa ve `\n` (newline, yeni satır) karakterini filtrelemiyorsa, saldırgan session dosyasına yeni satır ekleyebilir.
+**Önce bir uyarı:** PHP'nin **yerel (native)** session serileştiricisi (`php` handler) **uzunluk-önekli** format kullanır: `username|s:5:"admin";`. Buradaki `s:5`, "5 byte'lık string" demektir → değerin içine `\n` (ya da `|`, `;`) gömsen bile PHP tam **5 byte** okur, gömülü karakterler string'in PARÇASI kalır ve **yeni bir entry oluşturmaz.** Yani native PHP session formatı bu tür newline-injection'a **açık DEĞİLDİR.**
+
+**Zafiyet nereden çıkıyor?** Uygulama **kendi (custom)** handler'ını yazıp veriyi satır bazlı (`anahtar değer\n`) saklıyor ve okurken `explode("\n", ...)` kullanıyorsa — girdiye `\n` enjekte ederek sahte bir satır ekleyebilirsin. Natas 20 tam olarak budur.
 
 ```
-Normal girdi: "admin"
-Session dosyası: username|s:5:"admin";admin|i:0;
-
-Kötü amaçlı girdi: "admin\nadmin|i:1"
-Session dosyası:
-  username|s:..:"admin"
-  admin|i:1;admin|i:0;   ← sahte admin=1 satırı eklendi!
+# Custom, SATIR-BAZLI handler (zafiyetli olan):
+Normal girdi:  "admin"        → dosyada:  name admin
+Kötü girdi:    "admin\nadmin 1"
+Dosyada:       name admin
+               admin 1        ← explode("\n") ile "admin=1" sahte entry'si okunur!
 ```
 
 ---
@@ -58,20 +58,21 @@ Session dosyası:
 ```python
 import requests
 
+# NOT: bu yöntem custom, SATIR-BAZLI session handler içindir
+# (native php handler uzunluk-önekli olduğu için çalışmaz).
 # \n URL encoded: %0a
-# Session dosyasına admin|i:1; satırını ekle
-payload = "admin\nadmin|i:1"
+payload = "admin\nadmin 1"
 
-# Bu payload session'a yazılır:
-# username = "admin\nadmin|i:1"
-# Dosyada: username|s:..:"admin\nadmin|i:1";
-# PHP parse ederken \n yeni satır olarak alır
-# → admin|i:1 ayrı bir key olur
+# Dosyada (custom, satır bazlı):
+#   name admin
+#   admin 1          ← enjekte edilen sahte satır
+# Uygulama explode("\n") ile okuyunca "admin=1" entry'si oluşur
 ```
 
 ### PHP Session Parse Mantığı
 
-PHP session dosyasını parse ederken `|` ile key/value ayırır, `;` ile değer sonunu belirler. `\n` dosyada gerçek satır sonu olduğunda PHP bunu görmezden gelmez — her satırı ayrı entry olarak okur.
+- **Native format (`php` handler):** uzunluk-önekli (`key|s:LEN:"...";`). PHP tam `LEN` byte okuduğu için gömülü `\n`/`|`/`;` yeni entry **oluşturmaz** → newline-injection'a **kapalı.**
+- **Custom satır-bazlı handler:** `anahtar değer\n` satırları yazıp `explode("\n")` ile okur → gömülü `\n` sahte satır ekler → **açık burada.** Natas 20'nin zafiyeti bu custom handler'dan gelir, native formattan değil.
 
 ---
 

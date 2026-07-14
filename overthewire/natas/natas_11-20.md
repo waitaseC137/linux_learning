@@ -54,16 +54,16 @@ F12 → Application/Storage → Cookies
 Örn: ClVLIh4ASCsCBE8lAxMacFMZV2hdVVotEhhUJQNVAmhSEV4sFxFeaAw=
 ```
 
-**Adım 2 — Aynı değerlerin şifresiz base64'ünü üret:**
+**Adım 2 — Şifresiz (ham) JSON içeriğini not et:**
 ```
 {"showpassword":"no","bgcolor":"#ffffff"}
-→ base64: eyJzaG93cGFzc3dvcmQiOiJubyIsImJnY29sb3IiOiIjZmZmZmZmIn0=
 ```
+> ⚠️ Bunu base64'e **çevirme.** Şema `json → XOR → base64` olduğu için anahtarı bulurken **ham JSON plaintext'i** gerekir: `base64_decode(cookie) XOR ham_json = key`.
 
 **Adım 3 — CyberChef ile XOR → anahtarı bul:**
 1. [CyberChef](https://gchq.github.io/CyberChef/) aç
 2. Cookie değerini → "From Base64" işlemi
-3. Sonucu → "XOR" işlemi (key: base64 encoded plaintext)
+3. Sonucu → "XOR" işlemi (key operandı = **ham JSON plaintext**, UTF8: `{"showpassword":"no","bgcolor":"#ffffff"}` — base64'ü değil)
 4. Anahtar: `qw8J` (tekrar ediyor)
 
 **Adım 4 — Yeni cookie oluştur (`showpassword=yes`):**

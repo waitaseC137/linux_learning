@@ -26,9 +26,11 @@ Normal istek:
   /var/www/html/files/welcome.txt  ✓
 
 Path Traversal:
-  ?file=../../../etc/passwd
-  /var/www/html/files/../../../etc/passwd
+  ?file=../../../../etc/passwd
+  /var/www/html/files/../../../../etc/passwd
   → /etc/passwd  ✓ (sunucu bunu okur)
+  # /var/www/html/files/ köke göre 4 seviye derin → köke çıkmak için 4 adet ../ gerekir
+  # (3 adet ../ yalnızca /var'a çıkar ve /var/etc/passwd verir)
 ```
 
 Bu atak hem yerel dosyaları okumak (LFI) hem de uzak kaynaklar için (RFI) kullanılabilir.

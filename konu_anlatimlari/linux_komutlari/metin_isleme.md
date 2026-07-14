@@ -177,10 +177,9 @@ sort dosya.txt | uniq       # sıralayıp tekrarları kaldır
 
 ```bash
 $ echo -e "elma\nelma\narmut\nelmA\narmut" | sort | uniq -c
-      1 armut
-      1 armut     # büyük/küçük harf farklı → farklı sayıldı
+      2 armut
       2 elma
-      1 elmA
+      1 elmA     # büyük/küçük harf farklı → 'elma'dan ayrı sayıldı
 
 $ echo -e "elma\nelma\narmut\narmut" | sort | uniq -u
 # Çıktı: (boş — hepsi en az 2 kez var)
@@ -316,7 +315,7 @@ echo "merhaba" | tr -s 'a'            # ardışık 'a'ları teke indir
 ```bash
 tr 'a-z' 'A-Z'          # tüm küçük harfleri büyük yap
 tr 'A-Za-z' 'a-zA-Z'    # büyük/küçük harf değiştir
-tr '0-9' '9-0'           # rakamları ters çevir
+tr '0-9' '9876543210'    # rakamları ters çevir (tr azalan aralık kabul etmez; ters küme açıkça yazılır)
 tr -d '0-9'              # tüm rakamları sil
 tr -d '\n'               # satır sonlarını sil
 tr -s ' '                # birden fazla boşluğu teke indir

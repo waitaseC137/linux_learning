@@ -113,10 +113,11 @@ Leviathan Level 4'te binary çalıştırınca 0 ve 1'lerden oluşan bir çıktı
 
 **Perl ile:**
 ```bash
-echo "01010100 01101001 ..." | perl -lpe '$_=pack"B*",$_'
+# ÖNEMLİ: pack "B*" boşlukları da bit sayar → önce boşlukları sil
+echo "01010100 01101001 ..." | tr -d ' ' | perl -lpe '$_=pack"B*",$_'
 ```
 
-`pack "B*"` → binary string'i byte dizisine çevirir.
+`pack "B*"` → bit dizisini byte dizisine çevirir. Boşlukla ayrılmış girdide her boşluk fazladan bir bit olarak yorumlanıp hizayı bozar (çöp çıkar); bu yüzden `tr -d ' '` ile boşluklar önce temizlenmeli. Aynı şekilde alttaki Python örneği de bitişik bit dizisi bekler.
 
 **Python ile:**
 ```bash
