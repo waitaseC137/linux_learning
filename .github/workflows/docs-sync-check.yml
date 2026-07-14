@@ -1,0 +1,40 @@
+name: docs-sync-check
+
+# Kaynak içerik (konu_anlatimlari / overthewire) değiştiğinde docs/ aynasının
+# senkron olduğunu doğrular. Senkron değilse CI HATA verir → "sync-docs.sh unutuldu".
+# Otomatik düzeltmez; sadece bekçilik eder (auto-commit yok = token/döngü derdi yok).
+
+on:
+  push:
+    paths:
+      - 'konu_anlatimlari/**'
+      - 'overthewire/**'
+      - 'scripts/sync-docs.sh'
+      - 'docs/konu_anlatimlari/**'
+      - 'docs/overthewire/**'
+  pull_request:
+    paths:
+      - 'konu_anlatimlari/**'
+      - 'overthewire/**'
+      - 'docs/konu_anlatimlari/**'
+      - 'docs/overthewire/**'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: docs/ aynasını kaynaktan üret
+        run: bash scripts/sync-docs.sh
+
+      - name: docs/ senkron mu?
+        run: |
+          if ! git diff --quiet -- docs/; then
+            echo "::error::docs/ aynası kaynakla senkron DEĞİL. Yerelde 'bash scripts/sync-docs.sh' çalıştırıp docs/ değişikliklerini commit'le."
+            echo "--- Senkron farkı ---"
+            git diff --stat -- docs/
+            exit 1
+          fi
+          echo "✓ docs/ aynası kaynakla senkron."

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>linux_learning — learn by watching the terminal</title>
+<meta name="description" content="OverTheWire wargame writeups and topic guides. Learn Linux and security by playing." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<script src="assets/theme.js"></script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <span class="pp">🐧</span><b>linux_learning</b>
+    </a>
+    <div class="nav-links">
+      <a href="#wargames">wargames</a>
+      <a href="#konular">topic&nbsp;guides</a>
+      <a href="#kaynaklar">resources</a>
+    </div>
+    <a class="nav-lang" href="../index.html" title="Switch to Turkish"><span class="oth">TR</span><span class="cur">EN</span></a>
+    <a class="nav-gh" href="https://github.com/waitaseC137/linux_learning" target="_blank" rel="noopener">
+      <span>★</span> GitHub
+    </a>
+    <button class="theme-btn" id="themeBtn" title="Theme: light / dark"><span class="sw"></span><span class="lbl">light</span></button>
+    <button class="theme-btn sfx-btn" id="sfxBtn" title="Menu sounds"><span class="sw"></span><span class="lbl">sound</span></button>
+    <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="hero-kicker"><span class="dot"></span> 8 wargames · 110+ writeups · open source</span>
+      <h1>Learn <em>Linux</em> and <u>security</u> by <span class="pp">watching the terminal.</span></h1>
+      <p class="hero-lede">
+        Work through the OverTheWire wargames with <b>level-by-level</b> writeups, and
+        learn the concepts through <b>wargame-independent topic guides</b> — all in one
+        repo, by watching the terminal. 🐧
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#wargames">▸ browse the wargames</a>
+        <a class="btn btn-ghost" href="#konular">topic guides</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="n m">8</div><div class="l">Wargames</div></div>
+        <div class="hstat"><div class="n y">5</div><div class="l">Topic Areas</div></div>
+        <div class="hstat"><div class="n g">22</div><div class="l">Pwn Modules</div></div>
+        <div class="hstat"><div class="n">∞</div><div class="l">Curiosity</div></div>
+      </div>
+    </div>
+
+    <div class="hero-term-wrap">
+      <div class="term">
+        <div class="term-bar">
+          <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+          <span class="tt"><b>you</b>@linux_learning: ~</span>
+        </div>
+        <div class="term-body" id="hero-term"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ WARGAMES ============ -->
+<section class="band" id="wargames">
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">ls</span> <span class="arg">overthewire/</span></div>
+    <p class="sec-sub">
+      OverTheWire is a free platform that teaches Linux and security skills in a game format.
+      From beginner to advanced, in the recommended order:
+    </p>
+
+    <div class="path-rail">
+      <span class="n">Bandit</span><span class="arr">→</span>
+      <span class="n">Leviathan</span><span class="arr">→</span>
+      <span class="n">Krypton</span><span class="arr">→</span>
+      <span class="n">Natas</span><span class="arr">→</span>
+      <span class="n">Narnia</span><span class="arr">→</span>
+      <span class="n">Behemoth</span><span class="arr">→</span>
+      <span class="n">Utumno</span><span class="arr">→</span>
+      <span class="n">Maze</span>
+    </div>
+
+    <div class="filter-row">
+      <button class="chip on" data-filter="all">// all</button>
+      <button class="chip" data-filter="baslangic">beginner · 1–2</button>
+      <button class="chip" data-filter="orta">intermediate · 3–5</button>
+      <button class="chip" data-filter="ileri">advanced · 6–10</button>
+    </div>
+
+    <div class="wg-grid">
+
+      <!-- Bandit -->
+      <article class="wg" data-band="baslangic" data-wg="bandit" data-levels="34" style="--accent: var(--d-low)">
+        <div class="wg-top"><span class="wg-name">Bandit</span><span class="wg-idx">01 / 08</span></div>
+        <p class="wg-desc">The starter wargame for Linux terminal skills — SSH, reading files, permissions and basic tools. You can begin from scratch.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">1</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">34</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:10%"></i></div>
+        <div class="tags"><span class="tag">SSH</span><span class="tag">cat · less · file</span><span class="tag">grep · sort</span><span class="tag">find</span><span class="tag">base64 · rot13</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">bandit.labs.overthewire.org:2220</span>
+          <a class="wg-link" href="cozumler.html#bandit">writeups →</a>
+        </div>
+      </article>
+
+      <!-- Leviathan -->
+      <article class="wg" data-band="orta" data-wg="leviathan" data-levels="8" style="--accent: var(--d-mid)">
+        <div class="wg-top"><span class="wg-name">Leviathan</span><span class="wg-idx">02 / 08</span></div>
+        <p class="wg-desc">Binary analysis and simple exploit techniques. You inspect binary behaviour with ltrace/strace. Bandit recommended first.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">3</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">8</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:30%"></i></div>
+        <div class="tags"><span class="tag">ltrace · strace</span><span class="tag">SUID binary</span><span class="tag">symlink</span><span class="tag">basic RE</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">leviathan.labs...:2223</span>
+          <a class="wg-link" href="cozumler.html#leviathan">writeups →</a>
+        </div>
+      </article>
+
+      <!-- Krypton -->
+      <article class="wg" data-band="orta" data-wg="krypton" data-levels="7" style="--accent: var(--d-mid)">
+        <div class="wg-top"><span class="wg-name">Krypton</span><span class="wg-idx">03 / 08</span></div>
+        <p class="wg-desc">Cryptography fundamentals — from classic ciphers to modern approaches. You crack encrypted messages.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">3</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">7</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:30%"></i></div>
+        <div class="tags"><span class="tag">Caesar · ROT</span><span class="tag">Vigenère</span><span class="tag">frequency analysis</span><span class="tag">XOR</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">krypton.labs...:2231</span>
+          <a class="wg-link" href="cozumler.html#krypton">writeups →</a>
+        </div>
+      </article>
+
+      <!-- Natas -->
+      <article class="wg" data-band="orta" data-wg="natas" data-levels="35" style="--accent: var(--d-mid)">
+        <div class="wg-top"><span class="wg-name">Natas</span><span class="wg-idx">04 / 08</span></div>
+        <p class="wg-desc">Web security — HTTP, source-code analysis, SQL injection, XSS and more. Played in the browser.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">4</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">35</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:40%"></i></div>
+        <div class="tags"><span class="tag">HTTP headers</span><span class="tag">SQL injection</span><span class="tag">XSS</span><span class="tag">file inclusion</span><span class="tag">PHP</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">natas.labs.overthewire.org</span>
+          <a class="wg-link" href="cozumler.html#natas">writeups →</a>
+        </div>
+      </article>
+
+      <!-- Narnia -->
+      <article class="wg" data-band="ileri" data-wg="narnia" data-levels="10" style="--accent: var(--d-high)">
+        <div class="wg-top"><span class="wg-name">Narnia</span><span class="wg-idx">05 / 08</span></div>
+        <p class="wg-desc">Binary exploitation — buffer overflow, format string and basic exploit development. Requires reading assembly.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">6</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">10</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:60%"></i></div>
+        <div class="tags"><span class="tag">stack overflow</span><span class="tag">format string</span><span class="tag">shellcode</span><span class="tag">GDB</span><span class="tag">SUID exploit</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">narnia.labs...:2226</span>
+          <a class="wg-link" href="cozumler.html#narnia">writeups →</a>
+        </div>
+      </article>
+
+      <!-- Behemoth -->
+      <article class="wg" data-band="ileri" data-wg="behemoth" data-levels="9" style="--accent: var(--d-high)">
+        <div class="wg-top"><span class="wg-name">Behemoth</span><span class="wg-idx">06 / 08</span></div>
+        <p class="wg-desc">Intermediate binary exploitation. More complex scenarios than Narnia, ASLR and various protections.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">7</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">9</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:70%"></i></div>
+        <div class="tags"><span class="tag">stack · heap overflow</span><span class="tag">ret-to-libc</span><span class="tag">GOT/PLT</span><span class="tag">pwntools</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">behemoth.labs...:2221</span>
+          <a class="wg-link" href="cozumler.html#behemoth">writeups →</a>
+        </div>
+      </article>
+
+      <!-- Utumno -->
+      <article class="wg" data-band="ileri" data-wg="utumno" data-levels="8" style="--accent: var(--d-max)">
+        <div class="wg-top"><span class="wg-name">Utumno</span><span class="wg-idx">07 / 08</span></div>
+        <p class="wg-desc">Advanced binary exploitation. Minimum hints, maximum difficulty — for experienced exploit developers only.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">9</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">8</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:90%"></i></div>
+        <div class="tags"><span class="tag">arbitrary write</span><span class="tag">integer truncation</span><span class="tag">jmp_buf</span><span class="tag">PTR_MANGLE</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">utumno.labs...:2227</span>
+          <a class="wg-link" href="cozumler.html#utumno">writeups →</a>
+        </div>
+      </article>
+
+      <!-- Maze -->
+      <article class="wg" data-band="orta" data-wg="maze" data-levels="9" style="--accent: var(--cyan)">
+        <div class="wg-top"><span class="wg-name">Maze</span><span class="wg-idx">08 / 08</span></div>
+        <p class="wg-desc">Mixed binary exploitation &amp; RE — a different vulnerability class each level: TOCTOU, library hijack, self-modifying code, FSOP, ELF parser, format string. A capstone after Behemoth + Utumno.</p>
+        <div class="wg-meta">
+          <div class="m"><div class="v"><span class="acc">5</span>/10</div><div class="k">Difficulty</div></div>
+          <div class="m"><div class="v">9</div><div class="k">Levels</div></div>
+        </div>
+        <div class="diff-bar"><i style="width:50%"></i></div>
+        <div class="tags"><span class="tag">TOCTOU</span><span class="tag">lib hijack</span><span class="tag">FSOP</span><span class="tag">format string</span><span class="tag">self-modifying</span></div>
+        <div class="wg-foot">
+          <span class="wg-host">maze.labs...:2225</span>
+          <a class="wg-link" href="cozumler.html#maze">writeups →</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOPIC GUIDES ============ -->
+<section class="band band-alt" id="konular">
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">tree</span> <span class="arg">topic_guides/</span></div>
+    <p class="sec-sub">
+      Files where commands and concepts are kept as wargame-independent reference —
+      <b style="color:var(--fg)">now all readable inside the site.</b> Click a category
+      to open the reader.
+    </p>
+
+    <div class="tree-grid">
+      <div class="tree">
+        <a class="tree-row" href="konular.html#linux_komutlari/file_system.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">linux_commands/</div><div class="ds">file system · text processing · networking · permissions · processes · git</div></div></div>
+          <span class="cnt">7 topics</span>
+        </a>
+        <a class="tree-row" href="konular.html#binary_exploitation/00_buradan_basla.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">binary_exploitation/</div><div class="ds">x86 assembly → format string → ROP → GOT/PLT → protections</div></div></div>
+          <span class="cnt">22 modules</span>
+        </a>
+        <a class="tree-row" href="konular.html#web_guvenligi/01_html_source_and_devtools.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">web_security/</div><div class="ds">HTTP · source &amp; devtools · cookies · injection · deserialization</div></div></div>
+          <span class="cnt">24 topics</span>
+        </a>
+        <a class="tree-row" href="konular.html#kriptografi/krypton_commands_and_concepts.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">cryptography/</div><div class="ds">Krypton commands, concepts and classic ciphers</div></div></div>
+          <span class="cnt">1 topic</span>
+        </a>
+        <a class="tree-row" href="konular.html#leviathan_komutlari/binary_analysis.md">
+          <div class="nm"><span class="fold">▸</span><div><div class="lbl">leviathan_commands/</div><div class="ds">binary analysis · gdb · ltrace/strace · symlink · brute force</div></div></div>
+          <span class="cnt">6 topics</span>
+        </a>
+      </div>
+
+      <div class="tree-side">
+        <h4>How to use it?</h4>
+        <p>The guides explain the <b>method</b>, not the passwords (except <b>Krypton</b>, where the password is the decryption output). Try it yourself first, then look if you get stuck.</p>
+        <ul>
+          <li><span class="b">01</span> Read the level task on OverTheWire</li>
+          <li><span class="b">02</span> Try it <b>on your own</b> first</li>
+          <li><span class="b">03</span> If stuck, check the matching writeup / topic</li>
+          <li><span class="b">04</span> Reinforce the concept with the <b>topic guide</b></li>
+        </ul>
+        <a class="btn btn-primary" href="konular.html" style="margin-top:20px;width:100%;justify-content:center">▸ Open the topic guides</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESOURCES ============ -->
+<section class="band" id="kaynaklar">
+  <div class="wrap reveal">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">cat</span> <span class="arg">resources.md</span></div>
+    <p class="sec-sub">A curated selection of external resources collected in the repo — for when you want to go deeper.</p>
+
+    <div class="res-grid">
+      <div class="res">
+        <h4>// linux reference</h4>
+        <a href="https://manpages.ubuntu.com/" target="_blank" rel="noopener">Linux Man Pages</a>
+        <a href="https://explainshell.com/" target="_blank" rel="noopener">Explain Shell</a>
+        <a href="https://tldp.org/LDP/Bash-Beginners-Guide/html/" target="_blank" rel="noopener">Bash Beginners Guide</a>
+      </div>
+      <div class="res">
+        <h4>// web security</h4>
+        <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10</a>
+        <a href="https://portswigger.net/web-security" target="_blank" rel="noopener">PortSwigger Academy</a>
+        <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" target="_blank" rel="noopener">MDN HTTP Docs</a>
+      </div>
+      <div class="res">
+        <h4>// binary exploitation</h4>
+        <a href="https://www.youtube.com/playlist?list=PLhixgUqwRTjxglIswKp9mpkfPNfHkzyeN" target="_blank" rel="noopener">LiveOverflow — Pwn</a>
+        <a href="https://docs.pwntools.com/en/stable/" target="_blank" rel="noopener">pwntools Documentation</a>
+        <a href="https://pwn.college/" target="_blank" rel="noopener">pwn.college</a>
+        <a href="https://www.felixcloutier.com/x86/" target="_blank" rel="noopener">x86 Instruction Reference</a>
+      </div>
+      <div class="res">
+        <h4>// cryptography</h4>
+        <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">CyberChef</a>
+        <a href="https://www.dcode.fr/" target="_blank" rel="noopener">dCode.fr</a>
+        <a href="https://www.asciitable.com/" target="_blank" rel="noopener">ASCII Table</a>
+      </div>
+      <div class="res">
+        <h4>// git</h4>
+        <a href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener">Pro Git (English)</a>
+        <a href="https://learngitbranching.js.org/" target="_blank" rel="noopener">Learn Git Branching</a>
+        <a href="https://git-scm.com/doc" target="_blank" rel="noopener">Git Official Documentation</a>
+      </div>
+      <div class="res">
+        <h4>// overthewire</h4>
+        <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire Wargames</a>
+        <a href="https://mayadevbe.me/posts/overthewire/bandit/overview/" target="_blank" rel="noopener">Bandit Walkthrough</a>
+        <a href="https://exploit.education/phoenix/" target="_blank" rel="noopener">Exploit.education — Phoenix</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand"><span class="pp">🐧</span><b>linux_learning</b></div>
+      <p>By playing, by trial and error, by watching the terminal screen. The repo keeps growing — open to contributions and suggestions.</p>
+      <p class="lic">License: <b>CC BY-SA 4.0</b> · Code: <b>MIT</b></p>
+      <div class="foot-cat" id="footCat" aria-hidden="true"></div>
+    </div>
+    <div class="foot-links">
+      <a href="https://github.com/waitaseC137/linux_learning" target="_blank" rel="noopener">★ Open on GitHub</a>
+      <a href="#wargames">Wargames</a>
+      <a href="#konular">Topic Guides</a>
+      <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire ↗</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+<script src="assets/sfx.js"></script>
+</body>
+</html>
