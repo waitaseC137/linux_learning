@@ -87,8 +87,9 @@
 | [04_bellek_ve_registerlar.md](./x86_assembly/04_bellek_ve_registerlar.md) | Bellek (kutular) + register (işçinin elleri); AL/AH/EAX |
 | [05_kurulum_ve_ilk_program.md](./x86_assembly/05_kurulum_ve_ilk_program.md) | nasm/ld/gdb kurulumu, yaz→çevir→çalıştır zinciri |
 | [06_ilk_gercek_program.md](./x86_assembly/06_ilk_gercek_program.md) | `mov` ile register'a değer, çıkış kodu, `echo $?` |
+| [07_gdb_tek_adim.md](./x86_assembly/07_gdb_tek_adim.md) | GDB'de tek adım (`starti` / `si`), register'ları canlı izleme, `eip` |
 
-*(Ara dersler 01.5 / 04.5 / 05.5 kurs içinde bağlı; sıradaki üniteler 07–20 yazılıyor.)*
+*(Ara dersler 01.5 / 04.5 / 05.5 kurs içinde bağlı; sıradaki üniteler 08–20 yazılıyor.)*
 
 ---
 
