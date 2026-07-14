@@ -119,92 +119,33 @@ Hangisi Blok1'i aynı üretirse → secret[0] = chr(X)
 
 ## Natas'ta Kullanım
 
-### Natas 28 — ECB Oracle ile Şifre Sızıntısı
+### Natas 28 — ECB Blok Cut-and-Paste ile SQL Injection
 
-**Senaryo:** Uygulama arama sorgusunu AES-ECB ile şifreleyip URL'de taşıyor.
+> ⚠️ Bu seviye "secret'ı byte byte sızdıran bir oracle" **DEĞİLDİR.** Zafiyet, ECB'nin **blok bağımsızlığını** kullanıp şifreli metnin bloklarını yeniden dizerek (cut-and-paste) SQL injection yapmaktır; sızdırılan şey DB'deki natas29 şifresidir.
+
+**Senaryo:** Arama kutusuna girdiğin metin `mysql_real_escape_string` ile kaçışlanır, bir SQL sorgu şablonuna gömülür, sonra **tüm sorgu** AES-128-ECB (orijinalinde mcrypt Rijndael-128) ile şifrelenip base64 olarak URL'deki `query` parametresinde taşınır.
 
 **Kaynak kod özeti:**
 
 ```php
-function encrypt($text) {
-    $key = "<gizli_anahtar>";
-    // PKCS#7 padding + AES-128-ECB şifreleme
-    return base64_encode(openssl_encrypt(
-        $text . $SECRET,    // ← secret sorgunun sonuna ekleniyor!
-        'AES-128-ECB',
-        $key,
-        OPENSSL_RAW_DATA
-    ));
-}
+// kullanıcı girdisi ESCAPE edilip sorguya gömülüyor, sonra TÜM sorgu ECB ile şifreleniyor
+$input      = mysql_real_escape_string($_REQUEST["query"]);
+$query      = "SELECT joke FROM jokes WHERE joke LIKE '%$input%'";
+$ciphertext = base64_encode( ecb_encrypt($query) );   // AES-128-ECB → URL'de ?query=...
 ```
 
-Şifreli query: `encrypt("SELECT ... WHERE search='[kullanıcı_girdisi]'" + SECRET)`
+Yani şifrelenen şey "girdi + SECRET" değil, **kaçışlanmış girdini içeren SQL sorgusunun tamamı.**
 
-**Exploit Yaklaşımı:**
+**Exploit Yaklaşımı — ECB blok harmanı:**
 
-```
-Blok boyutu: 16 byte
-Prefix: "SELECT * FROM ur" (16 byte) → Blok 1
-        "ecords WHERE sea" (16 byte) → Blok 2
-        "rch='"           (5 byte)  → Blok 3 başlangıcı
+Girdi düz metinde escape edilse de, sen **ciphertext'i blok düzeyinde** kontrol edebilirsin. ECB'de aynı 16-byte plaintext bloğu hep aynı ciphertext bloğunu verir ve bloklar birbirinden bağımsızdır.
 
-Kullanıcı girdisi Blok 3'ten devam eder.
-```
+1. **Sabit önek uzunluğunu bul:** girdiye 1'er byte ekleyip ciphertext'in ne zaman bir blok (16 byte) büyüdüğünü gözle → şablonun senin girdine kadarki kısmının uzunluğunu verir.
+2. **Enjeksiyonu blok sınırına hizala:** dolgu ekleyerek zararlı SQL parçanın (`' UNION SELECT password FROM users -- `) tam bir blok sınırında başlamasını sağla.
+3. **Kaçışı blok düzeyinde etkisiz kıl:** `mysql_real_escape_string` tek tırnağı `\'` yapar. Girdiyi, kaçış karakteri (`\`) bir bloğun *sonunda*, işine yarayan baytlar *sonraki* blokta kalacak şekilde hizalarsın; sonra istemediğin blokları **kesip**, farklı isteklerden topladığın "temiz" blokları yerlerine **yapıştırırsın**.
+4. **Blokları yeniden diz:** ihtiyacın olan ciphertext bloklarını birleştirip yeni `query` base64'ünü kurar, isteği o değerle atarsın → sunucu deşifre eder, artık kaçışsız `UNION SELECT` içeren sorguyu çalıştırır → natas29 şifresi cevapta döner.
 
-Secret'ın ilk karakterini bulmak için:
-
-1. 11 'A' gönder → prefix + 11 A + secret[0] = 16 byte → Blok 3 tamam
-2. 11 'A' + chr(X) gönder → X dene, Blok 3 aynıysa → secret[0] = X
-
-```python
-import requests, base64
-
-url      = "http://natas28.natas.labs.overthewire.org/"
-username = "natas28"
-password = "[natas28_şifresi]"
-
-def encrypt(query):
-    r = requests.get(
-        url + "search.php",
-        params={"query": query},
-        auth=(username, password),
-        allow_redirects=False
-    )
-    # Location header'dan şifreli query'yi al
-    loc = r.headers.get("Location", "")
-    query_param = loc.split("query=")[1]
-    return base64.b64decode(requests.utils.unquote(query_param))
-
-# Blok boyutunu bul
-def find_block_size():
-    base = len(encrypt("A"))
-    for i in range(1, 33):
-        new = len(encrypt("A" * i))
-        if new > base:
-            return new - base
-    return None
-
-block_size = find_block_size()  # 16
-print(f"Blok boyutu: {block_size}")
-
-# Secret'ı byte byte çıkar
-secret = ""
-for i in range(32):
-    pad_len = block_size - (len("rch='") + len(secret)) % block_size - 1
-    reference = encrypt("A" * pad_len)
-    ref_blocks = len(encrypt("A" * pad_len + "A")) // block_size
-
-    for byte in range(256):
-        guess = "A" * pad_len + secret + chr(byte)
-        ct = encrypt(guess)
-        # Blok karşılaştırması — basitleştirilmiş
-        if ct[:ref_blocks * block_size] == reference[:ref_blocks * block_size]:
-            secret += chr(byte)
-            print(f"[+] Secret[{i}]: {chr(byte)} | {secret}")
-            break
-
-print(f"Secret: {secret}")
-```
+> 💡 Anahtar fikir: ECB'de her 16-byte blok bağımsız bir **yapı taşıdır.** Anahtarı bilmesen bile, senin kontrol ettiğin plaintext'lere karşılık gelen ciphertext bloklarını harmanlayarak sunucunun deşifre edip çalıştıracağı sorguyu yeniden inşa edebilirsin. Bu yüzden bu bir **block cut-and-paste** saldırısıdır — byte-at-a-time oracle değil.
 
 ---
 

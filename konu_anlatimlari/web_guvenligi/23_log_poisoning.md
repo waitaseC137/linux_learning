@@ -119,7 +119,6 @@ function safeinclude($filename) {
 
 function logRequest($filename) {
     $log  = $_SERVER['HTTP_USER_AGENT'];
-    $log  = str_replace('<', '*', $log);
     $log .= " " . date("d/m/Y H:i:s") . "\n";
     $fd   = fopen("/var/www/natas/natas25/logs/natas25_[session_id].log", "a");
     fwrite($fd, $log);

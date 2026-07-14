@@ -145,11 +145,11 @@ function doesUserExist($link, $usr) {
 
 **Sorun:**
 
-`doesUserExist()` → `WHERE username='admin                 x'` → truncation sonrası `WHERE username='admin'` → kayıt var, `createUser` çağrılmaz.
+`doesUserExist()` → `WHERE username='admin                 x'` → bu değer mevcut `admin` kaydıyla **eşleşmez**, çünkü **SELECT'in WHERE koşulundaki string literali TRUNCATE EDİLMEZ** (truncation yalnızca INSERT'te olur) → sondaki `x` durduğu için `doesUserExist` **false** döner → `createUser` **çağrılır**.
 
-Ama `checkCredentials()` → `WHERE username='admin' AND password='bizim_md5'` → `admin`'in kayıtlı şifresi bizimkiyle eşleşmez.
+Kilit nokta truncation'ın *nerede* olduğu: SELECT'te değil, sadece `createUser`'ın **INSERT**'ünde. Değer `'admin'+boşluklar+'x'` VARCHAR(64)'e yazılırken 64. karakterden sonrası (yani `x`) kırpılır.
 
-Buradaki ince fark: `doesUserExist` truncation'dan önce kontrol yapıyor, ancak bazı MySQL sürümleri ve `strict mode` kapalıyken truncation ile duplicate kayıt oluşturulabiliyor.
+Sonuç: tabloda **ikinci bir `admin` kaydı** oluşur — şifresi *bizim* belirlediğimiz. Ardından `checkCredentials('admin', bizim_şifre)` bu yeni kayıtla eşleşir → admin girişi. (MySQL strict-mode kapalıyken fazla uzun VARCHAR değeri hata yerine sessizce kırpılır.)
 
 **Exploit:**
 
@@ -160,8 +160,8 @@ url      = "http://natas27.natas.labs.overthewire.org/"
 username = "natas27"
 password = "[natas27_şifresi]"
 
-# "admin" + 57 boşluk + "x" = 63 karakter (VARCHAR(64)'ü truncate eder)
-evil_user = "admin" + " " * 57 + "x"
+# "admin" + 59 boşluk + "x" = 65 karakter (VARCHAR(64) sınırını AŞAR → "x" kırpılır, geriye "admin"+boşluklar kalır)
+evil_user = "admin" + " " * 59 + "x"
 evil_pass = "merhaba"
 
 # Adım 1: Sahte admin hesabı oluştur

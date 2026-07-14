@@ -137,15 +137,17 @@ username=admin&password=test
 username=admin&password=password&password=1
 ```
 
-`param('password')` → list context → `("password", 1)`
+`param('password')` liste bağlamında `("password", 1)` döndürür.
 
-`quote(("password", 1))` → Perl'in DBI versiyonuna göre farklı davranır:
+`$dbh->quote(param('password'))` → `quote("password", 1)` çağrısına düzleşir. **DBI'da `quote()`'un 2. argümanı bir SQL veri tipidir (`$data_type`).** Sayısal/dolu bir tip verilince `quote()`, değeri **tek tırnakla sarmalamaz** (base implementasyondaki `unless ($data_type)` koruması atlanır) → değer OLDUĞU GİBİ döner.
 
-Eski versiyonlarda: `quote()` listedeki sayısal değeri farklı işler → tırnak olmadan → injection!
+Yani `quote("password", 1)` → tırnaksız `password`. Sorgu şu hale gelir:
 
 ```sql
-SELECT * FROM users WHERE username='admin' AND password=password OR 1
+SELECT * FROM users WHERE username='admin' AND password=password
 ```
+
+Tırnaksız `password` bir string literal değil, **sütun adı** gibi yorumlanır → `password=password` (sütun kendisiyle) **her zaman true** → tüm satırlar döner → auth bypass.
 
 **curl ile:**
 
