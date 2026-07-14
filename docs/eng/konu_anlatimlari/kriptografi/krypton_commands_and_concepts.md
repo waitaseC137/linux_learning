@@ -19,7 +19,7 @@
    - [Frequency Analysis](#frequency-analysis)
    - [Vigenère Cipher](#vigenère-cipher)
    - [Kasiski Examination](#kasiski-examination)
-   - [Stream Cipher and XOR](#stream-cipher-and-xor)
+   - [Stream Cipher (Krypton 6: mod-26 shift)](#stream-cipher-krypton-6-mod-26-shift)
 3. [Online Tools](#online-tools)
 
 ---
@@ -153,7 +153,7 @@ python3 -c "print('A'*50, end='')" > test.txt
 
 The `end=''` parameter removes the `\n` (newline) character that `print` normally adds — critical for sending pure text to encryption binaries.
 
-In Krypton level 6, we also used it to solve the XOR keystream:
+In Krypton level 6, we also used it to solve the mod-26 keystream (the shift amount):
 
 ```python
 cipher_flag = "PNUKLYLWRQKGKBE"
@@ -353,12 +353,12 @@ A powerful platform for cryptanalysis. The features we use most in Krypton:
 | `sort -nr` | Level 3 | Frequency sorting (largest to smallest) |
 | `tr -cd 'X'` | Level 3 | Deleting everything except a specific letter |
 | `for i in {A..Z}` | Level 3 | Loop scanning letters from A to Z |
-| `python3 -c "..."` | Level 6 | Inline Python, XOR solving |
+| `python3 -c "..."` | Level 6 | Inline Python, mod-26 solving |
 | **Caesar Cipher** | Level 2 | Fixed-shift cipher |
 | **Frequency Analysis** | Level 3 | Breaking monoalphabetic ciphers via letter frequency |
 | **Vigenère Cipher** | Level 4-5 | Polyalphabetic cipher with a keyword |
 | **Kasiski Examination** | Level 5 | Finding the Vigenère key length |
-| **Stream Cipher/XOR** | Level 6 | Byte-by-byte XOR-based encryption |
+| **Stream Cipher (mod-26)** | Level 6 | mod-26 shift stream cipher (Vigenère-style, not XOR) |
 | CyberChef | Level 0+ | General encode/decode |
 | dCode.fr | Level 4-5 | Vigenère automatic cracking |
 

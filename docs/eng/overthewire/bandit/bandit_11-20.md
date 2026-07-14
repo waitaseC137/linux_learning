@@ -97,7 +97,7 @@ ssh bandit12@bandit.labs.overthewire.org -p 2220
 **Magic Number / File signature:** Every file type carries special bytes at the start. The `file` command uses this. Common ones:
 - `1f 8b` → gzip
 - `42 5a 68` (BZh) → bzip2
-- `75 73 74 61 72` → tar archive
+- `75 73 74 61 72` (ustar) → tar archive  *(note: this signature is NOT at the start of the file but at offset 257 — tar is the exception to the "magic bytes at the beginning" rule)*
 
 **Compression commands:**
 - `gzip -d file.gz` → decompress gzip

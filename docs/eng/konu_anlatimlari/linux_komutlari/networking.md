@@ -302,7 +302,7 @@ nmap target                     # basic scan
 nmap 192.168.1.0/24             # network scan
 nmap -p 80,443 target           # scan specific ports
 nmap -p 1-1000 target           # scan a port range
-nmap -p- target                 # scan all ports (0-65535)
+nmap -p- target                 # scan all ports (1-65535; port 0 not included)
 ```
 
 ### Important Flags

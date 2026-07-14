@@ -257,14 +257,14 @@ curl -u natas7:[password] \
 
 ```
 Application directory: /var/www/html/
-                       ^   ^   ^   ^
-                       1   2   3   4th level
+                       ^   ^   ^
+                       1   2   3rd level
 
 Target: /etc/natas_webpass/natas8
 
-/var/www/html/ → go up 3 → /
-../../../../etc/natas_webpass/natas8
-^ 4 of them (extra doesn't hurt)
+/var/www/html/ = 3 directories deep → 3 ../ to reach root
+../../../etc/natas_webpass/natas8
+^ 3 are enough (climbing above root does no harm — the extra stays at the / root)
 ```
 
 If you're not sure:

@@ -22,7 +22,7 @@ Each level in Krypton uses a more complex encryption method:
 | 3 → 4 | Frequency Analysis | ⭐⭐⭐ |
 | 4 → 5 | Vigenère (known key length) | ⭐⭐⭐ |
 | 5 → 6 | Vigenère (unknown key length) | ⭐⭐⭐⭐ |
-| 6 → 7 | Stream Cipher (XOR) | ⭐⭐⭐⭐⭐ |
+| 6 → 7 | Stream Cipher (mod-26 shift) | ⭐⭐⭐⭐⭐ |
 
 Useful online tools:
 - [CyberChef](https://gchq.github.io/CyberChef/) — All kinds of encoding/decoding
@@ -395,7 +395,7 @@ ssh krypton7@krypton.labs.overthewire.org -p 2231
 | **Caesar Cipher** | Fixed position shift | Known plaintext attack or brute force |
 | **Frequency Analysis** | Breaking using letter frequency | Match with English frequency table |
 | **Vigenère** | Keyword-based shifting | Kasiski examination + frequency analysis |
-| **Stream Cipher** | XOR-based byte-by-byte encryption | Detect repeating keystream |
+| **Stream Cipher** | mod-26 shift stream cipher (Vigenère-style, not XOR) | Detect repeating keystream |
 
 ## 📚 Tools Used
 

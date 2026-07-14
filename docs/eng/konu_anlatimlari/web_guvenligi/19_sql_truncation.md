@@ -92,7 +92,7 @@ INSERT INTO users VALUES ('admin          x', 'password3');
 INSERT INTO users (username, password)
 VALUES ('admin                                                              x', 'our_password');
 --       ↑ 64+ characters: "admin" + 59 spaces + "x"
--- MySQL truncates it → "admin" + 58 spaces (64 characters)
+-- MySQL truncates it → "admin" + 59 spaces (5+59 = 64 characters, the trailing "x" is dropped)
 -- Trailing space → stored like "admin"
 
 -- Login:

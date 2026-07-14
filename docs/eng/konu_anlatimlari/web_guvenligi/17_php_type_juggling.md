@@ -105,7 +105,7 @@ if($secret == NULL) {
 }
 // Input: "0" → "0" == NULL → false ✓
 // Input: "" → "" == NULL → true ← bypass!
-// Input: [] → [] == NULL → false
+// Input: [] → [] == NULL → true ← an empty array also equals null (this bypasses too)
 ```
 
 ---

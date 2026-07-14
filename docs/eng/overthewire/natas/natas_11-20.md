@@ -123,7 +123,8 @@ Now `exif_imagetype()` checks whether the file is actually an image. Still uploa
 ### 📖 Theory: Magic Bytes / File Signature
 
 Every file type carries special bytes at the beginning (magic bytes):
-- JPEG: `FF D8 FF` (or `GIF87a`)
+- JPEG: `FF D8 FF`
+- GIF: `GIF87a` / `GIF89a`  (GIF87a is a GIF signature, not JPEG)
 - PNG: `89 50 4E 47`
 
 `exif_imagetype()` checks these bytes to determine the file type. If we put a real JPEG header at the beginning of the file, we can still add PHP code!
@@ -409,19 +410,21 @@ Write the correct hex value into the browser cookie → password appears.
 ### 🎯 Task
 Add an `admin=1` line to the session data. Inject a new line into the session file with `%0A` (newline).
 
-### 📖 Theory: Session File Injection
+### 📖 Theory: Session File Injection (custom handler)
 
-PHP session files are stored line by line in `key value` format:
+> ⚠️ The native PHP session format is **length-prefixed** (`name|s:4:"test";`) and an embedded `\n` does NOT create a new entry. Natas 20's vulnerability comes from the application's **own (custom) handler**: it stores data line by line as `key value\n` and reads it back with `explode("\n")`.
+
+Custom handler file format (line-based, space-separated):
 ```
-name|s:4:"test";
+name test
 ```
 
-If we can insert a newline (`\n` / `%0A`) into the value, a new line is added:
+If you inject a newline (`\n` / `%0A`) into the value, a fake line is added:
 ```
-name|s:14:"test
-admin 1";
+name test
+admin 1
 ```
-→ An `admin = 1` line is created in the session file!
+→ When read back with `explode("\n")`, a fake `admin = 1` entry is created!
 
 ### 🔧 Solution
 

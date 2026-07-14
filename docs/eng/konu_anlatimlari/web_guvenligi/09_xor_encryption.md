@@ -240,7 +240,8 @@ ciphertext = base64.b64decode(cookie)
 
 ```python
 import json
-plaintext = json.encode({"showpassword": "no", "bgcolor": "#ffffff"})
+# use separators to produce it without spaces — it must match PHP json_encode's output exactly (otherwise the key comes out wrong)
+plaintext = json.dumps({"showpassword": "no", "bgcolor": "#ffffff"}, separators=(',', ':'))
 # '{"showpassword":"no","bgcolor":"#ffffff"}'
 ```
 
