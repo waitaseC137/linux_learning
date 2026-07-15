@@ -72,6 +72,25 @@
 
 ---
 
+## 🔌 Şalterden Bilgisayara (NAND'dan CPU'ya)
+
+> 🚧 **Bu kurs yazım aşamasında** — NandGame yolculuğundan doğdu; şu an şalter/röleden **Full Adder'a** kadar yazılı (00–06). Devamı (multi-bit adder, ALU, hafıza, saat, kontrol birimi) NandGame ilerledikçe eklenecek.
+>
+> 🧭 **Yeni mi başlıyorsun?** → [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) — işlemciyi "nedir?" diye değil, **parçalarından kurarak** öğrenmek isteyenler için. x86 kursunun kardeşi ve altı: orası işçiye emir vermeyi öğretir, burası işçiyi transistörden kurar.
+
+| Dosya | Konular |
+|---|---|
+| [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) | Kurs haritası; şalterden CPU'ya yolculuk |
+| [01_akim_salter_role.md](./salterden_bilgisayara/01_akim_salter_role.md) | Akım, şalter, röle — ilk "mantık" |
+| [02_nanddan_kapilar.md](./salterden_bilgisayara/02_nanddan_kapilar.md) | NAND evrensel: NOT/AND/OR/XOR türetmek |
+| [03_xor_iki_fedai.md](./salterden_bilgisayara/03_xor_iki_fedai.md) | XOR'u kurmak — "iki fedai" (OR + NAND + AND) |
+| [03.5_soyutlama_merdiveni.md](./salterden_bilgisayara/03.5_soyutlama_merdiveni.md) | Kapı = kapalı kutu; bir üst kata çıkmak |
+| [04_teller_sayi_olunca.md](./salterden_bilgisayara/04_teller_sayi_olunca.md) | Tellere değer biçmek; jeton mantığı |
+| [05_half_adder.md](./salterden_bilgisayara/05_half_adder.md) | XOR+AND = toplamın tohumu (sum + carry) |
+| [06_full_adder.md](./salterden_bilgisayara/06_full_adder.md) | a+b+carry-in; iki half adder = ALU'nun iskeleti |
+
+---
+
 ## ⚙️ x86 Assembly (sıfırdan)
 
 > 🚧 **Bu kurs yazım aşamasında** — şu an **Ünite 0** (makine modeli) + **Ünite 1'in başı** (ilk `mov` programı) yazılı (00–06); Ünite 1–4 (jmp/stack/call/syscall/C köprüsü) ekleniyor.

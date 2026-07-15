@@ -1,14 +1,16 @@
 # 🐧 linux_learning
 
-> Linux'u öğrenmek için topladığım kaynaklar, notlar ve çözümler.  
-> Oyun oynayarak, deneye yanıla, terminal ekranına bakarak.
+> Şalter → mantık kapısı → işlemci → assembly → işletim sistemi → wargame.
+> Bilgisayarı ve güvenliği **katman katman, en alttan** öğren — oyun oynayarak, deneye yanıla, terminale bakarak.
+>
+> "İşlemci nedir?" diye soranların değil, **işlemciyle dans etmek** isteyenlerin yeri.
 
 ---
 
 ## 📚 Konu Anlatımları
 
 Komutların ve kavramların wargame bağımsız, referans olarak tutulduğu dosyalar.  
-Linux komutları, binary analizi, web güvenliği, kriptografi, binary exploitation ve Behemoth modüllerini kapsar.
+Şalterden bilgisayara (NAND'dan CPU'ya), x86 assembly, Linux komutları, binary analizi, web güvenliği, kriptografi ve binary exploitation modüllerini kapsar.
 
 → **[Tüm konu anlatımlarına buradan ulaşabilirsin](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 

@@ -73,6 +73,23 @@ window.KONULAR = {
       ]
     },
     {
+      id: "salterden_bilgisayara",
+      label: "Şalterden Bilgisayara (NAND'dan CPU'ya)",
+      accent: "var(--d-low)",
+      tag: "🚧 yazılıyor",
+      blurb: "NandGame yolculuğundan doğan kurs — şalter/röleden NAND'a, NAND'dan mantık kapılarına, kapılardan toplayıcıya (half/full adder). İşlemciyi 'nedir' diye değil, parçalarından kendin kurarak öğren. Yazım aşamasında (00–06, Full Adder'a kadar).",
+      files: [
+        { f: "salterden_bilgisayara/00_buradan_basla.md",        n: "→",    t: "Buradan Başla",        h: "Kurs haritası; şalterden CPU'ya (🚧 yazılıyor)" },
+        { f: "salterden_bilgisayara/01_akim_salter_role.md",     n: "01",   t: "Akım · Şalter · Röle", h: "Elektrik → şalter → röle = ilk mantık" },
+        { f: "salterden_bilgisayara/02_nanddan_kapilar.md",      n: "02",   t: "NAND'dan Kapılar",     h: "NAND evrensel: NOT/AND/OR/XOR türet" },
+        { f: "salterden_bilgisayara/03_xor_iki_fedai.md",        n: "03",   t: "XOR: İki Fedai",       h: "XOR'u OR+NAND+AND ile kurmak" },
+        { f: "salterden_bilgisayara/03.5_soyutlama_merdiveni.md",n: "03.5", t: "Soyutlama Merdiveni",  h: "Kapı = kapalı kutu; bir üst kata çıkmak" },
+        { f: "salterden_bilgisayara/04_teller_sayi_olunca.md",   n: "04",   t: "Teller Sayı Olunca",   h: "Tellere değer biçmek; jeton mantığı" },
+        { f: "salterden_bilgisayara/05_half_adder.md",           n: "05",   t: "Half Adder",           h: "XOR+AND = toplamın tohumu (sum/carry)" },
+        { f: "salterden_bilgisayara/06_full_adder.md",           n: "06",   t: "Full Adder",           h: "a+b+carry-in; iki half adder" }
+      ]
+    },
+    {
       id: "x86_assembly",
       label: "x86 Assembly (sıfırdan)",
       accent: "var(--cyan)",
