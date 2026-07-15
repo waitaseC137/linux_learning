@@ -11,8 +11,8 @@
 ## 🗺️ Önerilen Sıra
 
 ```
-Bandit  →  Leviathan  →  Krypton  →  Narnia  →  Behemoth  →  Utumno  →  Maze
-(temel)    (RE giriş)    (kripto)    (binary)   (orta)       (ileri)     (karma/capstone)
+Bandit  →  Leviathan  →  Krypton  →  Narnia  →  Behemoth  →  Utumno  →  Maze  →  Vortex
+(temel)    (RE giriş)    (kripto)    (binary)   (orta)       (ileri)     (capstone) (geniş binexp)
 
 Natas — web güvenliği, ayrı dal olarak istediğin zaman
 ```
@@ -27,6 +27,7 @@ Natas — web güvenliği, ayrı dal olarak istediğin zaman
 | [Behemoth](#-behemoth--orta-seviye-binary-exploitation) | 7/10 | 9 | PATH hijack, format string, symlink, UDP, BOF |
 | [Utumno](#-utumno--ileri-seviye-binary-exploitation) | 9/10 | 9 | Keyfi yazma, integer bug'ları, jmp_buf/PTR_MANGLE |
 | [Maze](#-maze--karma-binary-exploitation--re) | 5/10 | 9 | TOCTOU, lib hijack, self-modifying, FSOP, ELF parser, format string |
+| [Vortex](#-vortex--ağdan-başlayan-geniş-binary-exploitation) | 6/10 | 27 | Ağ/endianness, overflow, format string, heap, ROP, kripto, RE/keygen |
 
 ---
 
@@ -166,6 +167,28 @@ Utumno sonrası** capstone olarak en sona konuldu.
 | [maze 6 -> 7.md](./maze/maze%206%20-%3E%207.md) | FSOP — `fp` overwrite → sahte `FILE` → `fprintf` ile `GOT[exit]` write | 6 → 7 |
 | [maze 7 -> 8.md](./maze/maze%207%20-%3E%208.md) | ELF parser overflow — güvenilmeyen `e_shentsize` → ret2env | 7 → 8 |
 | [maze 8 -> 9.md](./maze/maze%208%20-%3E%209.md) | Format string — `snprintf(buf,n,user)` → `%n` → `GOT[strlen]=system` | 8 → 9 |
+
+---
+
+## 🌀 Vortex — Ağdan Başlayan Geniş Binary Exploitation
+
+Ağ/soket programlamayla **başlayıp** klasik ikili istismar müfredatının tamamını dolaşan 27
+seviyelik lab: endianness → overflow → format string → heap → ret2libc/ROP, sonra kriptanaliz +
+RE/keygen. Narnia/Behemoth'un aksine tek kalıp değil; kaynak çoğu seviyede **verilmez** →
+binary'yi kendin sökersin. "İleri" konular (heap/ROP) sürpriz biçimde **orta bölgede (8–13)**;
+üst yarı (14–26) kripto + RE ağırlıklı.
+
+> 📌 **Başlamadan önce oku:** [00 - Vortex - BAŞLAMADAN ÖNCE OKUYUNUZ.md](./vortex/00%20-%20Vortex%20-%20BAŞLAMADAN%20ÖNCE%20OKUYUNUZ.md) — gereken ön bilgi & seviye haritası.
+>
+> ⚠️ 32-bit (x86) little-endian. Giriş SSH **değil** — **port 5842** ağ görevi; sonrası **port 2228**. Şifreler md'lerde gizli (`**********`).
+
+| Dosya | Konu / Teknik | Level'lar |
+|---|---|---|
+| [vortex 0 -> 1.md](./vortex/vortex%200%20-%3E%201.md) | Ağ soketi + endianness — 4×uint32'yi host byte order (little-endian) topla/gönder | 0 → 1 |
+| [vortex 1 -> 2.md](./vortex/vortex%201%20-%3E%202.md) | Sınırsız `ptr` decrement → kendi MSB'sine `0xca` yaz → gömülü `execlp` shell | 1 → 2 |
+| [vortex 2 -> 3.md](./vortex/vortex%202%20-%3E%203.md) | `tar` argüman enjeksiyonu (setuid) — parola dosyasını arşivlet, grup-okunur arşivden oku | 2 → 3 |
+
+> 🚧 Bölüm büyüyor — çözüldükçe yeni seviyeler eklenecek (toplam 27).
 
 
 ---

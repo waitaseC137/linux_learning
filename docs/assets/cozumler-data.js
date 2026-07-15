@@ -107,6 +107,16 @@ window.READER_DATA = {
         { f: "maze/maze 7 -> 8.md", n: "7→8", t: "Level 7 → 8", h: "ileri" },
         { f: "maze/maze 8 -> 9.md", n: "8→9", t: "Level 8 → 9", h: "final" }
       ]
+    },
+    {
+      id: "vortex", label: "Vortex", accent: "var(--d-high)", tag: "Zorluk 6/10 · 27 level",
+      blurb: "Ağdan başlayan geniş binary exploitation — endianness, overflow, format string, heap, ROP, sonra kriptanaliz + RE/keygen. Kaynak çoğu seviyede verilmez.",
+      files: [
+        { f: "vortex/00 - Vortex - BAŞLAMADAN ÖNCE OKUYUNUZ.md", n: "!", t: "Başlamadan Önce Oku", h: "kurulum, ağ, endianness, seviye haritası" },
+        { f: "vortex/vortex 0 -> 1.md", n: "0→1", t: "Level 0 → 1", h: "ağ soketi, endianness" },
+        { f: "vortex/vortex 1 -> 2.md", n: "1→2", t: "Level 1 → 2", h: "ptr overwrite, execlp" },
+        { f: "vortex/vortex 2 -> 3.md", n: "2→3", t: "Level 2 → 3", h: "tar argüman enjeksiyonu" }
+      ]
     }
   ]
 };
