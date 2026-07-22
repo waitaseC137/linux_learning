@@ -16,9 +16,9 @@
 - [Belleğe Yakından Bakış](#belle%C4%9Fe-yak%C4%B1ndan-bak%C4%B1%C5%9F)
 - [Adres mi, Değer mi — Bir Kez Daha](#adres-mi-de%C4%9Fer-mi--bir-kez-daha)
 - [Register'lara Yakından Bakış](#registerlara-yak%C4%B1ndan-bak%C4%B1%C5%9F)
-- [İşçinin Asıl Dansı: Depo ile Cep Arasında](#i%C5%9F%C3%A7inin-as%C4%B1l-dans%C4%B1-depo-ile-cep-aras%C4%B1nda)
+- [İşçinin Asıl Dansı: Depo ile Cep Arasında](#i%CC%87%C5%9F%C3%A7inin-as%C4%B1l-dans%C4%B1-depo-ile-cep-aras%C4%B1nda)
 - [Program da Bu Kutularda Durur](#program-da-bu-kutularda-durur)
-- [İşçinin Parmağı da Bir Register'dır](#i%C5%9F%C3%A7inin-parma%C4%9F%C4%B1-da-bir-registerd%C4%B1r)
+- [İşçinin Parmağı da Bir Register'dır](#i%CC%87%C5%9F%C3%A7inin-parma%C4%9F%C4%B1-da-bir-registerd%C4%B1r)
 
 ---
 
@@ -124,6 +124,8 @@ Yani bir register, 4 byte'lık bir sayı tutar. Bu da 03'teki "2'nin katları" m
  Bellek kutusu:  1 byte   →  0 .. 255
  Register:       4 byte   →  0 .. ~4.3 milyar   (tam olarak 2³² - 1)
 ```
+
+> 💡 İleri-not: Dikkat ettiysen buraya kadar hep **0'dan yukarı** saydık — hem kutuda hem register'da. Peki ya eksi sayılar, mesela −7? Onlar da bu aynı bitlere sığar, ayrı bir kutu icat etmeye gerek yok; ama "eksi bir sayı bu anahtarlarla *nasıl* yazılır?" sorusunu, işaretli sayıları ve bayrakları gördüğümüzde açacağız ([10_bayraklar_ve_cmp](./10_bayraklar_ve_cmp.md)). Şimdilik "aralık pozitif tarafta" demen yeter.
 
 Dikkat ettiysen bir önceki bölümle bağlanıyor: bir register tam olarak 4 bellek kutusu kadar sayı taşır. Bir register'ın içindekini depoya bıraktığında, o değer ardışık 4 kutuya yayılır — yani "büyük sayı = birkaç kutu" derken kastettiğimiz şeyin ta kendisi.
 

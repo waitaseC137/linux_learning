@@ -93,7 +93,7 @@
 
 ## ⚙️ x86 Assembly (sıfırdan)
 
-> 🚧 **Bu kurs yazım aşamasında** — şu an **Ünite 0** (makine modeli) + **Ünite 1'in başı** (ilk `mov` programı) yazılı (00–06); Ünite 1–4 (jmp/stack/call/syscall/C köprüsü) ekleniyor.
+> ✅ **Bu kurs tam (00–20).** Makine modelinden başlayıp aritmetik · akış (jmp/döngü) · stack · fonksiyon · sistem çağrıları · C köprüsüne kadar; içindeki **her program gerçek makinede çalıştırılarak doğrulandı.**
 >
 > 🧭 **Yeni mi başlıyorsun?** → [00_buradan_basla.md](./x86_assembly/00_buradan_basla.md) — assembly'yi *yazarak* gerçekten sıfırdan öğrenmek isteyenler için. Binary Exploitation'ın derin ön hazırlığıdır ("önce işçiye emir vermeyi öğren, sonra emri bük").
 
@@ -109,8 +109,20 @@
 | [07_gdb_tek_adim.md](./x86_assembly/07_gdb_tek_adim.md) | GDB'de tek adım (`starti` / `si`), register'ları canlı izleme, `eip` |
 | [08_mov_ve_bellek.md](./x86_assembly/08_mov_ve_bellek.md) | `[...]` bellek adresleme, `section .data`, AL/BIRAK, ilk pointer takibi (`[ebx]`) |
 | [08.5_little_endian.md](./x86_assembly/08.5_little_endian.md) | Belleğe byte byte bakmak; "aynen ters" byte sırası (little-endian) |
+| [09_aritmetik.md](./x86_assembly/09_aritmetik.md) | `add`/`sub`/`inc`/`dec`; two's complement (eksi sayılar); al-işle-bırak dansının tamamı |
+| [10_bayraklar_ve_cmp.md](./x86_assembly/10_bayraklar_ve_cmp.md) | Bayraklar (ZF/SF), `cmp` ve `test`; kararın ham maddesi |
+| [11_ziplamalar.md](./x86_assembly/11_ziplamalar.md) | `jmp`/`jz`/`jnz`/`jl`/`jg`; düz akışı kırmak, çift-tek programı |
+| [12_donguler.md](./x86_assembly/12_donguler.md) | Geri zıplama + sayaç = döngü; 1..N toplamı, tekrarlı toplamayla çarpma |
+| [13_bit_islemleri.md](./x86_assembly/13_bit_islemleri.md) | `and`/`or`/`xor`/`shl`/`shr`; `xor eax,eax`=sıfırla; `test`=`and` |
+| [14_stack.md](./x86_assembly/14_stack.md) | `push`/`pop`, `esp`, LIFO; stack neden aşağı büyür (işçinin not defteri) |
+| [15_call_ve_ret.md](./x86_assembly/15_call_ve_ret.md) | Fonksiyonlar, dönüş adresi; `call`=`push`+`jmp`, `ret`=`pop` |
+| [16_calling_convention.md](./x86_assembly/16_calling_convention.md) | cdecl: argüman geçme, dönüş değeri, `ebp` çıpası, prologue/epilogue |
+| [17_sistem_cagrilari.md](./x86_assembly/17_sistem_cagrilari.md) | `int 0x80`, syscall numaraları; ekrana "Merhaba Dünya" (`sys_exit` borcu ödenir) |
+| [18_ilk_etkilesimli_program.md](./x86_assembly/18_ilk_etkilesimli_program.md) | `sys_read` + `section .bss`; isim soran, selamlayan etkileşimli program |
+| [19_c_ile_assembly_koprusu.md](./x86_assembly/19_c_ile_assembly_koprusu.md) | `gcc -S` ile derlenmiş kodda tanıdık kalıpları görmek (`x*8`→`shl`) |
+| [20_buradan_nereye.md](./x86_assembly/20_buradan_nereye.md) | 64-bit'e geçiş, tersine mühendislik, binary exploitation, ileri kaynaklar |
 
-*(Ara dersler 01.5 / 04.5 / 05.5 kurs içinde bağlı; sıradaki üniteler 09–20 yazılıyor.)*
+*(Ara dersler 01.5 / 04.5 / 05.5 kurs içinde bağlı. Seri tamamlandı: 00–20.)*
 
 ---
 

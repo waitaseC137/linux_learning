@@ -14,13 +14,13 @@
 
 - [Bilgisayar Sihir Değil](#bilgisayar-sihir-de%C4%9Fil)
 - [Parça 1 — Bellek: Numaralı Kutular Deposu](#par%C3%A7a-1--bellek-numaral%C4%B1-kutular-deposu)
-- [Parça 2 — Register: İşçinin Cebindeki Kutular](#par%C3%A7a-2--register-i%C5%9F%C3%A7inin-cebindeki-kutular)
-- [Parça 3 — İşlemci: Çok Hızlı, Çok Aptal İşçi](#par%C3%A7a-3--i%C5%9Flemci-%C3%A7ok-h%C4%B1zl%C4%B1-%C3%A7ok-aptal-i%C5%9F%C3%A7i)
-- [İşçinin Tek Yaptığı Şey: Getir → Yap → İlerle](#i%C5%9F%C3%A7inin-tek-yapt%C4%B1%C4%9F%C4%B1-%C5%9Fey-getir--yap--ilerle)
+- [Parça 2 — Register: İşçinin Cebindeki Kutular](#par%C3%A7a-2--register-i%CC%87%C5%9F%C3%A7inin-cebindeki-kutular)
+- [Parça 3 — İşlemci: Çok Hızlı, Çok Aptal İşçi](#par%C3%A7a-3--i%CC%87%C5%9Flemci-%C3%A7ok-h%C4%B1zl%C4%B1-%C3%A7ok-aptal-i%CC%87%C5%9F%C3%A7i)
+- [İşçinin Tek Yaptığı Şey: Getir → Yap → İlerle](#i%CC%87%C5%9F%C3%A7inin-tek-yapt%C4%B1%C4%9F%C4%B1-%C5%9Fey-getir--yap--i%CC%87lerle)
 - [Program Nedir?](#program-nedir)
 - ["Programı Çalıştırmak" Ne Demek?](#program%C4%B1-%C3%A7al%C4%B1%C5%9Ft%C4%B1rmak-ne-demek)
-- [İşçi Hangi Emirleri Anlar? (Küçük Önizleme)](#i%C5%9F%C3%A7i-hangi-emirleri-anlar-k%C3%BC%C3%A7%C3%BCk-%C3%B6nizleme)
-- [Bu Kadar Aptal Bir İşçi Neden İşe Yarıyor?](#bu-kadar-aptal-bir-i%C5%9F%C3%A7i-neden-i%C5%9Fe-yar%C4%B1yor)
+- [İşçi Hangi Emirleri Anlar? (Küçük Önizleme)](#i%CC%87%C5%9F%C3%A7i-hangi-emirleri-anlar-k%C3%BC%C3%A7%C3%BCk-%C3%B6nizleme)
+- [Bu Kadar Aptal Bir İşçi Neden İşe Yarıyor?](#bu-kadar-aptal-bir-i%CC%87%C5%9F%C3%A7i-neden-i%CC%87%C5%9Fe-yar%C4%B1yor)
 
 ---
 

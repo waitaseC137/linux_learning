@@ -13,11 +13,11 @@
 
 ## 📋 İçindekiler
 
-- [mov: İşçinin İlk Emri](#mov-i%C5%9F%C3%A7inin-ilk-emri)
+- [mov: İşçinin İlk Emri](#mov-i%CC%87%C5%9F%C3%A7inin-i%CC%87lk-emri)
 - [Çıkış Kodu Nedir?](#%C3%A7%C4%B1k%C4%B1%C5%9F-kodu-nedir)
 - [Programı Yaz ve Çalıştır](#program%C4%B1-yaz-ve-%C3%A7al%C4%B1%C5%9Ft%C4%B1r)
 - [Sayıyı Değiştir: Komuta Sen Geçtin](#say%C4%B1y%C4%B1-de%C4%9Fi%C5%9Ftir-komuta-sen-ge%C3%A7tin)
-- [Bir Kutunun İçini Doğrudan Görebilir miyim?](#bir-kutunun-i%C3%A7ini-do%C4%9Frudan-g%C3%B6rebilir-miyim)
+- [Bir Kutunun İçini Doğrudan Görebilir miyim?](#bir-kutunun-i%CC%87%C3%A7ini-do%C4%9Frudan-g%C3%B6rebilir-miyim)
 
 ---
 
@@ -83,6 +83,8 @@ Artık bu satırların çoğunu okuyabiliyorsun:
 - `mov ebx, 8` → "ebx kutusuna 8 koy." Bu, çıkış kodumuz olacak.
 - `mov eax, 1` → "eax kutusuna 1 koy." Buradaki 1, çekirdeğe "yapılacak iş **çıkmak**" demenin numarasıdır. (Bu numaraların nereden geldiğini [17_sistem_cagrilari](./17_sistem_cagrilari.md)'da tam açacağız.)
 - `int 0x80` → "çekirdeğe seslen, yukarıda hazırladığımı yap." (Bunun içi de 17'de.)
+
+Bu iki `mov` birbirinden bağımsız — hangisini önce yazdığın fark etmez (05'te sıra tersineydi, `mov eax, 1` önce geliyordu; sonuç yine aynıydı). Önemli olan `int 0x80`'e gelmeden ikisinin de hazır olması.
 
 Şimdi 05'teki **aynı zincirle** çevir, birleştir, çalıştır:
 

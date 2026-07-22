@@ -13,7 +13,7 @@
 - [`[...]`: Adresteki Kutu](#-adresteki-kutu)
 - [Belleğe Bir Kutu Koymak: `section .data`](#belle%C4%9Fe-bir-kutu-koymak-section-data)
 - [AL: Bellekten Register'a](#al-bellekten-registera)
-- [BIRAK: Register'dan Belleğe](#b%C4%B1rak-registerdan-belle%C4%9Fe)
+- [BIRAK: Register'dan Belleğe](#birak-registerdan-belle%C4%9Fe)
 - [İlk Pointer Takibi](#i%CC%87lk-pointer-takibi)
 
 ---
@@ -28,6 +28,8 @@ Cevap tek bir işaret: **köşeli parantez, `[...]`.** Kuralı şu kadar basit:
 - Parantez içinde → **"o adresteki kutunun içi."** `mov eax, [5]` = "5 numaralı **kutuya git**, oradaki değeri eax'e koy."
 
 İşte 04'teki adres/değer ayrımının gerçek komuttaki hâli bu. Parantez, işçiye "bu bir adres — oraya git, oradakini al" demenin yolu. Parantezi "→ oraya git" oku çevir gibi düşün: `[sayi]` = "sayi'nin *gösterdiği yere* git."
+
+Bir uyarı: buradaki `[5]` sadece **fikri** gösteriyor — 5 gerçek, sana ait bir adres değil. Bunu tek başına bir programda çalıştırmayı deneme; çekirdek "orası senin değil" deyip programı durdurur. Az sonra `[sayi]` ile aynı işi *izinli* bir adres üzerinde gerçekten yapacağız.
 
 > 🔑 `[...]` = "bu bir adres, oraya git ve oradaki değeri kullan." Parantezsiz = değerin kendisi; parantezli = o adresteki kutunun içi. 04'teki adres/değer ayrımının komuttaki karşılığı budur.
 

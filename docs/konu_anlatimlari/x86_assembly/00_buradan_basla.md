@@ -9,13 +9,13 @@
 > daha önce hiç kod yazmamış olman, "register ne demek" bilmemen tamamen normal —
 > hepsini buradan, sıfırdan kuracağız. Tek ön koşul: sabır ve merak.
 
-> 🚧 **Bu kurs YAZIM AŞAMASINDA — devam ediyor.** Şu an yazılı: **Ünite 0** (makine modeli, 00–04.5) + **Ünite 1'in başı** (05, 05.5, 06 ilk `mov` programı, **07** gdb ile tek adım, **08** mov & bellek/pointer, **08.5** little-endian). Yol haritasındaki **09'dan sonrası planlı ama henüz yazılmadı** (aşağıda `🚧` işaretli, linksiz). Kurs ilerledikçe eklenecek.
+> ✅ **Bu kurs artık tam: 00'dan 20'ye kadar tüm dersler yazıldı.** Ve her ders "kağıt üstünde" değil — içindeki **her program ve her GDB çıktısı gerçek bir makinede çalıştırılarak doğrulandı.** Yol: **Ünite 0** (makine modeli) → **Ünite 1** (ilk komutlar, aritmetik) → **Ünite 2** (akış: karar & döngü) → **Ünite 3** (stack, fonksiyon, sistem çağrıları) → **Ünite 4** (C köprüsü, buradan nereye). Baştan sona, sırayla oku — her ünite bir öncekine yaslanır.
 
 ---
 
 ## 📋 İçindekiler
 
-- [Bu Kurs Ne DEĞİLDİR](#bu-kurs-ne-de%C4%9Fildir)
+- [Bu Kurs Ne DEĞİLDİR](#bu-kurs-ne-de%C4%9Fi%CC%87ldi%CC%87r)
 - [Önce Korkuyu Kıralım](#%C3%B6nce-korkuyu-k%C4%B1ral%C4%B1m)
 - [Sonunda Ne Yapabileceksin?](#sonunda-ne-yapabileceksin)
 - [Büyük Resim: Assembly Neden Var?](#b%C3%BCy%C3%BCk-resim-assembly-neden-var)
@@ -71,7 +71,9 @@ Makine kodu (işlemcinin gördüğü):   B8 05 00 00 00
 Assembly (senin yazdığın):          mov eax, 5        ← "EAX'a 5 koy"
 ```
 
-İkisi **birebir aynı şeydir.** Assembly, makine koduna en yakın insan dilidir — araya sihir, gizli iş, görünmeyen kurallar girmez. Bu yüzden assembly öğrenmek = makinenin gerçekte ne yaptığını öğrenmektir. Daha üst diller (C, Python) bu makinenin üstüne kurulu **kolaylık katmanlarıdır.**
+*(Peki neden tek bir 5 için beş sayı? İlki — `B8` — "EAX'a koy" emrinin kendisi; kalan dört sayı da 5'in bellekte durduğu 4 byte'lık hâli. Bunu [08_mov_ve_bellek](./08_mov_ve_bellek.md)'de açacağız — şimdilik saymana bile gerek yok, sadece gör.)*
+
+İkisi **birebir karşılık gelir** — her assembly satırı belli sayılara çevrilir, arada anlamadığın bir sihir yoktur. Assembly, makine koduna en yakın insan dilidir. *(Programı çalıştırmak için makinenin eklediği `_start`/ELF gibi görünmeyen sarmalı [05.5_perde_arkasi](./05.5_perde_arkasi.md)'te ayrıca açacağız.)* Bu yüzden assembly öğrenmek = makinenin gerçekte ne yaptığını öğrenmektir. Daha üst diller (C, Python) bu makinenin üstüne kurulu **kolaylık katmanlarıdır.**
 
 > 🔑 Akılda kalsın: **Sen assembly yazarsın → `nasm` adlı bir program onu makine koduna (sayılara) çevirir → işlemci o sayıları okuyup yapar.** Çevirmenin adı *assembler*'dır; bizimki `nasm`.
 
@@ -106,33 +108,33 @@ Dosyaları bu sırayla oku. Her ünite bir öncekine yaslanır.
 | 7 | [07_gdb_tek_adim](./07_gdb_tek_adim.md) | GDB'de tek adım at, register'ları izle | "Komut yaz → ne değişti gör" |
 | 8 | [08_mov_ve_bellek](./08_mov_ve_bellek.md) | `mov` çeşitleri, `[...]` = kutudaki adresin gösterdiği yer; ilk pointer takibi | İlk pointer sezgisi |
 | 8.5 | [08.5_little_endian](./08.5_little_endian.md) | Belleğe byte byte bakmak; "aynen ters" byte sırası (little-endian) | Byte diziliş sezgisi |
-| 9 | 09_aritmetik 🚧 *(yazılıyor)* | `add`, `sub`, `inc`, `dec` | Minik bir hesap makinesi |
+| 9 | [09_aritmetik](./09_aritmetik.md) | `add`, `sub`, `inc`, `dec` | Minik bir hesap makinesi |
 
 ### 🔀 Ünite 2 — Akış: İşçiye Karar Verdirmek
 
 | # | Dosya | Ne öğretir | İlk çalışan şey |
 |:---:|---|---|---|
-| 10 | 10_bayraklar_ve_cmp 🚧 *(yazılıyor)* | Bayraklar (ZF/SF...), `cmp`/`test` | "İşçi karşılaştırmayı nasıl hatırlar" |
-| 11 | 11_ziplamalar 🚧 *(yazılıyor)* | `jmp`, `jz`, `jnz`, `jl`, `jg` | "Çift mi tek mi" programı |
-| 12 | 12_donguler 🚧 *(yazılıyor)* | Sayaç + koşullu zıplama ile döngü | 10'dan geriye sayım, 1..N toplamı |
-| 13 | 13_bit_islemleri 🚧 *(yazılıyor)* | `and`, `or`, `xor`, `shl`, `shr` | `xor eax, eax` neden "sıfırla"dır |
+| 10 | [10_bayraklar_ve_cmp](./10_bayraklar_ve_cmp.md) | Bayraklar (ZF/SF...), `cmp`/`test` | "İşçi karşılaştırmayı nasıl hatırlar" |
+| 11 | [11_ziplamalar](./11_ziplamalar.md) | `jmp`, `jz`, `jnz`, `jl`, `jg` | "Çift mi tek mi" programı |
+| 12 | [12_donguler](./12_donguler.md) | Sayaç + koşullu zıplama ile döngü | 10'dan geriye sayım, 1..N toplamı |
+| 13 | [13_bit_islemleri](./13_bit_islemleri.md) | `and`, `or`, `xor`, `shl`, `shr` | `xor eax, eax` neden "sıfırla"dır |
 
 ### 🧱 Ünite 3 — Parçalar ve İşletim Sistemi
 
 | # | Dosya | Ne öğretir | İlk çalışan şey |
 |:---:|---|---|---|
-| 14 | 14_stack 🚧 *(yazılıyor)* | `push`/`pop`, stack neden ters büyür | İşçinin "not defteri" |
-| 15 | 15_call_ve_ret 🚧 *(yazılıyor)* | Fonksiyonlar, dönüş adresi, `call`/`ret` ikilisi | Tekrar kullanılabilir parça |
-| 16 | 16_calling_convention 🚧 *(yazılıyor)* | cdecl: parçaya veri verme, dönüş değeri, prologue/epilogue | "Topla(3,5)" çağırmak |
-| 17 | 17_sistem_cagrilari 🚧 *(yazılıyor)* | `int 0x80`, syscall numaraları, ekrana yazı/girdi | Gerçek "Merhaba Dünya" |
-| 18 | 18_ilk_etkilesimli_program 🚧 *(yazılıyor)* | Her şeyi birleştir | İsim soran, selamlayan asm programı |
+| 14 | [14_stack](./14_stack.md) | `push`/`pop`, stack neden ters büyür | İşçinin "not defteri" |
+| 15 | [15_call_ve_ret](./15_call_ve_ret.md) | Fonksiyonlar, dönüş adresi, `call`/`ret` ikilisi | Tekrar kullanılabilir parça |
+| 16 | [16_calling_convention](./16_calling_convention.md) | cdecl: parçaya veri verme, dönüş değeri, prologue/epilogue | "Topla(3,5)" çağırmak |
+| 17 | [17_sistem_cagrilari](./17_sistem_cagrilari.md) | `int 0x80`, syscall numaraları, ekrana yazı/girdi | Gerçek "Merhaba Dünya" |
+| 18 | [18_ilk_etkilesimli_program](./18_ilk_etkilesimli_program.md) | Her şeyi birleştir | İsim soran, selamlayan asm programı |
 
 ### 🌉 Ünite 4 — Köprü
 
 | # | Dosya | Ne öğretir |
 |:---:|---|---|
-| 19 | 19_c_ile_assembly_koprusu 🚧 *(yazılıyor)* | Minik bir C programını derle, asm'sine bak, tanıdık kalıpları gör |
-| 20 | 20_buradan_nereye 🚧 *(yazılıyor)* | 64-bit'e geçiş, tersine mühendislik, exploitation ve ileri kaynaklar |
+| 19 | [19_c_ile_assembly_koprusu](./19_c_ile_assembly_koprusu.md) | Minik bir C programını derle, asm'sine bak, tanıdık kalıpları gör |
+| 20 | [20_buradan_nereye](./20_buradan_nereye.md) | 64-bit'e geçiş, tersine mühendislik, exploitation ve ileri kaynaklar |
 
 ---
 

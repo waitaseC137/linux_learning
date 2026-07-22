@@ -15,7 +15,7 @@
 
 - [Üç Alet: nasm, ld, gdb](#%C3%BC%C3%A7-alet-nasm-ld-gdb)
 - [Aletleri Kur](#aletleri-kur)
-- [İlk Programını Yaz](#ilk-program%C4%B1n%C4%B1-yaz)
+- [İlk Programını Yaz](#i%CC%87lk-program%C4%B1n%C4%B1-yaz)
 - [Yaz → Çevir → Çalıştır](#yaz--%C3%A7evir--%C3%A7al%C4%B1%C5%9Ft%C4%B1r)
 - [Çalıştı mı? (Hiçbir Şey Olmadı!)](#%C3%A7al%C4%B1%C5%9Ft%C4%B1-m%C4%B1-hi%C3%A7bir-%C5%9Fey-olmad%C4%B1)
 - [Adım Adım Ne Oldu?](#ad%C4%B1m-ad%C4%B1m-ne-oldu)

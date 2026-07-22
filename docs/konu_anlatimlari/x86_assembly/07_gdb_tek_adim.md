@@ -11,7 +11,7 @@
 
 ## 📋 İçindekiler
 
-- [gdb Ne İşe Yarar?](#gdb-ne-i%C5%9Fe-yarar)
+- [gdb Ne İşe Yarar?](#gdb-ne-i%CC%87%C5%9Fe-yarar)
 - [Programı gdb'ye Sokmak ve Durdurmak](#program%C4%B1-gdbye-sokmak-ve-durdurmak)
 - [İlk Bakış: Kutular Henüz Boş](#i%CC%87lk-bak%C4%B1%C5%9F-kutular-hen%C3%BCz-bo%C5%9F)
 - [İlk Adım: `si` ve "İşte Değişti!"](#i%CC%87lk-ad%C4%B1m-si-ve-i%CC%87%C5%9Fte-de%C4%9Fi%C5%9Fti)
@@ -72,7 +72,7 @@ Karşına `(gdb)` yazan bir istem (prompt) gelir — artık komutları buraya ya
 (gdb) starti
 ```
 
-- **`set disassembly-flavor intel`** → gdb'ye "komutları **bizim yazdığımız sırayla** göster" demek. (gdb varsayılan olarak farklı bir sıra kullanır; bunu birazdan açıyoruz.)
+- **`set disassembly-flavor intel`** → gdb'ye "komutları **bizim yazdığımız sırayla** göster" demek. (*disassembly* = makine kodunu tekrar okunur asm komutlarına çevirmek; *flavor* = hangi yazım tarzıyla göstereceği.) gdb varsayılan olarak farklı, ters bir sıra kullanır — biz bu kursta hep intel'i, yani senin yazdığın sırayı tercih ediyoruz.
 - **`starti`** → "programı başlat, ama **ilk komutta** hemen durdur." İşçi henüz *hiçbir şey yapmadan* elini kaldırmış, seni bekliyor.
 
 Ekranda şunu görürsün (gerçekten çalıştırdım):
@@ -165,7 +165,7 @@ Programın en başında (starti'den hemen sonra) çıktı şuydu:
 => 0x8049000 <_start>:	mov    ebx,0x8
 ```
 
-`=>` "işçi şu an burada" demek. Ve gördüğün komut: `mov ebx,0x8` — **tam senin yazdığın `mov ebx, 8`.** (`0x8`, 8'in onaltılığı; `disassembly-flavor intel` sayesinde sıra da senin yazdığın gibi: önce hedef `ebx`, sonra kaynak.) Bir `si` atınca `=>` bir sonraki komuta kayar (`mov eax,0x1`), bir daha atınca `int 0x80`'e. **İşçi listede ilerliyor, sen adım adım arkasından bakıyorsun.**
+`=>` "işçi şu an burada" demek — ve o adres, `0x8049000`, yukarıdaki `starti` çıktısında gördüğün `0x08049000` ile **aynı adrestir**; baştaki fazladan sıfır sadece sıfır dolgusu, değeri değiştirmez. Ve gördüğün komut: `mov ebx,0x8` — **tam senin yazdığın `mov ebx, 8`.** (`0x8`, 8'in onaltılığı; `disassembly-flavor intel` sayesinde sıra da senin yazdığın gibi: önce hedef `ebx`, sonra kaynak.) Bir `si` atınca `=>` bir sonraki komuta kayar (`mov eax,0x1`), bir daha atınca `int 0x80`'e. **İşçi listede ilerliyor, sen adım adım arkasından bakıyorsun.**
 
 > 💡 **Aklınıza takılabilir:** *"Adresler neden `0x8049000`, `0x8049005` diye 5'er 5'er atlıyor?"* Çünkü her komut bellekte **birkaç byte** yer kaplar; `mov ebx, 8` gibi bir komut 5 byte. İşçi bir komutu bitirince eip'i **o komutun boyu kadar** ilerletir — yani sıradaki komutun başına. Komutların byte olarak nasıl kodlandığı ayrı ve derin bir konu; şimdilik bilmen gereken tek şey: **eip = sıradaki komutun adresi, her adımda ilerler.**
 

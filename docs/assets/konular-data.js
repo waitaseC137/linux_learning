@@ -93,10 +93,10 @@ window.KONULAR = {
       id: "x86_assembly",
       label: "x86 Assembly (sıfırdan)",
       accent: "var(--cyan)",
-      tag: "🚧 yazılıyor",
-      blurb: "Sıfırdan x86 assembly — makine modeli, register, ilk program, gdb, bellek & pointer, little-endian. Yazım aşamasında: şu an Ünite 0 + Ünite 1'in başı (00–08.5).",
+      tag: "20 ders · tam",
+      blurb: "Sıfırdan x86 assembly — makine modeli, register, ilk program, gdb, bellek & pointer, aritmetik, akış (jmp/döngü), bit işlemleri, stack, fonksiyon, sistem çağrıları ve C köprüsü. Tam seri (00–20); her program gerçek makinede doğrulandı.",
       files: [
-        { f: "x86_assembly/00_buradan_basla.md",           n: "→",    t: "Buradan Başla",         h: "Kurs haritası + ne öğreneceksin (🚧 yazılıyor)" },
+        { f: "x86_assembly/00_buradan_basla.md",           n: "→",    t: "Buradan Başla",         h: "Kurs haritası + ne öğreneceksin (tam seri 00–20)" },
         { f: "x86_assembly/01_bilgisayar_nedir.md",        n: "01",   t: "Bilgisayar Nedir?",     h: "Numaralı kutular + işçi; zihin modeli" },
         { f: "x86_assembly/01.5_sayi_ve_anlam.md",         n: "01.5", t: "Aynı Sayı, Bin Anlam",  h: "Sayı ≠ anlam; anlamı kod verir" },
         { f: "x86_assembly/02_terminal_ile_tanisma.md",    n: "02",   t: "Terminal ile Tanışma",  h: "Terminal, komut yazma, çıktı okuma" },
@@ -108,7 +108,19 @@ window.KONULAR = {
         { f: "x86_assembly/06_ilk_gercek_program.md",      n: "06",   t: "İlk Gerçek Program",    h: "mov ile değer, çıkış kodu, echo $?" },
         { f: "x86_assembly/07_gdb_tek_adim.md",            n: "07",   t: "GDB ile Tek Adım",      h: "starti · si · info registers · eip; kutuları canlı izle" },
         { f: "x86_assembly/08_mov_ve_bellek.md",           n: "08",   t: "mov ve Bellek",         h: "[...] adresleme · section .data · AL/BIRAK · ilk pointer takibi" },
-        { f: "x86_assembly/08.5_little_endian.md",         n: "08.5", t: "Little-Endian",         h: "belleğe byte byte bakmak; 'aynen ters' byte sırası" }
+        { f: "x86_assembly/08.5_little_endian.md",         n: "08.5", t: "Little-Endian",         h: "belleğe byte byte bakmak; 'aynen ters' byte sırası" },
+        { f: "x86_assembly/09_aritmetik.md",               n: "09",   t: "Aritmetik",             h: "add/sub/inc/dec · two's complement · al-işle-bırak" },
+        { f: "x86_assembly/10_bayraklar_ve_cmp.md",        n: "10",   t: "Bayraklar & cmp",       h: "ZF/SF · cmp · test; kararın ham maddesi" },
+        { f: "x86_assembly/11_ziplamalar.md",              n: "11",   t: "Zıplamalar",            h: "jmp/jz/jnz/jl/jg; akışı kırmak, çift-tek" },
+        { f: "x86_assembly/12_donguler.md",                n: "12",   t: "Döngüler",              h: "geri jmp + sayaç; 1..N toplamı, tekrarlı çarpma" },
+        { f: "x86_assembly/13_bit_islemleri.md",           n: "13",   t: "Bit İşlemleri",         h: "and/or/xor/shl/shr; xor eax,eax; test=and" },
+        { f: "x86_assembly/14_stack.md",                   n: "14",   t: "Stack",                 h: "push/pop · esp · LIFO; stack neden aşağı büyür" },
+        { f: "x86_assembly/15_call_ve_ret.md",             n: "15",   t: "call ve ret",           h: "fonksiyon, dönüş adresi; call=push+jmp" },
+        { f: "x86_assembly/16_calling_convention.md",      n: "16",   t: "Calling Convention",    h: "cdecl: argüman/dönüş, ebp, prologue/epilogue" },
+        { f: "x86_assembly/17_sistem_cagrilari.md",        n: "17",   t: "Sistem Çağrıları",      h: "int 0x80, syscall no; ekrana Merhaba Dünya" },
+        { f: "x86_assembly/18_ilk_etkilesimli_program.md", n: "18",   t: "İlk Etkileşimli",       h: "sys_read + .bss; isim soran, selamlayan program" },
+        { f: "x86_assembly/19_c_ile_assembly_koprusu.md",  n: "19",   t: "C ile Assembly Köprüsü",h: "gcc -S; derlenmiş kodda tanıdık kalıplar" },
+        { f: "x86_assembly/20_buradan_nereye.md",          n: "20",   t: "Buradan Nereye?",       h: "64-bit, tersine mühendislik, exploitation, kaynaklar" }
       ]
     },
     {

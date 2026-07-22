@@ -181,7 +181,7 @@ cd ..
 echo "ilk notum" > not.txt
 ```
 
-Burada yeni bir şey var: `>` işareti. Normalde `echo` çıktıyı **ekrana** yazardı; `>` ise "çıktıyı ekrana değil, **şu dosyaya** yaz" demektir. Yani bu satır, içinde `ilk notum` yazan `not.txt` adlı bir dosya oluşturur. Ekrana bir şey çıkmaz — çıktı artık dosyaya gitti.
+Burada iki yeni şey var. Önce `"..."` tırnakları: birden çok kelimeyi tek bir metin olarak bir arada tutar. `echo Merhaba`'da tek kelime olduğu için gerek yoktu (yukarıdaki üç kelimelik örnek de tırnaksız çalıştı); ama bir metni dosyaya yazarken tırnak, "bunların hepsi tek parça" demenin en temiz yoludur. İkincisi `>` işareti: Normalde `echo` çıktıyı **ekrana** yazardı; `>` ise "çıktıyı ekrana değil, **şu dosyaya** yaz" demektir. Yani bu satır, içinde `ilk notum` yazan `not.txt` adlı bir dosya oluşturur. Ekrana bir şey çıkmaz — çıktı artık dosyaya gitti.
 
 `ls` yazarsan `not.txt`'yi görürsün. Peki içinde ne var? **Bir dosyanın içeriğini görmek** → `cat`:
 

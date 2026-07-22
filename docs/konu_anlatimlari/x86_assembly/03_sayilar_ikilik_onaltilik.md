@@ -14,11 +14,11 @@
 ## 📋 İçindekiler
 
 - [Korkma: Bu Matematik Değil, Okuma-Yazma](#korkma-bu-matematik-de%C4%9Fil-okuma-yazma)
-- [Neden İkilik? Çünkü İçeride Sadece Açık/Kapalı Var](#neden-ikilik-%C3%A7%C3%BCnk%C3%BC-i%C3%A7eride-sadece-a%C3%A7%C4%B1kkapal%C4%B1-var)
+- [Neden İkilik? Çünkü İçeride Sadece Açık/Kapalı Var](#neden-i%CC%87kilik-%C3%A7%C3%BCnk%C3%BC-i%CC%87%C3%A7eride-sadece-a%C3%A7%C4%B1kkapal%C4%B1-var)
 - [Onluk Sistemi Zaten Biliyorsun](#onluk-sistemi-zaten-biliyorsun)
-- [İkilik: Aynı Fikir, Sadece İki Rakam](#ikilik-ayn%C4%B1-fikir-sadece-iki-rakam)
+- [İkilik: Aynı Fikir, Sadece İki Rakam](#i%CC%87kilik-ayn%C4%B1-fikir-sadece-i%CC%87ki-rakam)
 - [Bir Byte Neden 0–255? (01'in Cevabı)](#bir-byte-neden-0255-01in-cevab%C4%B1)
-- [Onaltılık: İnsanlar İçin Kısaltma](#onalt%C4%B1l%C4%B1k-insanlar-i%C3%A7in-k%C4%B1saltma)
+- [Onaltılık: İnsanlar İçin Kısaltma](#onalt%C4%B1l%C4%B1k-i%CC%87nsanlar-i%CC%87%C3%A7in-k%C4%B1saltma)
 - [Hex'i "Okumak" (Hesaplamak Değil)](#hexi-okumak-hesaplamak-de%C4%9Fil)
 - [Bunu Nerede Göreceğim?](#bunu-nerede-g%C3%B6rece%C4%9Fim)
 - [Ek: Byte Neden 8 Bit? (Tarihçe ve Sebepler)](#ek-byte-neden-8-bit-tarih%C3%A7e-ve-sebepler)
