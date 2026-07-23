@@ -91,7 +91,9 @@ gdb ./bellek
 (gdb) starti
 ```
 
-Bu sefer sadece register'a değil, **belleğin kendisine** de bakacağız. Bellek kutusuna bakma komutu **`x`** (*examine*): `x/1dw &sayi` = "sayi'nin adresindeki 1 tane dword'ü onluk göster." (`&sayi` = "sayi'nin adresi"; `d` = onluk, `w` = word/dword.)
+Bu sefer sadece register'a değil, **belleğin kendisine** de bakacağız. Bellek kutusuna bakma komutu **`x`** (*examine*): `x/1dw &sayi` = "sayi'nin adresindeki 1 tane dword'ü onluk göster." (`&sayi` = "sayi'nin adresi"; `d` = onluk göster; `w` = **4 byte'lık dword**.)
+
+> 💡 **Karışmasın:** buradaki `w`, `section .data`'daki `dw` ile **aynı harf ama farklı sözlük.** NASM'de `dw` = 2 byte'tı; gdb'nin `x/…w`'sinde `w` = **4 byte** (dword). Aynı harf, iki alet, iki boyut — burada 4 byte gösteriyor.
 
 ```
 (gdb) info registers eax

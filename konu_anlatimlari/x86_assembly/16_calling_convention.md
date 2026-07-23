@@ -33,6 +33,8 @@ cdecl'in üç temel kuralı (gerisi ayrıntı):
 2. **Dönüş değeri `eax`'te** döner.
 3. **Argümanları çağıran temizler** (fonksiyon değil).
 
+(Yukarıda sorduğumuz *"`ecx` bozulursa çağıranın `ecx`'i mahvolur mu?"*nun cevabı da bu sözleşmenin parçasıdır: hangi register'ı kimin koruyacağı belli kurala bağlıdır. Ama o bir ayrıntı — şimdilik bu üç kural `Topla`'yı yazmaya yetiyor, o inceliğe girmiyoruz.)
+
 Şimdi bunları tek tek, çalışan kodla görelim.
 
 > 🔑 **Calling convention** = çağıran ile fonksiyon arasındaki, "veriyi nereye koyacağız, sonucu nereden alacağız, kim temizleyecek" anlaşması. Tek doğru yok; 32-bit Linux'ta standart **cdecl**: argümanlar stack'e (sağdan sola), sonuç `eax`'te, temizlik çağıranda.
@@ -49,7 +51,7 @@ cdecl'in üç temel kuralı (gerisi ayrıntı):
     call topla
 ```
 
-Neden ters? Böylece `call` yapıldığında **1. argüman stack'te en üstte** (dönüş adresine en yakın) olur — fonksiyon "ilk argümanım nerede?" derken tutarlı bir yere bakar. Az sonra tam adresini göreceğiz.
+Neden ters? Böylece **`call`'dan hemen önce** 1. argüman stack'in tepesinde olur; `call` dönüş adresini onun üstüne `push`'layınca (15) tepe yine **dönüş adresi** olur, 1. argüman da onun hemen **altında** (dönüş adresine en yakın) kalır — fonksiyon "ilk argümanım nerede?" derken tutarlı bir yere bakar. Az sonra tam adresini göreceğiz.
 
 Sonuç ise `eax`'te döner (kural 2) — zaten 15'teki `ekle5` de sonucu eax'e bırakıyordu, cdecl bunu resmî kural yapıyor. Fonksiyondan çıkınca çağıran `eax`'e bakar, sonucu orada bulur.
 
@@ -69,7 +71,7 @@ topla:
     mov ebp, esp        ; ebp = şu anki tepe → sabit çıpa
 ```
 
-(Bu ilk örnekte çağıran `_start`; `ebp`'ye hiç değer yazmadık, yani sakladığımız şey aslında "boş", önemsiz bir sayı. Ama kural genel: fonksiyon, çağıran kim olursa olsun onun `ebp`'sini korur — burada sadece o boşu koruyor, kalıp her çağıranda aynı çalışsın diye.)
+(Bu ilk örnekte çağıran `_start`; `ebp`'ye anlamlı bir şey yazmamıştı, yani sakladığımız değerin **içeriği** önemsiz. Ama **satırın kendisi** önemli: çoğu çağıranın korunması gereken gerçek bir `ebp`'si olur — 19'da C fonksiyonlarında göreceksin — o yüzden kalıp, çağıran kim olursa olsun onun `ebp`'sini saklar. Burada sadece o "boş"u koruyor.)
 
 Bu iki satırdan sonra stack şöyle dizilidir (14'ten: yukarı = büyük adres). `ebp` artık sabit; ona göre argümanlar:
 
@@ -117,7 +119,7 @@ topla:
     ret
 ```
 
-Bir tek yeni parça var: `call`'dan sonraki `add esp, 8`. Bu, **kural 3** — çağıran, stack'e ittiği 2 argümanı (2 × 4 = 8 byte) geri temizliyor. (15'in uyarısını hatırla: stack dengede kalmazsa işler bozulur. Argümanları iten çağıran olduğu için, temizleyen de o.) Çalıştır:
+Bir tek yeni parça var: `call`'dan sonraki `add esp, 8`. Bu, **kural 3** — çağıran, stack'e ittiği 2 argümanı (2 × 4 = 8 byte) geri temizliyor. Neden `sub` değil de **`add`**? Stack aşağı (küçük adrese) doğru büyür (14); argümanları `push`'larken `esp` 8 **azalmıştı**, temizlik de onu 8 geri **artırır** — "silmek" burada `esp`'yi ittiğimiz yerin üstüne, eski tepeye taşımaktır. (15'in uyarısını hatırla: stack dengede kalmazsa işler bozulur. Argümanları iten çağıran olduğu için, temizleyen de o.) Çalıştır:
 
 ```
 nasm -f elf32 topla_fn.asm -o topla_fn.o

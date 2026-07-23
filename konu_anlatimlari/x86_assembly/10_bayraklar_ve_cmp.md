@@ -144,7 +144,7 @@ Tabloya koyalım — karar mantığının çekirdeği bu:
 Okuması çok basit:
 
 - **ZF = 1** ise iki sayı **eşit** (çünkü fark sıfır).
-- **ZF = 0, SF = 1** ise ilk sayı **küçük** (fark eksiye düştü — 09'daki two's complement'ten hatırla: eksi = en üst bit 1 = SF).
+- **ZF = 0, SF = 1** ise ilk sayı **küçük** (fark eksiye düştü. 09'daki `0xFFFFFFFD` gibi eksi sayılar hep en soldaki bitle başlar; iki'ye tümleyende **en üst bit = "eksi mi" işaretidir** — SF işte o biti kopyalar).
 - **ZF = 0, SF = 0** ise ilk sayı **büyük** (fark pozitif, sıfır değil).
 
 İşçi "hangisi büyük" sorusunu böyle "hatırlar": aslında hatırlamaz — sadece iki bit bırakır, sen (daha doğrusu bir sonraki komut) o iki bite bakıp kararı okur.
@@ -161,7 +161,7 @@ Okuması çok basit:
 test eax, eax       ; "eax sıfır mı?" → sıfırsa ZF=1
 ```
 
-`test`, `cmp` gibi "sonucu atıp yalnız bayrak kuran" bir komuttur. `test eax, eax` kullanıldığında pratik sonucu tek cümle: **eax sıfırsa ZF açılır, değilse kapalı kalır.** İki programla görelim.
+`test`, `cmp` gibi "sonucu atıp yalnız bayrak kuran" bir komuttur. `test eax, eax` kullanıldığında pratik sonucu tek cümle: **eax sıfırsa ZF açılır, değilse kapalı kalır.** (Yeri gelmişken: `test eax, eax` aslında SF'yi de kurar — eax eksiyse SF=1 olur — ama bu "sıfır mı" kısayolunda yalnız ZF'ye bakıyoruz.) İki programla görelim.
 
 `testsifir.asm` (eax = 0):
 
