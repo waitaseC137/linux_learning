@@ -129,6 +129,8 @@ Yolu takip et: `test eax, eax` bayrağı kurar. Sonra `jz sifir` — eğer ZF a�
 
 > 💡 **Aklınıza takılabilir:** *"Eşitlik için `jz` biraz tuhaf isim — 'sıfırsa atla' neden 'eşitse' demek?"* Çünkü `cmp a, b` içeride `a - b` yapıyordu (10); `a == b` ise fark **sıfır**, yani ZF açılır. Demek ki "eşit mi" sorusu aslında "fark sıfır mı" sorusudur. Bu yüzden `jz`'nin bir de **`je`** (*jump if equal*) adı vardır — ikisi **birebir aynı komuttur**, sadece iki farklı okunuşu. Aynı şekilde `jnz` = **`jne`** (*jump if not equal*). `cmp`'ten sonra `je`/`jne`, `test`'ten sonra `jz`/`jnz` yazmak sadece okunurluk tercihidir.
 
+> 💡 **Nerede işine yarar:** bir programın şifre/lisans kontrolünü kırmanın klasik yolu, disassembly'de tam bu `cmp`/`test` + `jz` çiftini bulmaktır — sonra ya `jz`'yi `jnz`'ye çevirir ya da zıplamayı `nop`'larsın; böylece "yanlış şifre" dalı "doğru"ymuş gibi davranır. Yani bugün elle *yazdığın* kalıbı, tersine mühendislik *söker.* Bir "kararı" kırmak = onun dayandığı koşullu zıplamayı değiştirmek. 20'de döneceğimiz binary exploitation'ın da ilk tuğlası bu.
+
 ---
 
 ## Sıralamaya Göre Zıpla: `jl` ve `jg`
@@ -174,7 +176,7 @@ Sayıları `mov eax, 40` / `mov ecx, 30` yapıp yeniden çalıştır:
 
 Program her seferinde **büyük olanı** seçti — sen `if (a > b)` mantığını, işçinin diliyle kurdun.
 
-> 🔑 `cmp a, b` + `jl`/`jg` = "a, b'den küçük/büyük mü?" kararı. 10'da bahsi geçen "işaretli karşılaştırma inceliğinin" bir adı var: **taşma (overflow)** — ve `jl`/`jg` doğru bayrak kombinasyonunu senin yerine bilir, sen elle uğraşmazsın. Bu taşmanın nereden geldiğini ileride, işaretli aritmetiğe döndüğümüzde tıkır tıkır göreceğiz; şimdilik ismini bil, gerisine güven. Sen sadece doğru olanı seç: sıralama için `jl`/`jg`/`jle`/`jge`, eşitlik için `je`/`jne`. Kalıp yine aynı: **`cmp` kur, koşullu zıpla.**
+> 🔑 `cmp a, b` + `jl`/`jg` = "a, b'den küçük/büyük mü?" kararı. 10'da bahsi geçen "işaretli karşılaştırma inceliğinin" bir adı var: **taşma (overflow)** — ve `jl`/`jg` doğru bayrak kombinasyonunu senin yerine bilir, sen elle uğraşmazsın. Bu taşmanın tam mekanizması, işaretli aritmetiğin daha derin bir konusu — bu başlangıç serisinin kapsamı dışında kalıyor; sana burada gereken tek şey ismini bilmek, gerisini `jl`/`jg` senin yerine hallediyor. Sen sadece doğru olanı seç: sıralama için `jl`/`jg`/`jle`/`jge`, eşitlik için `je`/`jne`. Kalıp yine aynı: **`cmp` kur, koşullu zıpla.**
 
 ---
 

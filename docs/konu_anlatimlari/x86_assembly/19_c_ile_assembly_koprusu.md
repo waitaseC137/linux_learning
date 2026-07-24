@@ -78,7 +78,7 @@ topla:
     ret                          ; ┘ (çağırana dön)    → 15. ders (ret)
 ```
 
-**İşte kursun bütün ödülü bu tabloda.** Derleyici, `a + b` gibi masum bir C satırını, tam da senin 16'da **elle kurduğun** iskelete çevirdi: prologue ile `ebp` çıpasını kur, argümanları `[ebp+8]` ve `[ebp+12]`'den oku (16'daki sözleşme!), `add` ile topla (09), epilogue ile temizle ve `ret`'le dön (15). Sen kurstan önce baksan bu bir gizemdi; şimdi **okuyabiliyorsun.**
+**İşte kursun bütün ödülü bu tabloda.** Derleyici, `a + b` gibi masum bir C satırını, tam da senin 16'da **elle kurduğun** iskelete çevirdi: prologue ile `ebp` çıpasını kur, argümanları `[ebp+8]` ve `[ebp+12]`'den oku (16'daki sözleşme!), `add` ile topla (09) — **sonuç `eax`'te kalır, ki cdecl'de dönüş değerinin durduğu yer orasıdır (16); C'deki `return a + b;`'nin "döndür" kısmı işte bu, ayrı bir komut değil** — epilogue ile temizle ve `ret`'le dön (15). Sen kurstan önce baksan bu bir gizemdi; şimdi **okuyabiliyorsun.**
 
 (Küçük bir fark: derleyici toplamı hesaplarken `edx`'i geçici olarak kullandı, biz elle yazarken doğrudan `eax`'i kullanmıştık. Bu normal — hangi register'ı geçici olarak seçeceği derleyicinin tercihidir; ikisi de aynı sözleşmeye uyduğu sürece sonuç değişmez.)
 
@@ -96,7 +96,7 @@ int carp8(int x) {
 }
 ```
 
-`gcc -m32 -S -masm=intel -O1 ...` ile çevir. Ürettiği:
+`gcc -m32 -S -masm=intel -O1 -fno-pie -fno-pic carp8.c -o carp8.s` ile çevir (aynı bayraklar, tek fark `-O0` yerine `-O1`). Ürettiği:
 
 ```nasm
 carp8:
@@ -107,7 +107,17 @@ carp8:
 
 **İşte 13'ün sözü.** 13'te sana `shl` demiştim; gcc burada `sal` yazdı — şaşırma, beklediğin komut bu: **sola kaydırmada `sal` ile `shl` birebir aynı komuttur** (aynı makine kodu, aynı opcode), sadece iki farklı isim. C'de `x * 8` yazdın, ama derleyici bir çarpma komutu (`mul`) koymadı — onun yerine `sal eax, 3` (sola 3 kaydır = ×2³ = ×8) koydu, çünkü kaydırma çok daha hızlı (13). C'de "çarpma" gördün; makinede bir **bit kaydırma** var. İkisi aynı sonucu verir ama derleyici hızlısını seçti.
 
-Küçük bir ek gözlem: `-O1` açıkken `push ebp`/`mov ebp, esp` prologue'u **bile yok** — derleyici, bu minik fonksiyonun `ebp` çıpasına ihtiyaç duymadığını görüp atlamış, argümanı doğrudan `[esp+4]`'ten okumuş. (Neden az önceki gibi `[ebp+8]` değil de `[esp+4]`? Çünkü prologue'daki `push ebp` yok — o `push` stack'i 4 byte aşağı itiyordu ve biz ölçüyü `ebp`'ye göre yapıyorduk. O kayma olmayınca 1. argüman `esp`'ye göre 4 byte yakında: `[esp+4]`.) (16'da "prologue bir *kolaylık*, mecburiyet değil" demiştik; işte kanıtı.) Optimize edilmiş kod, elle yazdığından daha "kurnaz" görünür — ama altında hep bildiğin komutlar vardır.
+Küçük bir ek gözlem: `-O1` açıkken `push ebp`/`mov ebp, esp` prologue'u **bile yok** — derleyici, bu minik fonksiyonun `ebp` çıpasına ihtiyaç duymadığını görüp atlamış, argümanı doğrudan `[esp+4]`'ten okumuş.
+
+Neden az önceki gibi `[ebp+8]` değil de `[esp+4]`? Üç adımda:
+
+- Fonksiyona girildiği an stack'in tepesinde (`[esp]`) **dönüş adresi** durur; 1. argüman onun hemen üstünde: **`[esp+4]`**.
+- Prologue **olsaydı**, `push ebp` `esp`'yi 4 byte aşağı iter, `mov ebp, esp` çıpayı oraya sabitlerdi — o yüzden `ebp`'ye göre argüman 4 byte daha uzakta kalırdı: **`[ebp+8]`**.
+- Bu fonksiyonda prologue **yok**, o itiş hiç olmadı; ölçüyü doğrudan `esp`'den yapıyoruz: **`[esp+4]`**.
+
+("Hani `esp` sürekli oynuyordu, ona güvenmek tehlikeliydi (16)?" — evet; ama bu minik fonksiyon stack'e hiç dokunmuyor (`push`/`pop`/`call` yok), o yüzden `esp` baştan sona **kıpırdamıyor** ve burada ona güvenmek güvenli.)
+
+(16'da "prologue bir *kolaylık*, mecburiyet değil" demiştik; işte kanıtı.) Optimize edilmiş kod, elle yazdığından daha "kurnaz" görünür — ama altında hep bildiğin komutlar vardır.
 
 > 🔑 `-O1`/`-O2` (optimizasyon) açıkken derleyici zekileşir: `× 8` → `shl/sal` (13), gereksiz prologue'u atar, register'ları kurnazca kullanır. Bu yüzden optimize edilmiş kod ilk bakışta yabancı görünebilir — ama tuğlaları hep bu kursun tuğlalarıdır. Tersine mühendislikte işin çoğu, bu "kurnaz ama tanıdık" kalıpları sökmektir.
 

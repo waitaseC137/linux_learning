@@ -82,6 +82,8 @@ dongu:
     int 0x80
 ```
 
+> 💡 **Hangi bayrağı `jnz` okuyor?** Bu döngüde `jnz`'den önce **iki** bayrak-kuran komut var: önce `add eax, ecx`, sonra `dec ecx` — ikisi de ZF'yi günceller (10). Kural basit: **her yeni aritmetik komut bir öncekinin bayrağını ezer**, o yüzden `jnz` yalnızca **kendinden hemen önceki** komutun (yani `dec`'in) bayrağına bakar. `dec`'i tam `jnz`'nin önüne bu yüzden koyduk; `add`'in kurduğu ZF umursanmaz, geçerli olan `dec`'inki.
+
 Turları kafanda çevir: ecx=3 → eax 0+3=3; ecx=2 → eax 3+2=5; ecx=1 → eax 5+1=6; ecx=0 → `jnz` durur. Sonuç 6 (=1+2+3). Çalıştır:
 
 ```

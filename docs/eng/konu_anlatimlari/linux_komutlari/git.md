@@ -187,7 +187,7 @@ index ...
 +++ b/README.md
 @@ -4,3 +4,3 @@
  username: natas9
--password: <eski şifre — git geçmişinde kalmış>   ← OLD (removed)
+-password: <old password — still in git history> ← OLD (removed)
 +password: xxxxxxxxxx                            ← NEW (added)
 ```
 

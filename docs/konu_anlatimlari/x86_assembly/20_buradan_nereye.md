@@ -63,7 +63,9 @@ _start:
 
 Gördüğün gibi **kavram** hiç değişmedi — "register'a değer koy, numarayı `rax`'e yaz, çağır." Sadece isimler ve birkaç sayı farklı. 32-bit'i anladıysan, 64-bit'e geçiş bir öğleden sonralık iş.
 
-> 🔑 64-bit, öğrendiğinin **büyümüş hâli:** `e__` register'lar `r__` olur (+ `r8`–`r15`), `int 0x80` yerine `syscall`, çağrı numaraları değişir. Kavramlar (register, stack, çağrı sözleşmesi, syscall) aynı. 32-bit sağlam temelse, 64-bit sadece yeni bir lehçe.
+(Tek gerçek *yeni alışkanlık* şu: 64-bit'te bir **fonksiyona** argümanları — 16'da yaptığın gibi stack'e `push`'layıp `[ebp+8]`'den okumak yerine — doğrudan **register'lara** (`rdi`, `rsi`, `rdx`...) koyarsın. Yani 16'nın `[ebp+8]` stack-argüman modeli 32-bit cdecl'e özgüdür; 64-bit bir fonksiyonun içinde `[ebp+8]` görmezsin — tersine mühendislikte bunu bileceksin. Yukarıdaki tablodaki *syscall* argümanlarının register'da olması da zaten aynı mantığın bir örneği.)
+
+> 🔑 64-bit, öğrendiğinin **büyümüş hâli:** `e__` register'lar `r__` olur (+ `r8`–`r15`), `int 0x80` yerine `syscall`, çağrı numaraları değişir. Kavramların çoğu (register, stack, syscall) aynı; çağrı sözleşmesinin **fikri** de aynı — tek gerçek fark, fonksiyon argümanlarının stack yerine **register**'a geçmesi. 32-bit sağlam temelse, 64-bit sadece yeni bir lehçe.
 
 ---
 

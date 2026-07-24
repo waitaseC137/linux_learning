@@ -155,6 +155,8 @@ Bunu tutan da bir kutu: **`eip`** (*instruction pointer* — "komut göstergesi"
 
 Sıradaki komutu görmek için: **`x/i $eip`** ("eip'in gösterdiği adresteki komutu, komut olarak yaz"):
 
+> 💡 **Baştaki `$` ne?** gdb'de bir register'ı **bir ifadenin içinde, değeri lazım olduğu için** kullanırken adının başına `$` koyarsın: `$eip` = "eip'in *içindeki* adres". Yukarıdaki `info registers eax`'te ise `$` yoktu — çünkü orada register'ı bir hesaba katmıyor, sadece **adıyla listeliyorduk**. Kısaca: değerini kullanıyorsan `$eip`, sadece adını söylüyorsan `eax`.
+
 ```
 (gdb) x/i $eip
 ```
