@@ -26,12 +26,65 @@ window.KONULAR = {
       ]
     },
     {
+      id: "salterden_bilgisayara",
+      label: "From Switches to a Computer (NAND to CPU)",
+      accent: "var(--d-low)",
+      tag: "🚧 in progress",
+      blurb: "A course born from the NandGame journey — from switch/relay to NAND, from NAND to logic gates, from gates to the adder (half/full adder). Learn the processor not by asking 'what is it' but by building it from its parts yourself. Still being written (00–06, up to the Full Adder).",
+      files: [
+        { f: "salterden_bilgisayara/00_buradan_basla.md",        n: "→",    t: "Start Here",              h: "Course map; from switches to a CPU (🚧 in progress)" },
+        { f: "salterden_bilgisayara/01_akim_salter_role.md",     n: "01",   t: "Current · Switch · Relay", h: "Electricity → switch → relay = the first logic" },
+        { f: "salterden_bilgisayara/02_nanddan_kapilar.md",      n: "02",   t: "Gates from NAND",         h: "NAND is universal: derive NOT/AND/OR/XOR" },
+        { f: "salterden_bilgisayara/03_xor_iki_fedai.md",        n: "03",   t: "XOR: The Two Workhorses", h: "Building XOR from OR+NAND+AND" },
+        { f: "salterden_bilgisayara/03.5_soyutlama_merdiveni.md",n: "03.5", t: "The Ladder of Abstraction", h: "A gate = a closed box; climbing one floor up" },
+        { f: "salterden_bilgisayara/04_teller_sayi_olunca.md",   n: "04",   t: "When Wires Become Numbers", h: "Assigning value to wires; the token logic" },
+        { f: "salterden_bilgisayara/05_half_adder.md",           n: "05",   t: "Half Adder",              h: "XOR+AND = the seed of addition (sum/carry)" },
+        { f: "salterden_bilgisayara/06_full_adder.md",           n: "06",   t: "Full Adder",              h: "a+b+carry-in; two half adders" }
+      ]
+    },
+    {
+      id: "x86_assembly",
+      label: "x86 Assembly (from scratch)",
+      accent: "var(--cyan)",
+      tag: "20 lessons · complete",
+      blurb: "x86 assembly from zero — the machine model, registers, first program, gdb, memory & pointers, arithmetic, control flow (jmp/loops), bit operations, the stack, functions, system calls, and the bridge to C. The full series (00–20); every program verified on a real machine.",
+      files: [
+        { f: "x86_assembly/00_buradan_basla.md",           n: "→",    t: "Start Here",            h: "Course map + what you'll learn (full series 00–20)" },
+        { f: "x86_assembly/01_bilgisayar_nedir.md",        n: "01",   t: "What Is a Computer?",   h: "Numbered boxes + a worker; the mental model" },
+        { f: "x86_assembly/01.5_sayi_ve_anlam.md",         n: "01.5", t: "Same Number, a Thousand Meanings", h: "A number ≠ its meaning; code gives it meaning" },
+        { f: "x86_assembly/02_terminal_ile_tanisma.md",    n: "02",   t: "Meeting the Terminal",  h: "The terminal, typing commands, reading output" },
+        { f: "x86_assembly/03_sayilar_ikilik_onaltilik.md",n: "03",   t: "Binary & Hex",          h: "Counting the way the machine counts" },
+        { f: "x86_assembly/04_bellek_ve_registerlar.md",   n: "04",   t: "Memory & Registers",    h: "Boxes + the worker's hands" },
+        { f: "x86_assembly/04.5_registerin_ici.md",        n: "04.5", t: "Inside a Register",     h: "AL/AH/AX/EAX — size games" },
+        { f: "x86_assembly/05_kurulum_ve_ilk_program.md",  n: "05",   t: "Setup & First Program", h: "nasm/ld/gdb; write→assemble→run" },
+        { f: "x86_assembly/05.5_perde_arkasi.md",          n: "05.5", t: "Behind the Curtain",    h: "PATH, nasm vs ld, _start" },
+        { f: "x86_assembly/06_ilk_gercek_program.md",      n: "06",   t: "First Real Program",    h: "A value with mov, exit code, echo $?" },
+        { f: "x86_assembly/07_gdb_tek_adim.md",            n: "07",   t: "Single-Stepping with GDB", h: "starti · si · info registers · eip; watch the boxes live" },
+        { f: "x86_assembly/08_mov_ve_bellek.md",           n: "08",   t: "mov and Memory",        h: "[...] addressing · section .data · load/store · first pointer follow" },
+        { f: "x86_assembly/08.5_little_endian.md",         n: "08.5", t: "Little-Endian",         h: "Looking at memory byte by byte; the 'exactly reversed' order" },
+        { f: "x86_assembly/09_aritmetik.md",               n: "09",   t: "Arithmetic",            h: "add/sub/inc/dec · two's complement · load-compute-store" },
+        { f: "x86_assembly/10_bayraklar_ve_cmp.md",        n: "10",   t: "Flags & cmp",           h: "ZF/SF · cmp · test; the raw material of a decision" },
+        { f: "x86_assembly/11_ziplamalar.md",              n: "11",   t: "Jumps",                 h: "jmp/jz/jnz/jl/jg; breaking the flow, even/odd" },
+        { f: "x86_assembly/12_donguler.md",                n: "12",   t: "Loops",                 h: "backward jmp + counter; sum 1..N, repeated multiply" },
+        { f: "x86_assembly/13_bit_islemleri.md",           n: "13",   t: "Bit Operations",        h: "and/or/xor/shl/shr; xor eax,eax; test=and" },
+        { f: "x86_assembly/14_stack.md",                   n: "14",   t: "The Stack",             h: "push/pop · esp · LIFO; why the stack grows down" },
+        { f: "x86_assembly/15_call_ve_ret.md",             n: "15",   t: "call and ret",          h: "functions, return address; call=push+jmp" },
+        { f: "x86_assembly/16_calling_convention.md",      n: "16",   t: "Calling Convention",    h: "cdecl: arguments/return, ebp, prologue/epilogue" },
+        { f: "x86_assembly/17_sistem_cagrilari.md",        n: "17",   t: "System Calls",          h: "int 0x80, syscall number; Hello World on screen" },
+        { f: "x86_assembly/18_ilk_etkilesimli_program.md", n: "18",   t: "First Interactive Program", h: "sys_read + .bss; a program that asks your name and greets you" },
+        { f: "x86_assembly/19_c_ile_assembly_koprusu.md",  n: "19",   t: "The C–Assembly Bridge", h: "gcc -S; familiar patterns in compiled code" },
+        { f: "x86_assembly/20_buradan_nereye.md",          n: "20",   t: "Where to From Here?",   h: "64-bit, reverse engineering, exploitation, resources" }
+      ]
+    },
+    {
       id: "leviathan_komutlari",
       label: "Binary Analysis & RE",
       accent: "var(--yellow)",
       tag: "Leviathan",
       blurb: "Inspecting how binaries behave: tracing, symbolic links, GDB.",
       files: [
+        { f: "leviathan_komutlari/before_you_start.md",      t: "Before You Start",       h: "SSH · how the game works · prerequisites · the recon reflex" },
+        { f: "leviathan_komutlari/what_leviathan_teaches.md", t: "What Does Leviathan Teach?", h: "info disclosure · command injection · symlink/TOCTOU · level→concept" },
         { f: "leviathan_komutlari/file_permissions_suid.md", t: "File Permissions & SUID", h: "chmod · find -perm · privilege escalation" },
         { f: "leviathan_komutlari/binary_analysis.md",     t: "Binary Analysis",        h: "file · strings · xxd · od" },
         { f: "leviathan_komutlari/ltrace_strace.md",       t: "ltrace / strace",       h: "strcmp · fopen · access · system" },
@@ -83,6 +136,7 @@ window.KONULAR = {
       numbered: true,
       files: [
         { f: "binary_exploitation/00_buradan_basla.md",                     n: "→",   t: "Start Here",                  h: "Intro for non-assembly readers + reading order" },
+        { f: "binary_exploitation/00a_assembly_bilmeden_giris.md",          n: "00a", t: "Getting Started Without Assembly", h: "Minimum instruction dictionary, an end-to-end first exploit" },
         { f: "binary_exploitation/00_x86_assembly_temelleri.md",            n: "00",  t: "x86 Assembly Basics",          h: "Registers, instructions" },
         { f: "binary_exploitation/00b_gdb_ile_assembly_okumak.md",          n: "00b", t: "Reading Assembly with GDB",    h: "disassemble, stepi, x/i" },
         { f: "binary_exploitation/01_bellek_ve_memory_layout.md",           n: "01",  t: "Memory & Memory Layout",       h: "Stack, heap, .text, .bss" },

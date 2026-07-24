@@ -11,8 +11,8 @@
 ## 🗺️ Recommended Order
 
 ```
-Bandit  →  Leviathan  →  Krypton  →  Narnia  →  Behemoth  →  Utumno  →  Maze
-(basics)   (intro RE)    (crypto)    (binary)   (medium)     (advanced)  (mixed/capstone)
+Bandit  →  Leviathan  →  Krypton  →  Narnia  →  Behemoth  →  Utumno  →  Maze  →  Vortex
+(basics)   (intro RE)    (crypto)    (binary)   (medium)     (advanced)  (capstone)   (broad binexp)
 
 Natas — web security, separate branch, start whenever you like
 ```
@@ -27,6 +27,7 @@ Natas — web security, separate branch, start whenever you like
 | [Behemoth](#-behemoth--intermediate-binary-exploitation) | 7/10 | 9 | PATH hijack, format string, symlink, UDP, BOF |
 | [Utumno](#-utumno--advanced-binary-exploitation) | 9/10 | 9 | Arbitrary write, integer bugs, jmp_buf/PTR_MANGLE |
 | [Maze](#-maze--mixed-binary-exploitation--re) | 5/10 | 9 | TOCTOU, lib hijack, self-modifying, FSOP, ELF parser, format string |
+| [Vortex](#-vortex--broad-binary-exploitation-from-the-network) | 6/10 | 27 | Network/endianness, overflow, format string, heap, ROP, crypto, RE/keygen |
 
 ---
 
@@ -156,6 +157,28 @@ it brings together all the techniques in the series, which is why despite a 5/10
 | [maze 6 -> 7.md](./maze/maze%206%20-%3E%207.md) | FSOP — `fp` overwrite → fake `FILE` → `fprintf` writes `GOT[exit]` | 6 → 7 |
 | [maze 7 -> 8.md](./maze/maze%207%20-%3E%208.md) | ELF parser overflow — untrusted `e_shentsize` → ret2env | 7 → 8 |
 | [maze 8 -> 9.md](./maze/maze%208%20-%3E%209.md) | Format string — `snprintf(buf,n,user)` → `%n` → `GOT[strlen]=system` | 8 → 9 |
+
+---
+
+## 🌀 Vortex — Broad Binary Exploitation from the Network
+
+A 27-level lab that **starts** with network/socket programming and then walks the entire classic
+binary-exploitation curriculum: endianness → overflow → format string → heap → ret2libc/ROP, then
+cryptanalysis + RE/keygen. Unlike Narnia/Behemoth it isn't a single pattern; source is **not given**
+at most levels → you disassemble the binary yourself. The "advanced" topics (heap/ROP) sit
+surprisingly in the **middle band (8–13)**; the upper half (14–26) leans toward crypto + RE.
+
+> 📌 **Read before starting:** [00 - Vortex - BAŞLAMADAN ÖNCE OKUYUNUZ.md](./vortex/00%20-%20Vortex%20-%20BAŞLAMADAN%20ÖNCE%20OKUYUNUZ.md) — prerequisite knowledge & level map.
+>
+> ⚠️ 32-bit (x86) little-endian. The entry point is **not** SSH — it's a **port 5842** network task; after that, **port 2228**. Passwords are hidden in the writeups (`**********`).
+
+| File | Topic / Technique | Levels |
+|---|---|---|
+| [vortex 0 -> 1.md](./vortex/vortex%200%20-%3E%201.md) | Network socket + endianness — sum 4×uint32 in host byte order (little-endian) and send it back | 0 → 1 |
+| [vortex 1 -> 2.md](./vortex/vortex%201%20-%3E%202.md) | Unbounded `ptr` decrement → write `0xca` over its own MSB → embedded `execlp` shell | 1 → 2 |
+| [vortex 2 -> 3.md](./vortex/vortex%202%20-%3E%203.md) | `tar` argument injection (setuid) — have it archive the password file, read it from the group-readable archive | 2 → 3 |
+
+> 🚧 This section is growing — new levels will be added as they're solved (27 total).
 
 ---
 

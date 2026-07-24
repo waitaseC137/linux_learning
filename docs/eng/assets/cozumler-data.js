@@ -101,6 +101,16 @@ window.READER_DATA = {
         { f: "maze/maze 7 -> 8.md", n: "7→8", t: "Level 7 → 8", h: "advanced" },
         { f: "maze/maze 8 -> 9.md", n: "8→9", t: "Level 8 → 9", h: "final" }
       ]
+    },
+    {
+      id: "vortex", label: "Vortex", accent: "var(--d-high)", tag: "Difficulty 6/10 · 27 levels",
+      blurb: "A broad binary-exploitation lab that starts from network/socket programming and walks the whole classic curriculum — endianness, overflow, format string, heap, ret2libc/ROP, then cryptanalysis + RE/keygen. Source is not given at most levels.",
+      files: [
+        { f: "vortex/00 - Vortex - BAŞLAMADAN ÖNCE OKUYUNUZ.md", n: "!", t: "Read Before You Start", h: "setup, networking, endianness, level map" },
+        { f: "vortex/vortex 0 -> 1.md", n: "0→1", t: "Level 0 → 1", h: "network socket, endianness" },
+        { f: "vortex/vortex 1 -> 2.md", n: "1→2", t: "Level 1 → 2", h: "ptr overwrite, execlp" },
+        { f: "vortex/vortex 2 -> 3.md", n: "2→3", t: "Level 2 → 3", h: "tar argument injection" }
+      ]
     }
   ]
 };
