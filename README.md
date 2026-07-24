@@ -3,7 +3,7 @@
 > Şalter → mantık kapısı → işlemci → assembly → işletim sistemi → wargame.
 > Bilgisayarı ve güvenliği **katman katman, en alttan** öğren — oyun oynayarak, deneye yanıla, terminale bakarak.
 >
-> "İşlemci nedir?" diye soranların değil, **işlemciyle dans etmek** isteyenlerin yeri.
+> 
 
 ---
 
