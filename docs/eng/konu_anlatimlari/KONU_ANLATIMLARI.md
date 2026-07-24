@@ -22,6 +22,8 @@
 
 | File | Commands / Concepts |
 |---|---|
+| [before_you_start.md](./leviathan_komutlari/before_you_start.md) | Before starting Leviathan: SSH connection, how the game works, prerequisites, the recon reflex |
+| [what_leviathan_teaches.md](./leviathan_komutlari/what_leviathan_teaches.md) | What Leviathan teaches: info disclosure, command injection, symlink/TOCTOU, encoding≠security, level→concept map |
 | [file_permissions_suid.md](./leviathan_komutlari/file_permissions_suid.md) | `chmod` `find -perm` `whoami` `SUID` privilege escalation |
 | [binary_analysis.md](./leviathan_komutlari/binary_analysis.md) | `file` `strings` `xxd` `od` binary→ASCII |
 | [ltrace_strace.md](./leviathan_komutlari/ltrace_strace.md) | `ltrace` `strace` `strcmp` `fopen` `access` `system` |
@@ -70,12 +72,65 @@
 
 ---
 
+## 🔌 From Switches to a Computer (NAND to CPU)
+
+> 🚧 **This course is still being written** — it grew out of the NandGame journey; right now it's written from switch/relay up to the **Full Adder** (00–06). The rest (multi-bit adder, ALU, memory, clock, control unit) will be added as the journey continues.
+>
+> 🧭 **New to this?** → [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) — for people who want to learn the processor not by asking "what is it?" but by **building it from its parts**. It's the sibling and the floor beneath the x86 course: there you learn to give the worker orders, here you build the worker from transistors.
+
+| File | Topics |
+|---|---|
+| [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) | Course map; the journey from switches to a CPU |
+| [01_akim_salter_role.md](./salterden_bilgisayara/01_akim_salter_role.md) | Current, switch, relay — the first "logic" |
+| [02_nanddan_kapilar.md](./salterden_bilgisayara/02_nanddan_kapilar.md) | NAND is universal: deriving NOT/AND/OR/XOR |
+| [03_xor_iki_fedai.md](./salterden_bilgisayara/03_xor_iki_fedai.md) | Building XOR — "the two workhorses" (OR + NAND + AND) |
+| [03.5_soyutlama_merdiveni.md](./salterden_bilgisayara/03.5_soyutlama_merdiveni.md) | A gate = a closed box; climbing one floor up |
+| [04_teller_sayi_olunca.md](./salterden_bilgisayara/04_teller_sayi_olunca.md) | Assigning value to wires; the token logic |
+| [05_half_adder.md](./salterden_bilgisayara/05_half_adder.md) | XOR+AND = the seed of addition (sum + carry) |
+| [06_full_adder.md](./salterden_bilgisayara/06_full_adder.md) | a+b+carry-in; two half adders = the skeleton of an ALU |
+
+---
+## ⚙️ x86 Assembly (from scratch)
+
+> ✅ **This course is complete (00–20).** From the machine model up through arithmetic · control flow (jmp/loops) · the stack · functions · system calls · the C bridge; **every program in it was verified by running it on a real machine.**
+>
+> 🧭 **New to this?** → [00_buradan_basla.md](./x86_assembly/00_buradan_basla.md) — for people who want to learn assembly truly from scratch, *by writing it*. It's the deep groundwork for Binary Exploitation ("first learn to give the worker orders, then learn to bend the order").
+
+| File | Topics |
+|---|---|
+| [00_buradan_basla.md](./x86_assembly/00_buradan_basla.md) | Course map, mental model, how to study |
+| [01_bilgisayar_nedir.md](./x86_assembly/01_bilgisayar_nedir.md) | Numbered boxes + a worker; what "running" means |
+| [02_terminal_ile_tanisma.md](./x86_assembly/02_terminal_ile_tanisma.md) | The terminal, typing commands, reading output |
+| [03_sayilar_ikilik_onaltilik.md](./x86_assembly/03_sayilar_ikilik_onaltilik.md) | Binary/hex — counting the way the machine counts |
+| [04_bellek_ve_registerlar.md](./x86_assembly/04_bellek_ve_registerlar.md) | Memory (boxes) + registers (the worker's hands); AL/AH/EAX |
+| [05_kurulum_ve_ilk_program.md](./x86_assembly/05_kurulum_ve_ilk_program.md) | Installing nasm/ld/gdb, the write→assemble→run chain |
+| [06_ilk_gercek_program.md](./x86_assembly/06_ilk_gercek_program.md) | A value into a register with `mov`, exit code, `echo $?` |
+| [07_gdb_tek_adim.md](./x86_assembly/07_gdb_tek_adim.md) | Single-stepping in GDB (`starti` / `si`), watching registers live, `eip` |
+| [08_mov_ve_bellek.md](./x86_assembly/08_mov_ve_bellek.md) | `[...]` memory addressing, `section .data`, load/store, the first pointer follow (`[ebx]`) |
+| [08.5_little_endian.md](./x86_assembly/08.5_little_endian.md) | Looking at memory byte by byte; the "exactly reversed" byte order (little-endian) |
+| [09_aritmetik.md](./x86_assembly/09_aritmetik.md) | `add`/`sub`/`inc`/`dec`; two's complement (negative numbers); the whole load-compute-store dance |
+| [10_bayraklar_ve_cmp.md](./x86_assembly/10_bayraklar_ve_cmp.md) | Flags (ZF/SF), `cmp` and `test`; the raw material of a decision |
+| [11_ziplamalar.md](./x86_assembly/11_ziplamalar.md) | `jmp`/`jz`/`jnz`/`jl`/`jg`; breaking the straight flow, the even-odd program |
+| [12_donguler.md](./x86_assembly/12_donguler.md) | Backward jump + counter = a loop; sum 1..N, multiplication by repeated addition |
+| [13_bit_islemleri.md](./x86_assembly/13_bit_islemleri.md) | `and`/`or`/`xor`/`shl`/`shr`; `xor eax,eax`=zero it; `test`=`and` |
+| [14_stack.md](./x86_assembly/14_stack.md) | `push`/`pop`, `esp`, LIFO; why the stack grows down (the worker's notepad) |
+| [15_call_ve_ret.md](./x86_assembly/15_call_ve_ret.md) | Functions, the return address; `call`=`push`+`jmp`, `ret`=`pop` |
+| [16_calling_convention.md](./x86_assembly/16_calling_convention.md) | cdecl: passing arguments, return value, the `ebp` anchor, prologue/epilogue |
+| [17_sistem_cagrilari.md](./x86_assembly/17_sistem_cagrilari.md) | `int 0x80`, syscall numbers; "Hello World" on screen (the `sys_exit` debt is paid) |
+| [18_ilk_etkilesimli_program.md](./x86_assembly/18_ilk_etkilesimli_program.md) | `sys_read` + `section .bss`; an interactive program that asks your name and greets you |
+| [19_c_ile_assembly_koprusu.md](./x86_assembly/19_c_ile_assembly_koprusu.md) | Seeing familiar patterns in compiled code with `gcc -S` (`x*8`→`shl`) |
+| [20_buradan_nereye.md](./x86_assembly/20_buradan_nereye.md) | Moving to 64-bit, reverse engineering, binary exploitation, further resources |
+
+*(The interludes 01.5 / 04.5 / 05.5 are linked inside the course. The series is complete: 00–20.)*
+
+---
 ## 💥 Binary Exploitation
 
 > 🧭 **New to this?** Start here → [00_buradan_basla.md](./binary_exploitation/00_buradan_basla.md) — an intro for people who don't know assembly: minimum instruction dictionary, the little-endian trap, an end-to-end first exploit, and the reading order.
 
 | File | Topics |
 |---|---|
+| [00a_assembly_bilmeden_giris.md](./binary_exploitation/00a_assembly_bilmeden_giris.md) | Getting started without assembly: minimum instruction dictionary, an end-to-end first exploit |
 | [00_x86_assembly_temelleri.md](./binary_exploitation/00_x86_assembly_temelleri.md) | Registers, data types, MOV/LEA/arithmetic, PUSH/POP, CALL/RET, calling convention, prologue/epilogue |
 | [00b_gdb_ile_assembly_okumak.md](./binary_exploitation/00b_gdb_ile_assembly_okumak.md) | Assembly→C method, common patterns (memset/memcpy/strlen/switch), GDB command reference |
 | [01_bellek_ve_memory_layout.md](./binary_exploitation/01_bellek_ve_memory_layout.md) | Stack layout, variable adjacency, buffer overflow logic, `x/20wx $esp` |
