@@ -125,14 +125,14 @@
   const defs = el('defs');
   defs.innerHTML =
     '<radialGradient id="ferrite" cx="50%" cy="50%" r="50%">' +
-      '<stop offset="0" stop-color="#0D1728"/><stop offset="0.565" stop-color="#1C2A40"/>' +
-      '<stop offset="0.78" stop-color="#3D5070"/><stop offset="0.93" stop-color="#26344E"/>' +
-      '<stop offset="1" stop-color="#16223A"/></radialGradient>' +
+      '<stop offset="0" stop-color="var(--fer-0)"/><stop offset="0.565" stop-color="var(--fer-1)"/>' +
+      '<stop offset="0.78" stop-color="var(--fer-2)"/><stop offset="0.93" stop-color="var(--fer-3)"/>' +
+      '<stop offset="1" stop-color="var(--fer-4)"/></radialGradient>' +
     '<clipPath id="cwR" clipPathUnits="userSpaceOnUse"><rect x="' + CX + '" y="0" width="' + (CX+2) + '" height="' + (CY*2) + '"/></clipPath>' +
     '<clipPath id="cwL" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="' + CX + '" height="' + (CY*2) + '"/></clipPath>' +
     '<clipPath id="band" clipPathUnits="userSpaceOnUse"><path fill-rule="evenodd" d="' + ringPath(R_OUT+2) + ' ' + ringPath(R_HOLE-2) + '"/></clipPath>' +
     '<marker id="ah" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">' +
-      '<path d="M0 0 L7 3.5 L0 7 z" fill="#93A3BD" opacity=".5"/></marker>';
+      '<path d="M0 0 L7 3.5 L0 7 z" fill="var(--text-2)" opacity=".5"/></marker>';
   rope.appendChild(defs);
 
   const gUnder = el('g'), gCore = el('g'), gOver = el('g'), gText = el('g'), gHit = el('g');
@@ -537,10 +537,10 @@
     const d = el('defs');
     d.innerHTML =
       '<radialGradient id="ferrite2" cx="50%" cy="50%" r="50%">' +
-        '<stop offset="0" stop-color="#0D1728"/><stop offset="0.5" stop-color="#1C2A40"/>' +
-        '<stop offset="0.8" stop-color="#3D5070"/><stop offset="1" stop-color="#1A2740"/></radialGradient>' +
-      '<linearGradient id="fadeL"><stop offset="0" stop-color="#101B2D"/><stop offset="1" stop-color="#101B2D" stop-opacity="0"/></linearGradient>' +
-      '<linearGradient id="fadeR"><stop offset="0" stop-color="#101B2D" stop-opacity="0"/><stop offset="1" stop-color="#101B2D"/></linearGradient>';
+        '<stop offset="0" stop-color="var(--fer-0)"/><stop offset="0.5" stop-color="var(--fer-1)"/>' +
+        '<stop offset="0.8" stop-color="var(--fer-2)"/><stop offset="1" stop-color="var(--fer-5)"/></radialGradient>' +
+      '<linearGradient id="fadeL"><stop offset="0" stop-color="var(--panel)"/><stop offset="1" stop-color="var(--panel)" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="fadeR"><stop offset="0" stop-color="var(--panel)" stop-opacity="0"/><stop offset="1" stop-color="var(--panel)"/></linearGradient>';
     s.appendChild(d);
 
     // the whole harness, behind everything
@@ -550,7 +550,7 @@
       // flat fill, not the radial gradient: a gradient applied to a STROKE
       // bands visibly at this size and reads as concentric rings.
       s.appendChild(el('circle', { class:'cw-core', cx:cx(i), cy:CY, r:(RO+RH)/2,
-                                   fill:'none', stroke:'#2E4160', 'stroke-width':(RO-RH) }));
+                                   fill:'none', stroke:'var(--core-inner)', 'stroke-width':(RO-RH) }));
       s.appendChild(el('circle', { class:'cw-core', cx:cx(i), cy:CY, r:RO, fill:'none' }));
       s.appendChild(el('circle', { class:'cw-core', cx:cx(i), cy:CY, r:RH, fill:'none' }));
       // the band is visible again inside each hole
@@ -597,8 +597,8 @@
 
     const d = el('defs');
     d.innerHTML = '<radialGradient id="ferrite3" cx="50%" cy="50%" r="50%">' +
-      '<stop offset="0" stop-color="#0D1728"/><stop offset="0.5" stop-color="#1C2A40"/>' +
-      '<stop offset="0.8" stop-color="#3D5070"/><stop offset="1" stop-color="#1A2740"/></radialGradient>';
+      '<stop offset="0" stop-color="var(--fer-0)"/><stop offset="0.5" stop-color="var(--fer-1)"/>' +
+      '<stop offset="0.8" stop-color="var(--fer-2)"/><stop offset="1" stop-color="var(--fer-5)"/></radialGradient>';
     svg.appendChild(d);
 
     const gDrop = el('g'), gBus = el('g'), gCore = el('g'), gMark = el('g');
@@ -613,7 +613,7 @@
     const rings = [], marks = [], labs = [], buses = [], blabs = [];
     for (let i = 0; i < N; i++){
       gCore.appendChild(el('circle', { cx:cx(i), cy:CY, r:(RO+RH)/2, fill:'none',
-                                       stroke:'#2E4160', 'stroke-width':(RO-RH) }));
+                                       stroke:'var(--core-inner)', 'stroke-width':(RO-RH) }));
       const ring = el('circle', { class:'ad-core', cx:cx(i), cy:CY, r:RO, fill:'none' });
       gCore.appendChild(ring); rings.push(ring);
       gCore.appendChild(el('circle', { class:'ad-core', cx:cx(i), cy:CY, r:RH, fill:'none' }));
@@ -693,9 +693,9 @@
     // The redundant slice is only 6.25% of the bar (~42px) — too narrow to
     // hold its own label, so it points at one instead.
     s.appendChild(el('path', { d:'M ' + (X0 + W - 21) + ' ' + (Y + H) + ' L ' + (X0 + W - 21) + ' ' + (Y + H + 12),
-                               stroke:'#E9A768', 'stroke-width':1.2, fill:'none' }));
+                               stroke:'var(--wire-copper-bright)', 'stroke-width':1.2, fill:'none' }));
     const b = el('text', { class:'bg-lbl', x:X0 + W, y:Y + H + 24,
-                           style:'text-anchor:end;fill:#E9A768;font-weight:600' });
+                           style:'text-anchor:end;fill:var(--wire-copper-bright);font-weight:600' });
     b.textContent = '12 bit fazlalık';
     s.appendChild(b);
 

@@ -7,12 +7,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<!-- Tema tercihi sitenin geri kalanıyla ortak (localStorage: ll_theme).
+     <head> içinde yüklenir ki sayfa yanlış temayla bir an parlamasın. -->
+<script src="../../assets/theme.js"></script>
 </head>
 <body>
 <div class="scene">
 
   <header>
-    <p class="eyebrow"><a class="geri" href="../../laboratuvar.html">← laboratuvar</a> · donanım vaka incelemesi</p>
+    <div class="hdr-top">
+      <p class="eyebrow"><a class="geri" href="../../laboratuvar.html">← laboratuvar</a> · donanım vaka incelemesi</p>
+      <button class="theme-btn" id="themeBtn" title="Tema: açık / karanlık"><span class="sw"></span><span class="lbl">açık</span></button>
+    </div>
     <h1>Çekirdek İp Belleği<br>(Core Rope Memory)</h1>
     <p>1969. Üç kişiyi bir kutuya koyup Ay'a gönderiyorsun. Kutudaki bilgisayarın programı sekiz gün boyunca hiç değişmeyecek — ne fırlatmanın sarsıntısı, ne kesilen bir besleme, ne de yanlış çalışan bir satır tek bir biti bozabilecek. Soru şu: bir programı, hiçbir şeyin üstüne yazamayacağı bir yere nasıl yazarsın?</p>
     <p>Cevap, programı elektrikte hiç tutmamak oldu. Program bir <b>şekle</b> yazıldı: ince bir tel, küçük bir halkanın içinden geçiyorsa bir şey, etrafından dolanıyorsa başka bir şey demekti. Sonra o teller elle dokundu. Kod, kelimenin tam anlamıyla dokunmuştu.</p>
@@ -79,15 +85,15 @@
     <p class="section-label">Çekirdek düzlemi — bir kelimenin 16 sense teli — her halkaya dokunarak yolu değiştir</p>
     <div class="legend">
       <div class="legend-item">
-        <svg class="legend-swatch" viewBox="0 0 30 14"><line x1="2" y1="7" x2="28" y2="7" stroke="#E9A768" stroke-width="3.2" stroke-linecap="round"/></svg>
+        <svg class="legend-swatch" viewBox="0 0 30 14"><line x1="2" y1="7" x2="28" y2="7" stroke="var(--wire-copper-bright)" stroke-width="3.2" stroke-linecap="round"/></svg>
         tel delikten geçiyor → 1
       </div>
       <div class="legend-item">
-        <svg class="legend-swatch" viewBox="0 0 30 14"><path d="M5 13 L5 6 A5 5 0 0 1 15 6 L15 13" fill="none" stroke="#C6793F" stroke-width="2.8"/></svg>
+        <svg class="legend-swatch" viewBox="0 0 30 14"><path d="M5 13 L5 6 A5 5 0 0 1 15 6 L15 13" fill="none" stroke="var(--wire-copper)" stroke-width="2.8"/></svg>
         tel etrafından dönüyor → 0
       </div>
       <div class="legend-item">
-        <svg class="legend-swatch" viewBox="0 0 30 14"><line x1="2" y1="7" x2="28" y2="7" stroke="#E8B75D" stroke-width="5" stroke-linecap="round"/></svg>
+        <svg class="legend-swatch" viewBox="0 0 30 14"><line x1="2" y1="7" x2="28" y2="7" stroke="var(--core-glow)" stroke-width="5" stroke-linecap="round"/></svg>
         sürücü (set/reset) hattı
       </div>
     </div>
@@ -290,9 +296,9 @@
 
       <svg id="loop" viewBox="0 0 700 150" aria-hidden="true">
         <defs>
-          <marker id="ahd" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#55647D"/></marker>
-          <marker id="ahi" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#33465F"/></marker>
-          <marker id="ahl" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#7FD8A6"/></marker>
+          <marker id="ahd" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--text-3)"/></marker>
+          <marker id="ahi" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--core-idle)"/></marker>
+          <marker id="ahl" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--pulse-green)"/></marker>
         </defs>
 
         <g class="lp-step">

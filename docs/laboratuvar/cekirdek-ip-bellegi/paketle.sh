@@ -7,9 +7,11 @@ mkdir -p _tek-dosya
 python3 - <<'PY'
 import re, pathlib
 root = pathlib.Path('.')
-html = (root / 'index.html').read_text(encoding='utf-8')
-css  = (root / 'assets/style.css').read_text(encoding='utf-8')
-js   = (root / 'assets/rope.js').read_text(encoding='utf-8')
+html  = (root / 'index.html').read_text(encoding='utf-8')
+css   = (root / 'assets/style.css').read_text(encoding='utf-8')
+js    = (root / 'assets/rope.js').read_text(encoding='utf-8')
+# tema betigi sitenin ortak dosyasi (docs/assets/theme.js) — iki ust dizinde
+theme = (root / '../../assets/theme.js').read_text(encoding='utf-8')
 
 before = html
 html = html.replace(
@@ -19,11 +21,19 @@ assert html != before, 'style.css baglantisi bulunamadi'
 
 before = html
 html = html.replace(
+    '<script src="../../assets/theme.js"></script>',
+    '<script>\n' + theme + '\n</script>')
+assert html != before, 'theme.js baglantisi bulunamadi'
+
+before = html
+html = html.replace(
     '<script src="assets/rope.js"></script>',
     '<script>\n' + js + '\n</script>')
 assert html != before, 'rope.js baglantisi bulunamadi'
 
-assert 'assets/' not in html, 'geriye assets/ referansi kaldi'
+# Yorum metinlerinde "assets/" gecebilir; onemli olan cozulmemis BAGLANTI kalmamasi.
+leftover = re.findall(r'(?:src|href)\s*=\s*["\'][^"\']*assets/[^"\']*["\']', html)
+assert not leftover, f'geriye cozulmemis baglanti kaldi: {leftover}'
 
 out = root / '_tek-dosya/cekirdek-ip-bellegi-tek-dosya.html'
 out.write_text(html, encoding='utf-8')
