@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Çekirdek İp Belleği — Apollo Guidance Computer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="scene">
+
+  <header>
+    <p class="eyebrow"><a class="geri" href="../../laboratuvar.html">← laboratuvar</a> · donanım vaka incelemesi</p>
+    <h1>Çekirdek İp Belleği<br>(Core Rope Memory)</h1>
+    <p>1969. Üç kişiyi bir kutuya koyup Ay'a gönderiyorsun. Kutudaki bilgisayarın programı sekiz gün boyunca hiç değişmeyecek — ne fırlatmanın sarsıntısı, ne kesilen bir besleme, ne de yanlış çalışan bir satır tek bir biti bozabilecek. Soru şu: bir programı, hiçbir şeyin üstüne yazamayacağı bir yere nasıl yazarsın?</p>
+    <p>Cevap, programı elektrikte hiç tutmamak oldu. Program bir <b>şekle</b> yazıldı: ince bir tel, küçük bir halkanın içinden geçiyorsa bir şey, etrafından dolanıyorsa başka bir şey demekti. Sonra o teller elle dokundu. Kod, kelimenin tam anlamıyla dokunmuştu.</p>
+    <p>Aşağıda o dokumayı parça parça kuracaksın: önce tek bir halka, sonra bir kelime, sonra ipin kendisi. Hiçbir sayı sistemi ön bilgisi gerekmiyor — gerekeni yeri geldiğinde kuracağız. Acele etme.</p>
+  </header>
+
+  <section>
+    <p class="section-label">Neden alışıldık bellek olmaz</p>
+    <div class="prose">
+      <p>Bellek dediğimiz şey normalde elektriktir. Bir yerde bir gerilim tutulur, o gerilim <b>1</b> demektir; kesilirse 0 olur, ya da hiç olur. Böyle bir belleğin iki huyu vardır: enerji gidince içindekini unutur, ve üstüne yazmak dünyanın en kolay işidir.</p>
+      <p>Yerde bu sorun değil. Bozulursa yeniden yükle, geç. Ay yolunda yeniden yükleyecek kimse yok, yükleyecek disk de yok. İniş yordamının, motor yanarken kendi kendine değişmemesi gerekiyordu.</p>
+      <p>Peki bir biti, üstüne yazmanın <i>fiziksel olarak</i> mümkün olmadığı bir yere nasıl koyarsın?</p>
+      <p>Şöyle: hiç enerjiyle tutma. Bir karar ver, o kararı bir telin izlediği yola işle, sonra teli oraya dik. Değiştirmek için elektrik değil, makas gerekir.</p>
+    </div>
+    <p class="hint">Ödenen bedel: bu belleğe <b>yazamazsın</b>. Bir kez dokunduktan sonra yalnızca okunur. Bugün buna <b>ROM</b> diyoruz (İngilizce <i>read-only memory</i> — "sadece-oku belleği"). Çalışırken değişmesi gereken sayılar — hız, açı, sayaçlar — AGC'de bambaşka, silinebilir bir bellekte durur. İp yalnızca programı ve değişmeyen sabitleri taşır.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Bir halka, bir tel, iki seçenek</p>
+    <div class="prose">
+      <p>Elinde küçük bir halka var. Ortası delik, kendisi mıknatıslanabiliyor — ama tanıdığın mıknatıs gibi değil.</p>
+      <p>Şöyle düşün: halkanın çevresi tek yönlü bir döner kavşak. Bütün trafik ya saat yönünde akar, ya tersine. İkisinin arası yok, ve dışarıdan sert bir itiş gelmedikçe yön hiç değişmez — fişi çeksen de değişmez, on yıl beklesen de.</p>
+      <p>Bir de ince, yalıtımlı bir telin var. Tel için tam olarak iki seçenek var: halkanın <b>deliğinden geçer</b>, ya da halkanın <b>dışından dolanıp</b> gider. Ortası yok — ya içeriden, ya dışarıdan.</p>
+    </div>
+
+    <div class="choice-pair">
+      <figure>
+        <svg viewBox="0 0 220 120" role="img" aria-label="tel halkanın deliğinden geçiyor">
+          <path class="cw-back" d="M14 60 L206 60"/>
+          <circle class="cw-ring" cx="110" cy="60" r="27"/>
+          <path class="cw-front" d="M126 60 L206 60"/>
+        </svg>
+        <figcaption>içinden geçiyor</figcaption>
+      </figure>
+      <figure>
+        <svg viewBox="0 0 220 120" role="img" aria-label="tel halkanın etrafından dolanıyor">
+          <circle class="cw-ring" cx="110" cy="60" r="27"/>
+          <path class="cw-front" d="M14 60 Q110 -28 206 60"/>
+        </svg>
+        <figcaption>etrafından dolanıyor</figcaption>
+      </figure>
+    </div>
+
+    <div class="prose" style="margin-top:14px">
+      <p>Hepsi bu. Saklanan şey bu.</p>
+      <p>Sıradan bir ayrım gibi görünüyor. Değil. Bu sayfanın bütün fikri burada: <b>bilgi halkanın içinde durmuyor.</b> Halka boş; içine yazılmış bir işaret, tutulmuş bir yük, saklanmış bir sayı yok. Bilgi telin <b>yolunda</b> duruyor — ve tel bir kez o yoldan geçtikten sonra onu değiştirmenin yolu ipi sökmektir.</p>
+    </div>
+    <p class="hint">Benzetmenin sızdığı yeri kapatalım: buzdolabı mıknatısındaki gibi bir kuzey ucu, bir güney ucu arama. Buradaki yön halkanın <b>çevresinde dolanıyor</b>, uçlarda değil — kavşak benzetmesinin tuttuğu tek yer de bu.</p>
+    <p class="hint">Halkanın malzemesini merak ettiysen: AGC'nin ip çekirdekleri ince manyetik <b>şeridin sarılmasıyla</b> yapılmıştır — aşağıdaki fizik paneli o yüzden "bant sarımlı" diyor. Makinenin silinebilir belleğindeki çekirdekler başka türden. Şimdilik önemli olan halkanın neden yapıldığı değil, <b>deliği.</b></p>
+  </section>
+
+  <section>
+    <p class="section-label">Halka nasıl konuşur</p>
+    <div class="prose">
+      <p>Peki bir yol nasıl okunur? Teli gözle takip edecek hâlimiz yok — makinenin bunu elektrikle sorması lazım.</p>
+      <p>Sorma şekli şu: halkanın mıknatıslanmasını bir anda ters çevir. Trafiği tersine akıt. Bunu yapan şey kısa ve sert bir akım itişidir; adı <b>darbe</b> (İngilizce <i>pulse</i> — "vuruş"). Darbeyi taşıyan ayrı bir tel vardır; okuma telleri hiçbir şey sürmez, sadece dinler.</p>
+      <p>Halkanın deliğinden geçen tel o dönüşü üstünde hisseder: telde bir anlık gerilim tıkı belirir. Halkanın dışından dolanan tel hiçbir şey hissetmez, hattı sessiz kalır.</p>
+      <p>Değişim varsa ses var. Değişim yoksa sessizlik. Bu yüzden okumanın kendisi iki adımlıdır: önce bir darbe halkayı bir yöne sabitler, sonra ikincisi ters çevirir; bitler o ters dönüşte okunur. Halkada saklanan bir şey olmadığı için okumak hiçbir şeyi silmiyor — yol yerinde duruyor.</p>
+      <p>İki telin birbirine hiç değmediğine dikkat et. Halka aracılık ediyor: biri onu çeviriyor, öbürü çevrildiğini duyuyor. Değişimi duyan bu tellere belgelerde <b>sense teli</b> denir (İngilizce <i>sense wire</i> — "sezme teli"). Ve buradan sayfanın en ters cümlesi çıkıyor: çekirdek bir hafıza hücresi değil, bir <b>transformatördür.</b> Şarj aletinin içindeki küçük kutu da aynı fikri kullanır — bir taraftaki <i>değişim</i>, ona hiç değmeyen öteki tarafta gerilim doğurur. Halka bir bit tutmuyor; sadece bir haberi, kendisinden geçen herkese aynı anda duyuruyor.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Çekirdek düzlemi — bir kelimenin 16 sense teli — her halkaya dokunarak yolu değiştir</p>
+    <div class="legend">
+      <div class="legend-item">
+        <svg class="legend-swatch" viewBox="0 0 30 14"><line x1="2" y1="7" x2="28" y2="7" stroke="#E9A768" stroke-width="3.2" stroke-linecap="round"/></svg>
+        tel delikten geçiyor → 1
+      </div>
+      <div class="legend-item">
+        <svg class="legend-swatch" viewBox="0 0 30 14"><path d="M5 13 L5 6 A5 5 0 0 1 15 6 L15 13" fill="none" stroke="#C6793F" stroke-width="2.8"/></svg>
+        tel etrafından dönüyor → 0
+      </div>
+      <div class="legend-item">
+        <svg class="legend-swatch" viewBox="0 0 30 14"><line x1="2" y1="7" x2="28" y2="7" stroke="#E8B75D" stroke-width="5" stroke-linecap="round"/></svg>
+        sürücü (set/reset) hattı
+      </div>
+    </div>
+    <div class="plane-wrap">
+      <svg id="rope" viewBox="0 0 580 580"></svg>
+    </div>
+    <p class="hint">Burada bir kelime var: <b>tek bir çekirdek</b> ve deliğinden geçen ya da etrafından dönen on altı tel. Her tel kendi dilimine sahip olduğu için hiçbir bit deseninde birbirlerini kesmezler — soldan sağa dizseydik keserlerdi.</p>
+    <p class="hint">Ama şunu açıkça söyleyelim: bu bir <b>şema</b>, fotoğraf değil. Doğru olan kısım fizik — bit telin yolunda saklanıyor, çekirdek bir transformatör. Yerleşim ise çizim kolaylığı için seçildi. Gerçekte teller ışın gibi dağılmaz ve <b>delikte U dönüşü yapmaz</b>: düz geçer ve sıradaki çekirdeğe devam eder. Buradaki U, telin halkaya bağlanıp bağlanmadığını tek karede göstermenin yolu.</p>
+    <p class="hint">Gerçek modülün düzeni <b>cordwood</b> — odun istifi gibi, çekirdekler iki plaka arasında sıralı, teller aralarından demet halinde geçiyor. Bir modülde <b>512</b> çekirdek ve <b>192</b> sense teli var; yani buradaki bir çekirdek 12 kelimeye birden hizmet eder ve buradaki bir tel yüzlerce çekirdeğin arasından dolanır. Ölçeği birazdan konuşacağız.</p>
+
+    <button class="drive-btn" id="driveBtn">⚡ DARBE GÖNDER — belleği oku</button>
+
+    <div class="prose" style="margin-top:14px">
+      <p>Düğmeye basınca çekirdeğin mıknatıslanması bir anda ters döner — halkayı saran parlama ve dışarı açılan halka bu. Deliğinden geçen her tel o dönüşü <b>aynı anda</b> duyar; etrafından dönenler hiçbir şey duymaz. Aşağıdaki on altı iz aynı zaman eksenini paylaşıyor.</p>
+    </div>
+
+    <p class="section-label" style="margin-top:16px">Sense hatları — hepsi tek zaman ekseninde</p>
+    <div class="plane-wrap" style="padding:10px 6px">
+      <svg id="scope" viewBox="0 0 700 300"></svg>
+    </div>
+    <p class="hint">Dikkat: bütün dikenler <b>aynı dikey çizgide</b>. Bir kelimeyi okumak tek bir olaydır, bir tarama değil — bitlere sırayla bakılmaz, hepsi aynı anda konuşur.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <p>Okuma iki fazlıdır: önce <b>reset</b> darbesi çekirdeği bir yöne doyurur, sonra <b>set</b> darbesi ters yöne çevirir. Bit, akının bu <b>tam ters dönüşünde</b> okunur — ΔB = 2·B<sub>sat</sub> dediğimiz şey bu.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <p>O çekirdekten geçen <b>her sense teli bu değişimi aynı anda görür</b>. Kelimenin bütün bitleri <b>paralel</b> okunur — sırayla değil. Bir kelimeyi okumak tek bir olaydır, bir tarama değil.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <p>Tel çekirdeğin dışından dolaşıyorsa hiçbir bağlaşım oluşmaz, sense hattı sessiz kalır — bu da <b>0</b> olarak okunur.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <p>Çekirdek bir hafıza hücresi <b>değil</b>, bir <b>transformatördür</b>. Bit çekirdeğin içinde saklanmıyor — telin çekirdekten geçip geçmemesinde saklanıyor. R-700 çekirdekleri zaten böyle tarif ediyor: <i>"of the transformer type."</i></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">0 ve 1 — bu kararın adı</p>
+    <div class="prose">
+      <p>Yukarıdaki çizimde iki ad gördün: 1 ve 0. Şimdi nereden geldiklerini söyleyelim. Telin geçtiği hâle <b>1</b>, dolandığı hâle <b>0</b> diyoruz. Bir telin taşıdığı bu tek karara <b>bit</b> denir: bilgisayardaki en küçük bilgi parçası, ya bu ya o.</p>
+      <p>Bu adlandırma keyfî. Tersini de seçebilirdik, makine umursamazdı. Serinin ilk dersindeki cümleyi hatırla: tel, "1" taşıdığını bilmez. Anlamı biz veriyoruz.</p>
+      <p>Tek tel tek karar taşır — çok değil. Yan yana dizince iş değişir. Jeton diliyle düşün: her tele bir değer biç. En sağdaki 1'lik, solundaki 2'lik, onun solundaki 4'lük, sonra 8'lik; her adımda iki katı. Bir tel demetinin söylediği sayı, <b>1 olan tellerin değerlerinin toplamıdır.</b></p>
+      <p>Ekrandaki <code>000 000 000 000 110</code> için bu toplam 4 + 2 = <b>6</b>. Daha kalabalık bir örnek: <code>000 001 010 000 010</code> deseni 512 + 128 + 2 = <b>642</b> eder. On beş tel yan yana geldiğinde 0 ile 32.767 arasında istediğin sayıyı yazabilirsin. İşte bu kadar.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Bir kelime — 15 veri biti + 1 parite</p>
+    <div class="prose">
+      <p>Makine tellere tek tek bakmaz. Sabit sayıda teli tek demet olarak alır, tek seferde okur, tek parça olarak işler. Bu demetin adı <b>kelime</b> (İngilizce <i>word</i> — makinenin bir seferde ağzına aldığı lokma). AGC'de bir kelime <b>16</b> teldir.</p>
+      <p>On altı tel var, ama sayı on beşinde. On altıncı tel hiçbir sayı taşımaz.</p>
+      <p>Neden? Çünkü bozuk bir kelime de gayet geçerli bir kelimedir. Bir tel yanlış halkadan geçmişse ortaya çıkan sayı hâlâ kusursuz bir sayıdır — yanlış olduğunu sayının kendisine bakarak anlayamazsın. Sessizce yanlış olan bir bellekten kötüsü yoktur. Makinenin "bu bozuk" diyebilmesi için sayıya <b>dışarıdan bir tanık</b> lazım.</p>
+      <p>Bir de şu var: bu tellerin her biri elle dokunuyor. Tek bir modülde yüz bine yakın "geçsin mi, dolansın mı" kararı var ve teli halkadan geçiren el insan eli. Tanık, süs değil.</p>
+      <p>On altıncı tel o tanık. Donanım onu, kelimedeki 1'lerin toplam sayısı <b>her zaman tek</b> kalacak biçimde seçer. Okurken makine 1'leri sayar: tek çıkıyorsa devam eder, çift çıkıyorsa ortada bir bozukluk var demektir. Bu tele <b>parite biti</b> denir (İngilizce <i>parity</i> — "tek-çiftlik").</p>
+      <p>Yaptığı iş düzeltmek değil, <b>yakalamak.</b> Dürüst olalım: aynı kelimede iki tel birden ters dönerse toplam yine tek kalır ve parite hiçbir şey fark etmez. Tek hatayı yakalar, ikisini değil; nerede olduğunu da söylemez. Yazılım bu tele dokunamaz — o, donanımın kendi denetçisidir.</p>
+    </div>
+    <p class="hint">Sayıları baştan tutturalım: yukarıdaki çizimde çekirdekten <b>16</b> tel geçiyor, aşağıdaki okumada <b>15</b> karakter var. Çelişki değil — 15'i veri, 16'sı parite. Çizimde parite telinin kesik çizgili olmasının ve tıklanmamasının sebebi bu: onu sen değil, donanım belirliyor. Herhangi bir veri teline dokun, <code>P</code>'nin onunla birlikte döndüğünü göreceksin.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Kodlanan kelime — 15 veri biti + 1 parite</p>
+    <div class="readout">
+      <div class="bits" id="bitsOut">000 001 010 000 010</div>
+      <div class="meta">
+        <span>Oktal: <b id="octOut">01202</b></span>
+        <span>Ondalık: <b id="decOut">642</b></span>
+        <span>İşaretli: <b id="signOut">+642</b></span>
+        <span>Parite: <b id="parOut">0</b></span>
+      </div>
+    </div>
+    <p class="hint">Bitler <b>üçerli</b> gruplanıyor ve yanında dört sütun var. Dördü aynı işi yapmıyor: üçü aynı on beş telin üç ayrı okunuşu, biri hiç okunuş değil. Hangisinin ne olduğu ve neye yaradığı hemen aşağıda — sırayla.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Aynı 15 teli okumanın üç yolu — ve okuma olmayan bir sütun</p>
+    <div class="prose">
+      <p>Yukarıdaki kutuda dört sütun var: oktal, ondalık, işaretli, parite. Bunlar dört ayrı bilgi değil. İlk üçü <b>aynı on beş telin</b> üç ayrı okunuşu; dördüncüsü okunuş bile değil. Sırayla — ve her biri hangi derde çare, onunla birlikte.</p>
+      <p><b>Ondalık</b> — senin için var. <code>000 001 010 000 010</code> yazısı makineye her şeyi söyler, sana hiçbir şey söylemez: bu sayı büyük mü, küçük mü, geçen seferkinin iki katı mı? Ondalık okunuş bunu tek bakışta veriyor: <code>642</code>. Makineye zerre faydası yok. Zaten makine için yazılmadı.</p>
+      <p><b>Oktal</b> — programcı için var. Sebebi estetik değil, pratik: on beş biti telefonda söylemek, deftere yazmak, yüz sayfalık bir listede gözle aramak zorundasın. On beş tane sıfır-bir bu işlerin hiçbirine gelmez.</p>
+      <p>Bitleri <b>üçerli</b> grupla. Üç telin söyleyebileceği en büyük sayı 4 + 2 + 1, yani <b>7</b> — demek ki her üçlü, 0 ile 7 arasında tek bir rakam eder. On beş üçe tam bölündüğü için elinde tam beş rakam kalır: <code>01202</code>. Tabanı sekiz olan bu yazımın adı <b>oktal</b> (İngilizce <i>octal</i> — "sekizlik"); içinde 8 ve 9 rakamı yoktur, çünkü üç tel yediden fazlasını söyleyemez. En güzel yanı, çevirme diye bir işin olmaması: üçlüye bak, rakamı yaz; rakama bak, üçlüyü yaz. Gözle gidip gelirsin.</p>
+      <p>Peki neden bugün her yerde gördüğün onaltılık değil? Onaltılık bitleri <b>dörderli</b> ister. On beş, dörde bölünmez — sonda kırık bir grup kalır. AGC belgelerinin ve bu sayfadaki bütün sayıların sekizlik olmasının sebebi bu kadar sıradan.</p>
+      <p><b>İşaretli</b> — eksi sayılar için var. Telin eksisi yoktur: halka ya bu yöne döner ya şu yöne, "eksi yön" diye üçüncü bir hâl yok. O zaman eksiyi de tellerle anlatman gerekiyor. AGC'nin çözümü: en soldaki tel <b>işareti</b> söyler — 0 ise artı, 1 ise eksi. Bir sayının eksisini yazmak içinse <b>bütün tellerini terslersin:</b> geçenler dolanır, dolananlar geçer. Bu kadar. En soldaki de terslendiği için işaret kendiliğinden düzeliyor; ayrıca uğraşmıyorsun.</p>
+      <p>Neden bu yol? Çünkü donanımdaki bedeli neredeyse sıfır — bir sayıyı eksiye çevirmek, her telin okumasını ters çevirmekten ibaret. Bunun adı <b>birler tümleyeni</b> (İngilizce <i>ones' complement</i> — "birlere tümleme"). Bedel tek bir yerde çıkıyor: sıfırın iki yazılışı oluyor. Hepsi sıfır olan <code>00000</code> artı sıfır; onu terslediğinde çıkan <code>77777</code> eksi sıfır.</p>
+      <p><b>Parite</b> — ve dördüncü sütun sıradan çıkıyor. Parite bir okunuş <b>değil</b>; aynı sayının başka bir yazılışı değil. Sayının kendisiyle hiç ilgisi yok, sadece on altıncı telin ne durumda olduğunu söylüyor. Diğer üçü "bu sayı kaç?" sorusunun cevabı. Bu, "bu kelime sağlam mı?" sorusunun. Üç okunuş, bir denetçi.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Hazır örnekler — hepsi Apollo 11 LM uçuş programı (Luminary 099) listesinden</p>
+    <div class="presets">
+      <button class="chip" data-preset="EXTEND">00006 — EXTEND</button>
+      <button class="chip" data-preset="ALARM">01202 — 1202 alarmı</button>
+      <button class="chip" data-preset="CAZERO">34755 — CA ZERO</button>
+      <button class="chip" data-preset="BZF">13247 — TCF/BZF</button>
+      <button class="chip" data-preset="NEG0">77777 — eksi sıfır</button>
+      <button class="chip" data-preset="ZERO">00000 — artı sıfır</button>
+      <button class="chip" data-preset="rand">rastgele</button>
+    </div>
+    <p class="hint">Bu çiplerin hepsi Apollo 11'in Ay Modülü uçuş programından — gerçekten dokunmuş kelimeler. <code>00000</code> artı sıfır, <code>77777</code> eksi sıfır; ikisi de kaynak kodda <code>ZERO</code> ve <code>OCT -0</code> diye geçiyor. Yanlarındaki kısaltmalar (<code>EXTEND</code>, <code>CA</code>, <code>TCF</code>) sayı adı değil, komut adı — ne oldukları hemen aşağıda.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Bazı kelimeler sayı değil, emirdir</p>
+    <div class="prose">
+      <p>Çünkü ipteki kelimelerin hepsi sayı değil. Bir kısmı işlemciye ne yapacağını söyler — bunlara <b>komut</b> denir (İngilizce <i>instruction</i> — "buyruk").</p>
+      <p>AGC'nin bunun için seçtiği bölüşme şu: bir kelimenin <b>en soldaki üç teli</b> ne yapılacağını, kalan <b>on iki teli</b> neye yapılacağını söyler. Üç tel sekiz farklı emir yazmaya yeter. On iki tel de bir <b>adres</b> yazar — ipteki bir kelimenin sıra numarası.</p>
+      <p>Programcılar bu emirleri numarayla değil kısaltmayla yazar. <code>TC</code> (<i>transfer control</i>) düz Türkçesiyle "oraya git" demek. <code>TCF</code> (<i>transfer control to fixed</i>) aynı işin sabit hafızaya giden türü. <code>CA</code> (<i>clear and add</i>) "şu kelimeyi al, elindekinin üstüne yaz". <code>EXTEND</code> ise tek başına duran bir emir: "sıradaki kelimeyi başka bir komut tablosuna göre oku" der — sekiz emir yetmediği için var.</p>
+      <p>Yukarıdaki <code>13247 — TCF/BZF</code> çipinin iki isimli olmasının sebebi tam da bu. Aynı on beş tel deseni, önünde <code>EXTEND</code> varsa bir komut, yoksa başka bir komut olarak okunuyor. Aynı teller, aynı desen, aynı halkalar.</p>
+      <p>Yani bir kelimeye bakıp hangisi olduğunu anlayamazsın. <code>01202</code> yazan on beş tel, sayı olarak 642'dir; emir olarak okunursa "1202 adresine git" demektir. Hangisi olduğuna karar veren şey kelimenin kendisi değil — az aşağıda göreceğin gibi, işlemcinin oraya neden baktığı.</p>
+    </div>
+    <p class="hint">On iki telin yazabildiği en büyük adres 4095. İpte 36.864 kelime olduğuna göre bu yetmiyor — geri kalanına nasıl ulaşıldığı ayrı bir hikâye (banka anahtarlama) ve bu sayfanın konusu değil. Burada bilmen gereken tek şey, on iki telin bir adres yazdığı.</p>
+    <p class="hint"><code>1202</code> numarası bu sayfada boşuna durmuyor: Apollo 11 Ay'a inerken ekranda beliren alarmın numarası buydu. Bilgisayarın "elimdeki iş bana fazla geldi" deme biçimiydi — düşük öncelikli işleri bırakıp kendini toparladı, iniş devam etti.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Komut olarak</p>
+    <div class="readout" style="display:block">
+      <div class="instr-row">
+        <span class="instr-when">temel küme</span>
+        <b class="instr-mn" id="disBasic">EXTEND</b>
+        <span class="instr-gloss" id="glossBasic"></span>
+      </div>
+      <div class="instr-row">
+        <span class="instr-when">EXTEND'den sonra</span>
+        <b class="instr-mn" id="disExtra">READ CH06</b>
+        <span class="instr-gloss" id="glossExtra"></span>
+      </div>
+    </div>
+    <p class="hint">İki satır da aynı on beş teli okuyor. Aradaki fark kelimede değil: makine <b>bir önceki</b> kelimeyi <code>EXTEND</code> olarak gördüyse alt satırı, görmediyse üst satırı uygular. Yani bir kelimenin anlamı, o kelimenin bir özelliği bile değil — komşusuyla birlikte belirleniyor.</p>
+    <p class="hint">Yukarıdaki halkalardan herhangi birine dokun ve iki satırın birden değiştiğini gör. <b>Her on beş bitlik dizi geçerli bir komuta çözülür</b> — rastgele bir desen bile. Makinenin elinde "bu veri, şu komut" diye bir işaret yok; sadece Z'nin nereyi gösterdiği var.</p>
+  </section>
+
+  <section>
+    <p class="section-label">İp neden ip?</p>
+    <div class="prose">
+      <p>Şimdiye kadar tek bir kelimeye baktın: on altı tel, bir sıra halka. Bir modülde bu kelimelerden binlercesi var — ve hepsi <b>aynı</b> halkaları kullanıyor.</p>
+      <p>Tek bir tel modülün içinde tek bir halkada durmuyor. Bütün halka dizisinin arasında dolaşıyor; kimisinin içinden geçiyor, kimisinin dışından. Yanındaki tel aynı halkaların arasından bambaşka bir yol izliyor. Yüzlerce tel, aynı halkaların arasında, birbirinin altından üstünden geçe dolana örülüyor.</p>
+      <p>Bitmiş hâline bak: örülmüş, sıkışmış, elle tutulacak kalınlıkta bir demet. Halat gibi duruyor. Adı buradan geliyor — <b>core rope</b>, çekirdek ipi.</p>
+      <p>Ölçek şu: tek bir halkadan <b>192 tel</b> geçiyor, yani o tek halka on iki ayrı kelimeye birden hizmet ediyor. Altı modül yan yana konduğunda AGC'nin bütün sabit hafızası çıkıyor — <b>36.864 kelime.</b></p>
+      <p>Bu yüzden "bir çekirdek = bir bit" cümlesi bu bellek için yanlıştır. Halka bir hücre değil, ortak bir transformatör: aynı halkanın dönüşünü 192 tel birden duyar, her tel kendi kelimesindeki kendi bitini alır. Yukarıdaki çizimde gördüğün tek çekirdek ve on altı tel, bu yapının bir kelimelik dilimi — <b>ölçek</b> dışında doğru resim o.</p>
+    </div>
+    <p class="hint">Dokuma yarı otomatikti: delikli bir mylar <b>örgü bandı</b> makineyi sürüyor, makine kılavuzu doğru halkanın önüne konumlandırıyor, teli geçirme ya da dolandırma kararını <b>operatör elle</b> uyguluyordu. Bitmiş modül ikinci bir bantla — <b>denetim bandı</b> — baştan sona doğrulanıyordu. Bu doğrulamadan sonra program artık yazılım değildi; bir nesneydi.</p>
+    <p class="hint">Sayfanın başındaki soru buydu. Cevabı bu.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Bir tel, çok çekirdek</p>
+    <div class="prose">
+      <p>Yukarıdaki çizim bir çekirdeğe bakıyordu: bir halka, on altı tel. Şimdi <b>dik açıdan</b> bakalım — tek bir teli tut ve modülün içinde nereye gittiğini izle.</p>
+      <p>Tel tek bir halkada durmuyor. Sıradaki halkaya gidiyor, ondan sonrakine, ondan sonrakine. Her birinde yeniden aynı karar veriliyor: içeriden mi, dışarıdan mı. Yanındaki tel aynı halkaların arasından bambaşka bir yol izliyor.</p>
+      <p>Gerçek modülün düzenine <b>cordwood</b> deniyor — odun istifi gibi, çekirdekler iki plaka arasında sıralı, teller aralarından demet halinde geçiyor.</p>
+    </div>
+    <div class="plane-wrap" style="margin-top:12px;padding:8px 4px">
+      <svg id="strip" viewBox="0 0 720 170" aria-hidden="true"></svg>
+    </div>
+    <p class="hint">Bakır kuşak tel demetinin tamamı; içinden üç tanesini ayırıp çizdik ki demetin <b>tellerden</b> ibaret olduğu görünsün. Üçünün de aynı çekirdeklerden geçtiğine ama farklı yollar izlediğine dikkat et.</p>
+    <div class="prose" style="margin-top:12px">
+      <p>Ölçek şöyle çıkıyor:</p>
+      <p><code>1 çekirdek = 192 tel = 12 kelime</code> · <code>1 modül = 512 çekirdek = 6.144 kelime</code> · <code>AGC = 6 modül = 36.864 kelime</code></p>
+      <p>Yoğunluk yaklaşık <b>1500 bit/inç³</b> — aynı dönemin silinebilir çekirdek belleğinin <b>beş katı</b>. Bütün fark, aynı halkayı 192 kez kullanmaktan geliyor.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Peki hangi çekirdek? — seçim, engellemeyle yapılır</p>
+    <div class="prose">
+      <p>İpin asıl icadı burada, ve ters çalışıyor.</p>
+      <p>Bir kelimeyi okumak için tek bir çekirdeği çevirmen lazım. Ama sürücü akımı seçici değil — <b>128 çekirdeği birden</b> çevirmeye kalkıyor. Seçimi yapan şey, istediğini kurmak değil: <b>istemediklerini engellemek.</b></p>
+      <p>Her çekirdekten, sürücü telinin yanı sıra <b>engelleme (inhibit)</b> telleri de geçiyor. Bunlar çiftler halinde: her adres biti için bir çift, ve çiftin biri o biti 0 olanlardan, diğeri 1 olanlardan geçiyor. Bir adres seçmek istediğinde, her bit için <b>eşleşmeyen</b> tarafı beslersin. Geriye tek bir çekirdek kalır — hiçbir engellemeye yakalanmayan.</p>
+      <p>Aşağıda üç bitlik küçültülmüş hali var: sekiz çekirdek, üç engelleme çifti. Bitleri çevir ve hangisinin ayakta kaldığını izle.</p>
+    </div>
+
+    <div class="addr-bits" id="addrBits" style="margin-top:14px">
+      <span class="alab">adres:</span>
+    </div>
+    <div class="plane-wrap" style="padding:8px 4px">
+      <svg id="addr" viewBox="0 0 720 290"></svg>
+    </div>
+    <p class="hint">Kırmızı hatlar beslenen engelleme telleri, kırmızı <b>×</b> ise engellenmiş çekirdek. Yeşil olan tek çekirdek adreslenen kelimeyi taşıyor. Sekiz adres için üç çift yetiyor; gerçek AGC modülünde <b>sekiz çift</b> var — yedisi 128 çekirdeği ikiye bölerek seçiyor, sekizincisi adres paritesi, yani bilerek fazladan. Seçilmeyen her çekirdek en az iki ayrı engelleme sinyali alsın diye.</p>
+    <p class="hint">Bunun neden zekice olduğunu görmek için tersini düşün: her çekirdeğe ayrı bir seçme teli çekseydin, 512 çekirdek için 512 tel gerekirdi. Engellemeyle <b>on altı</b> tel yetiyor.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Bu kelimeyi kim istiyor?</p>
+    <div class="cpu-panel">
+      <p>Bir kelime tek başına bir şey değil. İpte <b>36.864</b> kelime var ve her birinin bir numarası — bir <b>adresi</b> — var. Bellek ancak <b>birinin sorduğu şey</b> olarak anlam kazanır.</p>
+      <p>Soran şey işlemci. Ve şaşırtıcı biçimde, akışı sürdürmek için tuttuğu tek şey şu: sıradaki kelimenin adresi.</p>
+
+      <div class="reg-strip">
+        <span class="reg-name">Z</span>
+        <span class="reg-val" id="zOut">03250</span>
+        <span class="reg-desc">AGC'nin program sayacı. İçinde sıradaki kelimenin adresi durur. Kendisi de bellekte, <b>05</b> numaralı gözde — yani kayıt dediğimiz şey de bir adres.</span>
+      </div>
+
+      <svg id="loop" viewBox="0 0 700 150" aria-hidden="true">
+        <defs>
+          <marker id="ahd" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#55647D"/></marker>
+          <marker id="ahi" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#33465F"/></marker>
+          <marker id="ahl" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#7FD8A6"/></marker>
+        </defs>
+
+        <g class="lp-step">
+          <rect class="lp-box" x="14"  y="16" width="142" height="58" rx="7"/>
+          <text class="lp-num"   x="26"  y="32">1</text>
+          <text class="lp-title" x="85"  y="38">ADRES</text>
+          <text class="lp-val"   x="85"  y="60" id="lv0">03250</text>
+        </g>
+
+        <g class="lp-step">
+          <rect class="lp-box" x="186" y="16" width="142" height="58" rx="7"/>
+          <text class="lp-num"   x="198" y="32">2</text>
+          <text class="lp-title" x="257" y="38">İPTEN GETİR</text>
+          <text class="lp-val"   x="257" y="60" id="lv1">00006</text>
+        </g>
+
+        <g class="lp-step">
+          <rect class="lp-box" x="358" y="16" width="142" height="58" rx="7"/>
+          <text class="lp-num"   x="370" y="32">3</text>
+          <text class="lp-title" x="429" y="38">ÇÖZ</text>
+          <text class="lp-val"   x="429" y="60" id="lv2">EXTEND</text>
+        </g>
+
+        <g class="lp-step">
+          <rect class="lp-box" x="530" y="16" width="142" height="58" rx="7"/>
+          <text class="lp-num"   x="542" y="32">4</text>
+          <text class="lp-title" x="601" y="38">YAP</text>
+          <text class="lp-val"   x="601" y="60" id="lv3">Z'ye dokunmadı</text>
+        </g>
+
+        <path class="lp-arrow" d="M156 45 L182 45" marker-end="url(#ahd)"/>
+        <path class="lp-arrow" d="M328 45 L354 45" marker-end="url(#ahd)"/>
+        <path class="lp-arrow" d="M500 45 L526 45" marker-end="url(#ahd)"/>
+
+        <path class="lp-ret" id="lret" d="M601 74 L601 122 L85 122 L85 82" marker-end="url(#ahi)"/>
+        <text class="lp-lbl" id="llbl" x="343" y="114">Z := Z + 1</text>
+      </svg>
+
+      <p>İşlemcinin bütün işi dört adımın tekrarıdır: <b>adresi al, ipten kelimeyi getir, ne dediğini çöz, yap.</b> Yukarıdaki dört kutu tam olarak bu. Bu dört adımlık tura <b>çevrim</b> denir (İngilizce <i>fetch–execute cycle</i> — "getir-yap döngüsü") ve bir bilgisayarın açık olduğu sürece yaptığı tek şey budur. AGC bunu saniyede on binlerce kez döndürüyordu; aşağıdaki düğme sana bir turu, tek tek yaptırıyor.</p>
+      <p>Basmadan önce ne olacağını söyleyelim. Z'nin gösterdiği adresteki kelime getirilir, çözülür, yapılır; sonra Z ya bir artar ya da emrin söylediği adrese atlar. Bir basış = bir tur. Ekranda Z'nin sayısı ve dört kutunun içindekiler değişir — başka hiçbir yer kımıldamaz. Yukarıdaki halkaların kendi düğmesi var, bu düğme onlara dokunmuyor.</p>
+
+      <button class="drive-btn cycle-btn" id="cycleBtn">▶ BİR ÇEVRİM ÇALIŞTIR</button>
+
+      <p class="hint">Hiçbir şeye dokunmadan üç kez bas: Z'nin <code>03251</code>, <code>03252</code>, <code>03253</code> diye ilerlediğini göreceksin — program satır satır akıyor. Sonra yukarıdaki hazır örneklerden <code>13247</code>'yi seç ve tekrar bas: Z geriye, <code>03247</code>'ye sıçrar ve orada kalır. <code>01202</code> seçiliyken ise ilk basıştan sonra ekranda hiçbir şey değişmez — bozuk değil: o kelime kendi adresine gitmeyi emrediyor, makine sonsuza kadar aynı yerde dönüyor. En dar döngü budur. <b>Dallanma ayrı bir mekanizma değil</b> — sadece son kutunun Z'ye yazması.</p>
+      <p class="hint">ÇÖZ kutusu yukarıdaki <b>temel küme</b> satırını gösteriyor — çünkü bu görünüşte bir önceki kelime yok, dolayısıyla <code>EXTEND</code> gelip gelmediğini bilemiyor. Gerçek makine bunu bilir; farkı yaratan tek şey de o.</p>
+      <p class="hint">Ve asıl mesele şu: ip, kendisine sorulan şeyin <b>veri mi komut mu</b> olduğunu bilmiyor. <code>77777</code> bir sabit — eksi sıfır. Ama Z oraya işaret ederse getirilir, çözülür ve yapılır. Hangisi olduğuna karar veren tek şey, Z'nin nereyi gösterdiği.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Sığmadı</p>
+    <div class="prose">
+      <p>Tasarımın başında bir tahmin yapılmıştı: <b>4.000 kelime</b> yeter. Uçan ipte 36.864 kelime vardı — dokuz katı. Ve yine sığmıyordu.</p>
+      <p>Sıradan bir bilgisayarda bunun çaresi bellidir: kodu küçült, sıkıştır, gerekirse diskten parça parça yükle. Burada hiçbiri yok. İp dokunduğu anda boyutu kesinleşiyor: 98.304 karar, ne bir eksik ne bir fazla. <b>İpin içinde sıkıştırma yapılamaz.</b></p>
+      <p>O zaman tek bir yer kalıyor: <b>ipe girmeden önce.</b></p>
+      <p>Ve tam olarak bu yapıldı. AGC'nin güdüm ve seyrüsefer kodu, bu sayfada gördüğün komutlarla yazılmadı. Daha yoğun, ayrı bir gösterimle yazıldı — ve onu çalıştıran şey, ipin içindeki başka bir program: <b>yorumlayıcı</b> (İngilizce <i>interpreter</i> — "çeviren").</p>
+      <p>Raporun kendi cümlesi bunu tereddütsüz söylüyor: bu gösterim <i>"for economy of storage"</i> — <b>yer ekonomisi için</b> seçilmiş.</p>
+      <p>Bedeli de yazıyor: <i>"a means of trading off execution speed against instruction repertoire."</i> Yorumlayıcı her adımda önce ne yapacağını çözüyor, sonra yapıyor. Yani <b>yeri zamanla satın alıyorsun.</b> Kod küçülüyor, çalışması yavaşlıyor.</p>
+      <p>Bir kazanç daha var. Hatırlarsan, on iki telin yazabildiği en büyük adres 4095'ti ve ipte 36.864 kelime vardı — o boşluğu orada askıda bırakmıştık. Yoğun gösterim bunu da çözüyor: raporun deyişiyle tek bir kelimeden <b>32.768 adrese</b> ulaşılabiliyor.</p>
+    </div>
+    <p class="hint">Yani AGC'nin içinde bir sıkıştırma algoritması var — ve o algoritma yorumlayıcının kendisi. Sıkıştırılan şey veri değil, <b>programın kendisi</b>.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Fazlalığın hesabı</p>
+    <div class="prose">
+      <p>Yer bu kadar sıkışıkken, ipin bir kısmının bilerek israf edildiğini söylesem?</p>
+      <p>Parite bunu yapıyor. Her on altı telden biri hiçbir sayı taşımıyor. Modül başına hesabı basit: 98.304 bitin <b>6.144'ü</b> parite — kapasitenin tam <b>1/16'sı, yani %6,25'i</b>. Yerin altın değerinde olduğu bir makinede, on altıda bir gönüllü olarak veriliyor.</p>
+      <p>Karşılığında alınan şey: tek bit hatasını yakalayabilmek. Yer ile güven arasında yapılmış, açık bir takas.</p>
+      <p>Bunun ikinci bir yüzü var ve daha ilginç. Tek parite kuralı, bir kelimenin on altı bitinin hepsinin birden 1 olmasını yasaklıyor. Demek ki bir çekirdekten geçen 192 tel, alabileceği her konfigürasyonu alamıyor:</p>
+    </div>
+    <div class="plane-wrap" style="margin-top:12px;padding:10px 8px">
+      <svg id="budget" viewBox="0 0 700 130" aria-hidden="true"></svg>
+    </div>
+    <div class="prose" style="margin-top:12px">
+      <p>Çekirdek fiziksel olarak <b>192 tel</b> taşıyor ama yalnızca <b>180 bitlik</b> özgürlüğü var. Aradaki 12 bit hiçbir şey saklamıyor — <b>diğer 180'in bir fonksiyonu.</b> Fazlalık dediğimiz şey tam olarak bu: yer kaplayan ama bilgi taşımayan bit.</p>
+      <p>Ve üçüncü bir yerde daha karşımıza çıkıyor. Adres çözücüde sekiz engelleme çifti vardı; yedisi 128 çekirdeği ikiye bölerek seçiyor, sekizincisi <b>adres paritesi</b> — yani bilerek fazladan. Seçilmeyen her çekirdek en az iki ayrı engelleme sinyali alsın diye.</p>
+      <p>Yani fazlalık bir yerde değil, üç yerde: sakladığın bitte, çekirdeğin alabileceği biçimde, ve adresi seçme yolunda. Üçünde de aynı takas — <b>yerden veriyorsun, güvenden alıyorsun.</b></p>
+    </div>
+    <p class="hint">Sığmayan bir makinede bunları yapmak savurganlık değil. Ay yolunda bozuk bir kelimeyi fark etmemenin bedeli, altı bin bitten çok daha yüksekti.</p>
+  </section>
+
+  <section>
+    <p class="section-label">Sinyal — ve neden hesaplamıyoruz</p>
+    <p class="hint">Buraya kadar sinyalin <i>var mı yok mu</i> olduğuna baktık. Sıradaki soru büyüklüğü: o gerilim tıkı ne kadar? Bu bölüm cevabı vermiyor — <b>neden veremediğimizi</b> anlatıyor. İstersen atla; aşağıdaki hiçbir şey buna dayanmıyor.</p>
+    <div class="phys-panel">
+      <div class="phys-control">
+        <label>Akı dönüş süresi — Δt: <b id="dtOut">200</b> ns</label>
+        <input type="range" id="dtSlider" min="50" max="1000" value="200" step="10">
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-line">EMF = N × A<sub>e</sub> × ΔB / Δt</div>
+        <div class="formula-line sub">Faraday yasası — indüklenen gerilim, akının <i>değişim hızıyla</i> orantılıdır</div>
+        <span class="formula-note">Formül doğru. Ama AGC çekirdeği için bir <b>sayı üretemiyoruz</b>: bant sarımlı rope çekirdeğinin etkin kesit alanı A<sub>e</sub>, hiçbir birincil kaynakta yok. Kaynaksız bir A<sub>e</sub> ile hesaplanan her voltaj uydurmadır.</span>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-line">Bunun yerine: ölçülmüş değerler</div>
+        <div class="formula-line sub">silinebilir çekirdek bellek — <b>≈ 50 mV</b></div>
+        <span class="formula-note">R-700 Cilt III, s. 87, birebir: <i>"The output signal from the memory cores has an amplitude of about 50 millivolts."</i></span>
+        <div class="formula-line sub" style="margin-top:12px">core rope — <b>tartışmalı</b></div>
+        <span class="formula-note">Aynı NASA çizimini (SCD-1006320) okuyan iki araştırmacı farklı yayımlıyor: Ken Shirriff <b>215–430 mV</b>, Mike Stewart <b>≈100 mV</b> (25 mV gürültü tabanıyla). Kazananı biz seçmiyoruz — anlaşmazlığı olduğu gibi yazıyoruz.</span>
+      </div>
+      <p class="hint">Hepsi <b>milivolt</b> mertebesinde. Bir formülün doğru olması, içine koyduğun sayıların da doğru olduğu anlamına gelmez: Faraday yasası kusursuz çalışır, ama kaynaksız bir A<sub>e</sub> ile beslenirse iki mertebe yanlış cevap verir. Δt burada bir voltaj değil, aşağıdaki darbenin <b>şeklini</b> sürüyor — hızlı dönüş, dar ve keskin darbe.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="fact-box">
+      <p class="section-label">Gerçek AGC'de</p>
+      <ul>
+        <li>Her ip programının bir <b>"rope mother"</b>ı vardı: kodun o modüle dokunmaya hazır olduğunu onaylayan kişi. Luminary'nin rope mother'ı Margaret Hamilton'dı.</li>
+        <li>Enerji kesilse bile veri kaybolmaz — desen fiziksel olduğu için tamamen <b>kalıcıydı</b>.</li>
+        <li>Titreşime, radyasyona ve sıcaklık dalgalanmasına karşı olağanüstü dayanıklıydı — Ay yolculuğu için hız değil, güvenilirlik önceliğiydi.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="fact-box">
+      <p class="section-label">Aklında tut</p>
+      <ul>
+        <li>Çekirdek, mıknatıslanabilen küçük bir halkadır. Çevresi boyunca iki yönden birine döner ve enerji kesilse de öyle kalır.</li>
+        <li>Bilgi halkada değil, telin yolunda: içinden geçiyorsa 1, etrafından dolanıyorsa 0.</li>
+        <li>Okumak, halkayı ters çevirmektir. İçinden geçen tel dönüşü duyar, dışarıdaki duymaz. Halka bir hücre değil, bir <b>transformatördür</b>.</li>
+        <li>Bir kelime 16 teldir: 15'i sayıyı söyler, 16'sı denetçidir. Parite 1'lerin toplamını hep tek tutar — tek bit bozulursa yakalar, iki bit bozulursa kaçırır.</li>
+        <li>Oktal, on beş biti üçerli gruplayıp beş rakama indiren kısaltmadır. 15 üçe bölünür, dörde bölünmez; onaltılığın bu makinede işi yok.</li>
+        <li>Eksi sayı, bütün bitlerin tersidir. Donanımda bedava, bedeli tek yerde: iki tane sıfır.</li>
+        <li>Tek halkadan 192 tel geçer, o halka 12 kelime taşır. Yüzlercesi aynı halkalardan örülünce ortaya halat gibi bir demet çıkar — adı buradan geliyor.</li>
+        <li>Bir kelime sayı da olabilir emir de. Farkı kelimede değil, işlemcinin oraya neden baktığında.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>ŞALTERDEN BİLGİSAYARA · donanım galerisi · vaka: çekirdek ip belleği</footer>
+
+</div>
+
+<script src="assets/rope.js"></script>
+</body>
+</html>

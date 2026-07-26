@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Laboratuvar — linux_learning</title>
+<meta name="description" content="Okunacak değil, kurcalanacak dersler. Tarayıcıda çalışan interaktif donanım vaka incelemeleri." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<script src="assets/theme.js"></script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="pp">🐧</span><b>linux_learning</b>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#wargames">wargames</a>
+      <a href="konular.html">konu&nbsp;anlatımları</a>
+      <a href="laboratuvar.html" style="color:var(--magenta)">laboratuvar</a>
+      <a href="index.html#kaynaklar">kaynaklar</a>
+    </div>
+    <a class="nav-lang" href="eng/index.html" title="Switch to English"><span class="cur">TR</span><span class="oth">EN</span></a>
+    <a class="nav-gh" href="https://github.com/waitaseC137/linux_learning" target="_blank" rel="noopener">
+      <span>★</span> GitHub
+    </a>
+    <button class="theme-btn" id="themeBtn" title="Tema: açık / karanlık"><span class="sw"></span><span class="lbl">açık</span></button>
+    <button class="theme-btn sfx-btn" id="sfxBtn" title="Menü sesleri"><span class="sw"></span><span class="lbl">ses</span></button>
+    <button class="nav-burger" id="navBurger" aria-label="Menü" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ============ LABORATUVAR ============ -->
+<section class="band" id="laboratuvar">
+  <div class="wrap">
+    <div class="sec-head"><span class="sig">$</span> <span class="cmd">ls</span> <span class="arg">laboratuvar/</span></div>
+    <p class="sec-sub">
+      Bir şeyin nasıl çalıştığını anlatmakla, o şeyi elinle çevirip görmek aynı şey değil.
+      Buradakiler <b style="color:var(--fg)">okunmak için değil, kurcalanmak için</b> yazıldı —
+      tarayıcıda çalışırlar, düğmelerine basarsın, ne olduğunu izlersin.
+      Kurulum yok, indirilecek bir şey yok.
+    </p>
+
+    <div class="tree-grid" style="align-items:start">
+      <div class="tree">
+        <a class="tree-row" href="laboratuvar/cekirdek-ip-bellegi/index.html">
+          <div class="nm"><span class="fold">▸</span><div>
+            <div class="lbl">cekirdek-ip-bellegi/ 🚧</div>
+            <div class="ds">Apollo Guidance Computer'ın ROM'u · halka, tel, 15+1 bit · kelime çözümleyici · adres çözücü</div>
+          </div></div>
+          <span class="cnt">interaktif · yazılıyor</span>
+        </a>
+      </div>
+
+      <div class="tree-side">
+        <h4>Buradakiler neden ayrı?</h4>
+        <p>Konu anlatımları metindir; okursun, kafanda canlandırırsın. Laboratuvardakiler <b>çalışan şeylerdir</b> — kendi sayfaları, kendi görünümleri var, sitenin okuyucusunun içine sığmazlar.</p>
+        <ul>
+          <li><span class="b">01</span> Sayfayı aç, hiçbir şey kurma</li>
+          <li><span class="b">02</span> Anlatımı sırayla oku, aşağı in</li>
+          <li><span class="b">03</span> Karşına çıkan her düğmeye <b>bas</b></li>
+          <li><span class="b">04</span> Anlamadığın yeri işaretle, dön tekrar bak</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand"><span class="pp">🐧</span><b>linux_learning</b></div>
+      <p>Oyun oynayarak, deneye yanıla, terminal ekranına bakarak. Repo büyümeye devam ediyor — katkı ve önerilere açık.</p>
+      <p class="lic">Lisans: <b>CC BY-SA 4.0</b> · Kod: <b>MIT</b></p>
+      <div class="foot-cat" id="footCat" aria-hidden="true"></div>
+    </div>
+    <div class="foot-links">
+      <a href="https://github.com/waitaseC137/linux_learning" target="_blank" rel="noopener">★ GitHub'da aç</a>
+      <a href="index.html#wargames">Wargames</a>
+      <a href="konular.html">Konu Anlatımları</a>
+      <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire ↗</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/sfx.js"></script>
+</body>
+</html>

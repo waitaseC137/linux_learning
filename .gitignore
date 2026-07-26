@@ -1,4 +1,6 @@
 /graphify-out
+# paketle.sh'in urettigi tek-dosya turevi (kaynaktan yeniden uretilir)
+docs/laboratuvar/*/_tek-dosya/
 .claude
 .git
 .obsidian

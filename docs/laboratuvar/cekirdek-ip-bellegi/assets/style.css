@@ -1,0 +1,564 @@
+:root{
+    --bg: #0B1220;
+    --panel: #101B2D;
+    --panel-2: #0D1728;
+    --grid-line: #1B2A41;
+    --core-idle: #33465F;
+    --core-glow: #E8B75D;
+    --wire-copper: #C6793F;
+    --wire-copper-bright: #E9A768;
+    --pulse-green: #7FD8A6;
+    --text-1: #E7EEF5;
+    --text-2: #93A3BD;
+    --text-3: #55647D;
+    --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-attachment: fixed;
+  }
+
+  .scene {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 18px 60px;
+  }
+
+  header {
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--grid-line);
+    padding-bottom: 18px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--wire-copper-bright);
+    margin: 0 0 8px;
+  }
+
+  .geri {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+    opacity: 0.75;
+    transition: opacity 0.15s;
+  }
+
+  .geri:hover,
+  .geri:focus-visible {
+    opacity: 1;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+
+  header p {
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  section { margin-bottom: 26px; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+
+  /* Binary readout */
+  .readout {
+    background: var(--panel);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .readout .bits {
+    font-family: var(--mono);
+    font-size: 17px;
+    letter-spacing: 0.06em;
+    color: var(--pulse-green);
+    font-weight: 500;
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  .readout .meta {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-2);
+    display: flex;
+    gap: 16px;
+  }
+
+  .readout .meta b { color: var(--text-1); font-weight: 600; }
+
+  /* Presets */
+  .presets {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  button.chip {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--panel);
+    color: var(--text-2);
+    border: 1px solid var(--grid-line);
+    border-radius: 7px;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  button.chip:hover { border-color: var(--wire-copper); color: var(--text-1); }
+  button.chip:active { transform: translateY(1px); }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-2);
+    margin-bottom: 12px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-swatch { width: 26px; height: 14px; flex-shrink: 0; }
+
+  .hint {
+    font-size: 12.5px;
+    color: var(--text-3);
+    margin: 8px 2px 0;
+  }
+
+  /* Core plane */
+  .plane-wrap {
+    background: var(--panel);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 4px;
+  }
+
+
+
+
+
+
+
+
+
+
+
+  /* CPU frame — what asks for the word */
+  .cpu-panel {
+    background: var(--panel);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 16px 18px 18px;
+  }
+  .cpu-panel > p {
+    margin: 0 0 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-1);
+  }
+  .cpu-panel > p b { color: var(--pulse-green); font-weight: 600; }
+
+  .reg-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--panel-2);
+    border: 1px dashed var(--grid-line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 14px 0;
+    flex-wrap: wrap;
+  }
+  .reg-name {
+    font-family: var(--mono);
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--wire-copper-bright);
+  }
+  .reg-val {
+    font-family: var(--mono);
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--pulse-green);
+  }
+  .reg-desc { font-size: 12.5px; line-height: 1.5; color: var(--text-2); flex: 1; min-width: 220px; }
+  .reg-desc b { color: var(--text-1); }
+
+  svg#loop { display: block; width: 100%; height: auto; }
+  .lp-box { fill: var(--panel-2); stroke: var(--grid-line); stroke-width: 1.5; transition: stroke .1s, stroke-width .1s; }
+  .lp-num { font-family: var(--mono); font-size: 12px; font-weight: 700; fill: var(--text-3); text-anchor: start; transition: fill .1s; }
+
+  /* One cycle = four steps, lit in order. The loop stops being a claim in the
+     text and becomes something the reader watches happen. */
+  .lp-step.hot .lp-box { stroke: var(--wire-copper-bright); stroke-width: 2.5; }
+  .lp-step.hot .lp-num { fill: var(--wire-copper-bright); }
+  .lp-step.hot .lp-val { fill: var(--pulse-green); }
+  .lp-title { font-family: var(--mono); font-size: 11px; fill: var(--text-3); text-anchor: middle; letter-spacing: .09em; }
+  .lp-val { font-family: var(--mono); font-size: 15px; font-weight: 600; fill: var(--text-1); text-anchor: middle; }
+  .lp-arrow { stroke: var(--text-3); stroke-width: 2; fill: none; }
+  .lp-ret { stroke: var(--core-idle); stroke-width: 2; fill: none; stroke-dasharray: 5 4; transition: stroke .15s, stroke-width .15s; }
+  .lp-ret.live { stroke: var(--pulse-green); stroke-dasharray: none; }
+  .lp-ret.pulse { stroke-width: 4; }
+  .lp-lbl.pulse { fill: var(--wire-copper-bright); }
+  .lp-lbl { font-family: var(--mono); font-size: 12.5px; fill: var(--text-3); text-anchor: middle; }
+  .lp-lbl.live { fill: var(--pulse-green); font-weight: 600; }
+
+  .cycle-btn {
+    margin-top: 14px;
+    background: var(--wire-copper-bright);
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  /* ---- Radial core view: ONE core, 16 sense wires --------------------------
+     A left-to-right lane layout cannot work: with arbitrary bit patterns the
+     through/around sets are not contiguous, so strands must cross. Giving each
+     wire its own angular sector makes crossings structurally impossible.
+     Each wire is a hairpin: bit=1 turns around INSIDE the hole (linking
+     number 1), bit=0 turns around outside the rim (linking number 0).        */
+  svg#rope { display: block; width: 100%; height: auto; }
+
+  .core-body { fill: url(#ferrite); }
+  .core-rim  { fill: none; stroke: #46597A; stroke-width: 1.4; opacity: .9; }
+  .core-flash{ fill: none; stroke: var(--core-glow); stroke-width: 66; opacity: 0; }
+  .core-flash.on { animation: coreFlip 520ms ease-out; }
+  @keyframes coreFlip { 0% { opacity: 0 } 20% { opacity: .55 } 100% { opacity: 0 } }
+
+  /* scale(), not r: animating the r attribute is not portable. */
+  .wavefront { fill: none; stroke: var(--core-glow); stroke-width: 3; opacity: 0;
+               transform-box: view-box; transform-origin: 290px 290px; }
+  .wavefront.on { animation: waveOut 460ms ease-out; }
+  @keyframes waveOut {
+    0%   { opacity: .9; transform: scale(1);    stroke-width: 6 }
+    100% { opacity: 0;  transform: scale(2.77); stroke-width: 1 }
+  }
+
+  .strand { fill: none; stroke-linecap: round; stroke-linejoin: round;
+            pointer-events: none; transition: stroke .14s, stroke-width .14s, opacity .14s; }
+  .one    { stroke: var(--wire-copper-bright); stroke-width: 3.2; }
+  .zero   { stroke: var(--wire-copper); stroke-width: 2.8; opacity: .82; }
+  .ghost  { fill: none; stroke: var(--wire-copper-bright); stroke-width: 2.4;
+            opacity: .42; stroke-dasharray: 3 5; pointer-events: none; }
+  .drive  { fill: none; stroke: var(--core-glow); stroke-width: 4.5;
+            stroke-linecap: round; pointer-events: none; }
+  .strand.hot   { stroke-width: 4.4; opacity: 1; }
+  .strand.fired { stroke: var(--pulse-green); stroke-width: 4.4; }
+  .capArc { fill: none; stroke: var(--text-3); stroke-width: 1.2;
+            stroke-dasharray: 2 4; opacity: .45; pointer-events: none; }
+  .flux   { fill: none; stroke: var(--text-2); stroke-width: 2; opacity: .5; pointer-events: none; }
+
+  .idx    { font-family: var(--mono); font-size: 12px; fill: var(--text-3);
+            text-anchor: middle; pointer-events: none; }
+  .digit  { font-family: var(--mono); font-size: 23px; font-weight: 600;
+            fill: var(--text-2); text-anchor: middle; pointer-events: none; }
+  .digit.d1 { fill: var(--pulse-green); }
+  .idx.hotT, .digit.hotT { fill: var(--text-1); }
+  .idx.par  { fill: var(--wire-copper-bright); font-weight: 700; }
+  .strand.par { opacity: .55; stroke-dasharray: 6 4; }
+  .bolt   { font-size: 17px; text-anchor: middle; pointer-events: none; }
+
+  /* Corner captions. These need their own anchor classes: a stylesheet rule
+     beats a presentation attribute, so setAttribute('text-anchor',...) is
+     silently ignored and the text renders off-canvas. */
+  .corelabel   { font-family: var(--mono); font-size: 12.5px; fill: var(--text-3); pointer-events: none; }
+  .corelabel.s { text-anchor: start; }
+  .corelabel.e { text-anchor: end; }
+
+  /* fill:none is not hit-testable — a transparent fill is. */
+  .hit { fill: rgba(0,0,0,0); pointer-events: all; cursor: pointer;
+         outline: none; transition: fill .12s; }
+  .hit:hover { fill: rgba(233,167,104,.06); }
+  .hit:focus-visible { fill: rgba(233,167,104,.10); stroke: #E9A768;
+                       stroke-width: 1.4; stroke-dasharray: 5 4; }
+
+  svg#scope { display: block; width: 100%; height: auto; margin-top: 6px; }
+  .trace    { fill: none; stroke: #2A3A55; stroke-width: 1.4; }
+  .trace.hi { stroke: var(--pulse-green); stroke-width: 2.1;
+              filter: drop-shadow(0 0 3px var(--pulse-green)); }
+  .tlabel   { font-family: var(--mono); font-size: 11px; fill: var(--text-3); text-anchor: end; }
+  .tcursor  { stroke: var(--wire-copper-bright); stroke-width: 1.3;
+              stroke-dasharray: 4 4; opacity: 0; }
+  .tcursor.on { opacity: .9; }
+  .taxis    { font-family: var(--mono); font-size: 10.5px; fill: var(--text-3); }
+
+  /* Physics panel */
+  .phys-panel {
+    background: var(--panel);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 16px 18px 18px;
+  }
+
+  .phys-control { margin-bottom: 16px; }
+  .phys-control:last-child { margin-bottom: 0; }
+
+  .phys-control label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 8px;
+  }
+  .phys-control label b {
+    font-family: var(--mono);
+    color: var(--pulse-green);
+    font-weight: 600;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--pulse-green);
+    height: 4px;
+  }
+
+  .formula-box {
+    margin-top: 4px;
+    background: var(--panel-2);
+    border: 1px dashed var(--grid-line);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: var(--mono);
+  }
+  .formula-line {
+    font-size: 15px;
+    color: var(--text-1);
+    letter-spacing: 0.02em;
+  }
+  .formula-line.sub {
+    font-size: 12.5px;
+    color: var(--text-2);
+    margin-top: 6px;
+  }
+  .formula-result {
+    margin-top: 10px;
+    font-size: 20px;
+    color: var(--pulse-green);
+    font-weight: 600;
+  }
+  .formula-note {
+    font-family: var(--sans);
+    font-size: 11.5px;
+    color: var(--text-3);
+    font-weight: 400;
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* Drive button */
+  .drive-btn {
+    width: 100%;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--bg);
+    background: var(--pulse-green);
+    border: none;
+    border-radius: 9px;
+    padding: 15px;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+  }
+  .drive-btn:active { transform: translateY(1px); }
+  .drive-btn:disabled { opacity: 0.45; cursor: default; }
+
+  /* Explainer */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .step {
+    display: flex;
+    gap: 14px;
+    background: var(--panel);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--wire-copper-bright);
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .step p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-1);
+  }
+  .step p b { color: var(--pulse-green); font-weight: 600; }
+
+  .fact-box {
+    background: var(--panel-2);
+    border: 1px dashed var(--grid-line);
+    border-radius: 10px;
+    padding: 15px 17px;
+    margin-top: 16px;
+  }
+  .fact-box .section-label { color: var(--wire-copper-bright); margin-bottom: 8px; }
+  .fact-box ul { margin: 0; padding-left: 18px; }
+  .fact-box li { font-size: 13.5px; line-height: 1.6; color: var(--text-2); margin-bottom: 4px; }
+  .fact-box li:last-child { margin-bottom: 0; }
+  .fact-box b { color: var(--text-1); }
+
+  footer {
+    margin-top: 30px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  header p + p { margin-top: 10px; }
+
+  .prose {
+    background: var(--panel);
+    border: 1px solid var(--grid-line);
+    border-radius: 10px;
+    padding: 16px 18px 18px;
+  }
+  .prose > p { margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: var(--text-1); }
+  .prose > p:last-child { margin-bottom: 0; }
+  .prose > p b { color: var(--pulse-green); font-weight: 600; }
+  code {
+    font-family: var(--mono); font-size: 13px;
+    color: var(--wire-copper-bright); background: var(--panel-2);
+    padding: 1px 5px; border-radius: 4px;
+  }
+
+  /* One ring, one wire, two choices - deliberately unlabelled: the names
+     0 and 1 are not introduced until the next section. */
+  .choice-pair { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
+  .choice-pair figure {
+    flex: 1 1 240px; margin: 0;
+    background: var(--panel); border: 1px solid var(--grid-line);
+    border-radius: 10px; padding: 10px 8px 12px;
+  }
+  .choice-pair svg { display: block; width: 100%; height: auto; }
+  .choice-pair figcaption {
+    font-family: var(--mono); font-size: 12.5px;
+    color: var(--text-2); text-align: center; margin-top: 4px;
+  }
+  .cw-ring { fill: none; stroke: var(--core-idle); stroke-width: 14; }
+  .cw-back  { fill: none; stroke: var(--wire-copper); stroke-width: 5; stroke-linecap: round; }
+  .cw-front { fill: none; stroke: var(--wire-copper-bright); stroke-width: 5; stroke-linecap: round; }
+
+  /* Two readings of the same word, always both visible — a toggle would hide
+     the lesson behind a control the reader has to discover. */
+  .instr-row {
+    display: flex; align-items: baseline; gap: 8px 16px; flex-wrap: wrap;
+    padding: 11px 0; border-bottom: 1px solid var(--grid-line);
+  }
+  .instr-row:first-child { padding-top: 2px; }
+  .instr-row:last-child { border-bottom: none; padding-bottom: 2px; }
+  .instr-when {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--text-3);
+    min-width: 168px;
+  }
+  .instr-mn {
+    font-family: var(--mono); font-size: 19px; font-weight: 600;
+    color: var(--pulse-green); min-width: 190px;
+  }
+  .instr-gloss { font-size: 13px; color: var(--text-2); flex: 1; min-width: 190px; }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .idx { font-size: 17px; }
+    .digit { font-size: 28px; }
+    .tlabel { font-size: 15px; }
+    .readout .bits { font-size: 14px; }
+  }
+
+
+  /* ---- S7: one wire, many cores (cordwood) --------------------------------
+     The radial view is one core with many wires. This is the orthogonal slice:
+     one wire through many cores. Individual strands are not resolvable at this
+     pitch, so the harness is drawn as a band with a few strands peeled out.  */
+  svg#strip, svg#addr { display: block; width: 100%; height: auto; }
+  .cw-core   { stroke: #46597A; stroke-width: 1.2; }
+  .cw-band   { fill: none; stroke: var(--wire-copper); stroke-width: 15;
+               opacity: .30; stroke-linecap: round; }
+  .cw-inhole { fill: none; stroke: var(--wire-copper); stroke-width: 13; opacity: .55; }
+  .cw-str    { fill: none; stroke: var(--wire-copper-bright); stroke-width: 2.2;
+               stroke-linecap: round; opacity: .95; }
+  .cw-cap    { font-family: var(--mono); font-size: 11px; fill: var(--text-3); text-anchor: middle; }
+
+  /* ---- S7b: selection by inhibition --------------------------------------- */
+  .ad-core    { stroke: #46597A; stroke-width: 1.2; }
+  .ad-core.live { stroke: var(--pulse-green); stroke-width: 2.6; }
+  .ad-set     { fill: none; stroke: var(--core-glow); stroke-width: 4; stroke-linecap: round; }
+  .ad-bus     { fill: none; stroke: var(--core-idle); stroke-width: 2.4; }
+  .ad-bus.on  { stroke: #D96B6B; }
+  .ad-drop    { fill: none; stroke: #D96B6B; stroke-width: 2; }
+  .ad-lbl     { font-family: var(--mono); font-size: 11px; fill: var(--text-3); text-anchor: middle; }
+  .ad-lbl.live{ fill: var(--pulse-green); font-weight: 700; }
+  .ad-bl      { font-family: var(--mono); font-size: 11.5px; fill: var(--text-3); text-anchor: end; }
+  .ad-bl.on   { fill: #D96B6B; }
+  .ad-x       { font-family: var(--mono); font-size: 15px; fill: #D96B6B; text-anchor: middle; }
+  .addr-bits  { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .addr-bits .abit {
+    font-family: var(--mono); font-size: 17px; font-weight: 600;
+    background: var(--panel-2); color: var(--text-2);
+    border: 1px solid var(--grid-line); border-radius: 7px;
+    padding: 8px 15px; cursor: pointer; transition: all .12s;
+  }
+  .addr-bits .abit.on { border-color: var(--pulse-green); color: var(--pulse-green); }
+  .addr-bits .alab { font-family: var(--mono); font-size: 12px; color: var(--text-3); }
+
+
+  /* ---- S8: what the redundancy actually costs ----------------------------- */
+  svg#budget { display: block; width: 100%; height: auto; }
+  .bg-free  { fill: var(--pulse-green); opacity: .75; }
+  .bg-red   { fill: var(--wire-copper-bright); opacity: .85; }
+  .bg-track { fill: var(--panel-2); stroke: var(--grid-line); stroke-width: 1; }
+  .bg-lbl   { font-family: var(--mono); font-size: 12px; fill: var(--text-2); }
+  .bg-num   { font-family: var(--mono); font-size: 15px; font-weight: 600; fill: var(--text-1); }
+  .bg-tick  { font-family: var(--mono); font-size: 10.5px; fill: var(--text-3); }
