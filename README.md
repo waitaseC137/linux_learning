@@ -108,6 +108,12 @@ Yani evet, burada AI destekli bir akış var; ama bu repo "körlemesine üretip 
 
 **Somut bir örnek (Temmuz 2026):** Repoyu baştan sona bir güvenlik ve doğruluk incelemesinden geçirdim — bu turu **Claude Code** (Fable 5) ile birlikte yürüttük. Sızmış birkaç wargame parolasını maskeledik, sitedeki eksik/tutarsız yerleri (ana sayfada eksik kalan Maze wargame'i, birbirini tutmayan sayaçlar) düzelttik ve `docs/` aynasını kaynaktan otomatik üreten bir senkron sistemi (`scripts/sync-docs.sh` + CI kontrolü) kurduk. Bulguları Claude Code çıkardı ve düzeltmeleri uyguladı; ben her adımı inceleyip onayladım. Buradaki emek ortak — hız ve kapsam AI'dan, karar ve sorumluluk benden.
 
+**Somut bir örnek (Eylül 2026):** Bir gecede beş ders yazıldı — "Şalterden Bilgisayara" serisinin aritmetik ünitesi (07, 08, 08.5, 09, 10). Ama bunlar "şu konuyu anlat" denilerek yazdırılmadı. Yöntem şuydu: ben NandGame'de seviyeleri çözerken **nerede takıldığım, neyi yanlış anladığım, hangi kelimeyi hangi kelimeyle karıştırdığım** kayıt altına alındı; dersler o kayıtların üstüne kuruldu.
+
+Somut olarak: "carry-in ile carry-out aynı teldir" cümlesinin 07. dersin omurgası olmasının sebebi, benim tam orada kilitlenmiş olmam. 06'daki "üç ayrı OR" uyarısı, üçünü birbirine karıştırmam üzerine yazıldı. 04'e kapasite tablosunun eklenmesi, "`10` neden 2 ediyor" diye iki kez sormamdan çıktı. Full Adder'daki alternatif çözüm ise kitaptaki değil, benim kurduğum devre.
+
+Yani içeriğin sırasını ve vurgularını bir konu başlığı listesi değil, **gerçek bir öğrenme oturumu** belirledi. Taslağı Claude Code yazdı; nerede zorlanılacağını ben gösterdim. Hepsini okudum; sonradan bulduğum yerleri ayrı commit'lerle düzeltiyorum.
+
 > ℹ️ **Git geçmişi neden sıfırlandı?** Bu inceleme sırasında, bazı erken commit'lerde birkaç OverTheWire parolasının yanlışlıkla düz metin kaldığını fark ettik — reponun "şifreler paylaşılmıyor" ilkesine aykırı bir durum (bir tür bilgi ifşası açığı). Güncel dosyalarda maskelemek tek başına yetmiyordu; parolalar eski commit blob'larında hâlâ okunabiliyordu. Bu yüzden git geçmişini bilinçli olarak **tek bir temiz commit'e sıfırladık** (Temmuz 2026). **İçerikte kayıp yok** — yalnızca parola sızıntısı ve dağınık eski commit'ler temizlendi. Kafada soru işareti kalmasın diye açıkça not düşüyorum: geçmişin yeniden yazılması gizlemek için değil, bir güvenlik/ilke ihlalini kökten temizlemek içindi.
 
 ---
