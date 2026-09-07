@@ -299,12 +299,13 @@ diyebilmesi buradan başlıyor.
 ## 🔗 İlgili Konular
 
 - [08_increment.md](./08_increment.md) — Sarma ve carry-in'in ucuzluğu
+- [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md) — Sarmanın matematiği: `ℤ/2ⁿℤ` ve CWE-190
 - [04_teller_sayi_olunca.md](./04_teller_sayi_olunca.md) — "Sayı, okuma biçimindedir"
 - [07_multibit_adder.md](./07_multibit_adder.md) — Toplayıcının kendisi
 
 ---
 
-**Önceki konu:** [08_increment.md](./08_increment.md)
+**Önceki konu:** [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md)
 **Sonraki konu:** [10_bayraklar.md](./10_bayraklar.md) — Makinenin "eğer" demesi
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*

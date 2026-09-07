@@ -74,7 +74,7 @@
 
 ## 🔌 Şalterden Bilgisayara (NAND'dan CPU'ya)
 
-> 🚧 **Bu kurs yazım aşamasında** — NandGame yolculuğundan doğdu; **aritmetik ünitesi tamamlandı** (00–10): şalter/röleden toplayıcıya, çıkarıcıya ve bayraklara (ZF/SF) kadar. Devamı (ALU, hafıza, saat, kontrol birimi) NandGame ilerledikçe eklenecek.
+> 🚧 **Bu kurs yazım aşamasında** — NandGame yolculuğundan doğdu; **aritmetik ünitesi tamamlandı** (00–10, ara dersler dâhil): şalter/röleden toplayıcıya, çıkarıcıya ve bayraklara (ZF/SF) kadar. Devamı (ALU, hafıza, saat, kontrol birimi) NandGame ilerledikçe eklenecek.
 >
 > 🧭 **Yeni mi başlıyorsun?** → [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) — işlemciyi "nedir?" diye değil, **parçalarından kurarak** öğrenmek isteyenler için. x86 kursunun kardeşi ve altı: orası işçiye emir vermeyi öğretir, burası işçiyi transistörden kurar.
 
@@ -90,6 +90,7 @@
 | [06_full_adder.md](./salterden_bilgisayara/06_full_adder.md) | a+b+carry-in; iki half adder = ALU'nun iskeleti |
 | [07_multibit_adder.md](./salterden_bilgisayara/07_multibit_adder.md) | Zinciri kurmak; carry-in ile carry-out **aynı tel** |
 | [08_increment.md](./salterden_bilgisayara/08_increment.md) | 16-bit demet · taşma · kimsenin bakmadığı tel (carry flag) |
+| [08.5_sayac_basa_donunce.md](./salterden_bilgisayara/08.5_sayac_basa_donunce.md) | **Ara ders:** modüler aritmetik, `ℤ/2ⁿℤ` ve **CWE-190** tamsayı taşması |
 | [09_subtraction.md](./salterden_bilgisayara/09_subtraction.md) | İkinin tümleyeni; toplayıcıya çıkarma yaptırmak |
 | [10_bayraklar.md](./salterden_bilgisayara/10_bayraklar.md) | ZF ve SF; makinenin "eğer" demesi — `cmp`'in altındaki devre |
 

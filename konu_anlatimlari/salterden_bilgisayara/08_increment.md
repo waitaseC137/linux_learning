@@ -235,8 +235,9 @@ Elinde sadece toplayan bir alet var. Peki çıkarmayı nasıl yapacaksın?
 İşte bu sorunun cevabı, bilgisayarların eksi sayıları nasıl tuttuğunu — ve neden
 `1111111111111111` deseninin bazen 65535, bazen −1 anlamına geldiğini açıklıyor.
 
-Bu derste bir tel bilerek boşta kaldı. Sonraki derste o telin sarma davranışı,
-**eksi sayıların kendisini** üretecek.
+Bu derste bir tel bilerek boşta kaldı. Ama önce kısa bir ara vereceğiz: o telin
+üstünde duran matematiği ve neden yıllardır bir güvenlik açığı sınıfını beslediğini
+konuşacağız. Ardından aynı sarma davranışı, **eksi sayıların kendisini** üretecek.
 
 ---
 
@@ -266,6 +267,6 @@ Bu derste bir tel bilerek boşta kaldı. Sonraki derste o telin sarma davranış
 ---
 
 **Önceki konu:** [07_multibit_adder.md](./07_multibit_adder.md)
-**Sonraki konu:** [09_subtraction.md](./09_subtraction.md) — Eksi işareti olmayan dünya
+**Sonraki konu:** [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md) — Ara ders: sarma ve CWE-190
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*
