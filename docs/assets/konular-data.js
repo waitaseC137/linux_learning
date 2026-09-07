@@ -76,8 +76,8 @@ window.KONULAR = {
       id: "salterden_bilgisayara",
       label: "Şalterden Bilgisayara (NAND'dan CPU'ya)",
       accent: "var(--d-low)",
-      tag: "🚧 yazılıyor",
-      blurb: "NandGame yolculuğundan doğan kurs — şalter/röleden NAND'a, NAND'dan mantık kapılarına, kapılardan toplayıcıya (half/full adder). İşlemciyi 'nedir' diye değil, parçalarından kendin kurarak öğren. Yazım aşamasında (00–06, Full Adder'a kadar).",
+      tag: "12 ders · 🚧 aritmetik tam",
+      blurb: "NandGame yolculuğundan doğan kurs — şalter/röleden NAND'a, NAND'dan mantık kapılarına, kapılardan toplayıcıya (half/full adder). İşlemciyi 'nedir' diye değil, parçalarından kendin kurarak öğren. Aritmetik ünitesi tamamlandı (00–10): toplayıcı, çıkarıcı ve bayraklar. Sırada ALU, bellek ve işlemci.",
       files: [
         { f: "salterden_bilgisayara/00_buradan_basla.md",        n: "→",    t: "Buradan Başla",        h: "Kurs haritası; şalterden CPU'ya (🚧 yazılıyor)" },
         { f: "salterden_bilgisayara/01_akim_salter_role.md",     n: "01",   t: "Akım · Şalter · Röle", h: "Elektrik → şalter → röle = ilk mantık" },
@@ -86,7 +86,11 @@ window.KONULAR = {
         { f: "salterden_bilgisayara/03.5_soyutlama_merdiveni.md",n: "03.5", t: "Soyutlama Merdiveni",  h: "Kapı = kapalı kutu; bir üst kata çıkmak" },
         { f: "salterden_bilgisayara/04_teller_sayi_olunca.md",   n: "04",   t: "Teller Sayı Olunca",   h: "Tellere değer biçmek; jeton mantığı" },
         { f: "salterden_bilgisayara/05_half_adder.md",           n: "05",   t: "Half Adder",           h: "XOR+AND = toplamın tohumu (sum/carry)" },
-        { f: "salterden_bilgisayara/06_full_adder.md",           n: "06",   t: "Full Adder",           h: "a+b+carry-in; iki half adder" }
+        { f: "salterden_bilgisayara/06_full_adder.md",           n: "06",   t: "Full Adder",           h: "a+b+carry-in; iki half adder" },
+        { f: "salterden_bilgisayara/07_multibit_adder.md",       n: "07",   t: "Multi-bit Adder",      h: "Zinciri kurmak; carry-in ile carry-out aynı tel" },
+        { f: "salterden_bilgisayara/08_increment.md",            n: "08",   t: "Increment",            h: "16-bit demet · taşma · kimsenin bakmadığı tel" },
+        { f: "salterden_bilgisayara/09_subtraction.md",          n: "09",   t: "Subtraction",          h: "İkinin tümleyeni; toplayıcıya çıkarma yaptırmak" },
+        { f: "salterden_bilgisayara/10_bayraklar.md",            n: "10",   t: "Bayraklar (ZF/SF)",    h: "Sıfır ve işaret; makinenin 'eğer' demesi" }
       ]
     },
     {

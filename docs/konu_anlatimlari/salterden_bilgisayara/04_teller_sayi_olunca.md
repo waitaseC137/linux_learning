@@ -17,6 +17,7 @@
 - [Jeton Sistemi](#jeton-sistemi)
 - [Bu Zaten Bildiğin Bir Numara](#bu-zaten-bildiğin-bir-numara)
 - [İkilik Saymak](#ikilik-saymak)
+- [Kaç Tel, Kaç Sayı?](#kaç-tel-kaç-sayı)
 - [Okuma Formülü](#okuma-formülü)
 
 ---
@@ -122,6 +123,36 @@ dolunca soldaki bir artar. Aynı mantık, sadece "dolmak" 9'da değil 1'de oluyo
 
 ---
 
+## Kaç Tel, Kaç Sayı?
+
+Tabloya bir de şu gözle bak: **üç telle en fazla 7'ye kadar sayabildin.** Daha
+büyüğü için dördüncü teli eklemen gerekir.
+
+Her yeni tel, sayabildiğin en büyük sayıyı **ikiye katlar**:
+
+| tel sayısı | kaç farklı desen | sayabildiğin aralık |
+|:-:|:-:|:-:|
+| 1 | 2 | 0 – 1 |
+| 2 | 4 | 0 – 3 |
+| 3 | 8 | 0 – 7 |
+| 4 | 16 | 0 – 15 |
+| 8 | 256 | 0 – 255 |
+| **16** | **65536** | **0 – 65535** |
+
+> 🔑 Formül: **n telle 2ⁿ farklı desen** kurulur, en büyük sayı **2ⁿ − 1** olur.
+> Bir eksik, çünkü desenlerden biri sıfıra gidiyor.
+
+O son satırı aklında tut. İlerideki derslerde `65535` sayısı ısrarla karşına
+çıkacak — bilgisayarların çoğu **16 bitlik** demetlerle çalıştığı için o, bir
+demetin **taşabileceği en son değer.**
+
+> 💡 Peki 65535'in üstüne bir eklersen ne olur? Kilometre sayacı 999999'dan sonra
+> ne yapıyorsa onu: **başa sarar.** Bu küçük ayrıntı, ileride hem eksi sayıların
+> nasıl temsil edildiğini hem de bilgisayar güvenliğindeki bir zafiyet sınıfının
+> nasıl doğduğunu açıklayacak. Şimdilik sadece not et: **hane biter, sayaç döner.**
+
+---
+
 ## Okuma Formülü
 
 Her şeyi tek satıra sıkıştıralım. Üç telin adı soldan sağa `x h l` olsun
@@ -147,6 +178,8 @@ uzattığında paniklemeyeceksin; "2·h + l" diye okuyup geçeceksin.
 ☐ Sayı = yanan tellerin değerleri toplamı. (Jeton benzetmesi: hangi jetonları verdin?)
 ☐ Her jetondan en fazla BİR tane → değerler mecburen 1, 2, 4, 8... (ikinin katları).
 ☐ İkilik sistem = okuldaki basamak fikri, iki rakamla. `10` (ikilik) = "bir 2'lik" = 2.
+☐ n telle 2ⁿ desen, en büyük sayı 2ⁿ−1. 16 tel → 0–65535 (ileride ısrarla karşına çıkar).
+☐ Hane bitince sayaç BAŞA SARAR — eksi sayıların ve taşmanın tohumu burada.
 ☐ Okuma formülü: sayı = 4x + 2h + 1l. İki dersin anahtarı bu satır.
 ☐ Bilgisayar ikiliği seçmedi; ikilik, telin var/yok doğasından çıktı.
 ```
@@ -157,6 +190,7 @@ uzattığında paniklemeyeceksin; "2·h + l" diye okuyup geçeceksin.
 
 - [01_akim_salter_role.md](./01_akim_salter_role.md) — "Tel anlam bilmez" ilkesinin doğduğu yer
 - [05_half_adder.md](./05_half_adder.md) — Bu dersin meyvesi: sayıları TOPLAYAN devre
+- [08_increment.md](./08_increment.md) — 65535'in üstüne 1 eklersen ne oluyor
 
 ---
 

@@ -18,6 +18,7 @@
 - [Yanlış Yol: "Bütün Çiftleri Toplayayım"](#yanlış-yol-bütün-çiftleri-toplayayım)
 - [Doğru Yol: Kâğıttaki Gibi, Sırayla](#doğru-yol-kâğıttaki-gibi-sırayla)
 - [Son Tel: İki Elde, Tek Çıkış](#son-tel-iki-elde-tek-çıkış)
+- [Üç Ayrı OR — Karıştırma](#üç-ayrı-or--karıştırma)
 - [🎮 Şimdi Sen Kur](#-şimdi-sen-kur)
 - [Kapanış: 64'lü Zincir](#kapanış-64lü-zincir)
 
@@ -150,6 +151,54 @@ imkânsız.** OR'un tek şüpheli satırı hiç ziyaret edilmeyecek — güvenle
 > kapının aynı görevi yapabilmesi ilk başta tuhaf gelir — sırrı, farklarının hiç
 > test edilmediği bir dünyada yaşıyor olmalarıdır.
 
+### Bunun somut sonucu: OR kapısı olmadan da kurabilirsin
+
+O bonus lafta kalmasın. Half adder'ın `l` çıkışı **zaten XOR'dur** (05. ders). Yani
+elindeki `add` kutusunu OR yerine kullanabilirsin:
+
+```
+   add₃ = add(h₁, h₂)      →  l₃  =  XOR(h₁, h₂)  →  kutunun h çıkışı
+```
+
+Üçüncü bir half adder koyar, iki eldeyi ona verir, **`l` çıkışını** alırsın. `h₃`
+bacağı boşta kalır — hiç kullanılmaz, çünkü hiç 1 olmaz.
+
+| h₁ | h₂ | OR | XOR |
+|:-:|:-:|:-:|:-:|
+| 0 | 0 | 0 | 0 |
+| 0 | 1 | 1 | 1 |
+| 1 | 0 | 1 | 1 |
+| ~~1~~ | ~~1~~ | ~~1~~ | ~~0~~ | ← yukarıda kanıtladık: hiç olmuyor |
+
+Ayrıştıkları **tek satır** ziyaret edilmediği için iki devre birebir aynı davranır.
+
+> 🔑 Buradaki asıl ders şu: bir devrenin doğruluğu sadece kapılarına değil,
+> **hangi girişlerin mümkün olduğuna** da bağlıdır. "İmkânsız durum" bilgisi,
+> kapı seçme özgürlüğü kazandırır. Bunu kanıtlamadan kullanmak ise tehlikelidir —
+> o yüzden önce kâğıtta ispatladık, sonra kullandık.
+
+---
+
+## Üç Ayrı OR — Karıştırma
+
+Bu dersin en sinsi tuzağı bir devre hatası değil, bir **kelime** hatası. "OR" bu
+konuda üç ayrı yerde geçiyor ve üçü birbiriyle alakasız:
+
+| # | nerede | ne |
+|:-:|---|---|
+| 1 | **XOR'un içinde** | `XOR = (A OR B) AND (A NAND B)` — 03. dersten. Full adder'la ilgisi yok. |
+| 2 | **Tabloyu okurken** | `a = 1` katında `h = OR(b, c)` çıkıyor. Bu bir **gözlem**, kurulacak kapı değil. |
+| 3 | **Devrede** | `OR(h₁, h₂)` — iki eldeyi birleştiren. **Gerçek olan bu.** |
+
+> ⚠️ İkincisi özellikle tehlikeli: tabloyu katlara ayırıp `h = OR(b, c)` gözlemini
+> yaptıktan sonra devreye gidip `b` ile `c`'yi bir OR'a bağlamak çok cazip gelir.
+> **Yanlış yoldur.** O gözlem `a = 1` katının *tarifi*; devrenin `h`'si ise üç
+> girişin tamamına bakıyor.
+>
+> Genel kural: aynı ismi taşıyan iki şey gördüğünde, **hangisinden bahsettiğini
+> her seferinde yüksek sesle söyle.** Bu seride ileride aynı tuzak `c` harfiyle
+> (giren elde / çıkan elde) ve kutu bacak isimleriyle tekrar karşına çıkacak.
+
 ---
 
 ## 🎮 Şimdi Sen Kur
@@ -170,6 +219,11 @@ hangi jetonlar" diye içinden oku.
 
 Özetin özeti: *full adder = iki half adder + bir OR.* Ama bu cümleyi artık ezber
 olarak değil, her telinin "neden"ini bilerek söylüyorsun — fark budur.
+
+**Alternatif (OR kapısı kullanmadan):** 3. adımdaki OR yerine üçüncü bir `add` koy,
+girişlerine `h₁` ve `h₂`'yi ver, **`l` çıkışını** kutunun `h`'sine bağla. `h₃`'ü
+boşta bırak. Yukarıda kanıtladığın "iki elde aynı anda 1 olamaz" gerçeği bu devreyi
+de geçerli kılıyor. İki çözüm de doğrudur — ikincisi, ispatı *kullanan* çözümdür.
 
 </details>
 
@@ -207,6 +261,9 @@ Bu zinciri bizzat kurmak, bir sonraki dersin (ve NandGame'de sıradaki seviyenin
 ☐ Toplama SIRALIDIR: topla → sonucun üstüne ekle. (Katın cevabı, üst katın sinyali.)
 ☐ c ile toplanacak tel l'dir (ikisi de 1'lik cinsinden); h'ler 2'lik, kenarda bekler.
 ☐ İki h asla aynı anda 1 olamaz (kâğıt ispatı) → birleştirmeye OR yeter (XOR da geçerdi).
+☐ OR yerine üçüncü bir half adder'ın l çıkışı da kullanılabilir — ispatı KULLANAN çözüm.
+☐ Devrenin doğruluğu kapılara değil, hangi girişlerin MÜMKÜN olduğuna da bağlıdır.
+☐ Bu derste 'OR' üç ayrı şeye deniyor. Hangisinden bahsettiğini her seferinde söyle.
 ☐ h çıkışı komşunun c girişine takılır → 64'lü zincir = işlemcideki `add`in donanımı.
 ```
 
@@ -221,6 +278,6 @@ Bu zinciri bizzat kurmak, bir sonraki dersin (ve NandGame'de sıradaki seviyenin
 ---
 
 **Önceki konu:** [05_half_adder.md](./05_half_adder.md)
-**Sonraki konu:** *(yolda — Multi-bit Adder: 64'lü zincirin kuruluşu)*
+**Sonraki konu:** [07_multibit_adder.md](./07_multibit_adder.md) — Zinciri kurmak: aynı telin iki adı
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*

@@ -2,8 +2,6 @@
 
 > Şalter → mantık kapısı → işlemci → assembly → işletim sistemi → wargame.
 > Bilgisayarı ve güvenliği **katman katman, en alttan** öğren — oyun oynayarak, deneye yanıla, terminale bakarak.
->
-> 
 
 ---
 
@@ -13,6 +11,8 @@ Komutların ve kavramların wargame bağımsız, referans olarak tutulduğu dosy
 Şalterden bilgisayara (NAND'dan CPU'ya), x86 assembly, Linux komutları, binary analizi, web güvenliği, kriptografi ve binary exploitation modüllerini kapsar.
 
 → **[Tüm konu anlatımlarına buradan ulaşabilirsin](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
+
+> 🔌 **En alttan mı başlamak istiyorsun?** NAND kapısından toplayıcıya, çıkarıcıya ve bayraklara: **[Şalterden Bilgisayara](./konu_anlatimlari/salterden_bilgisayara/00_buradan_basla.md)** — aritmetik ünitesi tamam (00–10), ALU yolda.
 
 > 💥 **Binary exploitation'a sıfırdan mı başlıyorsun?** Assembly bilmeden de takip edebileceğin giriş rehberi: **[00_buradan_basla.md](./konu_anlatimlari/binary_exploitation/00_buradan_basla.md)**
 
