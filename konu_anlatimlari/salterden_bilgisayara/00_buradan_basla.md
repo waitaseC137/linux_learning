@@ -154,6 +154,7 @@ Dosyaları bu sırayla oku. Her ders bir öncekine yaslanır.
 |:---:|---|---|---|
 | 8 | [08_increment](./08_increment.md) | 16 bitlik demet; taşma ve kimsenin bakmadığı tel | Increment |
 | 8.5 | [08.5_sayac_basa_donunce](./08.5_sayac_basa_donunce.md) | *(ara ders)* Sarmanın matematiği ve **CWE-190** | — |
+| 8.5.1 | [08.5.1_tasma_gercek_hayatta](./08.5.1_tasma_gercek_hayatta.md) | *(ara ders)* Aynı taşmanın gerçek vakaları: Stagefright · Ariane 5 · Boeing 787 | — |
 | 9 | [09_subtraction](./09_subtraction.md) | İkinin tümleyeni; toplayıcıya çıkarma yaptırmak | Subtraction |
 
 ### 🚩 Ünite 3 — Karar Vermek
@@ -168,9 +169,10 @@ Veri yönlendirme (Switching) → hesap çekirdeği (ALU) → hafıza (latch, re
 → saat ve kontrol birimi → **komut işleyen işlemci.**
 
 > 💡 Numarası `.5` ile biten dosyalar kısa birer **ara ders**tir: ana yolun kıyısında,
-> daha hafif, karşılığında bir oyun seviyesi yok. Ama ikisini de atlama — `03.5`
-> serinin en önemli fikrini taşıyor, `08.5` ise kurduğun devrenin altındaki matematiği
-> ve o matematiğin güvenlik dünyasındaki karşılığını açıyor.
+> daha hafif, karşılığında bir oyun seviyesi yok. Ama hiçbirini atlama — `03.5`
+> serinin en önemli fikrini taşıyor, `08.5` kurduğun devrenin altındaki matematiği
+> ve o matematiğin güvenlik dünyasındaki karşılığını açıyor, `08.5.1` ise aynı
+> matematiğin dünyada neye mal olduğunu gösteriyor.
 
 ---
 

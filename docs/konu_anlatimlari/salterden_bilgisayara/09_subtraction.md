@@ -305,7 +305,7 @@ diyebilmesi buradan başlıyor.
 
 ---
 
-**Önceki konu:** [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md)
+**Önceki konu:** [08.5.1_tasma_gercek_hayatta.md](./08.5.1_tasma_gercek_hayatta.md)
 **Sonraki konu:** [10_bayraklar.md](./10_bayraklar.md) — Makinenin "eğer" demesi
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*

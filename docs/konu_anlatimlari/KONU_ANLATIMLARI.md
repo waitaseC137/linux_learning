@@ -91,6 +91,7 @@
 | [07_multibit_adder.md](./salterden_bilgisayara/07_multibit_adder.md) | Zinciri kurmak; carry-in ile carry-out **aynı tel** |
 | [08_increment.md](./salterden_bilgisayara/08_increment.md) | 16-bit demet · taşma · kimsenin bakmadığı tel (carry flag) |
 | [08.5_sayac_basa_donunce.md](./salterden_bilgisayara/08.5_sayac_basa_donunce.md) | **Ara ders:** modüler aritmetik, `ℤ/2ⁿℤ` ve **CWE-190** tamsayı taşması |
+| [08.5.1_tasma_gercek_hayatta.md](./salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md) | **Ara ders:** taşmanın gerçek vakaları — Stagefright, BEC token, Boeing 787, Ariane 5 |
 | [09_subtraction.md](./salterden_bilgisayara/09_subtraction.md) | İkinin tümleyeni; toplayıcıya çıkarma yaptırmak |
 | [10_bayraklar.md](./salterden_bilgisayara/10_bayraklar.md) | ZF ve SF; makinenin "eğer" demesi — `cmp`'in altındaki devre |
 
