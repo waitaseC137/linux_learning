@@ -20,6 +20,7 @@
 - [The Wrong Way: "Let Me Add All the Pairs"](#the-wrong-way-let-me-add-all-the-pairs)
 - [The Right Way: Like on Paper, In Order](#the-right-way-like-on-paper-in-order)
 - [The Last Wire: Two Carries, One Output](#the-last-wire-two-carries-one-output)
+- [Three Separate ORs — Don't Mix Them Up](#three-separate-ors--dont-mix-them-up)
 - [🎮 Now You Build It](#-now-you-build-it)
 - [Closing: The Chain of 64](#closing-the-chain-of-64)
 
@@ -155,6 +156,55 @@ will never be visited — use it with confidence.
 > same task in a circuit feels strange at first — the secret is that they live in a world
 > where their difference is never tested.
 
+### The concrete consequence: you can build it without an OR gate at all
+
+Let's not leave that bonus as talk. A half adder's `l` output **is already an XOR**
+(lesson 05). Which means you can use the `add` box you already have in place of the OR:
+
+```
+   add₃ = add(h₁, h₂)      →  l₃  =  XOR(h₁, h₂)  →  the box's h output
+```
+
+You place a third half adder, feed it the two carries, and take its **`l` output**. The
+`h₃` pin is left dangling — never used, because it is never 1.
+
+| h₁ | h₂ | OR | XOR |
+|:-:|:-:|:-:|:-:|
+| 0 | 0 | 0 | 0 |
+| 0 | 1 | 1 | 1 |
+| 1 | 0 | 1 | 1 |
+| ~~1~~ | ~~1~~ | ~~1~~ | ~~0~~ | ← proved above: never happens |
+
+Because the **one row** where they differ is never visited, the two circuits behave
+identically.
+
+> 🔑 The real lesson here: a circuit's correctness depends not only on its gates but also on
+> **which inputs are possible.** Knowing that a state is impossible buys you freedom in
+> choosing gates. Using that freedom without proving it is dangerous — which is why we
+> proved it on paper first and used it after.
+
+---
+
+## Three Separate ORs — Don't Mix Them Up
+
+The sneakiest trap in this lesson isn't a circuit mistake, it's a **word** mistake. "OR"
+comes up in three different places here and the three have nothing to do with each other:
+
+| # | where | what |
+|:-:|---|---|
+| 1 | **inside XOR** | `XOR = (A OR B) AND (A NAND B)` — from lesson 03. Nothing to do with the full adder. |
+| 2 | **while reading the table** | on the `a = 1` floor, `h = OR(b, c)` comes out. That's an **observation**, not a gate to build. |
+| 3 | **in the circuit** | `OR(h₁, h₂)` — the one that combines the two carries. **This is the real one.** |
+
+> ⚠️ The second is especially dangerous: after splitting the table into floors and making
+> the observation `h = OR(b, c)`, it becomes very tempting to go to the circuit and wire `b`
+> and `c` into an OR. **That's the wrong road.** That observation is a *description* of the
+> `a = 1` floor; the circuit's `h` looks at all three inputs.
+>
+> The general rule: when you see two things carrying the same name, **say out loud, every
+> single time, which one you're talking about.** Later in this series the same trap will
+> come back with the letter `c` (carry in / carry out) and with box pin names.
+
 ---
 
 ## 🎮 Now You Build It
@@ -175,6 +225,12 @@ read out to yourself "how many apples → which tokens".
 
 Summary of the summary: *full adder = two half adders + one OR.* But you now say this
 sentence not by rote but knowing the "why" of each of its wires — that's the difference.
+
+**Alternative (without using an OR gate):** instead of the OR in step 3, place a third
+`add`, feed `h₁` and `h₂` into its inputs, and wire its **`l` output** to the box's `h`.
+Leave `h₃` dangling. The fact you proved above — that the two carries can never be 1 at the
+same time — makes this circuit valid too. Both solutions are correct; the second is the one
+that *uses* the proof.
 
 </details>
 
@@ -212,6 +268,10 @@ Building this chain yourself is the job of the next lesson (and the next level i
 ☐ Addition is SEQUENTIAL: add → then add onto the result. (A floor's answer, the floor above's signal.)
 ☐ The wire added to c is l (both in 1-token units); the h's are 2-token, waiting off to the side.
 ☐ Two h's can never be 1 at once (paper proof) → OR is enough to combine (XOR would pass too).
+☐ A half adder's l output IS an XOR → a third `add` can replace the OR entirely.
+☐ A circuit's correctness depends on which inputs are POSSIBLE, not only on its gates.
+☐ Three separate ORs: inside XOR / the table observation / the real one in the circuit.
+☐ Never wire b and c into an OR — that observation only describes the a=1 floor.
 ☐ The h output plugs into the neighbor's c input → the chain of 64 = the hardware of the processor's `add`.
 ```
 
@@ -226,6 +286,6 @@ Building this chain yourself is the job of the next lesson (and the next level i
 ---
 
 **Previous topic:** [05_half_adder.md](./05_half_adder.md)
-**Next topic:** *(on the way — Multi-bit Adder: building the chain of 64)*
+**Next topic:** [07_multibit_adder.md](./07_multibit_adder.md) — Building the chain; one wire, two names
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This lesson is part of the "From Switches to a Computer" series. The series moves along together with [nandgame.com](https://nandgame.com).*

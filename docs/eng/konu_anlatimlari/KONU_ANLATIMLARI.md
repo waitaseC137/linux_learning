@@ -74,7 +74,7 @@
 
 ## 🔌 From Switches to a Computer (NAND to CPU)
 
-> 🚧 **This course is still being written** — it grew out of the NandGame journey; right now it's written from switch/relay up to the **Full Adder** (00–06). The rest (multi-bit adder, ALU, memory, clock, control unit) will be added as the journey continues.
+> 🚧 **This course is still being written** — it grew out of the NandGame journey; the **arithmetic unit is complete** (00–10, interludes included): from switch/relay up to the adder, the subtractor and the flags (ZF/SF). The rest (ALU, memory, clock, control unit) will be added as the journey continues.
 >
 > 🧭 **New to this?** → [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) — for people who want to learn the processor not by asking "what is it?" but by **building it from its parts**. It's the sibling and the floor beneath the x86 course: there you learn to give the worker orders, here you build the worker from transistors.
 
@@ -88,6 +88,12 @@
 | [04_teller_sayi_olunca.md](./salterden_bilgisayara/04_teller_sayi_olunca.md) | Assigning value to wires; the token logic |
 | [05_half_adder.md](./salterden_bilgisayara/05_half_adder.md) | XOR+AND = the seed of addition (sum + carry) |
 | [06_full_adder.md](./salterden_bilgisayara/06_full_adder.md) | a+b+carry-in; two half adders = the skeleton of an ALU |
+| [07_multibit_adder.md](./salterden_bilgisayara/07_multibit_adder.md) | Building the chain; carry-in and carry-out are **one wire** |
+| [08_increment.md](./salterden_bilgisayara/08_increment.md) | The 16-bit bundle · overflow · the wire nobody reads (carry flag) |
+| [08.5_sayac_basa_donunce.md](./salterden_bilgisayara/08.5_sayac_basa_donunce.md) | **Interlude:** modular arithmetic, `ℤ/2ⁿℤ` and **CWE-190** integer overflow |
+| [08.5.1_tasma_gercek_hayatta.md](./salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md) | **Interlude:** real cases of overflow — Stagefright, BEC token, Boeing 787, Ariane 5 |
+| [09_subtraction.md](./salterden_bilgisayara/09_subtraction.md) | Two's complement; making an adder subtract |
+| [10_bayraklar.md](./salterden_bilgisayara/10_bayraklar.md) | ZF and SF; how a machine says "if" — the circuit under `cmp` |
 
 ---
 ## ⚙️ x86 Assembly (from scratch)

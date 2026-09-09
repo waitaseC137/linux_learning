@@ -18,6 +18,7 @@
 - [The Token System](#the-token-system)
 - [This Is a Trick You Already Know](#this-is-a-trick-you-already-know)
 - [Counting in Binary](#counting-in-binary)
+- [How Many Wires, How Many Numbers?](#how-many-wires-how-many-numbers)
 - [The Reading Formula](#the-reading-formula)
 
 ---
@@ -125,6 +126,36 @@ the left one goes up by one. Same logic, except "filling up" happens at 1 instea
 
 ---
 
+## How Many Wires, How Many Numbers?
+
+Look at the table one more time with this in mind: **with three wires you could count up to
+7 at most.** For anything larger you have to add a fourth wire.
+
+Every new wire **doubles** the largest number you can count to:
+
+| wire count | how many distinct patterns | the range you can count |
+|:-:|:-:|:-:|
+| 1 | 2 | 0 – 1 |
+| 2 | 4 | 0 – 3 |
+| 3 | 8 | 0 – 7 |
+| 4 | 16 | 0 – 15 |
+| 8 | 256 | 0 – 255 |
+| **16** | **65536** | **0 – 65535** |
+
+> 🔑 The formula: **`n` wires build `2ⁿ` distinct patterns**, and the largest number is
+> **`2ⁿ − 1`.** One less, because one of the patterns is spent on zero.
+
+Keep that last row in mind. The number `65535` will keep turning up insistently in later
+lessons — because most computers work with **16-bit** bundles, and that is the very last
+value a bundle **can hold before it overflows.**
+
+> 💡 So what happens if you add one to 65535? Whatever an odometer does after 999999: it
+> **wraps around.** This small detail will later explain both how negative numbers are
+> represented and how a whole vulnerability class in computer security is born. For now just
+> note it down: **the digits run out, the counter turns over.**
+
+---
+
 ## The Reading Formula
 
 Let's squeeze everything into a single line. Let the three wires, left to right, be named
@@ -152,6 +183,8 @@ This formula is the key to the next two lessons. When our circuits hand you two 
 ☐ At most ONE of each token → the values must be 1, 2, 4, 8... (powers of two).
 ☐ The binary system = the place-value idea from school, with two digits. `10` (binary) = "one 2's" = 2.
 ☐ Reading formula: number = 4x + 2h + 1l. This line is the key to two lessons.
+☐ n wires → 2ⁿ patterns → the range 0 … 2ⁿ−1. Each new wire DOUBLES the ceiling.
+☐ 16 bits → 0 … 65535. Add one to 65535 and the counter wraps to the start.
 ☐ The computer didn't choose binary; binary came out of the on/off nature of the wire.
 ```
 

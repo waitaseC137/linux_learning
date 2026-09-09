@@ -81,17 +81,24 @@ Throughout the whole series we'll use one single tool: **[nandgame.com](https://
 
 ## What Will You Be Able to Do in the End?
 
-When you finish the part of the series written so far (Unit 0 + 1):
+When you finish the part of the series written so far:
 
 - You'll know what "1 and 0" **physically** is — not a metaphor, but wire and current.
 - You'll have **derived yourself** all the logic gates from a single kind of part (NAND).
 - You'll be able to explain how the computer **counts** and how it **adds**, because you
   built the adding circuit yourself.
+- You'll have built an **adder-subtractor** that works on real 16-bit numbers.
+- You'll be able to explain how a computer holds **negative numbers** (two's complement) —
+  not from memory, but knowing why it could not have been any other way.
+- You'll see why **overflows** like `65535 + 1 = 0` are unavoidable, and how that gives
+  birth to a real **class of security vulnerabilities.**
+- You'll have built with your own hands the **flags** (ZF, SF) that let a processor say
+  `if` — the wire underneath every `if` you have ever written.
 - The phrase "billions of transistors" won't scare you — because you'll have seen how the
   floors stack on top of one another.
 
-The series will grow as the game advances: next up are multi-digit addition, subtraction,
-the compute core (ALU), memory, and finally **a real processor that executes instructions.**
+The series keeps growing as the game advances: next up are data routing (Switching), the
+compute core (ALU), memory, and finally **a real processor that executes instructions.**
 All from the same bricks.
 
 ---
@@ -145,14 +152,33 @@ Read the files in this order. Each lesson leans on the previous one.
 | 4 | [04_teller_sayi_olunca](./04_teller_sayi_olunca.md) | Loading number-meaning onto wires; binary counting | — *(concept lesson)* |
 | 5 | [05_half_adder](./05_half_adder.md) | The first adder: 1 + 1 = 10 | Half Adder |
 | 6 | [06_full_adder](./06_full_adder.md) | The carry chain: the brick for adding numbers of unlimited size | Full Adder |
+| 7 | [07_multibit_adder](./07_multibit_adder.md) | Building the chain; carry-in and carry-out are **one wire** | Multi-bit Adder |
+
+### 🔁 Unit 2 — The Limit of a Number, and Negative Numbers
+
+| # | File | What it teaches | NandGame level |
+|:---:|---|---|---|
+| 8 | [08_increment](./08_increment.md) | The 16-bit bundle; overflow and the wire nobody reads | Increment |
+| 8.5 | [08.5_sayac_basa_donunce](./08.5_sayac_basa_donunce.md) | *(interlude)* The mathematics of wrapping, and **CWE-190** | — |
+| 8.5.1 | [08.5.1_tasma_gercek_hayatta](./08.5.1_tasma_gercek_hayatta.md) | *(interlude)* Real cases of the same overflow: Stagefright · Ariane 5 · Boeing 787 | — |
+| 9 | [09_subtraction](./09_subtraction.md) | Two's complement; making an adder subtract | Subtraction |
+
+### 🚩 Unit 3 — Making Decisions
+
+| # | File | What it teaches | NandGame level |
+|:---:|---|---|---|
+| 10 | [10_bayraklar](./10_bayraklar.md) | ZF and SF: how a machine says `if` | Equal to Zero · Less than Zero |
 
 ### 🔜 On the way (to be written as the game advances)
 
-Multi-bit Adder → subtraction and negative numbers → data routing (Switching) → the compute
-core (ALU) → memory (latch, register, RAM) → **the processor.**
+Data routing (Switching) → the compute core (ALU) → memory (latch, register, RAM) → clock
+and control unit → **a processor that executes instructions.**
 
 > 💡 Files whose number ends in `.5` are short **interludes**: on the side of the main road,
-> lighter. But don't skip 03.5 — the most important idea of the series is there.
+> lighter, with no game level to go with them. But don't skip any of them — `03.5` carries
+> the most important idea in the series, `08.5` opens up the mathematics underneath the
+> circuit you built and what that mathematics means in the security world, and `08.5.1`
+> shows what the same mathematics has cost in the real world.
 
 ---
 
@@ -184,6 +210,12 @@ two ends:
 They can be read independently of each other; but if you carry both at once, one day the two
 paths meet: there, you'll see that the `add` order you wrote goes to the adder you built here
 with your own hands. That moment is the reason both of these series exist.
+
+> 🔑 **And that moment has now arrived for the first time.** The `ZF` and `SF` flags you
+> build in [lesson 10](./10_bayraklar.md) of this series are the subject of
+> [lesson 10](../x86_assembly/10_bayraklar_ve_cmp.md) of the x86 series. Over there they
+> were mysterious bits the processor **handed** you; here you **build them yourself.** We've
+> been weaving the ladder from above and we're weaving it from below — the gap is narrowing.
 
 ---
 
