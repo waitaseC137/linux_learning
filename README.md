@@ -12,7 +12,7 @@ Komutların ve kavramların wargame bağımsız, referans olarak tutulduğu dosy
 
 → **[Tüm konu anlatımlarına buradan ulaşabilirsin](./konu_anlatimlari/KONU_ANLATIMLARI.md)**
 
-> 🔌 **En alttan mı başlamak istiyorsun?** NAND kapısından toplayıcıya, çıkarıcıya ve bayraklara: **[Şalterden Bilgisayara](./konu_anlatimlari/salterden_bilgisayara/00_buradan_basla.md)** — aritmetik ünitesi tamam (00–10), ALU yolda.
+> 🔌 **En alttan mı başlamak istiyorsun?** NAND kapısından toplayıcıya, çıkarıcıya ve bayraklara: **[Şalterden Bilgisayara](./konu_anlatimlari/salterden_bilgisayara/00_buradan_basla.md)** — aritmetik ünitesi tamam (00–10), seçici/switch (11) eklendi, ALU yolda.
 
 > 💥 **Binary exploitation'a sıfırdan mı başlıyorsun?** Assembly bilmeden de takip edebileceğin giriş rehberi: **[00_buradan_basla.md](./konu_anlatimlari/binary_exploitation/00_buradan_basla.md)**
 
@@ -113,6 +113,22 @@ Yani evet, burada AI destekli bir akış var; ama bu repo "körlemesine üretip 
 Somut olarak: "carry-in ile carry-out aynı teldir" cümlesinin 07. dersin omurgası olmasının sebebi, benim tam orada kilitlenmiş olmam. 06'daki "üç ayrı OR" uyarısı, üçünü birbirine karıştırmam üzerine yazıldı. 04'e kapasite tablosunun eklenmesi, "`10` neden 2 ediyor" diye iki kez sormamdan çıktı. Full Adder'daki alternatif çözüm ise kitaptaki değil, benim kurduğum devre.
 
 Yani içeriğin sırasını ve vurgularını bir konu başlığı listesi değil, **gerçek bir öğrenme oturumu** belirledi. Taslağı Claude Code yazdı; nerede zorlanılacağını ben gösterdim. Hepsini okudum; sonradan bulduğum yerleri ayrı commit'lerle düzeltiyorum.
+
+**Matematik önkoşul değil, işin içinden çıkıyor.** Bu serinin bir kuralı var: matematik "önce şunu öğren" diye kapıya konmuyor, uğraşılan işin içinden çıkıyor. Aritmetik ünitesinde bunun en net örneği taşma konusu oldu. 08.5'i konuşurken şöyle bir cümle kurdum:
+
+> *"matematikte de olduğu gibi işin içine bölme girince ortalık karışıyor, kararlar yeniden dağıtılıyor gibi"*
+
+Bu bir kafa karışıklığı itirafı gibi duruyordu; aslında doğru teşhisti. Taşma zaten bir bölme işlemidir — `(a + b) mod 2ⁿ`, yani **kalan**. Ders bu cümlenin üstüne yeniden kuruldu: "taşma" ile "bölmeden kalan" aynı şeyin iki adı olarak anlatıldı. Takıldığım yer atlanacak bir engel değil, dersin omurgası oldu.
+
+Aynı konuda C'nin klasik taşma kontrolü `if (sonuc < a)` **ezberletilmedi, türetildi**: taşarken `2ⁿ` kaybediyorsun ama en fazla `2ⁿ − 1` ekliyorsun, dolayısıyla sonuç küçülmek *zorunda*. Yanındaki `if (sonuc > MAX)` kontrolünün neden **her koşulda yanlış** olduğu (ve derleyicinin bunu ölü kod diye sildiği) aynı akıl yürütmeden çıktı. Doğru kontrolün `a > MAX - b` olması da öyle — verilen bir formül değil, varılan bir sonuç.
+
+**Ve oradan CWE'lere.** NandGame'de 16 bitlik toplayıcıyı kurarken 17. bitin gidecek yeri olmadığını görmek, oyunun bir kısıtlaması değil — **CWE-190**'ın (Integer Overflow or Wraparound) tanımının kendisi. Bu bağ kurulduktan sonra seri kendi kendine büyüdü:
+
+- **08.5.1** tamamen gerçek vakalardan oluşuyor: BEC Token'ın 2018'de `2 × 2²⁵⁵ mod 2²⁵⁶ = 0` ile sıfırlanması (CVE-2018-10299), Boeing 787'nin jeneratör yazılımının 248 günde bir yeniden başlatılması gerekmesi, Y2038, Pac-Man'in 256. bölümü. Aynı aritmetik, dört ayrı sektörde aynı sonucu veriyor.
+- Ardından **CWE-680** ve **CWE-787** geldi. 680 kolay oturmadı, birkaç deneme sürdü — çünkü 680 bir *olay* değil, bir *zincir etiketi* (`190 → 787`). Anlatım "fren patladı" ile "duvara çarptı" ayrımına oturunca yerine geçti.
+- Dahası, 08.5.1'in kendi şeması metniyle çelişiyordu: 680'i iki ok arasında duran bir düğüm gibi çiziyordu, oysa metin onun bir *ok* olduğunu söylüyordu. Bunu yayından sonra ben fark ettim; şema iki kutulu hâliyle yeniden çizildi ve ders güncellendi.
+
+Yani zafiyet listeleri dışarıdan yapıştırılmadı. Toplayıcıyı kendi ellerinle kurunca CWE-190 zaten karşına çıkıyor; ders sadece o karşılaşmaya isim veriyor.
 
 > ℹ️ **Git geçmişi neden sıfırlandı?** Bu inceleme sırasında, bazı erken commit'lerde birkaç OverTheWire parolasının yanlışlıkla düz metin kaldığını fark ettik — reponun "şifreler paylaşılmıyor" ilkesine aykırı bir durum (bir tür bilgi ifşası açığı). Güncel dosyalarda maskelemek tek başına yetmiyordu; parolalar eski commit blob'larında hâlâ okunabiliyordu. Bu yüzden git geçmişini bilinçli olarak **tek bir temiz commit'e sıfırladık** (Temmuz 2026). **İçerikte kayıp yok** — yalnızca parola sızıntısı ve dağınık eski commit'ler temizlendi. Kafada soru işareti kalmasın diye açıkça not düşüyorum: geçmişin yeniden yazılması gizlemek için değil, bir güvenlik/ilke ihlalini kökten temizlemek içindi.
 
