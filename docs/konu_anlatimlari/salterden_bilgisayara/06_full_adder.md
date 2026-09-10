@@ -17,7 +17,7 @@
 - [Sekiz Satır Değil, Dört Durum](#sekiz-satır-değil-dört-durum)
 - [Yanlış Yol: "Bütün Çiftleri Toplayayım"](#yanlış-yol-bütün-çiftleri-toplayayım)
 - [Doğru Yol: Kâğıttaki Gibi, Sırayla](#doğru-yol-kâğıttaki-gibi-sırayla)
-- [Son Tel: İki Elde, Tek Çıkış](#son-tel-iki-elde-tek-çıkış)
+- [Son Tel: İki Elde, Tek Çıkış](#son-tel-i̇ki-elde-tek-çıkış)
 - [Üç Ayrı OR — Karıştırma](#üç-ayrı-or--karıştırma)
 - [🎮 Şimdi Sen Kur](#-şimdi-sen-kur)
 - [Kapanış: 64'lü Zincir](#kapanış-64lü-zincir)

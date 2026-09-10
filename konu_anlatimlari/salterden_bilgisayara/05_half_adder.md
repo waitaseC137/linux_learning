@@ -13,7 +13,7 @@
 - [Görev: 1 + 1 Kaç Eder?](#görev-1--1-kaç-eder)
 - [Tek Çıkış Neden Yetmez?](#tek-çıkış-neden-yetmez)
 - [Tabloyu Kur, Tanıdıkları Bul](#tabloyu-kur-tanıdıkları-bul)
-- [Devre: İki Eski Dost, Yan Yana](#devre-iki-eski-dost-yan-yana)
+- [Devre: İki Eski Dost, Yan Yana](#devre-i̇ki-eski-dost-yan-yana)
 - [Neden "YARIM" Toplayıcı?](#neden-yarım-toplayıcı)
 - [🎮 Şimdi Sen Kur](#-şimdi-sen-kur)
 

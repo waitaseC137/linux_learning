@@ -15,12 +15,12 @@
 ## 📋 İçindekiler
 
 - [Çıkarmayı Toplamaya Çevirmek](#çıkarmayı-toplamaya-çevirmek)
-- [Tellerde Eksi İşareti Yok](#tellerde-eksi-işareti-yok)
+- [Tellerde Eksi İşareti Yok](#tellerde-eksi-i̇şareti-yok)
 - [Sayacı Geriye Çevir](#sayacı-geriye-çevir)
-- [İspat: Gerçekten −1 Gibi Davranıyor mu?](#ispat-gerçekten-1-gibi-davranıyor-mu)
+- [İspat: Gerçekten −1 Gibi Davranıyor mu?](#i̇spat-gerçekten-1-gibi-davranıyor-mu)
 - [−B'yi Üretmek: Ters Çevir, 1 Ekle](#byi-üretmek-ters-çevir-1-ekle)
 - [Neden Her Zaman Çalışıyor](#neden-her-zaman-çalışıyor)
-- [Aynı Teller, İki Anlam](#aynı-teller-iki-anlam)
+- [Aynı Teller, İki Anlam](#aynı-teller-i̇ki-anlam)
 - [🔒 Güvenlik Köprüsü](#-güvenlik-köprüsü)
 - [🎮 Şimdi Sen Kur](#-şimdi-sen-kur)
 - [Kapanış: Bayrakların Doğuşu](#kapanış-bayrakların-doğuşu)

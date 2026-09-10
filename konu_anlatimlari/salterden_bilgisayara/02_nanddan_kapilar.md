@@ -14,7 +14,7 @@
 ## 📋 İçindekiler
 
 - [Elimizde Ne Var: Kapalı Kutu NAND](#elimizde-ne-var-kapalı-kutu-nand)
-- [DEĞİL (NOT / invert): Aynaya Bağlamak](#değil-not--invert-aynaya-bağlamak)
+- [DEĞİL (NOT / invert): Aynaya Bağlamak](#deği̇l-not--invert-aynaya-bağlamak)
 - [VE (AND): Tersin Tersi](#ve-and-tersin-tersi)
 - [VEYA (OR): Ters Kapıdan Girmek](#veya-or-ters-kapıdan-girmek)
 - [Dört Kelimelik Dil](#dört-kelimelik-dil)

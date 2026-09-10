@@ -14,7 +14,7 @@
 
 ## 📋 İçindekiler
 
-- [Bu Seri Ne DEĞİLDİR](#bu-seri-ne-değildir)
+- [Bu Seri Ne DEĞİLDİR](#bu-seri-ne-deği̇ldi̇r)
 - [Önce Korkuyu Kıralım](#önce-korkuyu-kıralım)
 - [Tek Araç: NandGame](#tek-araç-nandgame)
 - [Sonunda Ne Yapabileceksin?](#sonunda-ne-yapabileceksin)

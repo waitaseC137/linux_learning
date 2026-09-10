@@ -15,7 +15,7 @@
 
 - [Görev: Farklılık Dedektörü](#görev-farklılık-dedektörü)
 - [Neden Tek Kapı Yetmiyor?](#neden-tek-kapı-yetmiyor)
-- [İki Fedai, Bir Onay Masası](#iki-fedai-bir-onay-masası)
+- [İki Fedai, Bir Onay Masası](#i̇ki-fedai-bir-onay-masası)
 - [Tabloyu Fedailerle Doğrula](#tabloyu-fedailerle-doğrula)
 - [XOR'un Gizli Kimliği (Önümüzdeki Ünitenin Fragmanı)](#xorun-gizli-kimliği-önümüzdeki-ünitenin-fragmanı)
 - [🎮 Şimdi Sen Kur](#-şimdi-sen-kur)

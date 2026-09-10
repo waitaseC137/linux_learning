@@ -14,11 +14,11 @@
 
 - [1 ve 0 Aslında Nedir?](#1-ve-0-aslında-nedir)
 - [Şalter: Akıma Karar Veren Parça](#şalter-akıma-karar-veren-parça)
-- [Röle: Kendi Kolunu Elektrik İten Şalter](#röle-kendi-kolunu-elektrik-iten-şalter)
-- [Rölenin İki Huyu: Normalde Geçiren, Normalde Kesen](#rölenin-iki-huyu-normalde-geçiren-normalde-kesen)
+- [Röle: Kendi Kolunu Elektrik İten Şalter](#röle-kendi-kolunu-elektrik-i̇ten-şalter)
+- [Rölenin İki Huyu: Normalde Geçiren, Normalde Kesen](#rölenin-i̇ki-huyu-normalde-geçiren-normalde-kesen)
 - [Transistör: Rölenin Torunu](#transistör-rölenin-torunu)
-- [İlk Görev: NAND Kapısı](#ilk-görev-nand-kapısı)
-- [Neden İlk Kapı NAND?](#neden-ilk-kapı-nand)
+- [İlk Görev: NAND Kapısı](#i̇lk-görev-nand-kapısı)
+- [Neden İlk Kapı NAND?](#neden-i̇lk-kapı-nand)
 - [🎮 Şimdi Sen Kur](#-şimdi-sen-kur)
 
 ---

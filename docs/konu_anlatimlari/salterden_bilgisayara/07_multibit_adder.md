@@ -13,7 +13,7 @@
 ## 📋 İçindekiler
 
 - [Tek Basamaktan Sayıya](#tek-basamaktan-sayıya)
-- [Aynı Telin İki Adı](#aynı-telin-iki-adı)
+- [Aynı Telin İki Adı](#aynı-telin-i̇ki-adı)
 - [Bir de Üçüncü Sözlük: sum / carry](#bir-de-üçüncü-sözlük-sum--carry)
 - [Yanlış Yol: Soldan Başlamak](#yanlış-yol-soldan-başlamak)
 - [Analiz Yönü ≠ Hesap Yönü](#analiz-yönü--hesap-yönü)

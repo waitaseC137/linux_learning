@@ -16,7 +16,7 @@
 - [Çare: Tel Eklemek ve Değer Biçmek](#çare-tel-eklemek-ve-değer-biçmek)
 - [Jeton Sistemi](#jeton-sistemi)
 - [Bu Zaten Bildiğin Bir Numara](#bu-zaten-bildiğin-bir-numara)
-- [İkilik Saymak](#ikilik-saymak)
+- [İkilik Saymak](#i̇kilik-saymak)
 - [Kaç Tel, Kaç Sayı?](#kaç-tel-kaç-sayı)
 - [Okuma Formülü](#okuma-formülü)
 
