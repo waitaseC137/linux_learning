@@ -308,6 +308,6 @@ something outside choose "which one to do" — that is, the **ALU.** That's the 
 ---
 
 **Previous topic:** [09_subtraction.md](./09_subtraction.md)
-**Next topic:** *(on the way — the ALU: every operation in one box)*
+**Next topic:** [11_selector_switch.md](./11_selector_switch.md) — The circuit's first decision
 
 *This lesson is part of the "From Switches to a Computer" series. The series moves along together with [nandgame.com](https://nandgame.com).*

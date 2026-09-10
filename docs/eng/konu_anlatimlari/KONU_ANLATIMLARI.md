@@ -74,7 +74,7 @@
 
 ## 🔌 From Switches to a Computer (NAND to CPU)
 
-> 🚧 **This course is still being written** — it grew out of the NandGame journey; the **arithmetic unit is complete** (00–10, interludes included): from switch/relay up to the adder, the subtractor and the flags (ZF/SF). The rest (ALU, memory, clock, control unit) will be added as the journey continues.
+> 🚧 **This course is still being written** — it grew out of the NandGame journey; the **arithmetic and routing units are complete** (00–11, interludes included): from switch/relay up to the adder, the subtractor, the flags (ZF/SF) and data routing (the multiplexer). The rest (ALU, memory, clock, control unit) will be added as the journey continues.
 >
 > 🧭 **New to this?** → [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) — for people who want to learn the processor not by asking "what is it?" but by **building it from its parts**. It's the sibling and the floor beneath the x86 course: there you learn to give the worker orders, here you build the worker from transistors.
 
@@ -94,6 +94,7 @@
 | [08.5.1_tasma_gercek_hayatta.md](./salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md) | **Interlude:** real cases of overflow — Stagefright, BEC token, Boeing 787, Ariane 5 |
 | [09_subtraction.md](./salterden_bilgisayara/09_subtraction.md) | Two's complement; making an adder subtract |
 | [10_bayraklar.md](./salterden_bilgisayara/10_bayraklar.md) | ZF and SF; how a machine says "if" — the circuit under `cmp` |
+| [11_selector_switch.md](./salterden_bilgisayara/11_selector_switch.md) | Selector & Switch; data vs control wire, the multiplexer |
 
 ---
 ## ⚙️ x86 Assembly (from scratch)

@@ -74,7 +74,7 @@
 
 ## 🔌 Şalterden Bilgisayara (NAND'dan CPU'ya)
 
-> 🚧 **Bu kurs yazım aşamasında** — NandGame yolculuğundan doğdu; **aritmetik ünitesi tamamlandı** (00–10, ara dersler dâhil): şalter/röleden toplayıcıya, çıkarıcıya ve bayraklara (ZF/SF) kadar. Devamı (ALU, hafıza, saat, kontrol birimi) NandGame ilerledikçe eklenecek.
+> 🚧 **Bu kurs yazım aşamasında** — NandGame yolculuğundan doğdu; **aritmetik ve yönlendirme üniteleri tamamlandı** (00–11, ara dersler dâhil): şalter/röleden toplayıcıya, çıkarıcıya, bayraklara (ZF/SF) ve veri yönlendirmeye (multiplexer) kadar. Devamı (ALU, hafıza, saat, kontrol birimi) NandGame ilerledikçe eklenecek.
 >
 > 🧭 **Yeni mi başlıyorsun?** → [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) — işlemciyi "nedir?" diye değil, **parçalarından kurarak** öğrenmek isteyenler için. x86 kursunun kardeşi ve altı: orası işçiye emir vermeyi öğretir, burası işçiyi transistörden kurar.
 
@@ -94,6 +94,7 @@
 | [08.5.1_tasma_gercek_hayatta.md](./salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md) | **Ara ders:** taşmanın gerçek vakaları — Stagefright, BEC token, Boeing 787, Ariane 5 |
 | [09_subtraction.md](./salterden_bilgisayara/09_subtraction.md) | İkinin tümleyeni; toplayıcıya çıkarma yaptırmak |
 | [10_bayraklar.md](./salterden_bilgisayara/10_bayraklar.md) | ZF ve SF; makinenin "eğer" demesi — `cmp`'in altındaki devre |
+| [11_selector_switch.md](./salterden_bilgisayara/11_selector_switch.md) | Selector & Switch; veri/kontrol teli ayrımı, multiplexer |
 
 ---
 

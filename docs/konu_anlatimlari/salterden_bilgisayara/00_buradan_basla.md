@@ -90,6 +90,8 @@ Serinin bugüne kadar yazılmış bölümünü bitirdiğinde:
   **güvenlik açığı sınıfını** nasıl doğurduğunu göreceksin.
 - İşlemcinin `eğer` diyebilmesini sağlayan **bayrakları** (ZF, SF) kendi elinle
   kurmuş olacaksın — yazdığın her `if`'in altındaki tel.
+- Bir devreye **ne yapacağını dışarıdan söyleyen** teli kuracaksın (multiplexer) —
+  programlanabilirliğin kökü.
 - "Milyarlarca transistör" lafı seni korkutmayacak — çünkü katların nasıl üst üste
   bindiğini görmüş olacaksın.
 
@@ -157,16 +159,17 @@ Dosyaları bu sırayla oku. Her ders bir öncekine yaslanır.
 | 8.5.1 | [08.5.1_tasma_gercek_hayatta](./08.5.1_tasma_gercek_hayatta.md) | *(ara ders)* Aynı taşmanın gerçek vakaları: Stagefright · Ariane 5 · Boeing 787 | — |
 | 9 | [09_subtraction](./09_subtraction.md) | İkinin tümleyeni; toplayıcıya çıkarma yaptırmak | Subtraction |
 
-### 🚩 Ünite 3 — Karar Vermek
+### 🚩 Ünite 3 — Karar Vermek ve Yönlendirmek
 
 | # | Dosya | Ne öğretir | NandGame seviyesi |
 |:---:|---|---|---|
 | 10 | [10_bayraklar](./10_bayraklar.md) | ZF ve SF: makinenin `eğer` demesi | Equal to Zero · Less than Zero |
+| 11 | [11_selector_switch](./11_selector_switch.md) | Kontrol teli; vana olarak AND; multiplexer | Selector · Switch |
 
 ### 🔜 Yolda (oyun ilerledikçe yazılacak)
 
-Veri yönlendirme (Switching) → hesap çekirdeği (ALU) → hafıza (latch, register, RAM)
-→ saat ve kontrol birimi → **komut işleyen işlemci.**
+Hesap çekirdeği (ALU) → hafıza (latch, register, RAM) → saat ve kontrol birimi
+→ **komut işleyen işlemci.**
 
 > 💡 Numarası `.5` ile biten dosyalar kısa birer **ara ders**tir: ana yolun kıyısında,
 > daha hafif, karşılığında bir oyun seviyesi yok. Ama hiçbirini atlama — `03.5`

@@ -94,6 +94,8 @@ When you finish the part of the series written so far:
   birth to a real **class of security vulnerabilities.**
 - You'll have built with your own hands the **flags** (ZF, SF) that let a processor say
   `if` — the wire underneath every `if` you have ever written.
+- You'll build the wire that tells a circuit **what to do from the outside** (the
+  multiplexer) — the root of programmability.
 - The phrase "billions of transistors" won't scare you — because you'll have seen how the
   floors stack on top of one another.
 
@@ -163,16 +165,17 @@ Read the files in this order. Each lesson leans on the previous one.
 | 8.5.1 | [08.5.1_tasma_gercek_hayatta](./08.5.1_tasma_gercek_hayatta.md) | *(interlude)* Real cases of the same overflow: Stagefright · Ariane 5 · Boeing 787 | — |
 | 9 | [09_subtraction](./09_subtraction.md) | Two's complement; making an adder subtract | Subtraction |
 
-### 🚩 Unit 3 — Making Decisions
+### 🚩 Unit 3 — Making Decisions and Routing
 
 | # | File | What it teaches | NandGame level |
 |:---:|---|---|---|
 | 10 | [10_bayraklar](./10_bayraklar.md) | ZF and SF: how a machine says `if` | Equal to Zero · Less than Zero |
+| 11 | [11_selector_switch](./11_selector_switch.md) | The control wire; AND as a valve; the multiplexer | Selector · Switch |
 
 ### 🔜 On the way (to be written as the game advances)
 
-Data routing (Switching) → the compute core (ALU) → memory (latch, register, RAM) → clock
-and control unit → **a processor that executes instructions.**
+The compute core (ALU) → memory (latch, register, RAM) → clock and control unit →
+**a processor that executes instructions.**
 
 > 💡 Files whose number ends in `.5` are short **interludes**: on the side of the main road,
 > lighter, with no game level to go with them. But don't skip any of them — `03.5` carries

@@ -76,7 +76,7 @@ window.KONULAR = {
       id: "salterden_bilgisayara",
       label: "Şalterden Bilgisayara (NAND'dan CPU'ya)",
       accent: "var(--d-low)",
-      tag: "14 ders · 🚧 aritmetik tam",
+      tag: "15 ders · 🚧 yönlendirme tam",
       blurb: "NandGame yolculuğundan doğan kurs — şalter/röleden NAND'a, NAND'dan mantık kapılarına, kapılardan toplayıcıya (half/full adder). İşlemciyi 'nedir' diye değil, parçalarından kendin kurarak öğren. Aritmetik ünitesi tamamlandı (00–10): toplayıcı, çıkarıcı ve bayraklar. Sırada ALU, bellek ve işlemci.",
       files: [
         { f: "salterden_bilgisayara/00_buradan_basla.md",        n: "→",    t: "Buradan Başla",        h: "Kurs haritası; şalterden CPU'ya (🚧 yazılıyor)" },
@@ -92,7 +92,8 @@ window.KONULAR = {
         { f: "salterden_bilgisayara/08.5_sayac_basa_donunce.md", n: "08.5", t: "Sayaç Başa Dönünce", h: "Ara ders: modüler aritmetik · ℤ/2ⁿℤ · CWE-190" },
         { f: "salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md", n: "08.5.1", t: "Taşma Gerçek Hayatta", h: "Ara ders: Stagefright · BEC token · Boeing 787 · Ariane 5" },
         { f: "salterden_bilgisayara/09_subtraction.md",          n: "09",   t: "Subtraction",          h: "İkinin tümleyeni; toplayıcıya çıkarma yaptırmak" },
-        { f: "salterden_bilgisayara/10_bayraklar.md",            n: "10",   t: "Bayraklar (ZF/SF)",    h: "Sıfır ve işaret; makinenin 'eğer' demesi" }
+        { f: "salterden_bilgisayara/10_bayraklar.md",            n: "10",   t: "Bayraklar (ZF/SF)",    h: "Sıfır ve işaret; makinenin 'eğer' demesi" },
+        { f: "salterden_bilgisayara/11_selector_switch.md",     n: "11",   t: "Selector & Switch",    h: "Kontrol teli · vana olarak AND · multiplexer" }
       ]
     },
     {

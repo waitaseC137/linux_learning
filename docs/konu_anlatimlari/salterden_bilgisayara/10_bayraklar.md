@@ -302,6 +302,6 @@ yapacağını" dışarıdan seçtirmek — yani **ALU.** Sıradaki durak orası.
 ---
 
 **Önceki konu:** [09_subtraction.md](./09_subtraction.md)
-**Sonraki konu:** *(yolda — ALU: bütün işlemler tek kutuda)*
+**Sonraki konu:** [11_selector_switch.md](./11_selector_switch.md) — Devrenin ilk kararı
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*
