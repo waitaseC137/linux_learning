@@ -20,10 +20,14 @@
   const docsEl   = document.getElementById('docs');
 
   /* ---------- marked yapılandırma ---------- */
+  // GitHub'ın başlık kodlamasıyla (github-slugger) aynı davranır:
+  // harf/rakam/birleşen işaret ve _ korunur, gerisi düşer, boşluk tireye döner.
+  // Türkçe harfler ÇEVRİLMEZ ve ardışık tireler BİRLEŞTİRİLMEZ — içindekiler
+  // listeleri GitHub kuralına göre yazıldığı için ikisi de önemli.
   function slug(s) {
     return s.toLowerCase().trim()
-      .replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ı/g,'i').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ü/g,'u')
-      .replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-');
+      .replace(/[^\p{L}\p{N}\p{M}_\s-]/gu, '')
+      .replace(/\s/g, '-');
   }
   if (window.marked) {
     marked.setOptions({ gfm: true, breaks: false });
