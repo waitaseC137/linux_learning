@@ -185,7 +185,9 @@ window.KONULAR = {
         { f: "cwe/cwe_680.md", n: "680", t: "Overflow → Buffer Overflow", h: "iki kutu modeli · Stagefright" },
         { f: "cwe/cwe_787.md", n: "787", t: "Out-of-bounds Write", h: "bellekte taban yok · ayır(0)" },
         { f: "cwe/cwe_681.md", n: "681", t: "Hatalı Tip Dönüşümü", h: "Ariane 5 · ölü kod" },
-        { f: "cwe/cwe_1300.md", n: "1300", t: "Fiziksel Yan Kanal", h: "akım · elektromanyetik dalga · ses" }
+        { f: "cwe/cwe_1300.md", n: "1300", t: "Fiziksel Yan Kanal", h: "akım · elektromanyetik dalga · ses" },
+        { f: "cwe/cwe_1247.md", n: "1247", t: "Voltaj ve Saat Sıçraması", h: "fault attack · Xbox 360 reset glitch" },
+        { f: "cwe/cwe_1261.md", n: "1261", t: "Tek Olay Bozulması", h: "bit dönmesi · Belçika 4096 · Mario 64" }
       ]
     }
   ]

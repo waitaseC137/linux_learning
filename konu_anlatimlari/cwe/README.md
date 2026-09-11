@@ -94,36 +94,19 @@ yapmazlar. Bu seviyedeki CWE'ler tam da o varsayımın bozulduğu yerde durur.
 | Ders | CWE | Resmî adı | |
 |---|---|---|---|
 | [01 · Akım, Şalter, Röle](../salterden_bilgisayara/01_akim_salter_role.md) | [**CWE-1300**](./cwe_1300.md) | Improper Protection of Physical Side Channels | 📄 |
-| [02 · NAND'dan Kapılar](../salterden_bilgisayara/02_nanddan_kapilar.md) | **CWE-1247** | Improper Protection Against Voltage and Clock Glitches | 👾 |
+| [02 · NAND'dan Kapılar](../salterden_bilgisayara/02_nanddan_kapilar.md) | [**CWE-1247**](./cwe_1247.md) | Improper Protection Against Voltage and Clock Glitches | 📄 |
 
 **📄 CWE-1300 — Fiziksel yan kanal.** Bir kapı durum değiştirirken enerji harcar; çekilen akım, yayılan dalga ve çıkan ses işlenen veriyle ilişkilidir. Kod kusursuz olsa bile sızıntı fizikten gelir → [sayfası](./cwe_1300.md)
 
-**👾 CWE-1247 — Voltaj ve saat glitch'i.** Bir kapının doğru çalışması, beslemesinin
-ve saatinin düzgün olmasına bağlıdır. Xbox 360 açılırken, yüklenecek kodun özeti
-(hash) olması gereken değerle karşılaştırılıyordu. 2011'de hackerlar tam o anda
-işlemcinin reset hattına yaklaşık 20 nanosaniyelik bir darbe verdi; karşılaştırma
-"eşit" sonucunu döndürdü ve değiştirilmiş kod çalıştı. Saldırı *Reset Glitch Hack*
-adıyla bilinir.
+**📄 CWE-1247 — Voltaj ve saat sıçraması.** Bir kapının doğru çalışması beslemesine ve saatine bağlıdır. Biri bir anlığına bozulursa devre yanlış bir sonuç üretir — ve o sonuç bir güvenlik kararıysa "hayır" "evet"e döner → [sayfası](./cwe_1247.md)
 
 ### Ünite 1 — Saymak ve Toplamak
 
 | Ders | CWE | Resmî adı | |
 |---|---|---|---|
-| [04 · Teller Sayı Olunca](../salterden_bilgisayara/04_teller_sayi_olunca.md) | **CWE-1261** | Improper Handling of Single Event Upsets | 👾 |
+| [04 · Teller Sayı Olunca](../salterden_bilgisayara/04_teller_sayi_olunca.md) | [**CWE-1261**](./cwe_1261.md) | Improper Handling of Single Event Upsets | 📄 |
 
-**👾 CWE-1261 — Tek olay bozulması.** Radyasyon, örneğin uzaydan gelen parçacıklar,
-bir bellek hücresindeki tek bir biti çevirebilir. 04'teki `n tel → 2ⁿ desen` kuralı
-bunun izini sürmeni sağlar: bir sayıya tam olarak 2'nin bir kuvveti eklenmişse tek
-bir bit dönmüş demektir.
-
-- **Belçika, 2003.** Schaerbeek'teki elektronik seçimde bir adayın oyuna açıklanamayan
-  **4096** oy eklendi. `4096 = 2¹²`. Resmî rapor "büyük ihtimalle kendiliğinden bir
-  bit dönmesi" dedi; hata yakalanıp düzeltildi. Sebebin kozmik ışın olduğu
-  kanıtlanmadı.
-- **Super Mario 64, 2013.** Bir speedrun sırasında Mario bir anda bir üst kata
-  ışınlandı. Mario'nun yükseklik değerinin ilk baytı `C5`'ten `C4`'e değişmişti:
-  `1100 0101 → 1100 0100`, yani tek bir bit. O bit elle çevrilince aynı ışınlanma
-  tekrar oluşuyor. Biti neyin çevirdiği ise bilinmiyor.
+**📄 CWE-1261 — Tek olay bozulması.** Yüklü bir parçacık bir bellek hücresindeki değeri devirebilir. 04'teki `n tel → 2ⁿ desen` kuralı bunun izini sürmeni sağlar: bir sayıya tam olarak 2'nin bir kuvveti eklenmişse tek bir bit dönmüştür → [sayfası](./cwe_1261.md)
 
 ### Ünite 2 — Sayının Sınırı ve Eksi Sayılar
 
