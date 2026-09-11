@@ -90,7 +90,6 @@ window.KONULAR = {
         { f: "salterden_bilgisayara/07_multibit_adder.md",       n: "07",   t: "Multi-bit Adder",      h: "Zinciri kurmak; carry-in ile carry-out aynı tel" },
         { f: "salterden_bilgisayara/08_increment.md",            n: "08",   t: "Increment",            h: "16-bit demet · taşma · kimsenin bakmadığı tel" },
         { f: "salterden_bilgisayara/08.5_sayac_basa_donunce.md", n: "08.5", t: "Sayaç Başa Dönünce", h: "Ara ders: modüler aritmetik · ℤ/2ⁿℤ · CWE-190" },
-        { f: "salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md", n: "08.5.1", t: "Taşma Gerçek Hayatta", h: "Ara ders: Stagefright · BEC token · Boeing 787 · Ariane 5" },
         { f: "salterden_bilgisayara/09_subtraction.md",          n: "09",   t: "Subtraction",          h: "İkinin tümleyeni; toplayıcıya çıkarma yaptırmak" },
         { f: "salterden_bilgisayara/10_bayraklar.md",            n: "10",   t: "Bayraklar (ZF/SF)",    h: "Sıfır ve işaret; makinenin 'eğer' demesi" },
         { f: "salterden_bilgisayara/11_selector_switch.md",     n: "11",   t: "Selector & Switch",    h: "Kontrol teli · vana olarak AND · multiplexer" }
@@ -171,6 +170,21 @@ window.KONULAR = {
       blurb: "Klasik şifrelerden frekans analizine — Krypton'un kavramları.",
       files: [
         { f: "kriptografi/krypton_komutlar_ve_kavramlar.md", t: "Krypton: Komutlar & Kavramlar", h: "Caesar · Vigenère · XOR · frekans" }
+      ]
+    },
+    {
+      id: "cwe",
+      label: "👾 CWE Haritası",
+      accent: "var(--magenta)",
+      tag: "meraklısına",
+      blurb: "Derslerde karşına çıkan zayıflık türleri: CWE ile CVE farkı, zincirler ve her zayıflığın kendi sayfası — ne olduğu, hangi devrede doğduğu, gerçek hayatta ne yaptığı, nasıl önlendiği.",
+      files: [
+        { f: "cwe/README.md",  n: "→",   t: "CWE Haritası",      h: "CWE nedir, CVE nedir, farkları · hangi ders hangi CWE" },
+        { f: "cwe/cwe_190.md", n: "190", t: "Integer Overflow",  h: "BEC Token · Y2038 · Boeing 787 · Pac-Man" },
+        { f: "cwe/cwe_191.md", n: "191", t: "Integer Underflow", h: "0 − 1 · MITRE vakaları · Gandhi efsanesi" },
+        { f: "cwe/cwe_680.md", n: "680", t: "Overflow → Buffer Overflow", h: "iki kutu modeli · Stagefright" },
+        { f: "cwe/cwe_787.md", n: "787", t: "Out-of-bounds Write", h: "bellekte taban yok · ayır(0)" },
+        { f: "cwe/cwe_681.md", n: "681", t: "Hatalı Tip Dönüşümü", h: "Ariane 5 · ölü kod" }
       ]
     }
   ]

@@ -127,6 +127,7 @@ Leviathan temelleri verdi. Bir sonraki adımlar:
 
 ## İlgili Konular
 
+- 👾 **Meraklısına:** [bu dersteki CWE'ler](../cwe/README.md#binary-analizi--re-leviathan) — açıkların CWE'leri: 78 · 59 · 367
 - 👈 **Başlamadan önce ön bilgiler:** [baslamadan_once_on_bilgiler.md](./baslamadan_once_on_bilgiler.md)
 - Teknik referanslar: [dosya_izinleri_suid.md](./dosya_izinleri_suid.md) · [ltrace_strace.md](./ltrace_strace.md) · [sembolik_linkler.md](./sembolik_linkler.md) · [gdb.md](./gdb.md) · [binary_analizi.md](./binary_analizi.md) · [brute_force_bash.md](./brute_force_bash.md)
 - Tüm konu indeksi: [../KONU_ANLATIMLARI.md](../KONU_ANLATIMLARI.md)

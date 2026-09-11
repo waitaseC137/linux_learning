@@ -155,8 +155,7 @@ Dosyaları bu sırayla oku. Her ders bir öncekine yaslanır.
 | # | Dosya | Ne öğretir | NandGame seviyesi |
 |:---:|---|---|---|
 | 8 | [08_increment](./08_increment.md) | 16 bitlik demet; taşma ve kimsenin bakmadığı tel | Increment |
-| 8.5 | [08.5_sayac_basa_donunce](./08.5_sayac_basa_donunce.md) | *(ara ders)* Sarmanın matematiği ve **CWE-190** | — |
-| 8.5.1 | [08.5.1_tasma_gercek_hayatta](./08.5.1_tasma_gercek_hayatta.md) | *(ara ders)* Aynı taşmanın gerçek vakaları: Stagefright · Ariane 5 · Boeing 787 | — |
+| 8.5 | [08.5_sayac_basa_donunce](./08.5_sayac_basa_donunce.md) | *(ara ders)* Sarmanın matematiği: `ℤ/2ⁿℤ`, hata kümesi, doğru kontrol | — |
 | 9 | [09_subtraction](./09_subtraction.md) | İkinin tümleyeni; toplayıcıya çıkarma yaptırmak | Subtraction |
 
 ### 🚩 Ünite 3 — Karar Vermek ve Yönlendirmek
@@ -174,8 +173,9 @@ Hesap çekirdeği (ALU) → hafıza (latch, register, RAM) → saat ve kontrol b
 > 💡 Numarası `.5` ile biten dosyalar kısa birer **ara ders**tir: ana yolun kıyısında,
 > daha hafif, karşılığında bir oyun seviyesi yok. Ama hiçbirini atlama — `03.5`
 > serinin en önemli fikrini taşıyor, `08.5` kurduğun devrenin altındaki matematiği
-> ve o matematiğin güvenlik dünyasındaki karşılığını açıyor, `08.5.1` ise aynı
-> matematiğin dünyada neye mal olduğunu gösteriyor.
+> açıyor. Ara dersler yalnızca **matematik ve ek bilgi** taşır; o matematiğin
+> güvenlik dünyasındaki karşılıkları ayrı bir klasörde durur:
+> [👾 CWE Haritası](../cwe/README.md).
 
 ---
 

@@ -124,9 +124,10 @@ Aynı konuda C'nin klasik taşma kontrolü `if (sonuc < a)` **ezberletilmedi, t�
 
 **Ve oradan CWE'lere.** NandGame'de 16 bitlik toplayıcıyı kurarken 17. bitin gidecek yeri olmadığını görmek, oyunun bir kısıtlaması değil — **CWE-190**'ın (Integer Overflow or Wraparound) tanımının kendisi. Bu bağ kurulduktan sonra seri kendi kendine büyüdü:
 
-- **08.5.1** tamamen gerçek vakalardan oluşuyor: BEC Token'ın 2018'de `2 × 2²⁵⁵ mod 2²⁵⁶ = 0` ile sıfırlanması (CVE-2018-10299), Boeing 787'nin jeneratör yazılımının 248 günde bir yeniden başlatılması gerekmesi, Y2038, Pac-Man'in 256. bölümü. Aynı aritmetik, dört ayrı sektörde aynı sonucu veriyor.
+- Gerçek vakalar geldi: BEC Token'ın 2018'de `2 × 2²⁵⁵ mod 2²⁵⁶ = 0` ile sıfırlanması (CVE-2018-10299), Boeing 787'nin jeneratör yazılımının 248 günde bir yeniden başlatılması gerekmesi, Y2038, Pac-Man'in 256. bölümü. Aynı aritmetik, dört ayrı sektörde aynı sonucu veriyor.
 - Ardından **CWE-680** ve **CWE-787** geldi. 680 kolay oturmadı, birkaç deneme sürdü — çünkü 680 bir *olay* değil, bir *zincir etiketi* (`190 → 787`). Anlatım "fren patladı" ile "duvara çarptı" ayrımına oturunca yerine geçti.
-- Dahası, 08.5.1'in kendi şeması metniyle çelişiyordu: 680'i iki ok arasında duran bir düğüm gibi çiziyordu, oysa metin onun bir *ok* olduğunu söylüyordu. Bunu yayından sonra ben fark ettim; şema iki kutulu hâliyle yeniden çizildi ve ders güncellendi.
+- Dahası, o dersin şeması kendi metniyle çelişiyordu: 680'i iki ok arasında duran bir düğüm gibi çiziyordu, oysa metin onun bir *ok* olduğunu söylüyordu. Bunu yayından sonra ben fark ettim; şema iki kutulu hâliyle yeniden çizildi.
+- **Eylül 2026'da yapı değişti:** ara dersler yalnızca matematik ve ek bilgi taşıyacak, CWE'ler ayrı bir klasöre çıkacak. Gerçek vakalar `konu_anlatimlari/cwe/` altına, her zayıflık için ayrı sayfaya taşındı; derslerden oraya 👾 bağlantılarıyla gidiliyor.
 
 Yani zafiyet listeleri dışarıdan yapıştırılmadı. Toplayıcıyı kendi ellerinle kurunca CWE-190 zaten karşına çıkıyor; ders sadece o karşılaşmaya isim veriyor.
 

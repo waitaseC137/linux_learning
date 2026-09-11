@@ -260,6 +260,7 @@ konuşacağız. Ardından aynı sarma davranışı, **eksi sayıların kendisini
 
 ## 🔗 İlgili Konular
 
+- 👾 **Meraklısına:** Taşma kontrolü devirince — [CWE-190](../cwe/cwe_190.md) → [CWE-680](../cwe/cwe_680.md) → [CWE-787](../cwe/cwe_787.md)
 - [07_multibit_adder.md](./07_multibit_adder.md) — `add 16`'nın içindeki zincir
 - [03.5_soyutlama_merdiveni.md](./03.5_soyutlama_merdiveni.md) — Demet = telin üst katı
 - [04_teller_sayi_olunca.md](./04_teller_sayi_olunca.md) — Hane bitince ne olur
@@ -267,6 +268,6 @@ konuşacağız. Ardından aynı sarma davranışı, **eksi sayıların kendisini
 ---
 
 **Önceki konu:** [07_multibit_adder.md](./07_multibit_adder.md)
-**Sonraki konu:** [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md) — Ara ders: sarma ve CWE-190
+**Sonraki konu:** [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md) — Ara ders: sarmanın matematiği
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*

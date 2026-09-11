@@ -188,6 +188,7 @@ uzattığında paniklemeyeceksin; "2·h + l" diye okuyup geçeceksin.
 
 ## 🔗 İlgili Konular
 
+- 👾 **Meraklısına:** [bu dersin CWE'si](../cwe/README.md#ünite-1--saymak-ve-toplamak) — tek bir bitin dönmesi: Belçika'nın 4096 oyu, Mario'nun ışınlanması (CWE-1261)
 - [01_akim_salter_role.md](./01_akim_salter_role.md) — "Tel anlam bilmez" ilkesinin doğduğu yer
 - [05_half_adder.md](./05_half_adder.md) — Bu dersin meyvesi: sayıları TOPLAYAN devre
 - [08_increment.md](./08_increment.md) — 65535'in üstüne 1 eklersen ne oluyor

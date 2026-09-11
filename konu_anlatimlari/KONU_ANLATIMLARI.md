@@ -90,8 +90,7 @@
 | [06_full_adder.md](./salterden_bilgisayara/06_full_adder.md) | a+b+carry-in; iki half adder = ALU'nun iskeleti |
 | [07_multibit_adder.md](./salterden_bilgisayara/07_multibit_adder.md) | Zinciri kurmak; carry-in ile carry-out **aynı tel** |
 | [08_increment.md](./salterden_bilgisayara/08_increment.md) | 16-bit demet · taşma · kimsenin bakmadığı tel (carry flag) |
-| [08.5_sayac_basa_donunce.md](./salterden_bilgisayara/08.5_sayac_basa_donunce.md) | **Ara ders:** modüler aritmetik, `ℤ/2ⁿℤ` ve **CWE-190** tamsayı taşması |
-| [08.5.1_tasma_gercek_hayatta.md](./salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md) | **Ara ders:** taşmanın gerçek vakaları — Stagefright, BEC token, Boeing 787, Ariane 5 |
+| [08.5_sayac_basa_donunce.md](./salterden_bilgisayara/08.5_sayac_basa_donunce.md) | **Ara ders:** modüler aritmetik, `ℤ/2ⁿℤ` ve taşmanın matematiği |
 | [09_subtraction.md](./salterden_bilgisayara/09_subtraction.md) | İkinin tümleyeni; toplayıcıya çıkarma yaptırmak |
 | [10_bayraklar.md](./salterden_bilgisayara/10_bayraklar.md) | ZF ve SF; makinenin "eğer" demesi — `cmp`'in altındaki devre |
 | [11_selector_switch.md](./salterden_bilgisayara/11_selector_switch.md) | Selector & Switch; veri/kontrol teli ayrımı, multiplexer |
@@ -165,5 +164,15 @@
 | [17_setjmp_longjmp_ptr_mangle.md](./binary_exploitation/17_setjmp_longjmp_ptr_mangle.md) | `jmp_buf`, PTR_MANGLE, ebp-pivot bypass | Utumno 7 |
 | [18_ag_servisi_exploitasyonu.md](./binary_exploitation/18_ag_servisi_exploitasyonu.md) | socket/bind/fork server, soket üzerinden exploit, UDP sniffing | Maze 8, Behemoth 5 |
 | [19_setuid_yetki_dususu_ve_p_bayragi.md](./binary_exploitation/19_setuid_yetki_dususu_ve_p_bayragi.md) | ruid/euid/suid, `setresuid`, yetki düşürme, `#!/bin/sh -p`, setuid script | Maze 4 + Hepsi |
+
+---
+
+## 👾 CWE Haritası
+
+> Derslerde karşına çıkan zayıflık türlerinin tek yerde toplandığı sayfa. Derslerdeki **👾 Meraklısına** bağlantıları buraya çıkar.
+
+| Dosya | Konular |
+|---|---|
+| [README.md](./cwe/README.md) | CWE nedir, CVE nedir, farkları · zincirler · Şalterden Bilgisayara ve Leviathan derslerinin CWE'leri · yoldakiler |
 
 ---
