@@ -218,7 +218,7 @@ Parmak yok, insan yok — akım, akımı yönetti. Geri kalan her şey, bunun te
 
 ## 🔗 İlgili Konular
 
-- 👾 **Meraklısına:** [bu devrenin CWE'si](../cwe/README.md#ünite-0--tuğlalar-şalterden-kapılara) — kapının çektiği akım sır sızdırabilir (CWE-1300)
+- 👾 **Meraklısına:** [CWE-1300 — Fiziksel yan kanal](../cwe/cwe_1300.md) — kapının çektiği akım, içeride ne işlendiğini sızdırabilir
 - [00_buradan_basla.md](./00_buradan_basla.md) — Serinin yol haritası
 - [02_nanddan_kapilar.md](./02_nanddan_kapilar.md) — Bu tuğladan bütün kapıları türetmek
 

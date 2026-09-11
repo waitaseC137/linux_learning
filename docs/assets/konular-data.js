@@ -184,7 +184,8 @@ window.KONULAR = {
         { f: "cwe/cwe_191.md", n: "191", t: "Integer Underflow", h: "0 − 1 · MITRE vakaları · Gandhi efsanesi" },
         { f: "cwe/cwe_680.md", n: "680", t: "Overflow → Buffer Overflow", h: "iki kutu modeli · Stagefright" },
         { f: "cwe/cwe_787.md", n: "787", t: "Out-of-bounds Write", h: "bellekte taban yok · ayır(0)" },
-        { f: "cwe/cwe_681.md", n: "681", t: "Hatalı Tip Dönüşümü", h: "Ariane 5 · ölü kod" }
+        { f: "cwe/cwe_681.md", n: "681", t: "Hatalı Tip Dönüşümü", h: "Ariane 5 · ölü kod" },
+        { f: "cwe/cwe_1300.md", n: "1300", t: "Fiziksel Yan Kanal", h: "akım · elektromanyetik dalga · ses" }
       ]
     }
   ]

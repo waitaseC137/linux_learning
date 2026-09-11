@@ -93,13 +93,10 @@ yapmazlar. Bu seviyedeki CWE'ler tam da o varsayımın bozulduğu yerde durur.
 
 | Ders | CWE | Resmî adı | |
 |---|---|---|---|
-| [01 · Akım, Şalter, Röle](../salterden_bilgisayara/01_akim_salter_role.md) | **CWE-1300** | Improper Protection of Physical Side Channels | 👾 |
+| [01 · Akım, Şalter, Röle](../salterden_bilgisayara/01_akim_salter_role.md) | [**CWE-1300**](./cwe_1300.md) | Improper Protection of Physical Side Channels | 📄 |
 | [02 · NAND'dan Kapılar](../salterden_bilgisayara/02_nanddan_kapilar.md) | **CWE-1247** | Improper Protection Against Voltage and Clock Glitches | 👾 |
 
-**👾 CWE-1300 — Fiziksel yan kanal.** Durumunu 0'dan 1'e çeviren bir kapı, aynı
-kalan bir kapıdan farklı akım çeker. Devrenin güç tüketimini yeterince hassas ölçen
-biri, içeride işlenen veriyi, örneğin bir şifreleme anahtarını, dışarıdan
-okuyabilir. Kod kusursuz olsa bile sızıntı fizikten gelir.
+**📄 CWE-1300 — Fiziksel yan kanal.** Bir kapı durum değiştirirken enerji harcar; çekilen akım, yayılan dalga ve çıkan ses işlenen veriyle ilişkilidir. Kod kusursuz olsa bile sızıntı fizikten gelir → [sayfası](./cwe_1300.md)
 
 **👾 CWE-1247 — Voltaj ve saat glitch'i.** Bir kapının doğru çalışması, beslemesinin
 ve saatinin düzgün olmasına bağlıdır. Xbox 360 açılırken, yüklenecek kodun özeti
