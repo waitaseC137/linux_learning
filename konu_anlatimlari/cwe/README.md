@@ -154,18 +154,25 @@ Condition seviyesinde gelecek; karşılaştırma hataları da onunla birlikte.
 
 | Ders | CWE | Resmî adı | |
 |---|---|---|---|
-| [Leviathan'ın Dersleri · Ders 3](../leviathan_komutlari/leviathan_ne_ogretiyor.md#ders-3--komut--argüman-enjeksiyonu-system) | **CWE-78** | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 📖 leviathan2 |
-| [Leviathan'ın Dersleri · Ders 5](../leviathan_komutlari/leviathan_ne_ogretiyor.md#ders-5--sembolik-link-saldırısı--güvensiz-tmp) | **CWE-59** | Improper Link Resolution Before File Access ('Link Following') | 📖 leviathan5 |
-| Aynı ders + [binary_exploitation/07](../binary_exploitation/07_sembolik_link.md#toctou-açığı-nedir) | **CWE-367** | Time-of-check Time-of-use (TOCTOU) Race Condition | 📖 Leviathan'da kısaca, 07'de ayrıntılı *(07'de numarası geçmiyor)* |
+| [Leviathan'ın Dersleri · Ders 3](../leviathan_komutlari/leviathan_ne_ogretiyor.md#ders-3--komut--argüman-enjeksiyonu-system) | [**CWE-78**](./cwe_78.md) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 📄 |
+| [Leviathan'ın Dersleri · Ders 5](../leviathan_komutlari/leviathan_ne_ogretiyor.md#ders-5--sembolik-link-saldırısı--güvensiz-tmp) | [**CWE-59**](./cwe_59.md) | Improper Link Resolution Before File Access ('Link Following') | 📄 |
+| Aynı ders + [binary_exploitation/07](../binary_exploitation/07_sembolik_link.md#toctou-açığı-nedir) | [**CWE-367**](./cwe_367.md) | Time-of-check Time-of-use (TOCTOU) Race Condition | 📄 |
+
+> 🔑 **Üçü aynı derste ama üçü ayrı şey.** 78'in kökü "veri ile komut aynı kanaldan
+> gidiyor"; 59 ve 367 ise "ad, kimlik değildir" ailesinden. 59 ile 367 arasındaki
+> ayrımı karıştırmamak önemli: **59'da kontrol hiç yok**, 367'de **kontrol var ama
+> yarış kaybediliyor**. İkisinin birleştiği yerin MITRE'de ayrı numarası var: CWE-363.
 
 ---
 
 ## Henüz Eşlenmeyenler
 
 **Web Güvenliği** ve **Binary Exploitation** serilerindeki dersler de doğrudan
-CWE'lere karşılık geliyor: command injection, SQL injection, format string, path
-traversal gibi. Bu derslerin eşlemesi henüz yapılmadı; yapıldıkça bu sayfaya
-eklenecek.
+CWE'lere karşılık geliyor: SQL injection, format string, path traversal gibi. Bu
+derslerin eşlemesi henüz yapılmadı; yapıldıkça bu sayfaya eklenecek.
+
+İlk köprü kuruldu sayılır: [CWE-78](./cwe_78.md) sayfası hem Leviathan Ders 3'e
+hem [web_guvenligi/07](../web_guvenligi/07_command_injection.md)'ye bağlanıyor.
 
 ---
 
