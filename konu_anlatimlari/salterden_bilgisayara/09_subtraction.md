@@ -298,7 +298,7 @@ diyebilmesi buradan başlıyor.
 
 ## 🔗 İlgili Konular
 
-- 👾 **Meraklısına:** [bu dersin CWE'leri](../cwe/README.md#ünite-2--sayının-sınırı-ve-eksi-sayılar) — Güvenlik Köprüsü'ndeki örneğin üç CWE'si: 196 → 839 → 195
+- 👾 **Meraklısına:** Güvenlik Köprüsü'ndeki örneğin üç CWE'si — [CWE-196](../cwe/cwe_196.md) (dönüşüm) → [CWE-839](../cwe/cwe_839.md) (yarım kontrol) → [CWE-195](../cwe/cwe_195.md) (geri dönüşüm)
 - [08_increment.md](./08_increment.md) — Sarma ve carry-in'in ucuzluğu
 - [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md) — Sarmanın matematiği: `ℤ/2ⁿℤ`
 - [04_teller_sayi_olunca.md](./04_teller_sayi_olunca.md) — "Sayı, okuma biçimindedir"

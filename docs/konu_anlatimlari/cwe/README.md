@@ -117,16 +117,14 @@ yapmazlar. Bu seviyedeki CWE'ler tam da o varsayımın bozulduğu yerde durur.
 | [**CWE-680**](./cwe_680.md) | Integer Overflow to Buffer Overflow | [08 · Increment](../salterden_bilgisayara/08_increment.md#-güvenlik-köprüsü) | 📄 |
 | [**CWE-787**](./cwe_787.md) | Out-of-bounds Write | [08 · Increment](../salterden_bilgisayara/08_increment.md#-güvenlik-köprüsü) | 📄 |
 | [**CWE-681**](./cwe_681.md) | Incorrect Conversion between Numeric Types | [04 · Teller Sayı Olunca](../salterden_bilgisayara/04_teller_sayi_olunca.md) | 📄 |
-| **CWE-196** → **CWE-839** → **CWE-195** | aşağıda | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-güvenlik-köprüsü) | 👾 |
+| [**CWE-196**](./cwe_196.md) | Unsigned to Signed Conversion Error | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-güvenlik-köprüsü) | 📄 |
+| [**CWE-839**](./cwe_839.md) | Numeric Range Comparison Without Minimum Check | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-güvenlik-köprüsü) | 📄 |
+| [**CWE-195**](./cwe_195.md) | Signed to Unsigned Conversion Error | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-güvenlik-köprüsü) | 📄 |
 
-**👾 09'daki örnekte üç CWE art arda.** Ağdan `65535` gelen bir uzunluk işaretli bir
-değişkene konuyor ve aynı sayı üç kez yanlış okunuyor:
-
-| Adım | Ne oluyor | CWE |
-|---|---|---|
-| Değişkene girerken | `65535`, işaretli tipte `−1` oluyor | **CWE-196** — Unsigned to Signed Conversion Error |
-| Kontrolde | `if (len > MAX)` sadece üst sınıra bakıyor, `−1` geçiyor | **CWE-839** — Numeric Range Comparison Without Minimum Check |
-| Kullanımda | `memcpy` aynı değeri işaretsiz okuyor: `65535` bayt | **CWE-195** — Signed to Unsigned Conversion Error |
+**Üçü bir zincir.** 09'un Güvenlik Köprüsü'ndeki örnekte aynı sayı üç kez farklı
+sözleşmeyle okunuyor: değişkene girerken [196](./cwe_196.md), kontrolde
+[839](./cwe_839.md), kullanımda [195](./cwe_195.md). Her birinin kendi sayfasında
+mekanizması, gerçek vakaları ve nasıl önlendiği var.
 
 **🔗 Exploit tarafı:** Aynı ailenin gerçek seviyelerde nasıl istismar edildiği →
 [binary_exploitation/11 · Integer Bug'ları](../binary_exploitation/11_integer_bug_truncation_signedness.md)
