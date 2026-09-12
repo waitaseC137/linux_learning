@@ -127,6 +127,7 @@ Leviathan gave you the fundamentals. The next steps:
 
 ## 🔗 Related Topics
 
+- 👾 **For the curious:** [the CWEs in this lesson](../cwe/README.md#binary-analysis--re-leviathan) — the weaknesses behind them: 78 · 59 · 367
 - 👈 **Before you start — background knowledge:** [before_you_start.md](./before_you_start.md)
 - Technical references: [file_permissions_suid.md](./file_permissions_suid.md) · [ltrace_strace.md](./ltrace_strace.md) · [symbolic_links.md](./symbolic_links.md) · [gdb.md](./gdb.md) · [binary_analysis.md](./binary_analysis.md) · [brute_force_bash.md](./brute_force_bash.md)
 - Full topic index: [../KONU_ANLATIMLARI.md](../KONU_ANLATIMLARI.md)

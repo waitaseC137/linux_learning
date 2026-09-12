@@ -43,7 +43,6 @@ window.KONULAR = {
         { f: "salterden_bilgisayara/07_multibit_adder.md",       n: "07",   t: "Multi-bit Adder",         h: "Building the chain; carry-in and carry-out are one wire" },
         { f: "salterden_bilgisayara/08_increment.md",            n: "08",   t: "Increment",               h: "16-bit bundle · overflow · the wire nobody reads" },
         { f: "salterden_bilgisayara/08.5_sayac_basa_donunce.md", n: "08.5", t: "When the Counter Wraps", h: "Interlude: modular arithmetic · ℤ/2ⁿℤ · CWE-190" },
-        { f: "salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md", n: "08.5.1", t: "Overflow in the Real World", h: "Interlude: Stagefright · BEC token · Boeing 787 · Ariane 5" },
         { f: "salterden_bilgisayara/09_subtraction.md",          n: "09",   t: "Subtraction",             h: "Two's complement; making an adder subtract" },
         { f: "salterden_bilgisayara/10_bayraklar.md",            n: "10",   t: "Flags (ZF/SF)",           h: "Zero and sign; how a machine says 'if'" },
         { f: "salterden_bilgisayara/11_selector_switch.md",     n: "11",   t: "Selector & Switch",       h: "The control wire · AND as a valve · the multiplexer" }
@@ -175,6 +174,24 @@ window.KONULAR = {
       blurb: "From classic ciphers to frequency analysis — the concepts behind Krypton.",
       files: [
         { f: "kriptografi/krypton_commands_and_concepts.md", t: "Krypton: Commands & Concepts", h: "Caesar · Vigenère · XOR · frequency" }
+      ]
+    },
+    {
+      id: "cwe",
+      label: "👾 CWE Map",
+      accent: "var(--magenta)",
+      tag: "for the curious",
+      blurb: "The kinds of weakness you meet across the lessons: the difference between CWE and CVE, the chains, and a page for each weakness — what it is, which circuit it is born in, what it has done in the real world, how it is prevented.",
+      files: [
+        { f: "cwe/README.md",  n: "\u2192",   t: "CWE Map",            h: "What a CWE is, what a CVE is · which lesson has which CWE" },
+        { f: "cwe/cwe_190.md", n: "190", t: "Integer Overflow",  h: "BEC Token · Y2038 · Boeing 787 · Pac-Man" },
+        { f: "cwe/cwe_191.md", n: "191", t: "Integer Underflow", h: "0 \u2212 1 · MITRE cases · the Gandhi legend" },
+        { f: "cwe/cwe_680.md", n: "680", t: "Overflow \u2192 Buffer Overflow", h: "the two-box model · Stagefright" },
+        { f: "cwe/cwe_787.md", n: "787", t: "Out-of-bounds Write", h: "no floor in memory · allocate(0)" },
+        { f: "cwe/cwe_681.md", n: "681", t: "Incorrect Numeric Conversion", h: "Ariane 5 · dead code" },
+        { f: "cwe/cwe_1300.md", n: "1300", t: "Physical Side Channel", h: "current · electromagnetic waves · sound" },
+        { f: "cwe/cwe_1247.md", n: "1247", t: "Voltage & Clock Glitches", h: "fault attack · Xbox 360 reset glitch" },
+        { f: "cwe/cwe_1261.md", n: "1261", t: "Single Event Upset", h: "bit flip · Belgium's 4096 · Mario 64" }
       ]
     }
   ]

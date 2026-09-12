@@ -266,6 +266,7 @@ vulnerability class for years. After that, the very same wrapping behaviour will
 
 ## 🔗 Related Topics
 
+- 👾 **For the curious:** when the overflow topples the check — [CWE-190](../cwe/cwe_190.md) → [CWE-680](../cwe/cwe_680.md) → [CWE-787](../cwe/cwe_787.md)
 - [07_multibit_adder.md](./07_multibit_adder.md) — The chain inside `add 16`
 - [03.5_soyutlama_merdiveni.md](./03.5_soyutlama_merdiveni.md) — A bundle = the floor above "wire"
 - [04_teller_sayi_olunca.md](./04_teller_sayi_olunca.md) — What happens when the digits run out

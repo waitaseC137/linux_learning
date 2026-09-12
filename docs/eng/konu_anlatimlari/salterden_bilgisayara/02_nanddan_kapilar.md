@@ -191,6 +191,7 @@ can use invert as a ready-made part in And and Or.)
 
 ## 🔗 Related Topics
 
+- 👾 **For the curious:** [CWE-1247 — Voltage and clock glitches](../cwe/cwe_1247.md) — a momentary disturbance can make a gate produce a wrong result
 - [01_akim_salter_role.md](./01_akim_salter_role.md) — What was inside NAND: relays
 - [03_xor_iki_fedai.md](./03_xor_iki_fedai.md) — The next gate: XOR, the difference detector
 - [03.5_soyutlama_merdiveni.md](./03.5_soyutlama_merdiveni.md) — Why the "closed box" idea matters so much

@@ -91,7 +91,6 @@
 | [07_multibit_adder.md](./salterden_bilgisayara/07_multibit_adder.md) | Building the chain; carry-in and carry-out are **one wire** |
 | [08_increment.md](./salterden_bilgisayara/08_increment.md) | The 16-bit bundle · overflow · the wire nobody reads (carry flag) |
 | [08.5_sayac_basa_donunce.md](./salterden_bilgisayara/08.5_sayac_basa_donunce.md) | **Interlude:** modular arithmetic, `ℤ/2ⁿℤ` and **CWE-190** integer overflow |
-| [08.5.1_tasma_gercek_hayatta.md](./salterden_bilgisayara/08.5.1_tasma_gercek_hayatta.md) | **Interlude:** real cases of overflow — Stagefright, BEC token, Boeing 787, Ariane 5 |
 | [09_subtraction.md](./salterden_bilgisayara/09_subtraction.md) | Two's complement; making an adder subtract |
 | [10_bayraklar.md](./salterden_bilgisayara/10_bayraklar.md) | ZF and SF; how a machine says "if" — the circuit under `cmp` |
 | [11_selector_switch.md](./salterden_bilgisayara/11_selector_switch.md) | Selector & Switch; data vs control wire, the multiplexer |
@@ -164,5 +163,15 @@
 | [17_setjmp_longjmp_ptr_mangle.md](./binary_exploitation/17_setjmp_longjmp_ptr_mangle.md) | `jmp_buf`, PTR_MANGLE, ebp-pivot bypass | Utumno 7 |
 | [18_ag_servisi_exploitasyonu.md](./binary_exploitation/18_ag_servisi_exploitasyonu.md) | socket/bind/fork server, exploit over socket, UDP sniffing | Maze 8, Behemoth 5 |
 | [19_setuid_yetki_dususu_ve_p_bayragi.md](./binary_exploitation/19_setuid_yetki_dususu_ve_p_bayragi.md) | ruid/euid/suid, `setresuid`, privilege drop, `#!/bin/sh -p`, setuid script | Maze 4 + All |
+
+---
+
+## 👾 CWE Map
+
+> The page where the kinds of weakness you meet across the lessons are collected in one place. The **👾 For the curious** links in the lessons all lead here.
+
+| File | Topics |
+|---|---|
+| [README.md](./cwe/README.md) | What a CWE is, what a CVE is, the difference · chains · the CWEs of the From Switches to a Computer and Leviathan lessons · what is on the way |
 
 ---

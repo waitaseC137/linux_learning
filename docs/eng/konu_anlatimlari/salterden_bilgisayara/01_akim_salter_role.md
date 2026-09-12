@@ -232,6 +232,7 @@ repetition of this.
 
 ## 🔗 Related Topics
 
+- 👾 **For the curious:** [CWE-1300 — Physical side channel](../cwe/cwe_1300.md) — the current a gate draws can leak what is being processed inside
 - [00_buradan_basla.md](./00_buradan_basla.md) — The roadmap of the series
 - [02_nanddan_kapilar.md](./02_nanddan_kapilar.md) — Deriving all the gates from this brick
 

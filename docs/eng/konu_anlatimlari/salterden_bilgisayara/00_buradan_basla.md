@@ -162,7 +162,6 @@ Read the files in this order. Each lesson leans on the previous one.
 |:---:|---|---|---|
 | 8 | [08_increment](./08_increment.md) | The 16-bit bundle; overflow and the wire nobody reads | Increment |
 | 8.5 | [08.5_sayac_basa_donunce](./08.5_sayac_basa_donunce.md) | *(interlude)* The mathematics of wrapping, and **CWE-190** | — |
-| 8.5.1 | [08.5.1_tasma_gercek_hayatta](./08.5.1_tasma_gercek_hayatta.md) | *(interlude)* Real cases of the same overflow: Stagefright · Ariane 5 · Boeing 787 | — |
 | 9 | [09_subtraction](./09_subtraction.md) | Two's complement; making an adder subtract | Subtraction |
 
 ### 🚩 Unit 3 — Making Decisions and Routing
@@ -180,8 +179,9 @@ The compute core (ALU) → memory (latch, register, RAM) → clock and control u
 > 💡 Files whose number ends in `.5` are short **interludes**: on the side of the main road,
 > lighter, with no game level to go with them. But don't skip any of them — `03.5` carries
 > the most important idea in the series, `08.5` opens up the mathematics underneath the
-> circuit you built and what that mathematics means in the security world, and `08.5.1`
-> shows what the same mathematics has cost in the real world.
+> circuit you built. Interludes carry only **mathematics and extra background**; what
+> that mathematics is called in the security world lives in its own folder:
+> [👾 CWE Map](../cwe/README.md).
 
 ---
 

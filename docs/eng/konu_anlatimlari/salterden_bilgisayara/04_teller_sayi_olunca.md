@@ -192,6 +192,7 @@ This formula is the key to the next two lessons. When our circuits hand you two 
 
 ## 🔗 Related Topics
 
+- 👾 **For the curious:** [CWE-1261 — Single event upset](../cwe/cwe_1261.md) — one bit flipping: Belgium's 4096 votes, Mario's teleport
 - [01_akim_salter_role.md](./01_akim_salter_role.md) — Where the principle "a wire knows no meaning" was born
 - [05_half_adder.md](./05_half_adder.md) — The fruit of this lesson: a circuit that ADDS numbers
 
