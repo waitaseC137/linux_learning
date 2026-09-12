@@ -1,8 +1,8 @@
-# 🧭 Yol Haritası — İşlemciden Kuantuma
+# 🧭 Yol Haritası — Voltajdan İşletim Sistemine
 
 > `nand2shell` öğrenme rotasının iskeleti. Aşağıdan yukarı: fizikten (voltaj)
 > çekirdeğe, oradan gizli katmanlara, farklı işlemci felsefelerine ve en sonda
-> bambaşka bir makineye — kuantuma.
+> kendi işletim sistemini yazmaya.
 >
 > ✅ **Durum işaretleri artık güncel tutuluyor** (2026-09-12'de açıldı; önceden
 > bilinçli olarak hepsi boştu). Anlamları:
@@ -211,7 +211,7 @@
 *Kırdığı varsayım: "von Neumann tek yol — komutlar bir sayaçtan sırayla çekilir."*
 
 - [ ] Başla → "von Neumann yarığı = en derin kırılma" tespitinin cisimleşmiş hâli
-- [ ] Devam → sistolik matris çarpımı: veri dokudan akar, sayaç yok; TPU neden tam matris için — matris-ağırlıklı = Bölüm 5'e (üniter matrisler) köprü
+- [ ] Devam → sistolik matris çarpımı: veri dokudan akar, sayaç yok; TPU neden tam matris için
 
 ---
 
@@ -263,30 +263,15 @@
 
 ---
 
-## Bölüm 5 — Bambaşka Bir Makine: Kuantum
-
-> *Kapak taşı. Burada duvar GERÇEKTEN fizik — politika değil. "Sıfırdan"
-> başlanacak; matematik zemini önce.*
-
-- [ ] QPU nedir (klasik CPU'dan farkı)
-- [ ] Gerekli matematik: kompleks lineer cebir, üniter / Hermitian, olasılık
-- [ ] Qubit & süperpozisyon
-- [ ] Kapılar = üniter matrisler
-- [ ] Ölçüm (Born kuralı)
-- [ ] Kuantum kodlama (Qiskit)
-- [ ] Yan-dal: kuantum tavlama / tünelleme *(opsiyonel; kapı-modeli için ön koşul değil)*
-
----
-
 ## Tasarım Notları (sonra tartışılacak)
 
 - Merdiven (Bölüm 1) tek hikâye ama 1A / 1B diye ikiye ayrıldı (temel / modern) —
   istenirse tek akışa geri döndürülür.
-- LFS, kuantumdan önce ve "zirve" olarak değil, konsolidasyon olarak konumlandı.
+- LFS bir "zirve" olarak değil, konsolidasyon olarak konumlandı.
 - Binexp, güvenlik bölümünün başında (microcode'dan kolay, doğal ısınma).
 - Bölüm 3 bir galeriye dönüştü (3A–3F); her durak x86'nın bir varsayımını kırar,
-  en yakından en radikale sıralı, Bölüm 5'e rampa. Önerilen çekirdek: **3A + 3E +
-  3F** (elle bellek → elle-kurma zirvesi → von Neumann ödülü + kuantum köprüsü);
+  en yakından en radikale sıralı. Önerilen çekirdek: **3A + 3E +
+  3F** (elle bellek → elle-kurma zirvesi → von Neumann ödülü);
   3B hızlı geçiş; 3C / 3D tada göre opsiyonel. Alınmayan başlıklar boş `[ ]` durur.
 - Çekirdek **derleme** (kendi Linux'unu derle) = Bölüm 4B içinde tek madde. Çekirdek
   **yazma** (sıfırdan OS) = ayrı **Bölüm 4.5**, çünkü tek mimari kırmıyor, bütün bir

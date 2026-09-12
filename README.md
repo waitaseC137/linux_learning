@@ -10,11 +10,11 @@
 
 ## 🧭 Yol Haritası — nereye gidiyoruz?
 
-Bu repo rastgele büyümüyor; voltajdan kuantuma uzanan tek bir merdiveni takip
+Bu repo rastgele büyümüyor; voltajdan işletim sistemine uzanan tek bir merdiveni takip
 ediyor. Hangi basamaktayız, neyi bitirdik, sırada ne var — hepsi tek dosyada,
 işaretli:
 
-→ **[ROADMAP.md — İşlemciden Kuantuma](./ROADMAP.md)**
+→ **[ROADMAP.md — Voltajdan İşletim Sistemine](./ROADMAP.md)**
 
 > `[x]` oturdu · `[ ]` 🚧 başlandı, yarım · `[ ]` henüz başlanmadı.
 > Bir basamak, konu anlatıldığı için değil, **"oturdu" dendiği için** kapanır.
