@@ -60,12 +60,12 @@
 
 ### 1A — Temel yarı (voltaj → x86 komutu)
 
-- [ ] 🚧 Voltaj: 1/0 = yüksek/alçak tel (sayı değil, fiziksel gerilim)
-    - [ ] eşik + gürültü payı: aradaki "gri bölge" neden yok sayılır
-    - [ ] neden 2 seviye? çok-seviyeli (ternary) fiziksel mümkün, neden kazanmadı
-- [ ] 🚧 Transistör = parmağı tel olan anahtar (elektrik elektriği kontrol eder)
-    - [ ] MOSFET sezgisi: kapı gerilimi kanalı açar/kapatır
-    - [ ] CMOS: neden çift (n+p), statik güç ~0 — o hâlde ısı nereden çıkar
+- [x] Voltaj: 1/0 = yüksek/alçak tel (sayı değil, fiziksel gerilim)
+    - [x] eşik + gürültü payı: aradaki "gri bölge" neden yok sayılır
+    - [x] neden 2 seviye? çok-seviyeli (ternary) fiziksel mümkün, neden kazanmadı
+- [x] Transistör = parmağı tel olan anahtar (elektrik elektriği kontrol eder)
+    - [x] MOSFET sezgisi: kapı gerilimi kanalı açar/kapatır
+    - [x] CMOS: neden çift (n+p), statik güç ~0 — o hâlde ısı nereden çıkar
 - [x] Mantık kapıları (NAND'dan türetme; anlamı biz koyarız, fizik aptal)
     - [x] NAND'dan NOT / AND / OR
     - [x] XOR + evrensellik: tek kapı tipinden her şey neden çıkar
