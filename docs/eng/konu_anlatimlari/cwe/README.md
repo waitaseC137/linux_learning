@@ -120,17 +120,14 @@ breaks.
 | [**CWE-680**](./cwe_680.md) | Integer Overflow to Buffer Overflow | [08 · Increment](../salterden_bilgisayara/08_increment.md#-the-security-bridge) | 📄 |
 | [**CWE-787**](./cwe_787.md) | Out-of-bounds Write | [08 · Increment](../salterden_bilgisayara/08_increment.md#-the-security-bridge) | 📄 |
 | [**CWE-681**](./cwe_681.md) | Incorrect Conversion between Numeric Types | [04 · When Wires Become Numbers](../salterden_bilgisayara/04_teller_sayi_olunca.md) | 📄 |
-| **CWE-196** → **CWE-839** → **CWE-195** | below | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-the-security-bridge) | 👾 |
+| [**CWE-196**](./cwe_196.md) | Unsigned to Signed Conversion Error | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-the-security-bridge) | 📄 |
+| [**CWE-839**](./cwe_839.md) | Numeric Range Comparison Without Minimum Check | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-the-security-bridge) | 📄 |
+| [**CWE-195**](./cwe_195.md) | Signed to Unsigned Conversion Error | [09 · Subtraction](../salterden_bilgisayara/09_subtraction.md#-the-security-bridge) | 📄 |
 
-**👾 Three CWEs back to back in the lesson 09 example.** A length of `65535` arrives
-from the network, is stored in a signed variable, and the same number is then
-misread three times in a row:
-
-| Step | What happens | CWE |
-|---|---|---|
-| Going into the variable | `65535` becomes `−1` in a signed type | **CWE-196** — Unsigned to Signed Conversion Error |
-| At the check | `if (len > MAX)` only looks at the upper bound, so `−1` passes | **CWE-839** — Numeric Range Comparison Without Minimum Check |
-| At the use | `memcpy` reads the same value as unsigned: `65535` bytes | **CWE-195** — Signed to Unsigned Conversion Error |
+**The three are a chain.** In the Security Bridge example in lesson 09 the same
+number is read three times under three different contracts: [196](./cwe_196.md) as
+it enters the variable, [839](./cwe_839.md) at the check, [195](./cwe_195.md) at the
+point of use. Each page carries its own mechanism, real cases and prevention.
 
 **🔗 The exploitation side:** how this same family is actually abused on real levels →
 [binary_exploitation/11 · Integer Bugs](../binary_exploitation/11_integer_bug_truncation_signedness.md)
@@ -160,18 +157,27 @@ arrives at the Condition level, and the comparison bugs come with it.
 
 | Lesson | CWE | Official name | |
 |---|---|---|---|
-| [What Leviathan Teaches · Lesson 3](../leviathan_komutlari/what_leviathan_teaches.md#lesson-3--command--argument-injection-system) | **CWE-78** | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 📖 leviathan2 |
-| [What Leviathan Teaches · Lesson 5](../leviathan_komutlari/what_leviathan_teaches.md#lesson-5--symbolic-link-attack--insecure-tmp) | **CWE-59** | Improper Link Resolution Before File Access ('Link Following') | 📖 leviathan5 |
-| Same lesson + [binary_exploitation/07](../binary_exploitation/07_sembolik_link.md#what-is-a-toctou-vulnerability) | **CWE-367** | Time-of-check Time-of-use (TOCTOU) Race Condition | 📖 briefly in Leviathan, in detail in 07 *(07 does not name the number)* |
+| [What Leviathan Teaches · Lesson 3](../leviathan_komutlari/what_leviathan_teaches.md#lesson-3--command--argument-injection-system) | [**CWE-78**](./cwe_78.md) | Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') | 📄 |
+| [What Leviathan Teaches · Lesson 5](../leviathan_komutlari/what_leviathan_teaches.md#lesson-5--symbolic-link-attack--insecure-tmp) | [**CWE-59**](./cwe_59.md) | Improper Link Resolution Before File Access ('Link Following') | 📄 |
+| Same lesson + [binary_exploitation/07](../binary_exploitation/07_sembolik_link.md#what-is-a-toctou-vulnerability) | [**CWE-367**](./cwe_367.md) | Time-of-check Time-of-use (TOCTOU) Race Condition | 📄 |
+
+> 🔑 **Three in the same lesson, but three different things.** The root of 78 is
+> "data and command travel down the same channel"; 59 and 367 belong to the "a name
+> is not an identity" family. The distinction between 59 and 367 matters: in **59
+> there is no check at all**, in **367 there is a check but the race is lost**. Where
+> the two meet has its own number in MITRE: CWE-363.
 
 ---
 
 ## Not Yet Mapped
 
 The lessons in the **Web Security** and **Binary Exploitation** series map onto CWEs
-just as directly: command injection, SQL injection, format string, path traversal
-and so on. That mapping has not been done yet; it will be added to this page as it
-is.
+just as directly: SQL injection, format string, path traversal and so on. That
+mapping has not been done yet; it will be added to this page as it is.
+
+The first bridge is built, though: the [CWE-78](./cwe_78.md) page connects both to
+Leviathan Lesson 3 and to
+[web_guvenligi/07](../web_guvenligi/07_command_injection.md).
 
 ---
 

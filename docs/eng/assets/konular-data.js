@@ -189,6 +189,12 @@ window.KONULAR = {
         { f: "cwe/cwe_680.md", n: "680", t: "Overflow \u2192 Buffer Overflow", h: "the two-box model · Stagefright" },
         { f: "cwe/cwe_787.md", n: "787", t: "Out-of-bounds Write", h: "no floor in memory · allocate(0)" },
         { f: "cwe/cwe_681.md", n: "681", t: "Incorrect Numeric Conversion", h: "Ariane 5 · dead code" },
+        { f: "cwe/cwe_196.md", n: "196", t: "Unsigned \u2192 Signed Conversion", h: "same pattern, new reader \u00b7 first link of the chain" },
+        { f: "cwe/cwe_839.md", n: "839", t: "Range Check Without Minimum", h: "ceiling watched, floor empty \u00b7 negative order" },
+        { f: "cwe/cwe_195.md", n: "195", t: "Signed \u2192 Unsigned Conversion", h: "an error value mistaken for a size \u00b7 CVE-2025-27363" },
+        { f: "cwe/cwe_78.md",  n: "78",  t: "OS Command Injection", h: "data and command in one channel \u00b7 execv, not system()" },
+        { f: "cwe/cwe_59.md",  n: "59",  t: "Link Following", h: "a name is not an identity \u00b7 container escape \u00b7 Zip Slip" },
+        { f: "cwe/cwe_367.md", n: "367", t: "TOCTOU Race", h: "a check is a photograph \u00b7 narrowing the gap is no fix" },
         { f: "cwe/cwe_1300.md", n: "1300", t: "Physical Side Channel", h: "current · electromagnetic waves · sound" },
         { f: "cwe/cwe_1247.md", n: "1247", t: "Voltage & Clock Glitches", h: "fault attack · Xbox 360 reset glitch" },
         { f: "cwe/cwe_1261.md", n: "1261", t: "Single Event Upset", h: "bit flip · Belgium's 4096 · Mario 64" }

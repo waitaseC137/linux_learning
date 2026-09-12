@@ -301,7 +301,7 @@ where a processor's ability to say "if" begins.
 
 ## 🔗 Related Topics
 
-- 👾 **For the curious:** [this lesson's CWEs](../cwe/README.md#unit-2--the-limit-of-a-number-and-negative-numbers) — the three CWEs in the Security Bridge example: 196 → 839 → 195
+- 👾 **For the curious:** the three CWEs in the Security Bridge example — [CWE-196](../cwe/cwe_196.md) (conversion) → [CWE-839](../cwe/cwe_839.md) (half a check) → [CWE-195](../cwe/cwe_195.md) (conversion back)
 - [08_increment.md](./08_increment.md) — Wrapping, and how cheap the carry-in is
 - [08.5_sayac_basa_donunce.md](./08.5_sayac_basa_donunce.md) — The mathematics of wrapping: `ℤ/2ⁿℤ` and CWE-190
 - [04_teller_sayi_olunca.md](./04_teller_sayi_olunca.md) — "The number lives in the way you read"
