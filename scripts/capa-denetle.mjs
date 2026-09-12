@@ -26,6 +26,8 @@ for (const d of dosyalar) {
   let kod = false;
   fs.readFileSync(d, "utf8").split("\n").forEach((satir, i) => {
     if (/^\s*(```|~~~)/.test(satir)) { kod = !kod; return; } if (kod) return;
+    // satır içi `kod` parçaları bağlantı sayılmaz — içlerindeki [..](..) markdown değildir
+    satir = satir.replace(/`[^`]*`/g, "");
     for (const l of satir.matchAll(/\[([^\]]*)\]\(([^)\s]+)\)/g)) {
       const href = l[2]; if (/^(https?:|mailto:|#?$)/.test(href)) continue;
       const [yolK, capa] = href.split("#");
