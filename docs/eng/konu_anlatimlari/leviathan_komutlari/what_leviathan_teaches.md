@@ -23,7 +23,7 @@ The password was embedded in plain text inside a backup file (`.backup/bookmarks
 - **Real world:** API keys that slipped into Git history, passwords in log files, credentials left in comment lines.
 - **Defense:** Don't embed secrets in code/backups; use a secret manager, tighten permissions, clean the history.
 
-🔗 Solution: [leviathan 0 -> 1](../../overthewire/leviathan/leviathan%200%20-%3E%201.md)
+🔗 Solution: [leviathan 0 → 1](../../overthewire/leviathan/leviathan_0-7.md#level-0--level-1--hidden-password-in-a-backup-file)
 
 ---
 
@@ -36,7 +36,7 @@ The programs asked for a password, but they had hardcoded the password inside th
 - **Real world:** API keys embedded in mobile apps/firmware, license checks, "secret" comparisons.
 - **Defense:** "Security through obscurity" is not security. Do authentication on the server side, with a hash + constant-time comparison.
 
-🔗 Solutions: [leviathan 1 -> 2](../../overthewire/leviathan/leviathan%201%20-%3E%202.md) · [leviathan 3 -> 4](../../overthewire/leviathan/leviathan%203%20-%3E%204.md)
+🔗 Solutions: [leviathan 1 → 2](../../overthewire/leviathan/leviathan_0-7.md#level-1--level-2--binary-analysis-with-ltrace) · [leviathan 3 → 4](../../overthewire/leviathan/leviathan_0-7.md#level-3--level-4--password-detection-with-ltrace-again)
 
 ---
 
@@ -49,7 +49,7 @@ The `printfile` program checked its access with `access()`, then printed the fil
 - **Real world:** **OS command injection** (CWE-78) on the web — this is the exact same logic as the most common and dangerous form of that class.
 - **Defense:** Instead of `system()`/`popen()`, pass arguments **separately** with `execv()`; never embed user input into a shell as a string.
 
-🔗 Solution: [leviathan 2 -> 3](../../overthewire/leviathan/leviathan%202%20-%3E%203.md)
+🔗 Solution: [leviathan 2 → 3](../../overthewire/leviathan/leviathan_0-7.md#level-2--level-3--symbolic-link--space-manipulation)
 
 ---
 
@@ -62,7 +62,7 @@ The `printfile` program checked its access with `access()`, then printed the fil
 - **Real world:** Tokens "hidden" with base64, hex dumps, URL-encoded data.
 - **Defense:** Encoding data does not hide it. If you genuinely need secrecy, you need encryption (and key management).
 
-🔗 Solution: [leviathan 4 -> 5](../../overthewire/leviathan/leviathan%204%20-%3E%205.md)
+🔗 Solution: [leviathan 4 → 5](../../overthewire/leviathan/leviathan_0-7.md#level-4--level-5--converting-binary-to-ascii)
 
 ---
 
@@ -75,7 +75,7 @@ The `leviathan5` program opened and printed a fixed path (`/tmp/file.log`) with 
 - **Real world:** **Symlink following / insecure temporary file** (CWE-59) — here there isn't even a check; the symlink is followed directly. (If an `access()` check had come in between, the check↔use race = **TOCTOU**, CWE-367.) Both are the basis of many local privesc CVEs.
 - **Defense:** `O_NOFOLLOW`, per-user secure directories, `mkstemp`, and dropping privilege before the work (`setresuid`).
 
-🔗 Solution: [leviathan 5 -> 6](../../overthewire/leviathan/leviathan%205%20-%3E%206.md)
+🔗 Solution: [leviathan 5 → 6](../../overthewire/leviathan/leviathan_0-7.md#level-5--level-6--tricking-a-binary-with-symlink)
 
 ---
 
@@ -88,7 +88,7 @@ The `leviathan5` program opened and printed a fixed path (`/tmp/file.log`) with 
 - **Real world:** Short PINs, predictable tokens, "magic" values embedded in the binary.
 - **Defense:** Don't put secrets in the binary as immediates; rate-limit PINs and validate them on the server.
 
-🔗 Solution: [leviathan 6 -> 7](../../overthewire/leviathan/leviathan%206%20-%3E%207.md)
+🔗 Solution: [leviathan 6 → 7](../../overthewire/leviathan/leviathan_0-7.md#level-6--level-7--reverse-engineering-with-gdb)
 
 ---
 

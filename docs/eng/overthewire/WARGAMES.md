@@ -114,7 +114,7 @@ Dynamic analysis, PATH hijack, symbolic links, network sniffing, format string, 
 
 ---
 
-## 🕳️ Utumno — Advanced Binary Exploitation
+## 🕳 Utumno — Advanced Binary Exploitation
 
 Reading execute-only binaries, deliberate shellcode exec, `getchar` arbitrary-write primitive, integer truncation, signed bounds bypass, and `jmp_buf` + PTR_MANGLE bypass. Contains the deepest techniques in the series.
 

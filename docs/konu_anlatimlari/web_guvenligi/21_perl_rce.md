@@ -10,7 +10,7 @@
 - [Perl open() Fonksiyonu](#perl-open-fonksiyonu)
 - [Pipe ile Komut Çalıştırma](#pipe-ile-komut-çalıştırma)
 - [Filtre Bypass Teknikleri](#filtre-bypass-teknikleri)
-- [Glob ile Bypass](#glob-ile-bypass)
+- [Glob ile Bypass](#glob--ile-bypass)
 - [Natas'ta Kullanım](#natasta-kullanım)
 
 ---

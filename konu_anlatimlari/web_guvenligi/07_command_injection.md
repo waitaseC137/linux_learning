@@ -9,7 +9,7 @@
 
 - [Command Injection Nedir?](#command-injection-nedir)
 - [Shell Operatörleri](#shell-operatörleri)
-- [PHP'de Tehlikeli Fonksiyonlar](#phpdeki-tehlikeli-fonksiyonlar)
+- [PHP'de Tehlikeli Fonksiyonlar](#phpde-tehlikeli-fonksiyonlar)
 - [Filtre Bypass Teknikleri](#filtre-bypass-teknikleri)
 - [Natas'ta Kullanım](#natasta-kullanım)
 

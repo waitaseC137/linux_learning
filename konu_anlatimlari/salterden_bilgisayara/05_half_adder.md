@@ -14,7 +14,7 @@
 - [Tek Çıkış Neden Yetmez?](#tek-çıkış-neden-yetmez)
 - [Tabloyu Kur, Tanıdıkları Bul](#tabloyu-kur-tanıdıkları-bul)
 - [Devre: İki Eski Dost, Yan Yana](#devre-i̇ki-eski-dost-yan-yana)
-- [Neden "YARIM" Toplayıcı?](#neden-yarım-toplayıcı)
+- [Neden "YARIM" Toplayıcı?](#neden-yarim-toplayıcı)
 - [🎮 Şimdi Sen Kur](#-şimdi-sen-kur)
 
 ---

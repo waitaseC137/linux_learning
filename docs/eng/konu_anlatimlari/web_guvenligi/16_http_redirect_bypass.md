@@ -8,7 +8,7 @@
 ## 📋 Table of Contents
 
 - [How Does HTTP Redirect Work?](#how-does-http-redirect-work)
-- [302 Response Body](#302-response-body)
+- [302 Response Body](#the-body-of-the-302-response)
 - [Not Following the Redirect](#not-following-the-redirect)
 - [Usage in Natas](#usage-in-natas)
 

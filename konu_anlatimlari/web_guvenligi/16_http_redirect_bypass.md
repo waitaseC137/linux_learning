@@ -8,7 +8,7 @@
 ## 📋 İçindekiler
 
 - [HTTP Redirect Nasıl Çalışır?](#http-redirect-nasıl-çalışır)
-- [302 Response Body](#302-response-body)
+- [302 Response Body](#302-responseun-bodysi)
 - [Redirect'i Takip Etmeme](#redirecti-takip-etmeme)
 - [Natas'ta Kullanım](#natasta-kullanım)
 

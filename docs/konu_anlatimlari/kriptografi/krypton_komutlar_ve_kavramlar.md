@@ -8,17 +8,17 @@
 
 ## 📋 İçindekiler
 
-1. [Linux Komutları](#linux-komutlari)
+1. [Linux Komutları](#linux-komutları)
    - [wc -c](#wc--c--karakter-sayma)
-   - [sort -nr](#sort--nr--sayisal-ters-siralama)
+   - [sort -nr](#sort--nr--sayısal-ters-sıralama)
    - [tr -cd](#tr--cd--karakter-filtreleme)
    - [for i in {A..Z}](#for-döngüsü-ile-harf-tarama)
-   - [python3 -c](#python3--c--tek-satir-python)
-2. [Kriptografi Kavramları](#kriptografi-kavrami)
+   - [python3 -c](#python3--c--tek-satır-python)
+2. [Kriptografi Kavramları](#kriptografi-kavramları)
    - [Caesar Cipher](#caesar-cipher)
    - [Frekans Analizi](#frekans-analizi)
    - [Vigenère Cipher](#vigenère-cipher)
-   - [Kasiski Sınaması](#kasiski-sinamasi)
+   - [Kasiski Sınaması](#kasiski-sınaması)
    - [Stream Cipher (Krypton 6: mod-26 kaydırma)](#stream-cipher-krypton-6-mod-26-kaydırma)
 3. [Online Araçlar](#online-araçlar)
 

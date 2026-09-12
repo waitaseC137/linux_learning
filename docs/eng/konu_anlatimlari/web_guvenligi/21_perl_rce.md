@@ -10,7 +10,7 @@
 - [The Perl open() Function](#the-perl-open-function)
 - [Running Commands with a Pipe](#running-commands-with-a-pipe)
 - [Filter Bypass Techniques](#filter-bypass-techniques)
-- [Bypass with Glob](#bypass-with-glob)
+- [Bypass with Glob](#bypass-with-glob-)
 - [Usage in Natas](#usage-in-natas)
 
 ---

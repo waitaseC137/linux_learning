@@ -25,7 +25,7 @@ Natas — web güvenliği, ayrı dal olarak istediğin zaman
 | [Natas](#-natas--web-güvenliğine-giriş) | 4/10 | 35 | Web güvenliği |
 | [Narnia](#-narnia--binary-exploitationa-giriş) | 6/10 | 10 | Buffer overflow, shellcode |
 | [Behemoth](#-behemoth--orta-seviye-binary-exploitation) | 7/10 | 9 | PATH hijack, format string, symlink, UDP, BOF |
-| [Utumno](#-utumno--ileri-seviye-binary-exploitation) | 9/10 | 9 | Keyfi yazma, integer bug'ları, jmp_buf/PTR_MANGLE |
+| [Utumno](#-utumno--i̇leri-seviye-binary-exploitation) | 9/10 | 9 | Keyfi yazma, integer bug'ları, jmp_buf/PTR_MANGLE |
 | [Maze](#-maze--karma-binary-exploitation--re) | 5/10 | 9 | TOCTOU, lib hijack, self-modifying, FSOP, ELF parser, format string |
 | [Vortex](#-vortex--ağdan-başlayan-geniş-binary-exploitation) | 6/10 | 27 | Ağ/endianness, overflow, format string, heap, ROP, kripto, RE/keygen |
 
@@ -124,7 +124,7 @@ Dinamik analiz, PATH hijack, sembolik link, ağ sniffing, format string ve geli�
 
 ---
 
-## 🕳️ Utumno — İleri Seviye Binary Exploitation
+## 🕳 Utumno — İleri Seviye Binary Exploitation
 
 Execute-only binary okuma, kasıtlı shellcode exec, `getchar` keyfi-yazma primitifi, integer truncation, signed bounds bypass ve `jmp_buf` + PTR_MANGLE bypass. Serinin en derin tekniklerini içerir.
 

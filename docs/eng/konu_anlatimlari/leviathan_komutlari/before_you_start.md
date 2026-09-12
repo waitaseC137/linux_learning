@@ -61,8 +61,8 @@ Knowing the topics below is enough. For each one there is a separate topic write
 
 | Need | Why it's needed | Topic file |
 |---|---|---|
-| **Navigating the terminal** (`ls -la`, `cd`, `cat`, `pwd`) | Exploring directories, seeing hidden files | [linux_komutlari/dosya_sistemi.md](../linux_komutlari/dosya_sistemi.md) |
-| **Text searching** (`grep`, `strings`) | Finding a leaked password inside a file | [linux_komutlari/metin_isleme.md](../linux_komutlari/metin_isleme.md) |
+| **Navigating the terminal** (`ls -la`, `cd`, `cat`, `pwd`) | Exploring directories, seeing hidden files | [linux_komutlari/file_system.md](../linux_komutlari/file_system.md) |
+| **Text searching** (`grep`, `strings`) | Finding a leaked password inside a file | [linux_komutlari/text_processing.md](../linux_komutlari/text_processing.md) |
 | **File permissions & SUID** | The whole logic of the game rests on this | [file_permissions_suid.md](./file_permissions_suid.md) |
 | **Binary recognition** (`file`, `xxd`, binary→ASCII) | Figuring out whether a program is 32/64-bit and decoding its output | [binary_analysis.md](./binary_analysis.md) |
 | **Dynamic analysis** (`ltrace`, `strace`) | Seeing which password the program compares against | [ltrace_strace.md](./ltrace_strace.md) |
