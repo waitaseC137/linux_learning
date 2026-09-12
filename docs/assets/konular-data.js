@@ -81,6 +81,7 @@ window.KONULAR = {
       files: [
         { f: "salterden_bilgisayara/00_buradan_basla.md",        n: "→",    t: "Buradan Başla",        h: "Kurs haritası; şalterden CPU'ya (🚧 yazılıyor)" },
         { f: "salterden_bilgisayara/01_akim_salter_role.md",     n: "01",   t: "Akım · Şalter · Röle", h: "Elektrik → şalter → röle = ilk mantık" },
+        { f: "salterden_bilgisayara/01.5_yasak_bolge.md", n: "01.5", t: "Yasak Bölge", h: "ara ders: gerilim · gürültü payı · MOSFET · CMOS · P ≈ C·V²·f" },
         { f: "salterden_bilgisayara/02_nanddan_kapilar.md",      n: "02",   t: "NAND'dan Kapılar",     h: "NAND evrensel: NOT/AND/OR/XOR türet" },
         { f: "salterden_bilgisayara/03_xor_iki_fedai.md",        n: "03",   t: "XOR: İki Fedai",       h: "XOR'u OR+NAND+AND ile kurmak" },
         { f: "salterden_bilgisayara/03.5_soyutlama_merdiveni.md",n: "03.5", t: "Soyutlama Merdiveni",  h: "Kapı = kapalı kutu; bir üst kata çıkmak" },

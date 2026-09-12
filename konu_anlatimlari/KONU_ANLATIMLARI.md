@@ -82,6 +82,7 @@
 |---|---|
 | [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) | Kurs haritası; şalterden CPU'ya yolculuk |
 | [01_akim_salter_role.md](./salterden_bilgisayara/01_akim_salter_role.md) | Akım, şalter, röle — ilk "mantık" |
+| [01.5_yasak_bolge.md](./salterden_bilgisayara/01.5_yasak_bolge.md) | **Ara ders:** gerilim ve gürültü payı, yasak bölge, MOSFET ve CMOS, `P ≈ C·V²·f` |
 | [02_nanddan_kapilar.md](./salterden_bilgisayara/02_nanddan_kapilar.md) | NAND evrensel: NOT/AND/OR/XOR türetmek |
 | [03_xor_iki_fedai.md](./salterden_bilgisayara/03_xor_iki_fedai.md) | XOR'u kurmak — "iki fedai" (OR + NAND + AND) |
 | [03.5_soyutlama_merdiveni.md](./salterden_bilgisayara/03.5_soyutlama_merdiveni.md) | Kapı = kapalı kutu; bir üst kata çıkmak |

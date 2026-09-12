@@ -120,6 +120,10 @@ Boyut farkının yarattığı sonucu hissetmek için: bu satırları okuduğun c
 işlemcisinde **milyarlarca** transistör var ve her biri saniyede milyarlarca kez
 açılıp kapanabiliyor.
 
+> 🔬 **Derine inmek istersen:** transistörün içinde ne olduğu, "1" ile "0"ın
+> gerçekte hangi gerilimler olduğu ve aradaki bölgenin neden yasak olduğu →
+> [01.5 · Yasak Bölge](./01.5_yasak_bolge.md)
+
 > 🔑 Ama fikir değişmedi: **transistör = kolu elektrik itilen şalter.** Röleyle
 > kurabildiğin her devre, transistörle de kurulur — sadece küçük ve hızlı olur. Bu
 > yüzden bu seride gönül rahatlığıyla röleyle başlıyoruz: röleyi anlayan, transistörü
@@ -225,6 +229,6 @@ Parmak yok, insan yok — akım, akımı yönetti. Geri kalan her şey, bunun te
 ---
 
 **Önceki konu:** [00_buradan_basla.md](./00_buradan_basla.md)
-**Sonraki konu:** [02_nanddan_kapilar.md](./02_nanddan_kapilar.md)
+**Sonraki konu:** [01.5_yasak_bolge.md](./01.5_yasak_bolge.md)
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*

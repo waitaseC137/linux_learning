@@ -195,7 +195,7 @@ And ve Or'da hazır parça olarak kullanabilirsin.)
 
 ---
 
-**Önceki konu:** [01_akim_salter_role.md](./01_akim_salter_role.md)
+**Önceki konu:** [01.5_yasak_bolge.md](./01.5_yasak_bolge.md)
 **Sonraki konu:** [03_xor_iki_fedai.md](./03_xor_iki_fedai.md)
 
 *Bu ders, "Şalterden Bilgisayara" serisinin bir parçasıdır. Seri, [nandgame.com](https://nandgame.com) eşliğinde ilerler.*

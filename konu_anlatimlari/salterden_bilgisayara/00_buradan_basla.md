@@ -137,6 +137,7 @@ Dosyaları bu sırayla oku. Her ders bir öncekine yaslanır.
 | # | Dosya | Ne öğretir | NandGame seviyesi |
 |:---:|---|---|---|
 | 1 | [01_akim_salter_role](./01_akim_salter_role.md) | 1 ve 0 gerçekte nedir; röle; ilk kapı | Nand |
+| 1.5 | [01.5_yasak_bolge](./01.5_yasak_bolge.md) | *(ara ders)* Gerilim, gürültü payı, transistörün içi ve CMOS | — |
 | 2 | [02_nanddan_kapilar](./02_nanddan_kapilar.md) | Tek tuğladan bütün kapılar: NOT, AND, OR | Invert, And, Or |
 | 3 | [03_xor_iki_fedai](./03_xor_iki_fedai.md) | Farklılık dedektörü XOR — iki fedai hikâyesi | Xor |
 | 3.5 | [03.5_soyutlama_merdiveni](./03.5_soyutlama_merdiveni.md) | *(ara ders)* Katları kutulamak — bilgisayarın kuruluş sırrı | — |
