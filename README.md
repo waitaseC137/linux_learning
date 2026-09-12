@@ -94,6 +94,8 @@ Bandit (Linux temelleri), Leviathan ve Krypton (tersine mühendislik ve kripto),
 - [x86 Instruction Reference — Felix Cloutier](https://www.felixcloutier.com/x86/)
 - [Exploit Education — Phoenix](https://exploit.education/phoenix/) *(modern pwntools ile pratik)*
 - [pwn.college](https://pwn.college/) *(binary exploitation eğitim platformu)*
+- [Nightmare — guyinatuxedo](https://github.com/guyinatuxedo/nightmare) *(46 modül, 90+ CTF challenge'ı, tam çözümleriyle · [web hâli](https://guyinatuxedo.github.io/))*
+- [Shogun — guyinatuxedo](https://github.com/guyinatuxedo/Shogun) *(Nightmare'in heap tarafının devamı)*
 
 ### Kriptografi
 - [CyberChef](https://gchq.github.io/CyberChef/)
