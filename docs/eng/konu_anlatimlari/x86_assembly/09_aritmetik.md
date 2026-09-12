@@ -362,4 +362,4 @@ DROP  → x/1dw &sonuc = 300 (result written to storage)
 **Previous topic:** [08.5_little_endian.md](./08.5_little_endian.md)
 **Next topic:** [10_bayraklar_ve_cmp.md](./10_bayraklar_ve_cmp.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

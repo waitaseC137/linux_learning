@@ -256,4 +256,4 @@ bitir:
 **Önceki konu:** [10_bayraklar_ve_cmp.md](./10_bayraklar_ve_cmp.md)
 **Sonraki konu:** [12_donguler.md](./12_donguler.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

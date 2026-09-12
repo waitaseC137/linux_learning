@@ -338,4 +338,4 @@ Prepared statement'ta kullanıcı girdisi **asla** SQL kodu olarak yorumlanmaz. 
 **Önceki konu:** [10_dosya_yukleme_bypass.md](./10_dosya_yukleme_bypass.md)
 **Sonraki konu:** [12_blind_sql_injection.md](./12_blind_sql_injection.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

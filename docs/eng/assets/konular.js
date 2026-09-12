@@ -8,7 +8,7 @@
   const TITLE = DATA.title || 'Konu Anlatımları';
   const INTRO = DATA.intro || 'Komutların ve kavramların wargame-bağımsız referansı. Bir kategoriden başla — ya da soldaki ağaçtan / aramadan istediğin konuya git. Hepsi site içinde.';
   const UNIT = DATA.unit || 'dosya';
-  const REPO_BLOB = 'https://github.com/waitaseC137/linux_learning/blob/main/';
+  const REPO_BLOB = 'https://github.com/waitaseC137/nand2shell/blob/main/';
 
   // dil — <html lang="en"> ise İngilizce arayüz metinleri
   const EN = document.documentElement.lang === 'en';
@@ -105,7 +105,7 @@
     });
     elContent.innerHTML =
       '<div class="reader"><div class="welcome">' +
-        '<div class="crumb"><a href="index.html">~/linux_learning</a><span class="sep">/</span><span class="cur">' + ROOT_LABEL + '</span></div>' +
+        '<div class="crumb"><a href="index.html">~/nand2shell</a><span class="sep">/</span><span class="cur">' + ROOT_LABEL + '</span></div>' +
         '<h1>' + TITLE + ' <span class="pp">/</span></h1>' +
         '<p class="lede">' + INTRO + '</p>' +
         '<div class="wcards">' + cards + '</div>' +
@@ -151,7 +151,7 @@
 
     const crumb =
       '<div class="crumb">' +
-        '<a href="index.html">~/linux_learning</a><span class="sep">/</span>' +
+        '<a href="index.html">~/nand2shell</a><span class="sep">/</span>' +
         '<a href="#">' + ROOT_LABEL + '</a><span class="sep">/</span>' +
         (cat ? '<span style="color:' + cat.accent + '">' + cat.id + '</span><span class="sep">/</span>' : '') +
         '<span class="cur">' + rel.split('/').pop() + '</span>' +

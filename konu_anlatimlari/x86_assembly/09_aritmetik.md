@@ -362,4 +362,4 @@ BIRAK → x/1dw &sonuc = 300 (sonuç depoya yazıldı)
 **Önceki konu:** [08.5_little_endian.md](./08.5_little_endian.md)
 **Sonraki konu:** [10_bayraklar_ve_cmp.md](./10_bayraklar_ve_cmp.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

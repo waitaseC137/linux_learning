@@ -303,4 +303,4 @@ Otomasyon:
 **Önceki konu:** [12_blind_sql_injection.md](./12_blind_sql_injection.md)
 **Sonraki konu:** [14_session_brute_force.md](./14_session_brute_force.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

@@ -300,4 +300,4 @@ Try:
 **Previous topic:** [16_http_redirect_bypass.md](./16_http_redirect_bypass.md)
 **Next topic:** [18_php_object_injection.md](./18_php_object_injection.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

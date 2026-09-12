@@ -195,4 +195,4 @@ Real output:
 **Previous topic:** [15_call_ve_ret.md](./15_call_ve_ret.md)
 **Next topic:** [17_sistem_cagrilari.md](./17_sistem_cagrilari.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

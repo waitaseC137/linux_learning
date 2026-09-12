@@ -154,4 +154,4 @@ Neden az önceki gibi `[ebp+8]` değil de `[esp+4]`? Üç adımda:
 **Önceki konu:** [18_ilk_etkilesimli_program.md](./18_ilk_etkilesimli_program.md)
 **Sonraki konu:** [20_buradan_nereye.md](./20_buradan_nereye.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

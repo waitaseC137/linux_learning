@@ -326,4 +326,4 @@ curl -u natas11:[şifre] \
 **Önceki konu:** [08_lfi_ve_path_traversal.md](./08_lfi_ve_path_traversal.md)
 **Sonraki konu:** [10_dosya_yukleme_bypass.md](./10_dosya_yukleme_bypass.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

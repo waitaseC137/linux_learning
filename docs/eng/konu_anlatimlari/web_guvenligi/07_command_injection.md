@@ -337,4 +337,4 @@ Try:
 **Previous topic:** [06_encoding_and_obfuscation.md](./06_encoding_and_obfuscation.md)
 **Next topic:** [08_lfi_and_path_traversal.md](./08_lfi_and_path_traversal.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -654,4 +654,4 @@ Congratulations on solving the last level of this game!
 
 **Önceki bölümler:** [bandit_0-10.md](./bandit_0-10.md) · [bandit_11-20.md](./bandit_11-20.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

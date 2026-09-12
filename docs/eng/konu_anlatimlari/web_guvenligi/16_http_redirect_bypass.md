@@ -176,4 +176,4 @@ Exploit:
 **Previous topic:** [15_session_and_newline_injection.md](./15_session_and_newline_injection.md)
 **Next topic:** [17_php_type_juggling.md](./17_php_type_juggling.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -164,4 +164,4 @@ And here's the point that ties the whole course together: back in lesson 06 we s
 **Previous topic:** [16_calling_convention.md](./16_calling_convention.md)
 **Next topic:** [18_ilk_etkilesimli_program.md](./18_ilk_etkilesimli_program.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

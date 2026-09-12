@@ -360,4 +360,4 @@ Automate:
 **Previous topic:** [11_sql_injection.md](./11_sql_injection.md)
 **Next topic:** [13_command_injection_advanced.md](./13_command_injection_advanced.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

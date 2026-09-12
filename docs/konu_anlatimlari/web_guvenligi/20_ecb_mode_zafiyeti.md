@@ -178,4 +178,4 @@ Exploit:
 **Önceki konu:** [19_sql_truncation.md](./19_sql_truncation.md)
 **Sonraki konu:** [21_perl_rce.md](./21_perl_rce.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

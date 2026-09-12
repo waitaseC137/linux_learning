@@ -236,4 +236,4 @@ And `test eax, 1`? Now it's plain: `eax and 1` = **only the lowest bit**. If the
 **Previous topic:** [12_donguler.md](./12_donguler.md)
 **Next topic:** [14_stack.md](./14_stack.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

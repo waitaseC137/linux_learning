@@ -270,4 +270,4 @@ Secure cookie management:
 **Previous topic:** [03_robots_and_directory_discovery.md](./03_robots_and_directory_discovery.md)
 **Next topic:** [05_php_source_code.md](./05_php_source_code.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

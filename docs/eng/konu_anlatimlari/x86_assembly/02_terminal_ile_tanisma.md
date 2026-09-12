@@ -275,4 +275,4 @@ See error messages as a **clue, not an enemy**. Most of the time they tell you e
 **Previous topic:** [01.5_sayi_ve_anlam.md](./01.5_sayi_ve_anlam.md)
 **Next topic:** [03_sayilar_ikilik_onaltilik.md](./03_sayilar_ikilik_onaltilik.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

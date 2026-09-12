@@ -360,4 +360,4 @@ Otomatize et:
 **Önceki konu:** [11_sql_injection.md](./11_sql_injection.md)
 **Sonraki konu:** [13_command_injection_ileri.md](./13_command_injection_ileri.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

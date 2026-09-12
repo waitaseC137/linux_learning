@@ -453,4 +453,4 @@ grep -i .* /etc/natas_webpass/natas11 dictionary.txt
 
 **Next section:** [natas_11-20.md](./natas_11-20.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

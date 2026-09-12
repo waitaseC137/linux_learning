@@ -1,15 +1,15 @@
 /* ============================================================
-   linux_learning — interactions
+   nand2shell — interactions
    ============================================================ */
 
 /* ---------- 1. hero: terminal yazma demosu ---------- */
 const SCRIPT_DESKTOP = [
-  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'tree -L 1' },
+  { t: 'prompt', text: '~/nand2shell $ ', cmd: 'tree -L 1' },
   { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">overthewire/</span>      <span class="td">8 wargame · level-by-level çözümler</span>' },
   { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">konu_anlatimlari/</span> <span class="td">wargame-bağımsız konu anlatımları</span>' },
   { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">docs/</span>             <span class="td">bu site</span>' },
   { t: 'blank' },
-  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'ssh bandit0@bandit.labs.overthewire.org -p 2220' },
+  { t: 'prompt', text: '~/nand2shell $ ', cmd: 'ssh bandit0@bandit.labs.overthewire.org -p 2220' },
   { t: 'raw', html: '<span class="tg">✓</span> <span class="td">bağlandı —</span> <span class="tc">bandit.labs.overthewire.org:2220</span>' },
   { t: 'blank' },
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },
@@ -29,12 +29,12 @@ const SCRIPT_MOBILE = [
 ];
 
 const SCRIPT_DESKTOP_EN = [
-  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'tree -L 1' },
+  { t: 'prompt', text: '~/nand2shell $ ', cmd: 'tree -L 1' },
   { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">overthewire/</span>      <span class="td">8 wargames · level-by-level writeups</span>' },
   { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">konu_anlatimlari/</span> <span class="td">wargame-independent topic guides</span>' },
   { t: 'raw', html: '<span class="tm">▸</span> <span class="tw">docs/</span>             <span class="td">this site</span>' },
   { t: 'blank' },
-  { t: 'prompt', text: '~/linux_learning $ ', cmd: 'ssh bandit0@bandit.labs.overthewire.org -p 2220' },
+  { t: 'prompt', text: '~/nand2shell $ ', cmd: 'ssh bandit0@bandit.labs.overthewire.org -p 2220' },
   { t: 'raw', html: '<span class="tg">✓</span> <span class="td">connected —</span> <span class="tc">bandit.labs.overthewire.org:2220</span>' },
   { t: 'blank' },
   { t: 'prompt', text: 'bandit0@bandit:~$ ', cmd: 'cat readme', last: true },

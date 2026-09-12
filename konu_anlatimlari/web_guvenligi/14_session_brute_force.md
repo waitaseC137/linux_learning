@@ -239,4 +239,4 @@ Sonsuz geçerli               Süre sınırı + logout'ta sil
 **Önceki konu:** [13_command_injection_ileri.md](./13_command_injection_ileri.md)
 **Sonraki konu:** [15_session_ve_newline_injection.md](./15_session_ve_newline_injection.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

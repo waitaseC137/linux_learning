@@ -240,4 +240,4 @@ repetition of this.
 **Previous topic:** [00_buradan_basla.md](./00_buradan_basla.md)
 **Next topic:** [02_nanddan_kapilar.md](./02_nanddan_kapilar.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

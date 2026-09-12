@@ -205,4 +205,4 @@ Run it, `echo $?`:
 **Previous topic:** [11_ziplamalar.md](./11_ziplamalar.md)
 **Next topic:** [13_bit_islemleri.md](./13_bit_islemleri.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -195,4 +195,4 @@ Gerçek çıktı:
 **Önceki konu:** [15_call_ve_ret.md](./15_call_ve_ret.md)
 **Sonraki konu:** [17_sistem_cagrilari.md](./17_sistem_cagrilari.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

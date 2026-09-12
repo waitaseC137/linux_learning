@@ -351,4 +351,4 @@ None of these but looks meaningless?
 **Previous topic:** [05_php_source_code.md](./05_php_source_code.md)
 **Next topic:** [07_command_injection.md](./07_command_injection.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

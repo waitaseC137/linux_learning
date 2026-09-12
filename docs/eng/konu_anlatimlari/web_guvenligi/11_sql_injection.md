@@ -338,4 +338,4 @@ In a prepared statement, user input is **never** interpreted as SQL code. Charac
 **Previous topic:** [10_file_upload_bypass.md](./10_file_upload_bypass.md)
 **Next topic:** [12_blind_sql_injection.md](./12_blind_sql_injection.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

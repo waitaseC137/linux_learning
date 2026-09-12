@@ -1,5 +1,6 @@
 import fs from "node:fs"; import path from "node:path";
-const DEPO = "/home/robin/linux_learning";
+// Depo kökü betiğin kendi konumundan türer — klasör adı değişse de çalışır
+const DEPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 // Varsayılan: tüm depo (docs/ aynası atlanır). Yol verilirse sadece orası taranır —
 // örn. İngilizce taraf için:  node scripts/capa-denetle.mjs docs/eng
 const KOK = process.argv[2] ? path.resolve(DEPO, process.argv[2]) : DEPO;

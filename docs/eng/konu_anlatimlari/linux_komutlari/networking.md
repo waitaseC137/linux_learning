@@ -457,4 +457,4 @@ wget -q https://...                   # quiet mode
 **Previous section:** [compression_encoding.md](./compression_encoding.md)  
 **Next section:** [permissions_users.md](./permissions_users.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -303,4 +303,4 @@ Automation:
 **Previous topic:** [12_blind_sql_injection.md](./12_blind_sql_injection.md)
 **Next topic:** [14_session_brute_force.md](./14_session_brute_force.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

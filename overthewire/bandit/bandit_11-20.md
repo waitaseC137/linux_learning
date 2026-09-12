@@ -477,4 +477,4 @@ bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
 
 **Sonraki bölüm:** [bandit_21-33.md](./bandit_21-33.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

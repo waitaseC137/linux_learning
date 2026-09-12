@@ -312,4 +312,4 @@ In this course we work at the **32-bit (EAX)** tier. But if you see AX, EAX, or 
 **Previous topic:** [03_sayilar_ikilik_onaltilik.md](./03_sayilar_ikilik_onaltilik.md)
 **Next topic:** [04.5_registerin_ici.md](./04.5_registerin_ici.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

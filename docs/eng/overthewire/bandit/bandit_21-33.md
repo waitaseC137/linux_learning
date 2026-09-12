@@ -654,4 +654,4 @@ What you learned across 33 levels:
 
 **Previous sections:** [bandit_0-10.md](./bandit_0-10.md) · [bandit_11-20.md](./bandit_11-20.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

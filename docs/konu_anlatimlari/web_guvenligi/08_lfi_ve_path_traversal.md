@@ -338,4 +338,4 @@ if (strpos($page, $base) === 0) {
 **Önceki konu:** [07_command_injection.md](./07_command_injection.md)
 **Sonraki konu:** [09_xor_sifrelemesi.md](./09_xor_sifrelemesi.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

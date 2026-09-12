@@ -230,4 +230,4 @@ Exploit:
 **Previous topic:** [22_perl_cgi_param_bypass.md](./22_perl_cgi_param_bypass.md)
 **Next topic:** [24_phar_deserialization.md](./24_phar_deserialization.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

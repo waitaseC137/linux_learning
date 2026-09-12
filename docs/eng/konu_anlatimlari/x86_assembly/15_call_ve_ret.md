@@ -170,4 +170,4 @@ Catch three things at once:
 **Previous topic:** [14_stack.md](./14_stack.md)
 **Next topic:** [16_calling_convention.md](./16_calling_convention.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

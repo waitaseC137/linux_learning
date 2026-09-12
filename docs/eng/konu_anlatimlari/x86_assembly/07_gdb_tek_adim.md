@@ -276,4 +276,4 @@ In this lesson you learned **a single job** gdb does: watching registers by sing
 **Previous topic:** [06_ilk_gercek_program.md](./06_ilk_gercek_program.md)
 **Next topic:** 08_mov_ve_bellek.md 🚧 *(being written)*
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

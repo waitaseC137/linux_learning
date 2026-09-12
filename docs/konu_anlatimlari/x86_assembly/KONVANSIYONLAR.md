@@ -80,5 +80,5 @@ görünmeyen kurallar girmez" üzerine kurulu; bir mekanizmaya "büyü, güven" 
 
 ---
 
-*Bu dosya [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun
+*Bu dosya [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun
 bir parçasıdır; "ev stili" ile birlikte okunur.*

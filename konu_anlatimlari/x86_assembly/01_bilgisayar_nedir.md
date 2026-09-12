@@ -229,4 +229,4 @@ Baştan beri "aptal işçi" diyoruz; bu kulağa bir kusur gibi geliyor. Aslında
 **Önceki konu:** [00_buradan_basla.md](./00_buradan_basla.md)
 **Sonraki konu:** [01.5_sayi_ve_anlam.md](./01.5_sayi_ve_anlam.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

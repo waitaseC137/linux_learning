@@ -242,4 +242,4 @@ Exploit:
 **Previous topic:** [17_php_type_juggling.md](./17_php_type_juggling.md)
 **Next topic:** [19_sql_truncation.md](./19_sql_truncation.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -208,4 +208,4 @@ Don't be afraid of typing a command wrong — worst case you get an error messag
 **Previous topic:** [04.5_registerin_ici.md](./04.5_registerin_ici.md)
 **Next topic:** [05.5_perde_arkasi.md](./05.5_perde_arkasi.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

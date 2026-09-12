@@ -208,4 +208,4 @@ Komutu yanlış yazmaktan korkma — en kötü ihtimalle bir hata mesajı alır,
 **Önceki konu:** [04.5_registerin_ici.md](./04.5_registerin_ici.md)
 **Sonraki konu:** [05.5_perde_arkasi.md](./05.5_perde_arkasi.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

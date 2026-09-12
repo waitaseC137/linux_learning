@@ -214,4 +214,4 @@ Exploit:
 **Previous topic:** [18_php_object_injection.md](./18_php_object_injection.md)
 **Next topic:** [20_ecb_mode_vulnerability.md](./20_ecb_mode_vulnerability.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

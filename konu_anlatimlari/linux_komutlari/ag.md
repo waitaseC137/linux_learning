@@ -457,4 +457,4 @@ wget -q https://...                   # sessiz mod
 **Önceki bölüm:** [sikistirma_encoding.md](./sikistirma_encoding.md)  
 **Sonraki bölüm:** [izinler_kullanici.md](./izinler_kullanici.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

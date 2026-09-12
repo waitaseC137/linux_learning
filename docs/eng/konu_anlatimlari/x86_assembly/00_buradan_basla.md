@@ -162,4 +162,4 @@ Throughout this course, getting errors **is part of the job** — programming is
 
 ---
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

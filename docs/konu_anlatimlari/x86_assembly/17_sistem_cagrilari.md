@@ -164,4 +164,4 @@ Ve işte bütün kursu birbirine bağlayan nokta: 06'da "sonucu `ebx`'e koy, `ec
 **Önceki konu:** [16_calling_convention.md](./16_calling_convention.md)
 **Sonraki konu:** [18_ilk_etkilesimli_program.md](./18_ilk_etkilesimli_program.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

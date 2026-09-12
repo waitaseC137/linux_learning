@@ -398,4 +398,4 @@ bzip2 -d binary_data.bz2
 **Önceki bölüm:** [metin_isleme.md](./metin_isleme.md)  
 **Sonraki bölüm:** [ag.md](./ag.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

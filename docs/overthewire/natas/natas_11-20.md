@@ -483,4 +483,4 @@ curl -b /tmp/cookies.txt 'http://natas20.natas.labs.overthewire.org/?debug' \
 **Önceki bölüm:** [natas_0-10.md](./natas_0-10.md)  
 **Sonraki bölüm:** [natas_21-34.md](./natas_21-34.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

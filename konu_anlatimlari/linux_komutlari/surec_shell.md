@@ -608,4 +608,4 @@ printenv SHELL              # mevcut shell'i gör
 **Önceki bölüm:** [izinler_kullanici.md](./izinler_kullanici.md)  
 **Sonraki bölüm:** [git.md](./git.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

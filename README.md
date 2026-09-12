@@ -1,5 +1,8 @@
-# 🐧 linux_learning
+# ⚡ nand2shell
 
+> **NAND'dan shell'e.** En altta tek bir mantık kapısı var, en üstte kendi açtığın kabuk.
+> Aradaki her basamağı kendin kuruyorsun.
+>
 > Şalter → mantık kapısı → işlemci → assembly → işletim sistemi → wargame.
 > Bilgisayarı ve güvenliği **katman katman, en alttan** öğren — oyun oynayarak, deneye yanıla, terminale bakarak.
 

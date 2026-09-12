@@ -507,4 +507,4 @@ You completed Natas — one of the most comprehensive CTF series in web security
 
 **Previous section:** [natas_11-20.md](./natas_11-20.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -236,4 +236,4 @@ Ve `test eax, 1`? Artık apaçık: `eax and 1` = **sadece en düşük bit**. En 
 **Önceki konu:** [12_donguler.md](./12_donguler.md)
 **Sonraki konu:** [14_stack.md](./14_stack.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

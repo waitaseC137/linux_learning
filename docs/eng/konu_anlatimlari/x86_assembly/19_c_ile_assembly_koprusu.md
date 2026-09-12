@@ -154,4 +154,4 @@ Why `[esp+4]` and not `[ebp+8]` like just before? In three steps:
 **Previous topic:** [18_ilk_etkilesimli_program.md](./18_ilk_etkilesimli_program.md)
 **Next topic:** [20_buradan_nereye.md](./20_buradan_nereye.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -128,4 +128,4 @@ Buradan sonrası senin merakına kalmış. İyi yolculuklar. 🚀
 **Önceki konu:** [19_c_ile_assembly_koprusu.md](./19_c_ile_assembly_koprusu.md)
 **Sonraki adım:** [Binary Exploitation serisi](../binary_exploitation/00_buradan_basla.md) — 🎉 **x86 Assembly serisi burada tamamlanıyor.** Öğrendiğin stack'i bükmeye devam et.
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

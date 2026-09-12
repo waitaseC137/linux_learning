@@ -229,4 +229,4 @@ We've been saying "dumb worker" all along; this sounds like a flaw. Actually it 
 **Previous topic:** [00_buradan_basla.md](./00_buradan_basla.md)
 **Next topic:** [01.5_sayi_ve_anlam.md](./01.5_sayi_ve_anlam.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -480,4 +480,4 @@ Well done, you seem to have used a light to see in the dark...
 
 ---
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

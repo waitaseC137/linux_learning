@@ -170,4 +170,4 @@ So what if you want to see inside any box (`eax`, `ecx`, `edx`… ) **at any mom
 **Previous topic:** [05.5_perde_arkasi.md](./05.5_perde_arkasi.md)
 **Next topic:** [07_gdb_tek_adim.md](./07_gdb_tek_adim.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

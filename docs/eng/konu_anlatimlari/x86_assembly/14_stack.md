@@ -159,4 +159,4 @@ But why downward? The logic is this: think of memory as a street. The **program 
 **Previous topic:** [13_bit_islemleri.md](./13_bit_islemleri.md)
 **Next topic:** [15_call_ve_ret.md](./15_call_ve_ret.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

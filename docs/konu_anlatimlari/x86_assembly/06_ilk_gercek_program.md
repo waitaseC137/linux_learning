@@ -170,4 +170,4 @@ Peki herhangi bir kutunun (`eax`, `ecx`, `edx`… ) içini, **istediğin an** g�
 **Önceki konu:** [05.5_perde_arkasi.md](./05.5_perde_arkasi.md)
 **Sonraki konu:** [07_gdb_tek_adim.md](./07_gdb_tek_adim.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

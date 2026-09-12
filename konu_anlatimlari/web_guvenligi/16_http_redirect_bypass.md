@@ -176,4 +176,4 @@ Exploit:
 **Önceki konu:** [15_session_ve_newline_injection.md](./15_session_ve_newline_injection.md)
 **Sonraki konu:** [17_php_type_juggling.md](./17_php_type_juggling.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

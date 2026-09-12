@@ -261,4 +261,4 @@ eax            0x2a                42
 **Önceki konu:** [07_gdb_tek_adim.md](./07_gdb_tek_adim.md)
 **Sonraki konu:** [08.5_little_endian.md](./08.5_little_endian.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

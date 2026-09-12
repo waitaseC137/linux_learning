@@ -244,4 +244,4 @@ curl -u natas1:[şifre] http://natas1.natas.labs.overthewire.org
 
 **Sonraki konu:** [02_http_protokolu.md](./02_http_protokolu.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

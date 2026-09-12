@@ -470,4 +470,4 @@ bandit9@bandit:~$ strings data.txt | grep ===
 
 ---
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

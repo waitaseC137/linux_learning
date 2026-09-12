@@ -256,4 +256,4 @@ Make it `mov eax, 8` (even) and run again:
 **Previous topic:** [10_bayraklar_ve_cmp.md](./10_bayraklar_ve_cmp.md)
 **Next topic:** [12_donguler.md](./12_donguler.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

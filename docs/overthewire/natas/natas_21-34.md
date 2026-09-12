@@ -507,4 +507,4 @@ Natas'ı tamamladın — web güvenliğinin en kapsamlı CTF serisinden biri.
 
 **Önceki bölüm:** [natas_11-20.md](./natas_11-20.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

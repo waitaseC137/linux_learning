@@ -552,4 +552,4 @@ du -b data.txt
 
 **Next section:** [text_processing.md](./text_processing.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -398,4 +398,4 @@ bzip2 -d binary_data.bz2
 **Previous section:** [text_processing.md](./text_processing.md)  
 **Next section:** [networking.md](./networking.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

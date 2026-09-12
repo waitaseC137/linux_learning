@@ -255,4 +255,4 @@ To create a PHP Phar:
 
 **Previous topic:** [23_log_poisoning.md](./23_log_poisoning.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

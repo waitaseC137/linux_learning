@@ -207,4 +207,4 @@ Exploit:
 **Previous topic:** [21_perl_rce.md](./21_perl_rce.md)
 **Next topic:** [23_log_poisoning.md](./23_log_poisoning.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

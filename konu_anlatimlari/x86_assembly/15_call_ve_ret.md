@@ -170,4 +170,4 @@ call SONRASI esp = 0xffffc56c    stack tepesi [esp] = 0x0804900a    eip şimdi: 
 **Önceki konu:** [14_stack.md](./14_stack.md)
 **Sonraki konu:** [16_calling_convention.md](./16_calling_convention.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

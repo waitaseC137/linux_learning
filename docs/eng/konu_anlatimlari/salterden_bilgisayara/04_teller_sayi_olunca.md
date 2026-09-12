@@ -200,4 +200,4 @@ This formula is the key to the next two lessons. When our circuits hand you two 
 **Previous topic:** [03.5_soyutlama_merdiveni.md](./03.5_soyutlama_merdiveni.md)
 **Next topic:** [05_half_adder.md](./05_half_adder.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

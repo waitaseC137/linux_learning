@@ -272,4 +272,4 @@ Artık 255'in neden 255 olduğu nettir: byte 8 bite sabitlendiği için, 8 bit `
 **Önceki konu:** [02_terminal_ile_tanisma.md](./02_terminal_ile_tanisma.md)
 **Sonraki konu:** [04_bellek_ve_registerlar.md](./04_bellek_ve_registerlar.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

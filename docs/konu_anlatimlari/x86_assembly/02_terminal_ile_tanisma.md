@@ -277,4 +277,4 @@ Hata mesajlarını **düşman değil, ipucu** olarak gör. Çoğu zaman tam olar
 **Önceki konu:** [01.5_sayi_ve_anlam.md](./01.5_sayi_ve_anlam.md)
 **Sonraki konu:** [03_sayilar_ikilik_onaltilik.md](./03_sayilar_ikilik_onaltilik.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

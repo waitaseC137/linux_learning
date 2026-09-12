@@ -322,4 +322,4 @@ curl -u natas4:[şifre] \
 **Önceki konu:** [01_html_kaynak_ve_devtools.md](./01_html_kaynak_ve_devtools.md)
 **Sonraki konu:** [03_robots_ve_dizin_kesfi.md](./03_robots_ve_dizin_kesfi.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

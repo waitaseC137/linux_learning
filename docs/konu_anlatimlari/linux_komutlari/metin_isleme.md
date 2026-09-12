@@ -686,4 +686,4 @@ cat krypton3 | sed 's/[^A-Z]//g'
 **Önceki bölüm:** [dosya_sistemi.md](./dosya_sistemi.md)  
 **Sonraki bölüm:** [sikistirma_encoding.md](./sikistirma_encoding.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

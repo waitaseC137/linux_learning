@@ -338,4 +338,4 @@ if (strpos($page, $base) === 0) {
 **Previous topic:** [07_command_injection.md](./07_command_injection.md)
 **Next topic:** [09_xor_encryption.md](./09_xor_encryption.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

@@ -205,4 +205,4 @@ carp:
 **Önceki konu:** [11_ziplamalar.md](./11_ziplamalar.md)
 **Sonraki konu:** [13_bit_islemleri.md](./13_bit_islemleri.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

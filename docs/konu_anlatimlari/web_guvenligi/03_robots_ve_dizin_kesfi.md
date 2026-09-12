@@ -215,4 +215,4 @@ Yeni bir Natas seviyesinde:
 **Önceki konu:** [02_http_protokolu.md](./02_http_protokolu.md)
 **Sonraki konu:** [04_cookie_manipulasyonu.md](./04_cookie_manipulasyonu.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

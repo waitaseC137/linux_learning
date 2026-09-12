@@ -312,4 +312,4 @@ Biz bu kursta **32-bit (EAX)** katında çalışıyoruz. Ama bir yerde AX, EAX y
 **Önceki konu:** [03_sayilar_ikilik_onaltilik.md](./03_sayilar_ikilik_onaltilik.md)
 **Sonraki konu:** [04.5_registerin_ici.md](./04.5_registerin_ici.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

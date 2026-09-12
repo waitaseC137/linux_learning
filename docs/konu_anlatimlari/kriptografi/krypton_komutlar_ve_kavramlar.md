@@ -375,4 +375,4 @@ Kriptanaliz için güçlü bir platform. Krypton'da en çok kullandığımız ö
 
 ---
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

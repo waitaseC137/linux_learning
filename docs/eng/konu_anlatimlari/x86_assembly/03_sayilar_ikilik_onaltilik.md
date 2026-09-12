@@ -272,4 +272,4 @@ Now it's clear why 255 is 255: because a byte was fixed at 8 bits, 8 bits hold `
 **Previous topic:** [02_terminal_ile_tanisma.md](./02_terminal_ile_tanisma.md)
 **Next topic:** [04_bellek_ve_registerlar.md](./04_bellek_ve_registerlar.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

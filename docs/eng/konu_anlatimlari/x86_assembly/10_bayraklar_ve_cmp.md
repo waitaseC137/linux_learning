@@ -242,4 +242,4 @@ Up to now we've always told the worker "advance in order, line by line" — the 
 **Previous topic:** [09_aritmetik.md](./09_aritmetik.md)
 **Next topic:** [11_ziplamalar.md](./11_ziplamalar.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

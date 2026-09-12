@@ -375,4 +375,4 @@ A powerful platform for cryptanalysis. The features we use most in Krypton:
 
 ---
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

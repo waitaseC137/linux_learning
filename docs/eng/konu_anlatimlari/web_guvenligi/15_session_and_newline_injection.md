@@ -219,4 +219,4 @@ Exploit:
 **Previous topic:** [14_session_brute_force.md](./14_session_brute_force.md)
 **Next topic:** [16_http_redirect_bypass.md](./16_http_redirect_bypass.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

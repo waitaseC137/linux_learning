@@ -276,4 +276,4 @@ Bu derste gdb'nin **tek bir işini** öğrendin: tek adımla register izlemek. A
 **Önceki konu:** [06_ilk_gercek_program.md](./06_ilk_gercek_program.md)
 **Sonraki konu:** 08_mov_ve_bellek.md 🚧 *(yazılıyor)*
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

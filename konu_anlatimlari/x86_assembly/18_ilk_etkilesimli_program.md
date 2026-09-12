@@ -176,4 +176,4 @@ Bu yüzden çıktıda isimden sonra alt satıra da geçtik: kullanıcı Enter'a 
 **Önceki konu:** [17_sistem_cagrilari.md](./17_sistem_cagrilari.md)
 **Sonraki konu:** [19_c_ile_assembly_koprusu.md](./19_c_ile_assembly_koprusu.md)
 
-*Bu rehber [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) reposunun bir parçasıdır.*
+*Bu rehber [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) reposunun bir parçasıdır.*

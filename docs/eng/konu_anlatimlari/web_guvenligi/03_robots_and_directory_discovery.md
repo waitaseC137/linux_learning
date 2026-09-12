@@ -215,4 +215,4 @@ On a new Natas level:
 **Previous topic:** [02_http_protocol.md](./02_http_protocol.md)
 **Next topic:** [04_cookie_manipulation.md](./04_cookie_manipulation.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

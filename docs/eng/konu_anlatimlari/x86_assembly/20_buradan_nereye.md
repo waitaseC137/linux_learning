@@ -128,4 +128,4 @@ From here on it's up to your curiosity. Safe travels. 🚀
 **Previous topic:** [19_c_ile_assembly_koprusu.md](./19_c_ile_assembly_koprusu.md)
 **Next step:** [The Binary Exploitation series](../binary_exploitation/00_buradan_basla.md) — 🎉 **The x86 Assembly series is completed here.** Keep bending the stack you learned.
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

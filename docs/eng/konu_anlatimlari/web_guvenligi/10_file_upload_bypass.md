@@ -326,4 +326,4 @@ After uploading:
 **Previous topic:** [09_xor_encryption.md](./09_xor_encryption.md)
 **Next topic:** [11_sql_injection.md](./11_sql_injection.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

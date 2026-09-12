@@ -176,4 +176,4 @@ That's why in the output we also dropped to the next line after the name: when t
 **Previous topic:** [17_sistem_cagrilari.md](./17_sistem_cagrilari.md)
 **Next topic:** [19_c_ile_assembly_koprusu.md](./19_c_ile_assembly_koprusu.md)
 
-*This guide is part of the [waitaseC137/linux_learning](https://github.com/waitaseC137/linux_learning) repository.*
+*This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*
