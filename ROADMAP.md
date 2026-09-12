@@ -57,6 +57,11 @@
 ## Bölüm 1 — İşlemci GERÇEKTEN Nedir: Bütünleşik Merdiven
 
 > *Tek sürekli hikâye. Mod: sök-anla + NandGame çöz-yarış.*
+>
+> *Hangi kavramın hangi NandGame seviyelerine denk geldiği maddelerin yanında
+> yazıyor — dördü birlikte oyunun 30 seviyesinin tamamını kaplar. Ders ↔ seviye
+> eşlemesinin tam tablosu
+> [00_buradan_basla](./konu_anlatimlari/salterden_bilgisayara/00_buradan_basla.md)'da.*
 
 ### 1A — Temel yarı (voltaj → x86 komutu)
 
@@ -66,18 +71,18 @@
 - [x] Transistör = parmağı tel olan anahtar (elektrik elektriği kontrol eder)
     - [x] MOSFET sezgisi: kapı gerilimi kanalı açar/kapatır
     - [x] CMOS: neden çift (n+p), statik güç ~0 — o hâlde ısı nereden çıkar
-- [x] Mantık kapıları (NAND'dan türetme; anlamı biz koyarız, fizik aptal)
+- [x] Mantık kapıları (NAND'dan türetme; anlamı biz koyarız, fizik aptal) — *NandGame: Logic Gates, 5 seviye*
     - [x] NAND'dan NOT / AND / OR
     - [x] XOR + evrensellik: tek kapı tipinden her şey neden çıkar
 - [x] Sayı doğar: konumsal ikili + ikinin tümleyeni (bit sayı DEĞİLDİ; "bu -5" kararını biz veririz — çıkarma = negatifi toplama)
     - [x] konumsal ikili + hex kısaltması
     - [x] ikinin tümleyeni: çıkarma neden ayrı devre değil, toplamanın kendisi
     - [x] taşma (overflow) vs elde (carry): işaretli / işaretsiz ayrımı
-- [ ] 🚧 Aritmetik: kapılardan toplayıcı → ALU (hesabın doğuşu; komutun asıl işi)
+- [ ] 🚧 Aritmetik: kapılardan toplayıcı → ALU (hesabın doğuşu; komutun asıl işi) — *NandGame: Arithmetics + Switching + ALU, 13 seviye*
     - [x] yarım toplayıcı → tam toplayıcı → dalgalı elde (ripple-carry)
     - [ ] 🚧 ALU: toplama + mantık + kaydırma tek blokta
     - [x] bayraklar (zero / carry / sign / overflow) — dallanmanın yakıtı
-- [ ] Kendini-tutan latch → hafızanın doğuşu
+- [ ] Kendini-tutan latch → hafızanın doğuşu — *NandGame: Memory, 6 seviye*
     - [ ] SR latch: geri besleme = kendini hatırlayan devre
     - [ ] D latch → D flip-flop (saat kenarıyla örnekle)
     - [ ] register = n flip-flop yan yana
@@ -90,17 +95,12 @@
 - [ ] Saat (clock) — metronom, GHz'in gerçek anlamı
     - [ ] kenar (edge) neden senkronizasyonun kalbi
     - [ ] kritik yol: en yavaş kapı zinciri saat tavanını nasıl belirler
-- [ ] Kontrol birimi + fetch-decode-execute
+- [ ] Kontrol birimi + fetch-decode-execute — *NandGame: Processor, 6 seviye*
     - [ ] program sayacı (PC) → getir → çöz → çalıştır döngüsü
     - [ ] kontrol sinyalleri: bir komut nasıl "tel"lere dönüşür
 - [x] Mikro-op: komutun altındaki komut (x86 = arayüz, çipin dili değil)
     - [x] tek x86 komutu → birden çok mikro-op
     - [x] neden: karmaşık ISA'yı basit iç çekirdeğe ayırmak
-- [ ] 🚧 Pratik: NandGame Bitirme Rotası (kapılar → aritmetik → hafıza → işlemci)
-    - [x] kapılar (NAND → NOT/AND/OR/XOR)
-    - [ ] 🚧 aritmetik (toplayıcı → ALU)
-    - [ ] hafıza (latch → register → RAM)
-    - [ ] işlemci (kontrol + tam CPU)
 - [ ] Pratik: Logisim / Digital Logic Sim sandbox
     - [ ] elle kurduğun ALU'yu görsel simülatörde doğrula
 - [x] Pratik: x86 assembly kursu (`konu_anlatimlari/x86_assembly`)
