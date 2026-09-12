@@ -4,10 +4,20 @@
 > çekirdeğe, oradan gizli katmanlara, farklı işlemci felsefelerine ve en sonda
 > bambaşka bir makineye — kuantuma.
 >
-> ⚠️ **Durum işaretleri bilinçli olarak boş.** Bu dosyada hiçbir madde "bitti"
-> işaretli değil — hepsi `[ ]`. İlerleme durumu burada tutulmuyor; neyin
-> tamamlandığı Claude Code tarafından memory'den çıkarılır. Çift kayıt tutulmaz
-> ki çelişmesin.
+> ✅ **Durum işaretleri artık güncel tutuluyor** (2026-09-12'de açıldı; önceden
+> bilinçli olarak hepsi boştu). Anlamları:
+>
+> | | |
+> |---|---|
+> | `[x]` | oturdu |
+> | `[ ]` 🚧 | başlandı, yarım |
+> | `[ ]` | henüz başlanmadı |
+>
+> Bir üst madde ancak **altındaki bütün maddeler** kapandığında `[x]` olur; biri
+> açıksa üst madde 🚧 kalır. Böylece "neredeyse bitti" ile "bitti" karışmaz.
+>
+> **"Bitti"yi Claude değil Poyraz söyler.** Bir konu anlatıldığı için değil,
+> "oturdu" dendiği için kapanır — bu kural yukarıdaki *Yöntem* bölümünde de var.
 
 > 🗺️ **Bu dosya HARİTA, ders defteri değil.** Adım adım "şunu yap / şu komut"
 > detayı burada TUTULMAZ — o basamağa gelince, tek konu, o oturumda üretilir
@@ -35,12 +45,12 @@
 
 ## Bölüm 0 — Pusula
 
-- [ ] Felsefe: "bu duvar fizik mi, politika mı?"
-- [ ] Felsefe: "bana sunulanın dışına çıkarsam ne olur?"
-- [ ] AI = yeni işlemci; düşünceyi devretmeden kullan (araç, otorite değil)
-- [ ] İkili amaç — net bölünme: anla (her durak zemin verir) + üret
+- [x] Felsefe: "bu duvar fizik mi, politika mı?"
+- [x] Felsefe: "bana sunulanın dışına çıkarsam ne olur?"
+- [x] AI = yeni işlemci; düşünceyi devretmeden kullan (araç, otorite değil)
+- [x] İkili amaç — net bölünme: anla (her durak zemin verir) + üret
       (seçili duraklar somut bir çıktı bırakır; gerisi anla-yeter)
-- [ ] Çalışma düzeni: 3 şerit (mimari durak → elle kurma → x86 kursu → başa dön)
+- [x] Çalışma düzeni: 3 şerit (mimari durak → elle kurma → x86 kursu → başa dön)
 
 ---
 
@@ -50,23 +60,23 @@
 
 ### 1A — Temel yarı (voltaj → x86 komutu)
 
-- [ ] Voltaj: 1/0 = yüksek/alçak tel (sayı değil, fiziksel gerilim)
+- [ ] 🚧 Voltaj: 1/0 = yüksek/alçak tel (sayı değil, fiziksel gerilim)
     - [ ] eşik + gürültü payı: aradaki "gri bölge" neden yok sayılır
     - [ ] neden 2 seviye? çok-seviyeli (ternary) fiziksel mümkün, neden kazanmadı
-- [ ] Transistör = parmağı tel olan anahtar (elektrik elektriği kontrol eder)
+- [ ] 🚧 Transistör = parmağı tel olan anahtar (elektrik elektriği kontrol eder)
     - [ ] MOSFET sezgisi: kapı gerilimi kanalı açar/kapatır
     - [ ] CMOS: neden çift (n+p), statik güç ~0 — o hâlde ısı nereden çıkar
-- [ ] Mantık kapıları (NAND'dan türetme; anlamı biz koyarız, fizik aptal)
-    - [ ] NAND'dan NOT / AND / OR
-    - [ ] XOR + evrensellik: tek kapı tipinden her şey neden çıkar
-- [ ] Sayı doğar: konumsal ikili + ikinin tümleyeni (bit sayı DEĞİLDİ; "bu -5" kararını biz veririz — çıkarma = negatifi toplama)
-    - [ ] konumsal ikili + hex kısaltması
-    - [ ] ikinin tümleyeni: çıkarma neden ayrı devre değil, toplamanın kendisi
-    - [ ] taşma (overflow) vs elde (carry): işaretli / işaretsiz ayrımı
-- [ ] Aritmetik: kapılardan toplayıcı → ALU (hesabın doğuşu; komutun asıl işi)
-    - [ ] yarım toplayıcı → tam toplayıcı → dalgalı elde (ripple-carry)
-    - [ ] ALU: toplama + mantık + kaydırma tek blokta
-    - [ ] bayraklar (zero / carry / sign / overflow) — dallanmanın yakıtı
+- [x] Mantık kapıları (NAND'dan türetme; anlamı biz koyarız, fizik aptal)
+    - [x] NAND'dan NOT / AND / OR
+    - [x] XOR + evrensellik: tek kapı tipinden her şey neden çıkar
+- [x] Sayı doğar: konumsal ikili + ikinin tümleyeni (bit sayı DEĞİLDİ; "bu -5" kararını biz veririz — çıkarma = negatifi toplama)
+    - [x] konumsal ikili + hex kısaltması
+    - [x] ikinin tümleyeni: çıkarma neden ayrı devre değil, toplamanın kendisi
+    - [x] taşma (overflow) vs elde (carry): işaretli / işaretsiz ayrımı
+- [ ] 🚧 Aritmetik: kapılardan toplayıcı → ALU (hesabın doğuşu; komutun asıl işi)
+    - [x] yarım toplayıcı → tam toplayıcı → dalgalı elde (ripple-carry)
+    - [ ] 🚧 ALU: toplama + mantık + kaydırma tek blokta
+    - [x] bayraklar (zero / carry / sign / overflow) — dallanmanın yakıtı
 - [ ] Kendini-tutan latch → hafızanın doğuşu
     - [ ] SR latch: geri besleme = kendini hatırlayan devre
     - [ ] D latch → D flip-flop (saat kenarıyla örnekle)
@@ -83,19 +93,19 @@
 - [ ] Kontrol birimi + fetch-decode-execute
     - [ ] program sayacı (PC) → getir → çöz → çalıştır döngüsü
     - [ ] kontrol sinyalleri: bir komut nasıl "tel"lere dönüşür
-- [ ] Mikro-op: komutun altındaki komut (x86 = arayüz, çipin dili değil)
-    - [ ] tek x86 komutu → birden çok mikro-op
-    - [ ] neden: karmaşık ISA'yı basit iç çekirdeğe ayırmak
-- [ ] Pratik: NandGame Bitirme Rotası (kapılar → aritmetik → hafıza → işlemci)
-    - [ ] kapılar (NAND → NOT/AND/OR/XOR)
-    - [ ] aritmetik (toplayıcı → ALU)
+- [x] Mikro-op: komutun altındaki komut (x86 = arayüz, çipin dili değil)
+    - [x] tek x86 komutu → birden çok mikro-op
+    - [x] neden: karmaşık ISA'yı basit iç çekirdeğe ayırmak
+- [ ] 🚧 Pratik: NandGame Bitirme Rotası (kapılar → aritmetik → hafıza → işlemci)
+    - [x] kapılar (NAND → NOT/AND/OR/XOR)
+    - [ ] 🚧 aritmetik (toplayıcı → ALU)
     - [ ] hafıza (latch → register → RAM)
     - [ ] işlemci (kontrol + tam CPU)
 - [ ] Pratik: Logisim / Digital Logic Sim sandbox
     - [ ] elle kurduğun ALU'yu görsel simülatörde doğrula
-- [ ] Pratik: x86 assembly kursu (`konu_anlatimlari/x86_assembly`)
-    - [ ] register / bellek / komut temeli (`nasm` + `ld`)
-    - [ ] mikro-op durağına köprü: yazdığın komutun altında ne oluyor
+- [x] Pratik: x86 assembly kursu (`konu_anlatimlari/x86_assembly`)
+    - [x] register / bellek / komut temeli (`nasm` + `ld`)
+    - [x] mikro-op durağına köprü: yazdığın komutun altında ne oluyor
 
 ### 1B — Modern yarı (x86 komutundan yukarı)
 
@@ -104,39 +114,39 @@
     - [ ] hazard'lar (veri / kontrol) + forwarding + stall
     - [ ] dallanma tahmini + yanlış tahmin cezası (kendi çipinde ölç)
     - [ ] OoO: sıra-dışı çalıştır, sırayla emekli et (ROB)
-- [ ] Önbellek piramidi — L1/L2/L3/RAM (canlı gecikme merdiveni)
-    - [ ] neden hiyerarşi: hız ↔ boyut takası
-    - [ ] hit/miss, satır (line), yerellik (temporal / spatial)
-    - [ ] kendi çipinde L1/L2/L3/RAM gecikme basamakları
-- [ ] SMT — çekirdek vs thread
-    - [ ] fiziksel çekirdek 2 thread'i nasıl "dokur"
-    - [ ] ne zaman kazanç, ne zaman yük (kendi 16C/32T'de ölç)
-- [ ] Chiplet / CCD — yonga içi vs yongalar arası gecikme
-    - [ ] 8940HX: 2 CCD + Infinity Fabric köprüsü
-    - [ ] CCD-içi vs CCD-aşırı çekirdek gecikme farkı
-- [ ] Önbellek tutarlılığı (MOESI) + çekirdekler-arası gecikme — 2 CCD'de CCD-aşımı cezası ölçülebilir; false sharing (ölçüm aracına bağ)
+- [x] Önbellek piramidi — L1/L2/L3/RAM (canlı gecikme merdiveni)
+    - [x] neden hiyerarşi: hız ↔ boyut takası
+    - [x] hit/miss, satır (line), yerellik (temporal / spatial)
+    - [x] kendi çipinde L1/L2/L3/RAM gecikme basamakları
+- [x] SMT — çekirdek vs thread
+    - [x] fiziksel çekirdek 2 thread'i nasıl "dokur"
+    - [x] ne zaman kazanç, ne zaman yük (kendi 16C/32T'de ölç)
+- [x] Chiplet / CCD — yonga içi vs yongalar arası gecikme
+    - [x] 8940HX: 2 CCD + Infinity Fabric köprüsü
+    - [x] CCD-içi vs CCD-aşırı çekirdek gecikme farkı
+- [ ] 🚧 Önbellek tutarlılığı (MOESI) + çekirdekler-arası gecikme — 2 CCD'de CCD-aşımı cezası ölçülebilir; false sharing (ölçüm aracına bağ)
     - [ ] MOESI durumları: paylaşılan satır nasıl senkron tutulur
     - [ ] false sharing: aynı satırı döven 2 çekirdek = sahte yavaşlama
-    - [ ] CCD-aşımı cezasını ölç
+    - [x] CCD-aşımı cezasını ölç
 - [ ] SIMD / AVX-512 (RPCS3 → Bölüm 3 bağlantısı)
     - [ ] tek komut, çok veri: 512-bit yazmaçlar
     - [ ] frekans düşüşü (downclock) takası var mı — kendi çipinde bak
 - [ ] Güç zinciri: PPT / TDC / EDC + termal
     - [ ] üç sınır ne demek, hangisi önce vurur
     - [ ] termal throttle vs güç limiti: kim frenliyor (ölç)
-- [ ] Bellek: kanal / gecikme / bant genişliği (+ memory training)
+- [ ] 🚧 Bellek: kanal / gecikme / bant genişliği (+ memory training)
     - [ ] kanal / rank sayısı bant genişliğini nasıl belirler
     - [ ] CL / tCAS gecikmesi vs bant genişliği takası
-    - [ ] memory training: boot'ta ne oluyor (Bölüm 4B'ye bağ)
+    - [x] memory training: boot'ta ne oluyor (Bölüm 4B'ye bağ)
 - [ ] Sanal bellek: MMU / TLB — adres çevirisi (DRAM'in üstündeki katman; Bölüm 2 + 4.5'e taban)
     - [ ] sanal → fiziksel: sayfa tablosu yürüyüşü (page walk)
     - [ ] TLB: çeviri önbelleği + miss cezası
 - [ ] Zamanlayıcı (scheduler)
     - [ ] çekirdeğe iş dağıtımı: CCD / SMT farkındalığı
     - [ ] CachyOS BORE / sched-ext = Bölüm 4B çekirdek durağına bağ
-- [ ] ⚒ Ölçüm aracı: kendi çipinde cache-gecikme merdiveni + SMT ölçeklenmesi + bant genişliği (1B'nin iddialarını kanıtlar)
-    - [ ] pointer-chasing ile gecikme merdiveni
-    - [ ] thread sayısına karşı ölçekleme eğrisi
+- [ ] 🚧 ⚒ Ölçüm aracı: kendi çipinde cache-gecikme merdiveni + SMT ölçeklenmesi + bant genişliği (1B'nin iddialarını kanıtlar)
+    - [x] pointer-chasing ile gecikme merdiveni
+    - [x] thread sayısına karşı ölçekleme eğrisi
     - [ ] 1B'nin tüm iddialarını tek çıktı grafiğinde topla
 
 ---
@@ -145,11 +155,11 @@
 
 > *Kolaydan zora, yazılımdan donanıma. Mod: binexp çöz-yarış; alt katmanlar sök-anla.*
 
-- [ ] Yazılıma saldırı: binary exploitation — OverTheWire
+- [ ] 🚧 Yazılıma saldırı: binary exploitation — OverTheWire
 - [ ] Yan-kanal ilkeli: Flush+Reload / Prime+Probe — önbellek zamanlamasıyla sızıntı (Spectre'nin gizli kanalı BUDUR; 1B ölçüm aracının silahlanmış hâli)
-- [ ] Köprü: ayrıcalık modeli + mikromimari saldırılar (ring, MMU, SMEP/SMAP, Spectre/Meltdown, TEE)
+- [ ] 🚧 Köprü: ayrıcalık modeli + mikromimari saldırılar (ring, MMU, SMEP/SMAP, Spectre/Meltdown, TEE)
 - [ ] Gizli ringler: SMM (ring -2, OS'un altında saklı mod) + hypervisor (ring -1, VT/AMD-V) — "gizli katman"ın tam da kendisi; PSP'ye (ring -3 sayılır) inişin ara basamakları
-- [ ] Komutun **altı**: microcode & EntrySign (imza duvarı) → repoya kanonik modül
+- [ ] 🚧 Komutun **altı**: microcode & EntrySign (imza duvarı) → repoya kanonik modül
 - [ ] Komutun **yanı**: PSP / güven kökü (ASP, boot root-of-trust, psptool, flashrom dökümü)
 
 ---

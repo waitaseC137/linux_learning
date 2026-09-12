@@ -8,6 +8,19 @@
 
 ---
 
+## 🧭 Yol Haritası — nereye gidiyoruz?
+
+Bu repo rastgele büyümüyor; voltajdan kuantuma uzanan tek bir merdiveni takip
+ediyor. Hangi basamaktayız, neyi bitirdik, sırada ne var — hepsi tek dosyada,
+işaretli:
+
+→ **[ROADMAP.md — İşlemciden Kuantuma](./ROADMAP.md)**
+
+> `[x]` oturdu · `[ ]` 🚧 başlandı, yarım · `[ ]` henüz başlanmadı.
+> Bir basamak, konu anlatıldığı için değil, **"oturdu" dendiği için** kapanır.
+
+---
+
 ## 📚 Konu Anlatımları
 
 Komutların ve kavramların wargame bağımsız, referans olarak tutulduğu dosyalar.  
