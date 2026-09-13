@@ -128,6 +128,10 @@ To feel the consequence of that size difference: the processor in the device you
 reading these lines on has **billions** of transistors, and each one can switch on and
 off billions of times per second.
 
+> 🔬 **If you want to go deeper:** what is actually inside a transistor, which voltages
+> "1" and "0" really are, and why the region between them is forbidden →
+> [01.5 · The Forbidden Zone](./01.5_yasak_bolge.md)
+
 > 🔑 But the idea hasn't changed: **transistor = a switch whose lever is pushed by
 > electricity.** Every circuit you can build with a relay can also be built with a
 > transistor — it's just smaller and faster. That's why in this series we start with the
@@ -239,6 +243,6 @@ repetition of this.
 ---
 
 **Previous topic:** [00_buradan_basla.md](./00_buradan_basla.md)
-**Next topic:** [02_nanddan_kapilar.md](./02_nanddan_kapilar.md)
+**Next topic:** [01.5_yasak_bolge.md](./01.5_yasak_bolge.md)
 
 *This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*

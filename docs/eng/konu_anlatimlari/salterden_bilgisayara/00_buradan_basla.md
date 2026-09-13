@@ -143,6 +143,7 @@ Read the files in this order. Each lesson leans on the previous one.
 | # | File | What it teaches | NandGame level |
 |:---:|---|---|---|
 | 1 | [01_akim_salter_role](./01_akim_salter_role.md) | What 1 and 0 really are; the relay; the first gate | Nand |
+| 1.5 | [01.5_yasak_bolge](./01.5_yasak_bolge.md) | *(interlude)* Voltage, the noise margin, inside the transistor, and CMOS | — |
 | 2 | [02_nanddan_kapilar](./02_nanddan_kapilar.md) | All gates from a single brick: NOT, AND, OR | Invert, And, Or |
 | 3 | [03_xor_iki_fedai](./03_xor_iki_fedai.md) | The difference detector XOR — the tale of the two that do the dirty work | Xor |
 | 3.5 | [03.5_soyutlama_merdiveni](./03.5_soyutlama_merdiveni.md) | *(interlude)* Boxing up the floors — the computer's construction secret | — |

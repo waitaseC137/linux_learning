@@ -82,6 +82,7 @@
 |---|---|
 | [00_buradan_basla.md](./salterden_bilgisayara/00_buradan_basla.md) | Course map; the journey from switches to a CPU |
 | [01_akim_salter_role.md](./salterden_bilgisayara/01_akim_salter_role.md) | Current, switch, relay — the first "logic" |
+| [01.5_yasak_bolge.md](./salterden_bilgisayara/01.5_yasak_bolge.md) | **Interlude:** voltage and the noise margin, the forbidden zone, MOSFET and CMOS, `P ≈ C·V²·f` |
 | [02_nanddan_kapilar.md](./salterden_bilgisayara/02_nanddan_kapilar.md) | NAND is universal: deriving NOT/AND/OR/XOR |
 | [03_xor_iki_fedai.md](./salterden_bilgisayara/03_xor_iki_fedai.md) | Building XOR — "the two workhorses" (OR + NAND + AND) |
 | [03.5_soyutlama_merdiveni.md](./salterden_bilgisayara/03.5_soyutlama_merdiveni.md) | A gate = a closed box; climbing one floor up |

@@ -198,7 +198,7 @@ can use invert as a ready-made part in And and Or.)
 
 ---
 
-**Previous topic:** [01_akim_salter_role.md](./01_akim_salter_role.md)
+**Previous topic:** [01.5_yasak_bolge.md](./01.5_yasak_bolge.md)
 **Next topic:** [03_xor_iki_fedai.md](./03_xor_iki_fedai.md)
 
 *This guide is part of the [waitaseC137/nand2shell](https://github.com/waitaseC137/nand2shell) repository.*
